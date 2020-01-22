@@ -1,3 +1,8 @@
+param(
+    [Parameter(Mandatory=$true)]
+    $saasSubscriptionId
+)
+
 . ./profile.ps1
 . ./utils.ps1
 . ./marketplace.ps1
@@ -5,6 +10,9 @@
 . ./bot.ps1
 . ./tenant.ps1
 . ./ad.ps1
+
+
+Write-Host $saasSubscriptionId
 
 Write-Host  "Running CTM-Blueprint..." -ForegroundColor Green
 $context = Get-AzContext
@@ -36,7 +44,6 @@ Try {
     #$marketplaceApp
 
     #$saasSubscriptionId = Split-Path $marketplaceApp.id -Leaf
-    $saasSubscriptionId = "1dc0e142-d927-c863-8dda-d33313c03004"
 
     Write-Host "Creating HBS Tenant $tenantId..." -NoNewline
     $saasTenant = New-HbsTenant -name $output.Parameters["serviceName"].Value -tenantId $tenantId `

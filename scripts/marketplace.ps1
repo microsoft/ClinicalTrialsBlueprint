@@ -1,7 +1,26 @@
+
+param(
+    [Parameter(Mandatory=$true)]
+    [String] 
+    $name,
+    
+    [Parameter()]
+    [String]
+    [ValidateSet('free','s1','s2','s3','s4','s5')] 
+    $planId = "free"
+)
+
+. ./profile.ps1
+
+
+
+$context = Get-AzContext
+$subscriptionId = $context.subscription.id
+
 function New-HbsSaaSApplication() {
     param(
-        $ResourceName,        
-        $SubscriptionId,
+        $resourceName,        
+        $subscriptionId,
         $planId,
         $offerId
     )    
@@ -15,13 +34,13 @@ function New-HbsSaaSApplication() {
         Properties = @{
             PublisherId            = "microsoft-hcb"
             OfferId                = $offerId
-            SaasResourceName       = $ResourceName
+            SaasResourceName       = $resourceName
             SKUId                  = $planId
             PaymentChannelType     = "SubscriptionDelegated"
             Quantity               = 1
             TermId                 = "hjdtn7tfnxcy"
             PaymentChannelMetadata = @{
-                AzureSubscriptionId = $SubscriptionId
+                AzureSubscriptionId = $subscriptionId
             }
         }
     }
@@ -46,7 +65,9 @@ function New-HbsSaaSApplication() {
             return $operationStatus
         }
         else {
-            Write-Error "Failed to create" $ResourceName
+            Write-Error "Failed to create" $resourceName
         }
     }
 }
+
+New-HbsSaaSApplication -resourceName $name -subscriptionId $subscriptionId -planId $planId -offerId microsofthealthcarebot
