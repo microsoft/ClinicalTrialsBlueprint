@@ -1,0 +1,375 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "serviceName": {
+            "type":"string"            
+        },
+        "objectId": {
+            "type":"string",
+            "defaultValue":"639a682a-fffa-482f-bff2-568fd64e5d89"            
+        },
+        "location": {
+            "type": "string",  
+            "defaultValue": "[resourceGroup().location]"
+        },
+        "luisSku":{
+            "type": "string",
+            "defaultValue": "F0",
+            "allowedValues": [
+                "F0"
+            ]
+        },
+        "luisLocation": {
+            "type":"string",
+            "defaultValue":"westus" 
+        },
+        "ayalonDockerRegistryUrl": {
+            "type":"string",
+            "defaultValue":"https://containerpreview.azurecr.io"
+        },
+        "ayalonDockerRegistryUser": {
+            "type":"string",
+            "defaultValue":"1930648e-be5a-49f8-93dd-11381794b13c"
+        },
+        "ayalonDockerRegistryPassword": {
+            "type":"securestring",
+            "defaultValue":"3e415e1c-0f8f-4a05-b122-5cd88c962c88"
+        },
+        "ayalonDockerImageName": {
+            "type":"string",
+            "defaultValue":"DOCKER|containerpreview.azurecr.io/microsoft/cognitive-services-healthcare:latest"
+        }
+    },
+    "variables": {
+        "uniqueServiceName": "[concat(parameters('serviceName'),'-', substring(uniqueString(resourceGroup().id), 0, 5))]",
+        "luisAuthoringName": "[concat(variables('uniqueServiceName'),'-authoring')]",
+        "luisPredictionName": "[concat(variables('uniqueServiceName'),'-prediction')]",
+        "insightsName": "[concat(variables('uniqueServiceName'),'-insights')]",
+        "fhirApiName":"[concat(variables('uniqueServiceName'),'-fhirapi')]",
+        "keyVaultName":"[concat(variables('uniqueServiceName'),'-kv')]",
+        "mapsServiceName":"[concat(variables('uniqueServiceName'),'-map')]",
+        "linuxWebAppPlanName":"[concat(variables('uniqueServiceName'),'-plan')]",
+        "ayalonWebAppName":"[concat(variables('uniqueServiceName'),'-webapp')]",
+        "textAnalyticsName":"[concat(variables('uniqueServiceName'),'-ta4h')]"
+    },
+    "resources": [
+         {
+            "type": "microsoft.insights/components",
+            "apiVersion": "2015-05-01",
+            "name": "[variables('insightsName')]",
+            "location": "[parameters('location')]",
+            "kind": "web",
+            "properties": {
+                "Application_Type": "web"
+            }
+        },
+        {
+            "type": "Microsoft.CognitiveServices/accounts",
+            "apiVersion": "2017-04-18",
+            "name": "[variables('luisPredictionName')]",
+            "location": "[parameters('luisLocation')]",
+            "sku": {
+                "name": "[parameters('luisSku')]"
+            },
+            "kind": "LUIS",
+            "properties": {
+                "statisticsEnabled": false
+            }
+        },
+        {
+            "apiVersion": "2017-04-18",
+            "name": "[variables('luisAuthoringName')]",
+            "location": "[parameters('luisLocation')]",
+            "type": "Microsoft.CognitiveServices/accounts",
+            "kind": "LUIS.Authoring",
+            "sku": {
+                "name": "[parameters('luisSku')]"
+            },
+            "properties": {
+                "statisticsEnabled": false
+            }
+        },
+        {
+            "condition":false,
+            "type": "Microsoft.HealthcareApis/services",
+            "apiVersion": "2019-09-16",
+            "name": "[variables('fhirApiName')]",
+            "location": "[parameters('location')]",
+            "kind": "fhir-R4",
+            "properties": {
+                "accessPolicies": [
+                    {
+                        "objectId": "[parameters('objectId')]"
+                    }
+                ],
+                "cosmosDbConfiguration": {
+                    "offerThroughput": 400
+                },
+                "authenticationConfiguration": {
+                    "authority": "https://login.microsoftonline.com/72f988bf-86f1-41af-91ab-2d7cd011db47",
+                    "audience": "https://azurehealthcareapis.com",
+                    "smartProxyEnabled": false
+                },
+                "corsConfiguration": {
+                    "origins": [],
+                    "headers": [],
+                    "methods": [],
+                    "allowCredentials": false
+                }
+            }
+        },
+        {
+            "type": "Microsoft.KeyVault/vaults",
+            "apiVersion": "2016-10-01",
+            "name": "[variables('keyVaultName')]",
+            "location": "[parameters('location')]",
+            "properties": {
+                "sku": {
+                    "family": "A",
+                    "name": "Standard"
+                },
+                "tenantId": "[subscription().tenantId]",
+                "accessPolicies": [
+                    {
+                        "tenantId": "[subscription().tenantId]",
+                        "objectId": "[parameters('objectId')]",
+                        "permissions": {
+                            "keys": [
+                            ],
+                            "secrets": [
+                                "get",
+                                "list"
+                            ],
+                            "certificates": [
+                            ]
+                        }
+                    }
+                ],
+                "enabledForDeployment": false,
+                "enabledForDiskEncryption": false,
+                "enabledForTemplateDeployment": false
+            }
+        },
+        {
+            "type": "Microsoft.CognitiveServices/accounts",
+            "apiVersion": "2017-04-18",
+            "name": "[variables('textAnalyticsName')]",
+            "location": "[parameters('location')]",
+            "sku": {
+                "name": "F0"
+            },
+            "kind": "TextAnalytics",
+            "properties": {
+                "customSubDomainName": "[variables('textAnalyticsName')]"
+            }
+        },
+        {
+            "name": "[variables('mapsServiceName')]",
+            "type": "Microsoft.Maps/accounts",
+            "apiVersion": "2018-05-01",
+            "location": "global",
+            "tags": {},
+            "sku": {
+                "name": "S0"
+            }
+        },
+        {
+            "type": "Microsoft.Web/serverfarms",
+            "apiVersion": "2018-02-01",
+            "name": "[variables('linuxWebAppPlanName')]",
+            "location":"[parameters('location')]",
+            "sku": {
+                "name": "P2v2",
+                "tier": "PremiumV2",
+                "size": "P2v2",
+                "family": "Pv2",
+                "capacity": 1
+            },
+            "kind": "linux",
+            "properties": {
+                "perSiteScaling": false,
+                "maximumElasticWorkerCount": 1,
+                "isSpot": false,
+                "reserved": true,
+                "isXenon": false,
+                "hyperV": false,
+                "targetWorkerCount": 0,
+                "targetWorkerSizeId": 0
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "2018-11-01",
+            "name": "[variables('ayalonWebAppName')]",
+            "location": "East US",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/serverfarms', variables('linuxWebAppPlanName'))]"                
+            ],
+            "kind": "app,linux,container",
+            "properties": {
+                "enabled": true,
+                "hostNameSslStates": [
+                    {
+                        "name": "[concat(variables('ayalonWebAppName'), '.azurewebsites.net')]",
+                        "sslState": "Disabled",
+                        "hostType": "Standard"
+                    },
+                    {
+                        "name": "[concat(variables('ayalonWebAppName'), '.scm.azurewebsites.net')]",
+                        "sslState": "Disabled",
+                        "hostType": "Repository"
+                    }
+                ],
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('linuxWebAppPlanName'))]",
+                "reserved": true,
+                "isXenon": false,
+                "hyperV": false,
+                "scmSiteAlsoStopped": false,
+                "clientAffinityEnabled": false,
+                "clientCertEnabled": false,
+                "hostNamesDisabled": false,
+                "containerSize": 0,
+                "dailyMemoryTimeQuota": 0,
+                "httpsOnly": false,
+                "redundancyMode": "None",
+                "siteConfig":{
+                    "appSettings": [
+                        {
+                            "name":"Eula",
+                            "value":"accept"
+                        },
+                        {
+                            "name":"Billing",
+                            "value":"[concat('https://',variables('textAnalyticsName'),'.cognitiveservices.azure.com')]"
+                        },
+                        {
+                            "name":"ApiKey",
+                            "value":"[listKeys(variables('textAnalyticsName'), '2017-04-18').key1]"
+                        },
+                        {
+                            "name": "DOCKER_REGISTRY_SERVER_URL",
+                            "value": "[parameters('ayalonDockerRegistryUrl')]"
+                        },
+                        {
+                            "name": "DOCKER_REGISTRY_SERVER_USERNAME",
+                            "value": "[parameters('ayalonDockerRegistryUser')]"
+                        },
+                        {
+                            "name": "DOCKER_REGISTRY_SERVER_PASSWORD",
+                            "value": "[parameters('ayalonDockerRegistryPassword')]"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "type":"Microsoft.Web/sites/config",
+            "apiVersion": "2018-11-01",
+            "name": "[concat(variables('ayalonWebAppName'), '/web')]",
+            "location": "East US",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', variables('ayalonWebAppName'))]",
+                "[resourceId('Microsoft.CognitiveServices/accounts', variables('textAnalyticsName'))]"
+            ],
+            "properties": {
+                "numberOfWorkers": 1,
+                "defaultDocuments": [
+                    "Default.htm",
+                    "Default.html",
+                    "Default.asp",
+                    "index.htm",
+                    "index.html",
+                    "iisstart.htm",
+                    "default.aspx",
+                    "index.php",
+                    "hostingstart.html"
+                ],
+                "netFrameworkVersion": "v4.0",
+                "linuxFxVersion": "[parameters('ayalonDockerImageName')]",
+                "requestTracingEnabled": false,
+                "remoteDebuggingEnabled": false,
+                "httpLoggingEnabled": false,
+                "logsDirectorySizeLimit": 35,
+                "detailedErrorLoggingEnabled": false,
+                "publishingUsername": "$ctm-bot",
+                "scmType": "None",
+                "use32BitWorkerProcess": true,
+                "webSocketsEnabled": false,
+                "alwaysOn": true,
+                "managedPipelineMode": "Integrated",
+                "virtualApplications": [
+                    {
+                        "virtualPath": "/",
+                        "physicalPath": "site\\wwwroot",
+                        "preloadEnabled": true
+                    }
+                ],
+                "loadBalancing": "LeastRequests",
+                "experiments": {
+                    "rampUpRules": []
+                },
+                "autoHealEnabled": false,
+                "localMySqlEnabled": false,
+                "ipSecurityRestrictions": [
+                    {
+                        "ipAddress": "Any",
+                        "action": "Allow",
+                        "priority": 1,
+                        "name": "Allow all",
+                        "description": "Allow all access"
+                    }
+                ],
+                "scmIpSecurityRestrictions": [
+                    {
+                        "ipAddress": "Any",
+                        "action": "Allow",
+                        "priority": 1,
+                        "name": "Allow all",
+                        "description": "Allow all access"
+                    }
+                ],
+                "scmIpSecurityRestrictionsUseMain": false,
+                "http20Enabled": false,
+                "minTlsVersion": "1.2",
+                "ftpsState": "AllAllowed",
+                "reservedInstanceCount": 0
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/hostNameBindings",
+            "apiVersion": "2018-11-01",
+            "name": "[concat(variables('ayalonWebAppName'), '/', variables('ayalonWebAppName'), '.azurewebsites.net')]",
+            "location": "East US",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', variables('ayalonWebAppName'))]"
+            ],
+            "properties": {
+                "siteName": "ctm-bot",
+                "hostNameType": "Verified"
+            }
+        }        
+    ],    
+    "outputs":{
+        "serviceUniqueName": {
+            "type":"string",
+            "value":"[variables('uniqueServiceName')]"
+        },
+        "instrumentationKey": {
+            "type": "string",
+            "value": "[reference(variables('insightsName'), '2015-05-01').instrumentationKey]"
+        },
+        "luisAuthotingKey": {
+            "type":"string",
+            "value":"[listKeys(variables('luisAuthoringName'),'2017-04-18').key1]"
+        },
+        "luisPredictionKey": {
+            "type":"string",
+            "value":"[listKeys(variables('luisPredictionName'),'2017-04-18').key1]"
+        },
+        "mapsKey": {
+            "type":"string",
+            "value": "[listKeys(variables('mapsServiceName'),'2018-05-01').primaryKey]"
+        }
+    }
+}
