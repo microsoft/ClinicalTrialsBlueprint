@@ -4,10 +4,10 @@
 			"path": "."
 		},
 		{
-			"path": "C:\\Users\\Arie\\Documents\\HealthBotOnboarding"
+			"path": "../HealthBotOnboarding"
 		},
 		{
-			"path": "C:\\Users\\Arie\\Documents\\HealthBOT"
+			"path": "../HealthBOT"
 		}
 	],
 	"settings": {}
