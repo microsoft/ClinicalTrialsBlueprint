@@ -1,75 +1,87 @@
 param(
     [Parameter(Mandatory=$true)]
-    $saasSubscriptionId
+    $saasSubscriptionId,
+    [Parameter()]
+    [String]
+    $resourceGroup = "CTM-Blueprint",
+    [Parameter()]
+    [String]
+    $serviceName = "CTM-Bot"
 )
 
 . ./profile.ps1
 . ./utils.ps1
-. ./marketplace.ps1
 . ./luis.ps1
 . ./bot.ps1
 . ./tenant.ps1
 . ./ad.ps1
 
 
-Write-Host $saasSubscriptionId
-
-Write-Host  "Running CTM-Blueprint..." -ForegroundColor Green
 $context = Get-AzContext
 $userId = $context.Account.id
 $subscriptionId = $context.subscription.id
-$planId = "free"
-$offerId = "microsofthealthcarebot"
 $luisAuthLocation = "westus"
 $env="-dev"
 $portalEndpoint = "https://us.healthbot$env.microsoft.com/account"
 $hbsLocation = "US"
-$luisAppFile = "../lu/LUIS.Triage.json"
+$luisPath = "../lu"
 $restorePath = "../bot-templates/teams-handoff.json"
-
+$restorePath = "../bot-templates"
 
 $objectId =$(Get-AzureADUser -Filter "UserPrincipalName eq '$userId'").ObjectId
 Write-Host ObjectId: $objectId
 
 Try {
-    $resourceGroup = "CTM-Blueprint"
-    Write-Host "Running Template Deplpyment"
-    $output = New-AzResourceGroupDeployment -ResourceGroupName $resourceGroup -TemplateFile "../arm-templates/azuredeploy.json" -objectId $objectId
+    Write-Host "Running Template Deployment"
+    $output = New-AzResourceGroupDeployment -serviceName $serviceName `
+                                            -ResourceGroupName $resourceGroup  `
+                                            -TemplateFile "../arm-templates/azuredeploy.json" `
+                                            -objectId $objectId `
+
     $output
     
     $tenantId = $output.Outputs["serviceUniqueName"].Value
-    Write-Host "Creating SaaS Marketplace offering $offerId..." -NoNewline
-
-    #$marketplaceApp = New-HbsSaaSApplication -ResourceName $tenantId -planId $planId -offerId $offerId -SubscriptionId $subscriptionId
-    #$marketplaceApp
-
-    #$saasSubscriptionId = Split-Path $marketplaceApp.id -Leaf
 
     Write-Host "Creating HBS Tenant $tenantId..." -NoNewline
-    $saasTenant = New-HbsTenant -name $output.Parameters["serviceName"].Value -tenantId $tenantId `
-        -saasSubscriptionId $saasSubscriptionId `
-        -planId $planId -offerId $offerId `
-        -location $hbsLocation `
-        -instrumentationKey $output.Outputs["instrumentationKey"].Value
+    $saasTenant = New-HbsTenant -name $serviceName -tenantId $tenantId `
+                                -saasSubscriptionId $saasSubscriptionId `
+                                -location $hbsLocation `
+                                -instrumentationKey $output.Outputs["instrumentationKey"].Value
     $saasTenant
 
-    
-    Write-Host "Importing LUIS Application from $luisAppFile..." -NoNewline
-    $luisJSON = Get-Content -Raw -Path $luisAppFile
-    $luisApplicationId = Import-LuisApplication -luisJSON $luisJSON -location $luisAuthLocation -authKey $output.Outputs["luisAuthotingKey"].Value
-    Write-Host "Done" -ForegroundColor Green
+    # Uploads all the LUIS files. Each file is a luis application
+    $luisApplications = @{}
+    Get-ChildItem -Path $luisPath | ForEach-Object {        
+        $luisApplication = Get-LuisApplicationByName -appName $_.BaseName -location $luisAuthLocation `
+                                                     -authKey $output.Outputs["luisAuthotingKey"].Value
+        if ($null -eq $luisApplication) {    
+            Write-Host "Importing LUIS Application from " $_.BaseName "..." -NoNewline
+            $luisJSON = Get-Content -Raw -Path $_.FullName
+            $luisApplicationId = Import-LuisApplication -appName $_.BaseName -luisJSON $luisJSON -location $luisAuthLocation  `
+                                                        -authKey $output.Outputs["luisAuthotingKey"].Value
+            Write-Host "Done" -ForegroundColor Green
+        } else {
+            $luisApplicationId = $luisApplication.id
+        }                                                    
+        $luisApplications[$_.BaseName] = $luisApplicationId
+        
+        Write-Host "Assigning LUIS app " $_.BaseName " to LUIS account..." -NoNewline
+        $assignLuisApp = Set-LuisApplicationAccount -appId $luisApplicationId -subscriptionId $subscriptionId `
+                            -resourceGroup $resourceGroup -accountName $tenantId"-prediction" -location $luisAuthLocation -authKey $output.Outputs["luisAuthotingKey"].Value
+        Write-Host "Done" -ForegroundColor Green
+    }
 
-    Write-Host "Assigning LUIS app to LUIS account..." -NoNewline
-    $assignLuisApp = Set-LuisApplicationAccount -appId $luisApplicationId -subscriptionId $subscriptionId `
-                        -resourceGroup $resourceGroup -accountName $tenantId"-prediction" -location $luisAuthLocation -authKey $output.Outputs["luisAuthotingKey"].Value
-    Write-Host "Done" -ForegroundColor Green
+    # Restore all the hbs templates
+    Get-ChildItem -Path $restorePath | ForEach-Object {
+        Write-Host "Importing template from " $_.BaseName "..." -NoNewline
+        $restoreJSON = Get-Content -Raw -Path $_.FullName
+        
+        # Here you need to replace the place holders with real data
 
-    Write-Host "Importing template from $restorePath..." -NoNewline
-    $restoreJSON = Get-Content -Raw -Path $restorePath
-
-    $saasTenant = Restore-HbsTenant -location $hbsLocation -tenant $saasTenant -data $restoreJSON -saasSubscriptionId $saasSubscriptionId
-    Write-Host "Done" -ForegroundColor Green
-    $saasTenant
+        $saasTenant = Restore-HbsTenant -location $hbsLocation -tenant $saasTenant `
+                                        -data $restoreJSON -saasSubscriptionId $saasSubscriptionId
+        Write-Host "Done" -ForegroundColor Green
+    }
 
     Write-Host "Your Healthcare Bot is now ready! You can access various resources below:" -ForegroundColor Green
     Write-Host " - Management Portal: " $portalEndpoint/$tenantId -ForegroundColor Green

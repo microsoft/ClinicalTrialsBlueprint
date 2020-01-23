@@ -1,3 +1,7 @@
+<#
+    .SYNOPSIS
+    Create SaaS Marketplace resource that will be used for charging for the Healthcare Bot Service 
+#>
 
 param(
     [Parameter(Mandatory=$true)]
@@ -11,7 +15,6 @@ param(
 )
 
 . ./profile.ps1
-
 
 
 $context = Get-AzContext

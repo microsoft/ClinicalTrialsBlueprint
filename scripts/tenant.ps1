@@ -8,8 +8,6 @@ function New-HbsTenant {
         $name,
         $tenantId,
         $saasSubscriptionId,
-        $planId,
-        $offerId,
         $location,
         $instrumentationKey
     )
@@ -20,8 +18,6 @@ function New-HbsTenant {
         email              = (Get-AzContext).Account.Id
         usermanagement     = "portal"
         saasSubscriptionId = $saasSubscriptionId
-        planId             = $planId
-        offerId            = $offerId
         location           = $location
         instrumentationKey = $instrumentationKey
     } | ConvertTo-Json

@@ -1,10 +1,27 @@
-function Import-LuisApplication($luisJSON, $location, $authKey) {
+
+function Get-LuisApplicationByName($appName, $location, $authKey) {
+    $headers = @{
+        "Ocp-Apim-Subscription-Key" = $authKey
+    }
+    $result = Invoke-WebRequest  -Uri "https://$location.api.cognitive.microsoft.com/luis/api/v2.0/apps" `
+                       -Method "get" `
+                       -ContentType "application/json" `
+                       -Headers $headers 
+
+    $luisApplicationResult = ConvertFrom-Json $result.Content
+
+    $app = $luisApplicationResult | Where-Object {$_.name -eq $appName}
+
+    return $app                     
+}
+
+function Import-LuisApplication($appName, $luisJSON, $location, $authKey) {
 
     $headers = @{
         "Ocp-Apim-Subscription-Key" = $authKey
     }
      
-    $result = Invoke-WebRequest  -Uri "https://$location.api.cognitive.microsoft.com/luis/api/v2.0/apps/import" `
+    $result = Invoke-WebRequest  -Uri "https://$location.api.cognitive.microsoft.com/luis/api/v2.0/apps/import?appName=$appName" `
                        -Method "post" `
                        -ContentType "application/json" `
                        -Headers $headers `
