@@ -64,6 +64,7 @@ function New-HbsSaaSApplication() {
             $r = Invoke-WebRequest -Uri $location -Method 'get' -Headers $headers -ContentType "application/json"
         }
         $operationStatus = ConvertFrom-Json $r.Content
+        Write-Host
         if ($operationStatus.properties.status -eq "PendingFulfillmentStart") {
             return $operationStatus
         }
@@ -73,4 +74,5 @@ function New-HbsSaaSApplication() {
     }
 }
 
-New-HbsSaaSApplication -resourceName $name -subscriptionId $subscriptionId -planId $planId -offerId microsofthealthcarebot
+$marketplaceApp = New-HbsSaaSApplication -resourceName $name -subscriptionId $subscriptionId -planId $planId -offerId microsofthealthcarebot
+return Split-Path $marketplaceApp.id -Leaf
