@@ -1,0 +1,222 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "serviceName": {
+            "type": "string"            
+        },
+        "ayalonDockerRegistryUrl": {
+            "type": "string",
+            "defaultValue": "https://containerpreview.azurecr.io"
+        },
+        "ayalonDockerRegistryUser": {
+            "type": "string",
+            "defaultValue": "1930648e-be5a-49f8-93dd-11381794b13c"
+        },
+        "ayalonDockerRegistryPassword": {
+            "type": "securestring",
+            "defaultValue": "3e415e1c-0f8f-4a05-b122-5cd88c962c88"
+        },
+        "ayalonDockerImageName": {
+            "type": "string",
+            "defaultValue": "DOCKER|containerpreview.azurecr.io/microsoft/cognitive-services-healthcare:latest"
+        }
+    },
+    "variables": {
+        "linuxWebAppPlanName": "[concat(parameters('serviceName'),'-plan')]",
+        "ayalonWebAppName": "[concat(parameters('serviceName'),'-webapp')]",
+        "textAnalyticsName": "[concat(parameters('serviceName'),'-ta4h')]"
+    },
+    "resources":[
+        {
+            "type": "Microsoft.CognitiveServices/accounts",
+            "apiVersion": "2017-04-18",
+            "name": "[variables('textAnalyticsName')]",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "F0"
+            },
+            "kind": "TextAnalytics",
+            "properties": {
+                "customSubDomainName": "[variables('textAnalyticsName')]"
+            }
+        },
+        {
+            "type": "Microsoft.Web/serverfarms",
+            "apiVersion": "2018-02-01",
+            "name": "[variables('linuxWebAppPlanName')]",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "P2v2",
+                "tier": "PremiumV2",
+                "size": "P2v2",
+                "family": "Pv2",
+                "capacity": 1
+            },
+            "kind": "linux",
+            "properties": {
+                "perSiteScaling": false,
+                "maximumElasticWorkerCount": 1,
+                "isSpot": false,
+                "reserved": true,
+                "isXenon": false,
+                "hyperV": false,
+                "targetWorkerCount": 0,
+                "targetWorkerSizeId": 0
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "2018-11-01",
+            "name": "[variables('ayalonWebAppName')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/serverfarms', variables('linuxWebAppPlanName'))]"
+            ],
+            "kind": "app,linux,container",
+            "properties": {
+                "enabled": true,
+                "hostNameSslStates": [
+                    {
+                        "name": "[concat(variables('ayalonWebAppName'), '.azurewebsites.net')]",
+                        "sslState": "Disabled",
+                        "hostType": "Standard"
+                    },
+                    {
+                        "name": "[concat(variables('ayalonWebAppName'), '.scm.azurewebsites.net')]",
+                        "sslState": "Disabled",
+                        "hostType": "Repository"
+                    }
+                ],
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('linuxWebAppPlanName'))]",
+                "reserved": true,
+                "isXenon": false,
+                "hyperV": false,
+                "scmSiteAlsoStopped": false,
+                "clientAffinityEnabled": false,
+                "clientCertEnabled": false,
+                "hostNamesDisabled": false,
+                "containerSize": 0,
+                "dailyMemoryTimeQuota": 0,
+                "httpsOnly": false,
+                "redundancyMode": "None",
+                "siteConfig": {
+                    "appSettings": [
+                        {
+                            "name": "Eula",
+                            "value": "accept"
+                        },
+                        {
+                            "name": "Billing",
+                            "value": "[concat('https://',variables('textAnalyticsName'),'.cognitiveservices.azure.com')]"
+                        },
+                        {
+                            "name": "ApiKey",
+                            "value": "[listKeys(variables('textAnalyticsName'), '2017-04-18').key1]"
+                        },
+                        {
+                            "name": "DOCKER_REGISTRY_SERVER_URL",
+                            "value": "[parameters('ayalonDockerRegistryUrl')]"
+                        },
+                        {
+                            "name": "DOCKER_REGISTRY_SERVER_USERNAME",
+                            "value": "[parameters('ayalonDockerRegistryUser')]"
+                        },
+                        {
+                            "name": "DOCKER_REGISTRY_SERVER_PASSWORD",
+                            "value": "[parameters('ayalonDockerRegistryPassword')]"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/config",
+            "apiVersion": "2018-11-01",
+            "name": "[concat(variables('ayalonWebAppName'), '/web')]",
+            "location": "East US",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', variables('ayalonWebAppName'))]",
+                "[resourceId('Microsoft.CognitiveServices/accounts', variables('textAnalyticsName'))]"
+            ],
+            "properties": {
+                "numberOfWorkers": 1,
+                "defaultDocuments": [
+                    "Default.htm",
+                    "Default.html",
+                    "Default.asp",
+                    "index.htm",
+                    "index.html",
+                    "iisstart.htm",
+                    "default.aspx",
+                    "index.php",
+                    "hostingstart.html"
+                ],
+                "netFrameworkVersion": "v4.0",
+                "linuxFxVersion": "[parameters('ayalonDockerImageName')]",
+                "requestTracingEnabled": false,
+                "remoteDebuggingEnabled": false,
+                "httpLoggingEnabled": false,
+                "logsDirectorySizeLimit": 35,
+                "detailedErrorLoggingEnabled": false,
+                "publishingUsername": "$ctm-bot",
+                "scmType": "None",
+                "use32BitWorkerProcess": true,
+                "webSocketsEnabled": false,
+                "alwaysOn": true,
+                "managedPipelineMode": "Integrated",
+                "virtualApplications": [
+                    {
+                        "virtualPath": "/",
+                        "physicalPath": "site\\wwwroot",
+                        "preloadEnabled": true
+                    }
+                ],
+                "loadBalancing": "LeastRequests",
+                "experiments": {
+                    "rampUpRules": [
+                    ]
+                },
+                "autoHealEnabled": false,
+                "localMySqlEnabled": false,
+                "ipSecurityRestrictions": [
+                    {
+                        "ipAddress": "Any",
+                        "action": "Allow",
+                        "priority": 1,
+                        "name": "Allow all",
+                        "description": "Allow all access"
+                    }
+                ],
+                "scmIpSecurityRestrictions": [
+                    {
+                        "ipAddress": "Any",
+                        "action": "Allow",
+                        "priority": 1,
+                        "name": "Allow all",
+                        "description": "Allow all access"
+                    }
+                ],
+                "scmIpSecurityRestrictionsUseMain": false,
+                "http20Enabled": false,
+                "minTlsVersion": "1.2",
+                "ftpsState": "AllAllowed",
+                "reservedInstanceCount": 0
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/hostNameBindings",
+            "apiVersion": "2018-11-01",
+            "name": "[concat(variables('ayalonWebAppName'), '/', variables('ayalonWebAppName'), '.azurewebsites.net')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', variables('ayalonWebAppName'))]"
+            ],
+            "properties": {
+                "siteName": "ctm-bot",
+                "hostNameType": "Verified"
+            }
+        }
+    ]
+
+}

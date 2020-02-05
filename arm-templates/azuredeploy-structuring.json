@@ -1,0 +1,121 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "serviceName": {
+      "type": "string"
+    },
+    "acrServer": {
+      "type": "string",
+      "defaultValue": "ctmdev.azurecr.io"
+    },
+    "acrUsername": {
+      "type": "string",
+      "defaultValue": "ctmdev"
+    },
+    "acrPassword": {
+      "type": "securestring"
+    },
+    "structuringImageName": {
+      "type": "string",
+      "defaultValue": "ctmdev.azurecr.io/structuring"
+    },
+    "constituencyParserImageName": {
+      "type": "string",
+      "defaultValue": "ctmdev.azurecr.io/constituencyparserserver"
+    }
+  },
+  "variables": {
+    "containerGroupName": "[concat(parameters('serviceName'),'-aci')]",
+    "keyVaultName": "[concat(parameters('serviceName'),'-kv')]"
+  },
+  "resources": [
+    {
+      "name": "[variables('containerGroupName')]",
+      "type": "Microsoft.ContainerInstance/containerGroups",
+      "apiVersion": "2018-10-01",
+      "location": "[resourceGroup().location]",
+      "identity": {
+        "type": "SystemAssigned"
+      },
+      "properties": {
+        "containers": [
+          {
+            "name": "structuring",
+            "properties": {
+              "image": "[parameters('structuringImageName')]",
+              "command": [
+                "dotnet",
+                "ClinicalTrialsStructuring.dll",
+                "download",
+                "bootstrap"
+              ],
+              "resources": {
+                "requests": {
+                  "cpu": 1,
+                  "memoryInGb": 1.5
+                }
+              }
+            }
+          },
+          {
+            "name": "constituency-parser",
+            "properties": {
+              "image": "[parameters('constituencyParserImageName')]",
+              "resources": {
+                "requests": {
+                  "cpu": 1,
+                  "memoryInGb": 4
+                }
+              }
+            }
+          }
+        ],
+        "imageRegistryCredentials": [
+          {
+            "server": "[parameters('acrServer')]",
+            "username": "[parameters('acrUsername')]",
+            "password": "[parameters('acrPassword')]"
+          }
+        ],
+        "restartPolicy": "OnFailure",
+        "osType": "Linux"
+      }
+    },
+    {
+      "type": "Microsoft.KeyVault/vaults",
+      "apiVersion": "2016-10-01",
+      "name": "[variables('keyVaultName')]",
+      "location": "[resourceGroup().location]",
+      "dependsOn":[
+          "[resourceId('Microsoft.ContainerInstance/containerGroups', variables('containerGroupName'))]"
+      ],
+      "properties": {
+        "sku": {
+          "family": "A",
+          "name": "Standard"
+        },
+        "tenantId": "[subscription().tenantId]",
+        "accessPolicies": [
+          {
+            "tenantId": "[subscription().tenantId]",
+            "objectId": "[reference(variables('containerGroupName'), '2019-12-01', 'Full').identity.principalId]",
+            "permissions": {
+              "keys": [
+              ],
+              "secrets": [
+                "get",
+                "list"
+              ],
+              "certificates": [
+              ]
+            }
+          }
+        ],
+        "enabledForDeployment": false,
+        "enabledForDiskEncryption": false,
+        "enabledForTemplateDeployment": false
+      }
+    }
+  ]
+}

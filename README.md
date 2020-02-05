@@ -44,6 +44,6 @@ $rg = New-AzResourceGroup -Name $serviceName -Location eastus
 Now we will deploy all the required Azure resources and configure them. This includes confguring the Healthcare Bot and subscribing the SaaS application created before.
 
 ```powershell
-default_azuredeploy.ps1 -saasSubscriptionId $saasSubscriptionId -resourceGroup $rg.ResourceGroupName -serviceName $serviceName
+default_azuredeploy.ps1 -saasSubscriptionId $saasSubscriptionId  -serviceName $serviceName
 ```
 This command can take few minutes to complete.

@@ -3,36 +3,33 @@ param(
     $saasSubscriptionId,
     [Parameter()]
     [String]
-    $resourceGroup = "CTM-Blueprint",
+    $serviceName,
     [Parameter()]
-    [String]
-    $serviceName = "CTM-Bot"
+    [ValidateSet('US',"EU")]
+    $hbsLocation    
 )
 
 . ./profile.ps1
-. ./utils.ps1
 . ./luis.ps1
-. ./bot.ps1
 . ./tenant.ps1
-. ./ad.ps1
-
 
 $context = Get-AzContext
 $userId = $context.Account.id
 $subscriptionId = $context.subscription.id
-$luisAuthLocation = "westus"
+$luisAuthLocation = "westus" # Authoring location is only in West US
+$resourceGroup = $serviceName
+
 $env="-dev"
 $portalEndpoint = "https://us.healthbot$env.microsoft.com/account"
-$hbsLocation = "US"
+
 $luisPath = "../lu"
-$restorePath = "../bot-templates/teams-handoff.json"
 $restorePath = "../bot-templates"
 
 $objectId =$(Get-AzureADUser -Filter "UserPrincipalName eq '$userId'").ObjectId
 Write-Host ObjectId: $objectId
 
 Try {
-    Write-Host "Running Template Deployment"
+    Write-Host "Running Template Deployment..."
     $output = New-AzResourceGroupDeployment -serviceName $serviceName `
                                             -ResourceGroupName $resourceGroup  `
                                             -TemplateFile "../arm-templates/azuredeploy.json" `
@@ -40,7 +37,7 @@ Try {
 
     $output
     
-    $tenantId = $output.Outputs["serviceUniqueName"].Value
+    $tenantId = $output.Outputs["serviceUniqueName"].Value    
 
     Write-Host "Creating HBS Tenant $tenantId..." -NoNewline
     $saasTenant = New-HbsTenant -name $serviceName -tenantId $tenantId `
@@ -67,7 +64,8 @@ Try {
         
         Write-Host "Assigning LUIS app " $_.BaseName " to LUIS account..." -NoNewline
         $assignLuisApp = Set-LuisApplicationAccount -appId $luisApplicationId -subscriptionId $subscriptionId `
-                            -resourceGroup $resourceGroup -accountName $tenantId"-prediction" -location $luisAuthLocation -authKey $output.Outputs["luisAuthotingKey"].Value
+                            -resourceGroup $resourceGroup -accountName $tenantId"-prediction" `
+                            -location $luisAuthLocation -authKey $output.Outputs["luisAuthotingKey"].Value
         Write-Host "Done" -ForegroundColor Green
     }
 

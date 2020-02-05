@@ -6,8 +6,7 @@
 param(
     [Parameter(Mandatory=$true)]
     [String] 
-    $name,
-    
+    $name,    
     [Parameter()]
     [String]
     [ValidateSet('free','s1','s2','s3','s4','s5')] 
