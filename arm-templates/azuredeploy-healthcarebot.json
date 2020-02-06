@@ -25,8 +25,7 @@
         "uniqueServiceName": "[concat(parameters('serviceName'),'-', substring(uniqueString(resourceGroup().id), 0, 5))]",
         "luisAuthoringName": "[concat(variables('uniqueServiceName'),'-authoring')]",
         "luisPredictionName": "[concat(variables('uniqueServiceName'),'-prediction')]",
-        "insightsName": "[concat(variables('uniqueServiceName'),'-insights')]",
-        "mapsServiceName": "[concat(variables('uniqueServiceName'),'-map')]"
+        "insightsName": "[concat(variables('uniqueServiceName'),'-insights')]"
     },
     "resources": [
         {
@@ -64,17 +63,6 @@
             "properties": {
                 "statisticsEnabled": false
             }
-        },
-        {
-            "name": "[variables('mapsServiceName')]",
-            "type": "Microsoft.Maps/accounts",
-            "apiVersion": "2018-05-01",
-            "location": "global",
-            "tags": {
-            },
-            "sku": {
-                "name": "S0"
-            }
         }
     ],
     "outputs": {
@@ -93,10 +81,6 @@
         "luisPredictionKey": {
             "type": "string",
             "value": "[listKeys(variables('luisPredictionName'),'2017-04-18').key1]"
-        },
-        "mapsKey": {
-            "type": "string",
-            "value": "[listKeys(variables('mapsServiceName'),'2018-05-01').primaryKey]"
         }
     }
 }

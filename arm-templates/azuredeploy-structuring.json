@@ -26,61 +26,29 @@
     }
   },
   "variables": {
+    "identityName": "[concat(parameters('serviceName'),'-identity')]",
     "containerGroupName": "[concat(parameters('serviceName'),'-aci')]",
-    "keyVaultName": "[concat(parameters('serviceName'),'-kv')]"
+    "keyVaultName": "[concat(parameters('serviceName'),'-kv')]",
+    "mapsServiceName": "[concat(parameters('serviceName'),'-map')]"
+
   },
   "resources": [
     {
-      "name": "[variables('containerGroupName')]",
-      "type": "Microsoft.ContainerInstance/containerGroups",
-      "apiVersion": "2018-10-01",
-      "location": "[resourceGroup().location]",
-      "identity": {
-        "type": "SystemAssigned"
-      },
-      "properties": {
-        "containers": [
-          {
-            "name": "structuring",
-            "properties": {
-              "image": "[parameters('structuringImageName')]",
-              "command": [
-                "dotnet",
-                "ClinicalTrialsStructuring.dll",
-                "download",
-                "bootstrap"
-              ],
-              "resources": {
-                "requests": {
-                  "cpu": 1,
-                  "memoryInGb": 1.5
-                }
-              }
-            }
-          },
-          {
-            "name": "constituency-parser",
-            "properties": {
-              "image": "[parameters('constituencyParserImageName')]",
-              "resources": {
-                "requests": {
-                  "cpu": 1,
-                  "memoryInGb": 4
-                }
-              }
-            }
-          }
-        ],
-        "imageRegistryCredentials": [
-          {
-            "server": "[parameters('acrServer')]",
-            "username": "[parameters('acrUsername')]",
-            "password": "[parameters('acrPassword')]"
-          }
-        ],
-        "restartPolicy": "OnFailure",
-        "osType": "Linux"
-      }
+      "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
+      "name": "[variables('identityName')]",
+      "apiVersion": "2018-11-30",
+      "location": "[resourceGroup().location]"
+    },
+    {
+        "name": "[variables('mapsServiceName')]",
+        "type": "Microsoft.Maps/accounts",
+        "apiVersion": "2018-05-01",
+        "location": "global",
+        "tags": {
+        },
+        "sku": {
+            "name": "S0"
+        }
     },
     {
       "type": "Microsoft.KeyVault/vaults",
@@ -88,18 +56,18 @@
       "name": "[variables('keyVaultName')]",
       "location": "[resourceGroup().location]",
       "dependsOn":[
-          "[resourceId('Microsoft.ContainerInstance/containerGroups', variables('containerGroupName'))]"
+          "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('identityName'))]"
       ],
       "properties": {
         "sku": {
           "family": "A",
-          "name": "Standard"
+          "name": "standard"
         },
         "tenantId": "[subscription().tenantId]",
         "accessPolicies": [
           {
             "tenantId": "[subscription().tenantId]",
-            "objectId": "[reference(variables('containerGroupName'), '2019-12-01', 'Full').identity.principalId]",
+            "objectId": "[reference(variables('identityName'), '2018-11-30', 'Full').properties.principalId]",
             "permissions": {
               "keys": [
               ],
@@ -115,6 +83,77 @@
         "enabledForDeployment": false,
         "enabledForDiskEncryption": false,
         "enabledForTemplateDeployment": false
+      }
+    },
+    {
+      "name": "[variables('containerGroupName')]",
+      "type": "Microsoft.ContainerInstance/containerGroups",
+      "apiVersion": "2018-10-01",
+      "location": "[resourceGroup().location]",
+      "identity": {
+        "type": "UserAssigned",
+        "userAssignedIdentities":{
+          "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities/',variables('identityName'))]": {
+
+          }
+        }
+      },
+      "dependsOn":[
+        "[resourceId('Microsoft.KeyVault/vaults', variables('keyVaultName'))]",
+        "[resourceId('Microsoft.Maps/accounts', variables('mapsServiceName'))]"
+      ],
+      "properties": {
+        "containers": [
+          {
+            "name": "structuring",
+            "properties": {
+              "image": "[parameters('structuringImageName')]",
+              "command": [
+                "dotnet",
+                "ClinicalTrialsStructuring.dll",
+                "download",
+                "bootstrap"
+              ],
+              "environmentVariables":[
+                {
+                  "name": "key_vault__address",
+                  "value": "[concat('https://', variables('keyVaultName'), '.vault.azure.net/')]"
+                },
+                {
+                  "name":"azure_maps__api_key",
+                  "value":"[listKeys(variables('mapsServiceName'),'2018-05-01').primaryKey]"
+                }
+              ],
+              "resources": {
+                "requests": {
+                  "cpu": 1,
+                  "memoryInGB": 1.5
+                }
+              }
+            }
+          },
+          {
+            "name": "constituency-parser",
+            "properties": {
+              "image": "[parameters('constituencyParserImageName')]",
+              "resources": {
+                "requests": {
+                  "cpu": 1,
+                  "memoryInGB": 4
+                }
+              }
+            }
+          }
+        ],
+        "imageRegistryCredentials": [
+          {
+            "server": "[parameters('acrServer')]",
+            "username": "[parameters('acrUsername')]",
+            "password": "[parameters('acrPassword')]"
+          }
+        ],
+        "restartPolicy": "OnFailure",
+        "osType": "Linux"
       }
     }
   ]
