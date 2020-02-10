@@ -40,23 +40,23 @@
       "location": "[resourceGroup().location]"
     },
     {
-        "name": "[variables('mapsServiceName')]",
-        "type": "Microsoft.Maps/accounts",
-        "apiVersion": "2018-05-01",
-        "location": "global",
-        "tags": {
-        },
-        "sku": {
-            "name": "S0"
-        }
+      "name": "[variables('mapsServiceName')]",
+      "type": "Microsoft.Maps/accounts",
+      "apiVersion": "2018-05-01",
+      "location": "global",
+      "tags": {
+      },
+      "sku": {
+        "name": "S0"
+      }
     },
     {
       "type": "Microsoft.KeyVault/vaults",
       "apiVersion": "2016-10-01",
       "name": "[variables('keyVaultName')]",
       "location": "[resourceGroup().location]",
-      "dependsOn":[
-          "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('identityName'))]"
+      "dependsOn": [
+        "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('identityName'))]"
       ],
       "properties": {
         "sku": {
@@ -92,13 +92,13 @@
       "location": "[resourceGroup().location]",
       "identity": {
         "type": "UserAssigned",
-        "userAssignedIdentities":{
+        "userAssignedIdentities": {
           "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities/',variables('identityName'))]": {
 
           }
         }
       },
-      "dependsOn":[
+      "dependsOn": [
         "[resourceId('Microsoft.KeyVault/vaults', variables('keyVaultName'))]",
         "[resourceId('Microsoft.Maps/accounts', variables('mapsServiceName'))]"
       ],
@@ -114,14 +114,14 @@
                 "download",
                 "bootstrap"
               ],
-              "environmentVariables":[
+              "environmentVariables": [
                 {
                   "name": "key_vault__address",
                   "value": "[concat('https://', variables('keyVaultName'), '.vault.azure.net/')]"
                 },
                 {
-                  "name":"azure_maps__api_key",
-                  "value":"[listKeys(variables('mapsServiceName'),'2018-05-01').primaryKey]"
+                  "name": "azure_maps__api_key",
+                  "value": "[listKeys(variables('mapsServiceName'),'2018-05-01').primaryKey]"
                 }
               ],
               "resources": {

@@ -6,7 +6,9 @@ param(
     $serviceName,
     [Parameter()]
     [ValidateSet('US',"EU")]
-    $hbsLocation    
+    $hbsLocation,
+    [Parameter()]
+    $ResourceGroup
 )
 
 . ./profile.ps1
@@ -17,7 +19,6 @@ $context = Get-AzContext
 $userId = $context.Account.id
 $subscriptionId = $context.subscription.id
 $luisAuthLocation = "westus" # Authoring location is only in West US
-$resourceGroup = $serviceName
 
 $env="-dev"
 $portalEndpoint = "https://us.healthbot$env.microsoft.com/account"
@@ -25,15 +26,11 @@ $portalEndpoint = "https://us.healthbot$env.microsoft.com/account"
 $luisPath = "../lu"
 $restorePath = "../bot-templates"
 
-$objectId =$(Get-AzureADUser -Filter "UserPrincipalName eq '$userId'").ObjectId
-Write-Host ObjectId: $objectId
-
 Try {
     Write-Host "Running Template Deployment..."
     $output = New-AzResourceGroupDeployment -serviceName $serviceName `
-                                            -ResourceGroupName $resourceGroup  `
-                                            -TemplateFile "../arm-templates/azuredeploy.json" `
-                                            -objectId $objectId `
+                                            -ResourceGroupName $ResourceGroup  `
+                                            -TemplateFile "../arm-templates/azuredeploy-healthcarebot.json"                                             
 
     $output
     
@@ -64,7 +61,7 @@ Try {
         
         Write-Host "Assigning LUIS app " $_.BaseName " to LUIS account..." -NoNewline
         $assignLuisApp = Set-LuisApplicationAccount -appId $luisApplicationId -subscriptionId $subscriptionId `
-                            -resourceGroup $resourceGroup -accountName $tenantId"-prediction" `
+                            -resourceGroup $ResourceGroup -accountName $tenantId"-prediction" `
                             -location $luisAuthLocation -authKey $output.Outputs["luisAuthotingKey"].Value
         Write-Host "Done" -ForegroundColor Green
     }

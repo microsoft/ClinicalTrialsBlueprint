@@ -3,7 +3,7 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "serviceName": {
-            "type": "string"            
+            "type": "string"
         },
         "ayalonDockerRegistryUrl": {
             "type": "string",

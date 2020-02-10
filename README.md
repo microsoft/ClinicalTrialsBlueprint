@@ -14,36 +14,77 @@ urlFragment: "update-this-to-unique-url-stub"
 ## Requirements
 * Clone/Download this repository to you local drive
 * [Install the Azure PowerShell module](https://docs.microsoft.com/en-us/powershell/azure/install-az-ps?view=azps-3.3.0)
-* [Install Azure AD Module](https://docs.microsoft.com/en-us/powershell/azure/active-directory/install-adv2?view=azureadps-2.0#installing-the-azure-ad-module)
 
 
-## Connect to Azure
-```powershell
+## Connect to Azure Subscription
+```PowerShell
 Login-AzAccount
+
+Set-AzContext -Subscription <Your Subscription Name>
 ```
 
-## Connect to AzureAD
-```powershell
-Connect-AzureAD
+## FHIR Server
+Create a Resource group for the Fhir server
+
+```PowerShell
+$fhirRg = New-AzResourceGroup -Name ctm-fhir-blueprint -Location eastus
 ```
-## Create Healthcare Bot Marketplace SaaS Subscription
-
-Switch to the scripts folder and create a SaaS application subscription. This will create the [Healthcare Bot application](https://azuremarketplace.microsoft.com/en-us/marketplace/apps/microsoft-hcb.microsofthealthcarebot)
-```powershell
-$serviceName = "myService"
-$saasSubscriptionId = marketplace -name $serviceName -plandId free
+Assign Fhir Server Name
+```PowerShell
+$fhirServiceName = <fhir service name>
 ```
 
-## Deploy required resources on your Azure Subscription
+Create the Fhir server deployment. You will to provide a admin password for the SQL server
+```PowerShell
+New-AzResourceGroupDeployment -ResourceGroupName $fhirRg.ResourceGroupName -TemplateFile ..\arm-templates\azuredeploy-fhir.json -serviceName $fhirServiceName
+```
 
-Create resource group
+Verify that the Fhir Server is running
+```PowerShell
+$metadataUrl = "https://$fhirServiceName.azurewebsites.net/metadata" 
+$metadata = Invoke-WebRequest -Uri $metadataUrl
+$metadata.RawContent
+```
+It will take a minute or so for the server to respond the first time.
+
+Create Resource Group for the Clinical Trials Blueprint resources
+
+```PowerShell
+$rg = New-AzResourceGroup -Name ctm-blueprint -Location eastus
+```
+
+Create the TextAnalytics for Healthcare deployment
+```PowerShell
+$taServiceName = <text analytics service>
+New-AzResourceGroupDeployment -TemplateFile ..\arm-templates\azuredeploy-ta4h.json -ResourceGroupName $rg.ResourceGroupName -serviceName $taServiceName
+```
+
+Check Text Analytics for Healthcare service is running
+```Powershell
+$statusUrl = "https://$taServiceName-webapp.azurewebsites.net/status"
+$status = Invoke-WebRequest -Uri $statusUrl
+$status.RawContent
+```
+It will take about 20 minutes for the service to deploy and run
+
+Create Structuring Service
+```Powershell
+$structuringServiceName = <ctm structuring service>
+New-AzResourceGroupDeployment -TemplateFile ..\arm-templates\azuredeploy-structuring.json -ResourceGroupName $rg.ResourceGroupName -serviceName $structuringServiceName
+```
+
+
+### Create Healthcare Bot
+
+Create the Healthcare Bot SaaS Application
 ```powershell
-$rg = New-AzResourceGroup -Name $serviceName -Location eastus
+$botServiceName = "myService"
+$saasSubscriptionId = .\marketplace -name $botServiceName -plandId free
 ```
 
 Now we will deploy all the required Azure resources and configure them. This includes confguring the Healthcare Bot and subscribing the SaaS application created before.
 
 ```powershell
-default_azuredeploy.ps1 -saasSubscriptionId $saasSubscriptionId  -serviceName $serviceName
+.\default_azuredeploy.ps1 -saasSubscriptionId $saasSubscriptionId  -serviceName $botServiceName
 ```
 This command can take few minutes to complete.

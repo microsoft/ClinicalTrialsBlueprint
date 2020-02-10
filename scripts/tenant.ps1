@@ -1,5 +1,5 @@
-#$onboardingEndpoint = "https://admin.healthbot-dev.microsoft.com/api"
-$onboardingEndpoint = "http://localhost:8083/api"
+$onboardingEndpoint = "https://admin.healthbot-dev.microsoft.com/api"
+#$onboardingEndpoint = "http://localhost:8083/api"
 
 function New-HbsTenant {
     param (
