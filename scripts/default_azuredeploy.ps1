@@ -1,13 +1,13 @@
 param(
     [Parameter(Mandatory=$true)]
     $saasSubscriptionId,
-    [Parameter()]
+    [Parameter(Mandatory=$true)]
     [String]
     $serviceName,
-    [Parameter()]
+    [Parameter(Mandatory=$true)]
     [ValidateSet('US',"EU")]
     $hbsLocation,
-    [Parameter()]
+    [Parameter(Mandatory=$true)]
     $ResourceGroup
 )
 
@@ -16,7 +16,6 @@ param(
 . ./tenant.ps1
 
 $context = Get-AzContext
-$userId = $context.Account.id
 $subscriptionId = $context.subscription.id
 $luisAuthLocation = "westus" # Authoring location is only in West US
 
