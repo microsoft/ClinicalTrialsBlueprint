@@ -23,6 +23,9 @@
     "constituencyParserImageName": {
       "type": "string",
       "defaultValue": "ctmdev.azurecr.io/constituencyparserserver"
+    },
+    "textAnalyticsService": {
+      "type": "string"
     }
   },
   "variables": {
@@ -66,7 +69,7 @@
         "tenantId": "[subscription().tenantId]",
         "accessPolicies": [
           {
-            "tenantId": "[subscription().tenantId]",
+            "tenantId": "[reference(variables('identityName'), '2018-11-30', 'Full').properties.tenantId]",
             "objectId": "[reference(variables('identityName'), '2018-11-30', 'Full').properties.principalId]",
             "permissions": {
               "keys": [
@@ -94,7 +97,6 @@
         "type": "UserAssigned",
         "userAssignedIdentities": {
           "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities/',variables('identityName'))]": {
-
           }
         }
       },
@@ -116,12 +118,20 @@
               ],
               "environmentVariables": [
                 {
+                  "name": "ASPNETCORE_ENVIRONMENT",
+                  "value": "dev_us"
+                },
+                {
                   "name": "key_vault__address",
                   "value": "[concat('https://', variables('keyVaultName'), '.vault.azure.net/')]"
                 },
                 {
                   "name": "azure_maps__api_key",
                   "value": "[listKeys(variables('mapsServiceName'),'2018-05-01').primaryKey]"
+                },
+                {
+                  "name": "ayalon__address",
+                  "value":"[concat('https://',parameters('textAnalyticsService'),'.azurewebsites.net/text/analytics/v3.0-preview.1/domains/health') ]"
                 }
               ],
               "resources": {

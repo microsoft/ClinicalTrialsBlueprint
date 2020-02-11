@@ -23,7 +23,7 @@ $luisAppFile = "../lu/LUIS.Triage.json"
 $restorePath = "../bot-templates/teams-handoff.json"
 $portalEndpoint = "https://us.healthbot-$env.microsoft.com/account"
 
-$createTenantOnly = $false
+$createTenantOnly = $true
 
 Try {
 
@@ -62,28 +62,30 @@ Try {
         -instrumentationKey $appInsights.InstrumentationKey
     Write-Host "Done" -ForegroundColor Green
 
-    Write-Host "Importing LUIS Application from $luisAppFile..." -NoNewline
-    $luisJSON = Get-Content -Raw -Path $luisAppFile
-    $luisApplicationId = Import-LuisApplication -luisJSON $luisJSON -location $luisAuthLocation -authKey $luisAuthoringKey.Key1
-    Write-Host "Done" -ForegroundColor Green
-
-    Write-Host "Assigning LUIS app to LUIS account..." -NoNewline
-    $assignLuisApp = Set-LuisApplicationAccount -appId $luisApplicationId -subscriptionId $subscriptionId `
-                        -resourceGroup $resourceGroup -accountName $tenantId -location $luisAuthLocation -authKey $luisAuthoringKey.Key1
-    Write-Host "Done" -ForegroundColor Green
-
-    # Write-Host "Creating MS Graph API Service principle $tenantId-graph-sp..." -NoNewline
-    # $spApp = New-HbsADApplication -displayName $tenantId-graph-sp 
-    #                               # -applicationPermissions "Directory.Read.All Group.Read.All OnlineMeetings.ReadWrite.All"
-    # Write-Host "Done" -ForegroundColor Green
-
-    Write-Host "Importing template from $restorePath..." -NoNewline
-    $restoreJSON = Get-Content -Raw -Path $restorePath
-    # $restoreJSON = $restoreJSON.Replace("{clientId}", $spApp.app.AppId)
-    # $restoreJSON = $restoreJSON.Replace("{clientSecret}", $spApp.creds.Value)
-    # $restoreJSON = $restoreJSON.Replace("{tenantId}", (Get-AzureADTenantDetail).ObjectId)
-    $saasTenant = Restore-HbsTenant -location $location -tenant $saasTenant -data $restoreJSON -saasSubscriptionId $saasSubscriptionId
-    Write-Host "Done" -ForegroundColor Green
+    if ($createTenantOnly -eq $false) {
+        Write-Host "Importing LUIS Application from $luisAppFile..." -NoNewline
+        $luisJSON = Get-Content -Raw -Path $luisAppFile
+        $luisApplicationId = Import-LuisApplication -luisJSON $luisJSON -location $luisAuthLocation -authKey $luisAuthoringKey.Key1
+        Write-Host "Done" -ForegroundColor Green
+    
+        Write-Host "Assigning LUIS app to LUIS account..." -NoNewline
+        $assignLuisApp = Set-LuisApplicationAccount -appId $luisApplicationId -subscriptionId $subscriptionId `
+                            -resourceGroup $resourceGroup -accountName $tenantId -location $luisAuthLocation -authKey $luisAuthoringKey.Key1
+        Write-Host "Done" -ForegroundColor Green
+    
+        # Write-Host "Creating MS Graph API Service principle $tenantId-graph-sp..." -NoNewline
+        # $spApp = New-HbsADApplication -displayName $tenantId-graph-sp 
+        #                               # -applicationPermissions "Directory.Read.All Group.Read.All OnlineMeetings.ReadWrite.All"
+        # Write-Host "Done" -ForegroundColor Green
+    
+        Write-Host "Importing template from $restorePath..." -NoNewline
+        $restoreJSON = Get-Content -Raw -Path $restorePath
+        # $restoreJSON = $restoreJSON.Replace("{clientId}", $spApp.app.AppId)
+        # $restoreJSON = $restoreJSON.Replace("{clientSecret}", $spApp.creds.Value)
+        # $restoreJSON = $restoreJSON.Replace("{tenantId}", (Get-AzureADTenantDetail).ObjectId)
+        $saasTenant = Restore-HbsTenant -location $location -tenant $saasTenant -data $restoreJSON -saasSubscriptionId $saasSubscriptionId
+        Write-Host "Done" -ForegroundColor Green
+    }
                               
     $saasTenant 
     Write-Host "Your Healthcare Bot is now ready! You can access various resources below:" -ForegroundColor Green

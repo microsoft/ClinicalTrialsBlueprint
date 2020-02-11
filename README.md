@@ -55,13 +55,13 @@ $rg = New-AzResourceGroup -Name ctm-blueprint -Location eastus
 
 Create the TextAnalytics for Healthcare deployment
 ```PowerShell
-$taServiceName = <text analytics service>
-New-AzResourceGroupDeployment -TemplateFile ..\arm-templates\azuredeploy-ta4h.json -ResourceGroupName $rg.ResourceGroupName -serviceName $taServiceName
+$ta4hServiceName = <text analytics service>
+New-AzResourceGroupDeployment -TemplateFile ..\arm-templates\azuredeploy-ta4h.json -ResourceGroupName $rg.ResourceGroupName -serviceName $ta4hServiceName
 ```
 
 Check Text Analytics for Healthcare service is running
 ```Powershell
-$statusUrl = "https://$taServiceName-webapp.azurewebsites.net/status"
+$statusUrl = "https://$ta4hServiceName-webapp.azurewebsites.net/status"
 $status = Invoke-WebRequest -Uri $statusUrl
 $status.RawContent
 ```
@@ -70,7 +70,7 @@ It will take about 20 minutes for the service to deploy and run
 Create Structuring Service
 ```Powershell
 $structuringServiceName = <ctm structuring service>
-New-AzResourceGroupDeployment -TemplateFile ..\arm-templates\azuredeploy-structuring.json -ResourceGroupName $rg.ResourceGroupName -serviceName $structuringServiceName
+New-AzResourceGroupDeployment -TemplateFile ..\arm-templates\azuredeploy-structuring.json -ResourceGroupName $rg.ResourceGroupName -serviceName $structuringServiceName -textAnalyticsService $ta4hServiceName
 ```
 
 
@@ -79,12 +79,12 @@ New-AzResourceGroupDeployment -TemplateFile ..\arm-templates\azuredeploy-structu
 Create the Healthcare Bot SaaS Application
 ```powershell
 $botServiceName = "myService"
-$saasSubscriptionId = .\marketplace -name $botServiceName -plandId free
+$saasSubscriptionId = .\marketplace -name $botServiceName -planId free
 ```
 
 Now we will deploy all the required Azure resources and configure them. This includes confguring the Healthcare Bot and subscribing the SaaS application created before.
 
 ```powershell
-.\default_azuredeploy.ps1 -saasSubscriptionId $saasSubscriptionId  -serviceName $botServiceName
+.\default_azuredeploy.ps1 -ResourceGroup $rg.ResourceGroupName -saasSubscriptionId $saasSubscriptionId  -serviceName $botServiceName -botLocation US
 ```
 This command can take few minutes to complete.
