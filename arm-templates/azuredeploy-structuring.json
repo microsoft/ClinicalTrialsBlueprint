@@ -37,7 +37,7 @@
     "containerGroupName": "[concat(parameters('serviceName'),'-aci')]",
     "keyVaultName": "[concat(parameters('serviceName'),'-kv')]",
     "mapsServiceName": "[concat(parameters('serviceName'),'-map')]",
-    "rediscaceName": "[concat(parameters('serviceName'),'-redis')]"
+    "redisCacheName": "[concat(parameters('serviceName'),'-redis')]"
 
   },
   "resources": [
@@ -65,7 +65,7 @@
     {
       "type": "Microsoft.Cache/Redis",
       "apiVersion": "2019-07-01",
-      "name": "[variables('rediscaceName')]",
+      "name": "[variables('redisCacheName')]",
       "location": "[resourceGroup().location]",
       "tags":{
         "CTM-Structuring": "redis"
@@ -101,7 +101,7 @@
           "family": "A",
           "name": "standard"
         },
-        "tenantId": "[subscription().tenantId]",
+        "tenantId": "[reference(variables('identityName'), '2018-11-30', 'Full').properties.tenantId]",
         "accessPolicies": [
           {
             "tenantId": "[reference(variables('identityName'), '2018-11-30', 'Full').properties.tenantId]",
@@ -111,30 +111,29 @@
               ],
               "secrets": [
                 "get",
-                "list"
+                "list",
+                "set"
               ],
               "certificates": [
               ]
             }
           }
         ],
-        "enabledForDeployment": false,
-        "enabledForDiskEncryption": false,
-        "enabledForTemplateDeployment": false
+        "enabledForDeployment": false
       }
     },
     {
-        "type": "Microsoft.KeyVault/vaults/secrets",
-        "name": "[concat(variables('keyVaultName'), '/azure_maps__api_key')]",
-        "apiVersion": "2015-06-01",
-        "properties": {
-            "contentType": "text/plain",
-            "value": "[listKeys(variables('mapsServiceName'),'2018-05-01').primaryKey]"
-        },
-        "dependsOn": [
-            "[resourceId('Microsoft.KeyVault/vaults', variables('keyVaultName'))]",
-            "[resourceId('Microsoft.Maps/accounts', variables('mapsServiceName'))]"
-        ]
+      "type": "Microsoft.KeyVault/vaults/secrets",
+      "name": "[concat(variables('keyVaultName'), '/azuremaps_key')]",
+      "apiVersion": "2015-06-01",
+      "properties": {
+          "contentType": "text/plain",
+          "value": "[listKeys(variables('mapsServiceName'),'2018-05-01').primaryKey]"
+      },
+      "dependsOn": [
+          "[resourceId('Microsoft.KeyVault/vaults', variables('keyVaultName'))]",
+          "[resourceId('Microsoft.Maps/accounts', variables('mapsServiceName'))]"
+      ]
     },
     {
       "name": "[variables('containerGroupName')]",
@@ -190,7 +189,7 @@
                 },
                 {
                   "name": "redis__key",
-                  "value": "[listKeys(resourceId('Microsoft.Cache/Redis', variables('rediscaceName')), '2015-08-01').primaryKey]"
+                  "value": "[listKeys(resourceId('Microsoft.Cache/Redis', variables('redisCacheName')), '2015-08-01').primaryKey]"
                 }
               ],
               "resources": {
