@@ -17,7 +17,7 @@ urlFragment: "update-this-to-unique-url-stub"
 
 
 ### Connect to Azure Subscription
-```PowerShell
+```azure PowerShell
 Login-AzAccount
 
 Set-AzContext -Subscription <Your Subscription Name>
@@ -26,11 +26,11 @@ Set-AzContext -Subscription <Your Subscription Name>
 ### FHIR Server
 Create a Resource group for the FHIR server. It must be in a separate resource group.
 
-```PowerShell
+```azurePowerShell
 $fhirRg = New-AzResourceGroup -Name ctm-fhir-blueprint -Location eastus
 ```
 Assign Fhir Server Name
-```PowerShell
+```AzPowerShell
 $fhirServiceName = <fhir service name>
 ```
 
