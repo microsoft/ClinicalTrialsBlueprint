@@ -5,6 +5,10 @@
     "serviceName": {
       "type": "string"
     },
+    "fhirServerName": {
+      "type": "string",
+      "defaultValue": "fhirosr4sql"
+    },
     "acrServer": {
       "type": "string",
       "defaultValue": "ctmdev.azurecr.io"
@@ -122,6 +126,14 @@
                 {
                   "name":"azure_maps__api_key",
                   "value":"[listKeys(variables('mapsServiceName'),'2018-05-01').primaryKey]"
+                },
+                {
+                  "name": "ayalon__address",
+                  "value":"[concat('https://',parameters('serviceName'),'-ayalon-webapp.azurewebsites.net/text/analytics/v3.0-preview.1/domains/health')]"
+                },
+                {
+                  "name": "fhir__endpoint",
+                  "value": "[concat('https://', parameters('fhirServerName'),'.azurewebsites.net/')]"
                 }
               ],
               "resources": {

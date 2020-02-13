@@ -23,9 +23,9 @@
         }
     },
     "variables": {
-        "linuxWebAppPlanName": "[concat(parameters('serviceName'),'-plan')]",
-        "ayalonWebAppName": "[concat(parameters('serviceName'),'-webapp')]",
-        "textAnalyticsName": "[concat(parameters('serviceName'),'-ta4h')]"
+        "linuxWebAppPlanName": "[concat(parameters('serviceName'),'-ayalon-plan')]",
+        "ayalonWebAppName": "[concat(parameters('serviceName'),'-ayalon-webapp')]",
+        "textAnalyticsName": "[concat(parameters('serviceName'),'-ta')]"
     },
     "resources":[
         {
