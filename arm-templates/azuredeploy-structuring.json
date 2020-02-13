@@ -18,7 +18,7 @@
     },
     "structuringImageName": {
       "type": "string",
-      "defaultValue": "ctmdev.azurecr.io/structuring"
+      "defaultValue": "ctmdev.azurecr.io/clinical-trials-structuring"
     },
     "constituencyParserImageName": {
       "type": "string",
@@ -32,7 +32,8 @@
     "identityName": "[concat(parameters('serviceName'),'-identity')]",
     "containerGroupName": "[concat(parameters('serviceName'),'-aci')]",
     "keyVaultName": "[concat(parameters('serviceName'),'-kv')]",
-    "mapsServiceName": "[concat(parameters('serviceName'),'-map')]"
+    "mapsServiceName": "[concat(parameters('serviceName'),'-map')]",
+    "rediscaceName": "[concat(parameters('serviceName'),'-redis')]"
 
   },
   "resources": [
@@ -40,7 +41,10 @@
       "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
       "name": "[variables('identityName')]",
       "apiVersion": "2018-11-30",
-      "location": "[resourceGroup().location]"
+      "location": "[resourceGroup().location]",
+      "tags":{
+        "CTM-Structuring":"managed identity"
+      }
     },
     {
       "name": "[variables('mapsServiceName')]",
@@ -48,9 +52,33 @@
       "apiVersion": "2018-05-01",
       "location": "global",
       "tags": {
+        "CTM-Structuring":"maps"
       },
       "sku": {
         "name": "S0"
+      }
+    },
+    {
+      "type": "Microsoft.Cache/Redis",
+      "apiVersion": "2019-07-01",
+      "name": "[variables('rediscaceName')]",
+      "location": "[resourceGroup().location]",
+      "tags":{
+        "CTM-Structuring": "redis"
+      },
+      "properties": {
+        "sku": {
+          "name": "Standard",
+          "family": "C",
+          "capacity": 0
+        },
+        "enableNonSslPort": false,
+        "redisConfiguration": {
+          "maxclients": "256",
+          "maxmemory-reserved": "2",
+          "maxfragmentationmemory-reserved": "12",
+          "maxmemory-delta": "2"
+        }
       }
     },
     {
@@ -58,6 +86,9 @@
       "apiVersion": "2016-10-01",
       "name": "[variables('keyVaultName')]",
       "location": "[resourceGroup().location]",
+      "tags": {
+        "CTM-Structuring": "keyvault"
+      },
       "dependsOn": [
         "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('identityName'))]"
       ],
@@ -89,6 +120,19 @@
       }
     },
     {
+        "type": "Microsoft.KeyVault/vaults/secrets",
+        "name": "[concat(variables('keyVaultName'), '/azure_maps__api_key')]",
+        "apiVersion": "2015-06-01",
+        "properties": {
+            "contentType": "text/plain",
+            "value": "[listKeys(variables('mapsServiceName'),'2018-05-01').primaryKey]"
+        },
+        "dependsOn": [
+            "[resourceId('Microsoft.KeyVault/vaults', variables('keyVaultName'))]",
+            "[resourceId('Microsoft.Maps/accounts', variables('mapsServiceName'))]"
+        ]
+    },
+    {
       "name": "[variables('containerGroupName')]",
       "type": "Microsoft.ContainerInstance/containerGroups",
       "apiVersion": "2018-10-01",
@@ -99,6 +143,9 @@
           "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities/',variables('identityName'))]": {
           }
         }
+      },
+      "tags": {
+        "CTM-Structuring":"containerGroups"
       },
       "dependsOn": [
         "[resourceId('Microsoft.KeyVault/vaults', variables('keyVaultName'))]",
@@ -131,7 +178,11 @@
                 },
                 {
                   "name": "ayalon__address",
-                  "value":"[concat('https://',parameters('textAnalyticsService'),'.azurewebsites.net/text/analytics/v3.0-preview.1/domains/health') ]"
+                  "value": "[concat('https://',parameters('textAnalyticsService'),'.azurewebsites.net/text/analytics/v3.0-preview.1/domains/health') ]"
+                },
+                {
+                  "name": "redis__key",
+                  "value": "[listKeys(resourceId('Microsoft.Cache/Redis', variables('rediscaceName')), '2015-08-01').primaryKey]"
                 }
               ],
               "resources": {
