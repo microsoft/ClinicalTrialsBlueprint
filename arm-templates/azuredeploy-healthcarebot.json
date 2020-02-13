@@ -1,6 +1,6 @@
 {
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
-    "contentVersion": "1.0.0.0",
+    "contentVersion": "1.0.0.0",    
     "parameters": {
         "serviceName": {
             "type": "string"
@@ -8,6 +8,9 @@
         "location": {
             "type": "string",
             "defaultValue": "[resourceGroup().location]"
+        },
+        "saasSubscriptionId": {
+            "type": "string"
         },
         "luisSku": {
             "type": "string",
@@ -22,10 +25,9 @@
         }
     },
     "variables": {
-        "uniqueServiceName": "[concat(parameters('serviceName'),'-', substring(uniqueString(resourceGroup().id), 0, 5))]",
-        "luisAuthoringName": "[concat(variables('uniqueServiceName'),'-authoring')]",
-        "luisPredictionName": "[concat(variables('uniqueServiceName'),'-prediction')]",
-        "insightsName": "[concat(variables('uniqueServiceName'),'-insights')]"
+        "luisAuthoringName": "[concat(parameters('serviceName'),'-authoring')]",
+        "luisPredictionName": "[concat(parameters('serviceName'),'-prediction')]",
+        "insightsName": "[concat(parameters('serviceName'),'-insights')]"
     },
     "resources": [
         {
@@ -68,7 +70,7 @@
     "outputs": {
         "serviceUniqueName": {
             "type": "string",
-            "value": "[variables('uniqueServiceName')]"
+            "value": "[concat(parameters('serviceName'),'-', substring(uniqueString(parameters('saasSubscriptionId')), 0, 6))]"
         },
         "instrumentationKey": {
             "type": "string",

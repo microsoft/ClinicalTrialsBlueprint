@@ -22,18 +22,22 @@
     },
     "structuringImageName": {
       "type": "string",
-      "defaultValue": "ctmdev.azurecr.io/structuring"
+      "defaultValue": "ctmdev.azurecr.io/clinical-trials-structuring"
     },
     "constituencyParserImageName": {
       "type": "string",
       "defaultValue": "ctmdev.azurecr.io/constituencyparserserver"
+    },
+    "textAnalyticsService": {
+      "type": "string"
     }
   },
   "variables": {
     "identityName": "[concat(parameters('serviceName'),'-identity')]",
     "containerGroupName": "[concat(parameters('serviceName'),'-aci')]",
     "keyVaultName": "[concat(parameters('serviceName'),'-kv')]",
-    "mapsServiceName": "[concat(parameters('serviceName'),'-map')]"
+    "mapsServiceName": "[concat(parameters('serviceName'),'-map')]",
+    "rediscaceName": "[concat(parameters('serviceName'),'-redis')]"
 
   },
   "resources": [
@@ -41,26 +45,56 @@
       "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
       "name": "[variables('identityName')]",
       "apiVersion": "2018-11-30",
-      "location": "[resourceGroup().location]"
+      "location": "[resourceGroup().location]",
+      "tags":{
+        "CTM-Structuring":"managed identity"
+      }
     },
     {
-        "name": "[variables('mapsServiceName')]",
-        "type": "Microsoft.Maps/accounts",
-        "apiVersion": "2018-05-01",
-        "location": "global",
-        "tags": {
-        },
+      "name": "[variables('mapsServiceName')]",
+      "type": "Microsoft.Maps/accounts",
+      "apiVersion": "2018-05-01",
+      "location": "global",
+      "tags": {
+        "CTM-Structuring":"maps"
+      },
+      "sku": {
+        "name": "S0"
+      }
+    },
+    {
+      "type": "Microsoft.Cache/Redis",
+      "apiVersion": "2019-07-01",
+      "name": "[variables('rediscaceName')]",
+      "location": "[resourceGroup().location]",
+      "tags":{
+        "CTM-Structuring": "redis"
+      },
+      "properties": {
         "sku": {
-            "name": "S0"
+          "name": "Standard",
+          "family": "C",
+          "capacity": 0
+        },
+        "enableNonSslPort": false,
+        "redisConfiguration": {
+          "maxclients": "256",
+          "maxmemory-reserved": "2",
+          "maxfragmentationmemory-reserved": "12",
+          "maxmemory-delta": "2"
         }
+      }
     },
     {
       "type": "Microsoft.KeyVault/vaults",
       "apiVersion": "2016-10-01",
       "name": "[variables('keyVaultName')]",
       "location": "[resourceGroup().location]",
-      "dependsOn":[
-          "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('identityName'))]"
+      "tags": {
+        "CTM-Structuring": "keyvault"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('identityName'))]"
       ],
       "properties": {
         "sku": {
@@ -70,7 +104,7 @@
         "tenantId": "[subscription().tenantId]",
         "accessPolicies": [
           {
-            "tenantId": "[subscription().tenantId]",
+            "tenantId": "[reference(variables('identityName'), '2018-11-30', 'Full').properties.tenantId]",
             "objectId": "[reference(variables('identityName'), '2018-11-30', 'Full').properties.principalId]",
             "permissions": {
               "keys": [
@@ -90,19 +124,34 @@
       }
     },
     {
+        "type": "Microsoft.KeyVault/vaults/secrets",
+        "name": "[concat(variables('keyVaultName'), '/azure_maps__api_key')]",
+        "apiVersion": "2015-06-01",
+        "properties": {
+            "contentType": "text/plain",
+            "value": "[listKeys(variables('mapsServiceName'),'2018-05-01').primaryKey]"
+        },
+        "dependsOn": [
+            "[resourceId('Microsoft.KeyVault/vaults', variables('keyVaultName'))]",
+            "[resourceId('Microsoft.Maps/accounts', variables('mapsServiceName'))]"
+        ]
+    },
+    {
       "name": "[variables('containerGroupName')]",
       "type": "Microsoft.ContainerInstance/containerGroups",
       "apiVersion": "2018-10-01",
       "location": "[resourceGroup().location]",
       "identity": {
         "type": "UserAssigned",
-        "userAssignedIdentities":{
+        "userAssignedIdentities": {
           "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities/',variables('identityName'))]": {
-
           }
         }
       },
-      "dependsOn":[
+      "tags": {
+        "CTM-Structuring":"containerGroups"
+      },
+      "dependsOn": [
         "[resourceId('Microsoft.KeyVault/vaults', variables('keyVaultName'))]",
         "[resourceId('Microsoft.Maps/accounts', variables('mapsServiceName'))]"
       ],
@@ -118,7 +167,11 @@
                 "download",
                 "bootstrap"
               ],
-              "environmentVariables":[
+              "environmentVariables": [
+                {
+                  "name": "ASPNETCORE_ENVIRONMENT",
+                  "value": "dev_us"
+                },
                 {
                   "name": "key_vault__address",
                   "value": "[concat('https://', variables('keyVaultName'), '.vault.azure.net/')]"
@@ -128,12 +181,16 @@
                   "value":"[listKeys(variables('mapsServiceName'),'2018-05-01').primaryKey]"
                 },
                 {
-                  "name": "ayalon__address",
-                  "value":"[concat('https://',parameters('serviceName'),'-ayalon-webapp.azurewebsites.net/text/analytics/v3.0-preview.1/domains/health')]"
-                },
-                {
                   "name": "fhir__endpoint",
                   "value": "[concat('https://', parameters('fhirServerName'),'.azurewebsites.net/')]"
+                },
+                {
+                  "name": "ayalon__address",
+                  "value": "[concat('https://',parameters('textAnalyticsService'),'-ayalon.azurewebsites.net/text/analytics/v3.0-preview.1/domains/health') ]"
+                },
+                {
+                  "name": "redis__key",
+                  "value": "[listKeys(resourceId('Microsoft.Cache/Redis', variables('rediscaceName')), '2015-08-01').primaryKey]"
                 }
               ],
               "resources": {
