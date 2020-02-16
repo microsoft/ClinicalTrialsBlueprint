@@ -47,10 +47,7 @@
             "name": "[variables('linuxWebAppPlanName')]",
             "location": "[resourceGroup().location]",
             "sku": {
-                "name": "P2v2",
-                "tier": "PremiumV2",
-                "size": "P2v2",
-                "family": "Pv2",
+                "name": "P1v2",
                 "capacity": 1
             },
             "kind": "linux",

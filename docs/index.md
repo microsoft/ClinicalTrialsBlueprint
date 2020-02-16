@@ -67,29 +67,33 @@ New-AzResourceGroupDeployment -TemplateFile ..\arm-templates\azuredeploy-ta4h.js
 
 Verify that Text Analytics for Healthcare service is running
 ```Powershell
-$statusUrl = "https://$ta4hServiceName-webapp.azurewebsites.net/status"
+$statusUrl = https://$ta4hServiceName-ayalon-webapp.azurewebsites.net/status
 $status = Invoke-WebRequest -Uri $statusUrl
 $status.RawContent
 ```
 It will take about 20 minutes for the service to deploy and run
 
-### Structuring Service
+### Matching Service
 
 Assign strcuturing service name
 ```Powershell
-$structuringServiceName = <ctm structuring service>
+$matchingServiceName = <ctm matching service>
 ```
 
-Create Structuring Service deployment
+Create Matching Service deployment
 ```Powershell
-New-AzResourceGroupDeployment -TemplateFile ..\arm-templates\azuredeploy-structuring.json -ResourceGroupName $rg.ResourceGroupName -serviceName $structuringServiceName -textAnalyticsService $ta4hServiceName
+New-AzResourceGroupDeployment -TemplateFile ..\arm-templates\azuredeploy-matching.json -ResourceGroupName $rg.ResourceGroupName -serviceName $matchingServiceName -textAnalyticsService $ta4hServiceName
 ```
 
+Check that the query engine is up and running
+```Powershell
+Invoke-WebRequest -Uri https://$matchingServiceName-qe-webapp.azurewebsites.net/matching
+```
 
 ### Healthcare Bot
 Assign the Healthcare Bot service name 
 ```Powershell
-$botServiceName = "myService"
+$botServiceName = "ctm-bot"
 ```
 Create the Healthcare Bot SaaS Application
 ```powershell
