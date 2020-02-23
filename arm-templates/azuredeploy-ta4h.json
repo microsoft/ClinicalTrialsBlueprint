@@ -47,7 +47,7 @@
             "name": "[variables('linuxWebAppPlanName')]",
             "location": "[resourceGroup().location]",
             "sku": {
-                "name": "P1v2",
+                "name": "P2v2",
                 "capacity": 1
             },
             "kind": "linux",

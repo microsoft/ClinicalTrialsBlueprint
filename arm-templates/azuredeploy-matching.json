@@ -296,7 +296,8 @@
         }
       },
       "dependsOn": [
-        "[concat('Microsoft.ManagedIdentity/userAssignedIdentities/', variables('identityName'))]"
+        "[concat('Microsoft.ManagedIdentity/userAssignedIdentities/', variables('identityName'))]",
+        "[resourceId('Microsoft.Web/serverfarms', variables('ctmServicePlan'))]"      
       ],
       "tags": {
         "CTM-Services": "query engine"
@@ -451,7 +452,8 @@
       "location": "[resourceGroup().location]",
       "kind": "app,linux,container",
       "dependsOn": [
-        "[resourceId('Microsoft.Web/serverfarms', variables('ctmServicePlan'))]"
+        "[resourceId('Microsoft.Web/serverfarms', variables('ctmServicePlan'))]",
+        "[concat('Microsoft.ManagedIdentity/userAssignedIdentities/', variables('identityName'))]"
       ],
       "identity": {
         "type": "UserAssigned",
@@ -609,7 +611,8 @@
       "location": "[resourceGroup().location]",
       "kind": "app,linux,container",
       "dependsOn":[
-        "[resourceId('Microsoft.Web/serverfarms', variables('ctmServicePlan'))]"
+        "[resourceId('Microsoft.Web/serverfarms', variables('ctmServicePlan'))]",
+        "[concat('Microsoft.ManagedIdentity/userAssignedIdentities/', variables('identityName'))]"
       ],
       "properties": {
         "enabled": true,
