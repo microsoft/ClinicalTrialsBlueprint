@@ -30,7 +30,7 @@
     },
     "constituencyParserImageName": {
       "type": "string",
-      "defaultValue": "ctmdev.azurecr.io/constituencyparserserver"
+      "defaultValue": "ctmdev.azurecr.io/constituency-parser-server"
     },
     "queryEngineImageName": {
       "type": "string",
@@ -55,6 +55,15 @@
     "proxyDockerImageName": {
         "type": "string",
         "defaultValue": "ctmdev.azurecr.io/clinical-trials-proxy:latest"
+    },
+    "servicePrincipalObjectId":{
+      "type": "string"
+    },
+    "servicePrincipleClientId": {
+      "type": "string"
+    },
+    "servicePrincipalClientSecret": {
+      "type":"securestring"
     }
   },
   "variables": {
@@ -95,7 +104,10 @@
                         "image": "[parameters('proxyDockerImageName')]",
                         "environment": {
                             "PROXY_TO": "ta:5000",
-                            "SECRET_VALUE": "[parameters('proxyApiKey')]"
+                            "KEY_VAULT_URL": "[concat('https://',variables('keyVaultName'),'.vault.azure.net/')]",
+                            "AZURE_TENANT_ID": "[subscription().tenantId]",
+                            "AZURE_CLIENT_ID": "[parameters('servicePrincipleClientId')]",
+                            "AZURE_CLIENT_SECRET": "[parameters('servicePrincipalClientSecret')]"
                         }
                     }
                 }
@@ -143,7 +155,8 @@
         "name": "[variables('ayalonWebAppName')]",
         "location": "[resourceGroup().location]",
         "dependsOn": [
-            "[resourceId('Microsoft.Web/serverfarms', variables('ayalonServicePlan'))]"
+            "[resourceId('Microsoft.Web/serverfarms', variables('ayalonServicePlan'))]",            
+            "[resourceId('Microsoft.KeyVault/vaults', variables('keyVaultName'))]"
         ],
         "kind": "app,linux,container",
         "properties": {
@@ -341,13 +354,13 @@
         "tenantId": "[subscription().tenantId]",
         "accessPolicies": [
           {
-            "objectId": "[reference(variables('identityName'), '2018-11-30', 'Full').properties.principalId]",
             "tenantId": "[subscription().tenantId]",
+            "objectId": "[parameters('servicePrincipalObjectId')]",
             "permissions": {
-              "secrets": [
-                "list",
-                "get"
-              ]
+                "secrets": [
+                    "get",
+                    "list"
+                ]
             }
           }
         ],
