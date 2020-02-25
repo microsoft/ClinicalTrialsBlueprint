@@ -32,9 +32,6 @@
       "type": "string",
       "defaultValue": "ctmdev.azurecr.io/constituencyparserserver"
     },
-    "textAnalyticsService": {
-      "type": "string"
-    },
     "queryEngineImageName": {
       "type": "string",
       "defaultValue": "DOCKER|ctmdev.azurecr.io/query-engine:latest"
@@ -46,20 +43,242 @@
     "disqualificationImageName": {
       "type":"string",
       "defaultValue":"DOCKER|ctmdev.azurecr.io/clinical-trials-disqualification:latest"      
+    },
+    "ayalonDockerImageName": {
+        "type": "string",
+        "defaultValue": "ctmdev.azurecr.io/cognitive-services-healthcare:latest"
+    },
+    "proxyApiKey": {
+        "type": "string",
+        "defaultValue":"[newGuid()]"
+    },
+    "proxyDockerImageName": {
+        "type": "string",
+        "defaultValue": "ctmdev.azurecr.io/clinical-trials-proxy:latest"
     }
   },
   "variables": {
+    "fhirServerEndpoint":"[concat('https://',parameters('fhirServerName'),'.azurewebsites.net/')]",
     "identityName": "[concat(parameters('serviceName'),'-identity')]",
     "containerGroupName": "[concat(parameters('serviceName'),'-aci')]",
     "keyVaultName": "[concat(parameters('serviceName'),'-kv')]",
     "mapsServiceName": "[concat(parameters('serviceName'),'-map')]",
     "redisCacheName": "[concat(parameters('serviceName'),'-redis')]",
     "ctmServicePlan": "[concat(parameters('serviceName'),'-ctm-plan')]",
+    "ayalonServicePlan": "[concat(parameters('serviceName'),'-ayalon-plan')]",
     "queryEngineWebAppName": "[concat(parameters('serviceName'),'-ctm-qe-webapp')]",
     "dynamicCriteriaSelectionWebAppName": "[concat(parameters('serviceName'),'-ctm-dcs-webapp')]",
-    "disqualificationWebAppName": "[concat(parameters('serviceName'),'-ctm-disq-webapp')]"
+    "disqualificationWebAppName": "[concat(parameters('serviceName'),'-ctm-disq-webapp')]",
+    "textAnalyticsName": "[concat(parameters('serviceName'),'-ta')]",
+    "ayalonWebAppName": "[concat(parameters('serviceName'),'-ayalon-webapp')]",
+    "composeTextAnalytics": {
+                "version": "3.3",
+                "services": {
+                    "ta": {
+                        "image": "[parameters('ayalonDockerImageName')]",
+                        "environment": {
+                            "ApiKey": "${apikey}",
+                            "Billing": "[concat('https://',variables('textAnalyticsName'),'.cognitiveservices.azure.com')]",
+                            "Eula": "accept"
+                        },
+                        "ports": [
+                            "5000"
+                        ]
+                    },
+                    "proxy": {
+                        "depends_on": [
+                            "ta"
+                        ],
+                        "ports": [
+                            "8081:80"
+                        ],
+                        "image": "[parameters('proxyDockerImageName')]",
+                        "environment": {
+                            "PROXY_TO": "ta:5000",
+                            "SECRET_VALUE": "[parameters('proxyApiKey')]"
+                        }
+                    }
+                }
+            }
+
   },
   "resources": [
+    {
+        "type": "Microsoft.CognitiveServices/accounts",
+        "apiVersion": "2017-04-18",
+        "name": "[variables('textAnalyticsName')]",
+        "location": "[resourceGroup().location]",
+        "sku": {
+            "name": "F0"
+        },
+        "kind": "TextAnalytics",
+        "properties": {
+            "customSubDomainName": "[variables('textAnalyticsName')]"
+        }
+    },
+    {
+        "type": "Microsoft.Web/serverfarms",
+        "apiVersion": "2018-02-01",
+        "name": "[variables('ayalonServicePlan')]",
+        "location": "[resourceGroup().location]",
+        "sku": {
+            "name": "P3v2",
+            "capacity": 1
+        },
+        "kind": "linux",
+        "properties": {
+            "perSiteScaling": false,
+            "maximumElasticWorkerCount": 1,
+            "isSpot": false,
+            "reserved": true,
+            "isXenon": false,
+            "hyperV": false,
+            "targetWorkerCount": 0,
+            "targetWorkerSizeId": 0
+        }
+    },    
+    {
+        "type": "Microsoft.Web/sites",
+        "apiVersion": "2018-11-01",
+        "name": "[variables('ayalonWebAppName')]",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+            "[resourceId('Microsoft.Web/serverfarms', variables('ayalonServicePlan'))]"
+        ],
+        "kind": "app,linux,container",
+        "properties": {
+            "enabled": true,
+            "hostNameSslStates": [
+                {
+                    "name": "[concat(variables('ayalonWebAppName'), '.azurewebsites.net')]",
+                    "sslState": "Disabled",
+                    "hostType": "Standard"
+                },
+                {
+                    "name": "[concat(variables('ayalonWebAppName'), '.scm.azurewebsites.net')]",
+                    "sslState": "Disabled",
+                    "hostType": "Repository"
+                }
+            ],
+            "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('ayalonServicePlan'))]",
+            "reserved": true,
+            "isXenon": false,
+            "hyperV": false,
+            "scmSiteAlsoStopped": false,
+            "clientAffinityEnabled": false,
+            "clientCertEnabled": false,
+            "hostNamesDisabled": false,
+            "containerSize": 0,
+            "dailyMemoryTimeQuota": 0,
+            "httpsOnly": false,
+            "redundancyMode": "None",
+            "siteConfig": {
+                "appSettings": [
+                    {
+                        "name": "DOCKER_REGISTRY_SERVER_URL",
+                        "value": "[parameters('acrServer')]"
+                    },
+                    {
+                        "name": "DOCKER_REGISTRY_SERVER_USERNAME",
+                        "value": "[parameters('acrUsername')]"
+                    },
+                    {
+                        "name": "DOCKER_REGISTRY_SERVER_PASSWORD",
+                        "value": "[parameters('acrPassword')]"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "type": "Microsoft.Web/sites/config",
+        "apiVersion": "2018-11-01",
+        "name": "[concat(variables('ayalonWebAppName'), '/web')]",
+        "location": "East US",
+        "dependsOn": [
+            "[resourceId('Microsoft.Web/sites', variables('ayalonWebAppName'))]",
+            "[resourceId('Microsoft.CognitiveServices/accounts', variables('textAnalyticsName'))]"
+        ],
+        "properties": {
+            "numberOfWorkers": 1,
+            "defaultDocuments": [
+                "Default.htm",
+                "Default.html",
+                "Default.asp",
+                "index.htm",
+                "index.html",
+                "iisstart.htm",
+                "default.aspx",
+                "index.php",
+                "hostingstart.html"
+            ],
+            "netFrameworkVersion": "v4.0",
+            "linuxFxVersion": "[concat('COMPOSE|',base64(
+                        replace(string(variables('composeTextAnalytics')),'${apikey}',listKeys(variables('textAnalyticsName'), '2017-04-18').key1)
+                        ))]",
+            "requestTracingEnabled": false,
+            "remoteDebuggingEnabled": false,
+            "httpLoggingEnabled": false,
+            "logsDirectorySizeLimit": 35,
+            "detailedErrorLoggingEnabled": false,
+            "publishingUsername": "$ctm-bot",
+            "scmType": "None",
+            "use32BitWorkerProcess": true,
+            "webSocketsEnabled": false,
+            "alwaysOn": true,
+            "managedPipelineMode": "Integrated",
+            "virtualApplications": [
+                {
+                    "virtualPath": "/",
+                    "physicalPath": "site\\wwwroot",
+                    "preloadEnabled": true
+                }
+            ],
+            "loadBalancing": "LeastRequests",
+            "experiments": {
+                "rampUpRules": [
+                ]
+            },
+            "autoHealEnabled": false,
+            "localMySqlEnabled": false,
+            "ipSecurityRestrictions": [
+                {
+                    "ipAddress": "Any",
+                    "action": "Allow",
+                    "priority": 1,
+                    "name": "Allow all",
+                    "description": "Allow all access"
+                }
+            ],
+            "scmIpSecurityRestrictions": [
+                {
+                    "ipAddress": "Any",
+                    "action": "Allow",
+                    "priority": 1,
+                    "name": "Allow all",
+                    "description": "Allow all access"
+                }
+            ],
+            "scmIpSecurityRestrictionsUseMain": false,
+            "http20Enabled": false,
+            "minTlsVersion": "1.2",
+            "ftpsState": "AllAllowed",
+            "reservedInstanceCount": 0
+        }
+    },
+    {
+        "type": "Microsoft.Web/sites/hostNameBindings",
+        "apiVersion": "2018-11-01",
+        "name": "[concat(variables('ayalonWebAppName'), '/', variables('ayalonWebAppName'), '.azurewebsites.net')]",
+        "location": "[resourceGroup().location]",
+        "dependsOn": [
+            "[resourceId('Microsoft.Web/sites', variables('ayalonWebAppName'))]"
+        ],
+        "properties": {
+            "siteName": "ctm-bot",
+            "hostNameType": "Verified"
+        }
+    },
     {
       "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
       "name": "[variables('identityName')]",
@@ -156,7 +375,7 @@
     },
     {
       "type": "Microsoft.KeyVault/vaults/secrets",
-      "name": "[concat(variables('keyVaultName'), '/radis-key')]",
+      "name": "[concat(variables('keyVaultName'), '/redis-key')]",
       "apiVersion": "2016-10-01",
       "dependsOn": [
         "[concat('Microsoft.KeyVault/vaults/', variables('keyVaultName'))]",
@@ -164,6 +383,17 @@
       ],
       "properties": {
         "value": "[listKeys(resourceId('Microsoft.Cache/Redis', variables('redisCacheName')), '2015-08-01').primaryKey]"
+      }
+    },
+    {
+      "type": "Microsoft.KeyVault/vaults/secrets",
+      "name": "[concat(variables('keyVaultName'), '/proxy-api-key')]",
+      "apiVersion": "2016-10-01",
+      "dependsOn": [
+        "[concat('Microsoft.KeyVault/vaults/', variables('keyVaultName'))]"
+      ],
+      "properties": {
+        "value": "[parameters('proxyApiKey')]"
       }
     },
     {
@@ -212,11 +442,11 @@
                 },
                 {
                   "name": "fhir__endpoint",
-                  "value": "[concat('https://', parameters('fhirServerName'),'.azurewebsites.net/')]"
+                  "value": "[variables('fhirServerEndpoint')]"
                 },
                 {
                   "name": "ayalon__address",
-                  "value": "[concat('https://',parameters('textAnalyticsService'),'-ayalon.azurewebsites.net/text/analytics/v3.0-preview.1/domains/health') ]"
+                  "value": "[concat(variables('ayalonWebAppName'),'.azurewebsites.net','text/analytics/v3.0-preview.1/domains/health') ]"
                 },
                 {
                   "name": "redis__key",

@@ -7,25 +7,62 @@
         },
         "ayalonDockerRegistryUrl": {
             "type": "string",
-            "defaultValue": "https://containerpreview.azurecr.io"
+            "defaultValue": "https://ctmdev.azurecr.io"
         },
         "ayalonDockerRegistryUser": {
             "type": "string",
-            "defaultValue": "1930648e-be5a-49f8-93dd-11381794b13c"
+            "defaultValue": "ctmdev"
         },
         "ayalonDockerRegistryPassword": {
             "type": "securestring",
-            "defaultValue": "3e415e1c-0f8f-4a05-b122-5cd88c962c88"
+            "defaultValue": "M4QqIr/1TeAc0OnqQ2Q8DOrrP8gJ1Fxt"
         },
         "ayalonDockerImageName": {
             "type": "string",
-            "defaultValue": "DOCKER|containerpreview.azurecr.io/microsoft/cognitive-services-healthcare:latest"
+            "defaultValue": "ctmdev.azurecr.io/cognitive-services-healthcare:latest"
+        },
+        "proxyDockerImageName": {
+            "type": "string",
+            "defaultValue": "ctmdev.azurecr.io/clinical-trials-proxy:latest"
+        },
+        "apiKey": {
+            "type": "string",
+            "defaultValue":"[newGuid()]"
         }
     },
     "variables": {
         "linuxWebAppPlanName": "[concat(parameters('serviceName'),'-ayalon-plan')]",
         "ayalonWebAppName": "[concat(parameters('serviceName'),'-ayalon-webapp')]",
-        "textAnalyticsName": "[concat(parameters('serviceName'),'-ta')]"
+        "textAnalyticsName": "[concat(parameters('serviceName'),'-ta')]",
+        "compose": {
+                    "version": "3.3",
+                    "services": {
+                        "ta": {
+                            "image": "[parameters('ayalonDockerImageName')]",
+                            "environment": {
+                                "ApiKey": "${apikey}",
+                                "Billing": "[concat('https://',variables('textAnalyticsName'),'.cognitiveservices.azure.com')]",
+                                "Eula": "accept"
+                            },
+                            "ports": [
+                                "5000"
+                            ]
+                        },
+                        "proxy": {
+                            "depends_on": [
+                                "ta"
+                            ],
+                            "ports": [
+                                "8081:80"
+                            ],
+                            "image": "[parameters('proxyDockerImageName')]",
+                            "environment": {
+                                "PROXY_TO": "ta:5000",
+                                "SECRET_VALUE": "[parameters('apiKey')]"
+                            }
+                        }
+                    }
+                }
     },
     "resources":[
         {
@@ -47,7 +84,7 @@
             "name": "[variables('linuxWebAppPlanName')]",
             "location": "[resourceGroup().location]",
             "sku": {
-                "name": "P2v2",
+                "name": "P3v2",
                 "capacity": 1
             },
             "kind": "linux",
@@ -100,18 +137,6 @@
                 "siteConfig": {
                     "appSettings": [
                         {
-                            "name": "Eula",
-                            "value": "accept"
-                        },
-                        {
-                            "name": "Billing",
-                            "value": "[concat('https://',variables('textAnalyticsName'),'.cognitiveservices.azure.com')]"
-                        },
-                        {
-                            "name": "ApiKey",
-                            "value": "[listKeys(variables('textAnalyticsName'), '2017-04-18').key1]"
-                        },
-                        {
                             "name": "DOCKER_REGISTRY_SERVER_URL",
                             "value": "[parameters('ayalonDockerRegistryUrl')]"
                         },
@@ -150,7 +175,9 @@
                     "hostingstart.html"
                 ],
                 "netFrameworkVersion": "v4.0",
-                "linuxFxVersion": "[parameters('ayalonDockerImageName')]",
+                "linuxFxVersion": "[concat('COMPOSE|',base64(
+                            replace(string(variables('compose')),'${apikey}',listKeys(variables('textAnalyticsName'), '2017-04-18').key1)
+                            ))]",
                 "requestTracingEnabled": false,
                 "remoteDebuggingEnabled": false,
                 "httpLoggingEnabled": false,

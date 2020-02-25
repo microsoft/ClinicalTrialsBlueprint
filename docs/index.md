@@ -56,23 +56,6 @@ Create Resource Group for the that will contain all the resources required for t
 $rg = New-AzResourceGroup -Name ctm-blueprint -Location eastus
 ```
 
-Assign the name for the Text Analytics for Healthcare service
-```Powershell
-$ta4hServiceName = <text analytics service>
-```
-Create the TextAnalytics for Healthcare deployment
-```PowerShell
-New-AzResourceGroupDeployment -TemplateFile ..\arm-templates\azuredeploy-ta4h.json -ResourceGroupName $rg.ResourceGroupName -serviceName $ta4hServiceName
-```
-
-Verify that Text Analytics for Healthcare service is running
-```Powershell
-$statusUrl = https://$ta4hServiceName-ayalon-webapp.azurewebsites.net/status
-$status = Invoke-WebRequest -Uri $statusUrl
-$status.RawContent
-```
-It will take about 20 minutes for the service to deploy and run
-
 ### Matching Service
 
 Assign strcuturing service name
@@ -82,7 +65,7 @@ $matchingServiceName = <ctm matching service>
 
 Create Matching Service deployment
 ```Powershell
-New-AzResourceGroupDeployment -TemplateFile ..\arm-templates\azuredeploy-matching.json -ResourceGroupName $rg.ResourceGroupName -serviceName $matchingServiceName -textAnalyticsService $ta4hServiceName
+New-AzResourceGroupDeployment -TemplateFile ..\arm-templates\azuredeploy-matching.json -ResourceGroupName $rg.ResourceGroupName -serviceName $matchingServiceName
 ```
 
 Check that the query engine is up and running
