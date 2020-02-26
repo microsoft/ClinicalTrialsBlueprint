@@ -67,7 +67,34 @@ Try {
         $assignLuisApp = Set-LuisApplicationAccount -appId $luisApplicationId -subscriptionId $subscriptionId `
                             -resourceGroup $ResourceGroup -accountName $serviceName"-prediction" `
                             -location $luisAuthLocation -authKey $output.Outputs["luisAuthotingKey"].Value
+
         Write-Host "Done" -ForegroundColor Green
+        Write-Host "Training LUIS app " $_.BaseName "..."  -NoNewline
+        $trainResult = Invoke-TrainLuisApplication -appId $luisApplicationId -version "0.1" -location $luisAuthLocation `
+                                    -authKey $output.Outputs["luisAuthotingKey"].Value
+        if ($trainResult.status -ne "UpToDate") {
+            Write-Host "Waiting to finish training..." -NoNewline
+            $waitForTraningToFinish = $true
+            while ($waitForTraningToFinish) {
+                $trainStatus = Get-LuisApplicationTrainingStatus -appId $luisApplicationId -version "0.1" `
+                                                                 -location $luisAuthLocation `
+                                                                 -authKey $output.Outputs["luisAuthotingKey"].Value                                                                                
+                $trainStatus | ForEach-Object {
+                    if ($_.details.status -ne "Success") {
+                        Write-Host "..." -NoNewline
+                        Start-Sleep -Seconds 2
+                        continue
+                    }
+                }
+                $waitForTraningToFinish = $false                                                                                
+            }
+        }
+        Write-Host "Done" -ForegroundColor Green        
+        Write-Host "Publishing LUIS app " $_.BaseName  "... " -NoNewline
+       
+        $publishResult = Publish-LuisApplication -appId $luisApplicationId -version "0.1" -location $luisAuthLocation `
+                                                 -authKey $output.Outputs["luisAuthotingKey"].Value                                                         
+        Write-Host "Published " -ForegroundColor Green        
     }
 
     # Restore all the hbs templates
@@ -81,7 +108,7 @@ Try {
         $restoreJSON = $restoreJSON.Replace('{qe-baseurl}', $matchingParameters.queryEngineEndpoint.Value)
         $restoreJSON = $restoreJSON.Replace('{dcs-baseurl}', $matchingParameters.dynamicCriteriaSelectionEndpoint.Value)
         $restoreJSON = $restoreJSON.Replace('{disq-baseurl}', $matchingParameters.dynamicCriteriaSelectionEndpoint.Value)
-        $restoreJSON = $restoreJSON.Replace('{luisApplicationId}', $luisApplicationId)
+        $restoreJSON = $restoreJSON.Replace('{luisApplicationId}', $luisApplications["ctm"])
         $restoreJSON = $restoreJSON.Replace('{luisPredictionKey}', $output.Outputs["luisPredictionKey"].Value)
         $restoreJSON = $restoreJSON.Replace('{luisLocation}', $output.Parameters["luisLocation"].Value)
 
