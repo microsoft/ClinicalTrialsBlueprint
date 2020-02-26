@@ -28,12 +28,29 @@
     "dataConnections": [
         {
             "type": "custom",
-            "name": "query-engine",
-            "description": "query-engine",
+            "name": "qe",
+            "description": "Query Engine",
             "base_url": "{qe-baseurl}",
             "auth_provider": "",
             "static_parameters": "[{\"key\":\"x-ctm-api-key\",\"type\":\"header\",\"value\":\"{ctm-api-key}\"}]"
+        },
+        {
+            "type": "custom",
+            "name": "dcs",
+            "description": "Dynamic Criteria Selection",
+            "base_url": "{dcs-baseurl}",
+            "auth_provider": "",
+            "static_parameters": "[{\"key\":\"x-ctm-api-key\",\"type\":\"header\",\"value\":\"{ctm-api-key}\"}]"
+        },
+        {
+            "type": "custom",
+            "name": "disq",
+            "description": "Disqualification Service",
+            "base_url": "{disq-baseurl}",
+            "auth_provider": "",
+            "static_parameters": "[{\"key\":\"x-ctm-api-key\",\"type\":\"header\",\"value\":\"{ctm-api-key}\"}]"
         }
+
     ],
     "authenticationProviders": [],
     "skills": [],
@@ -76,6 +93,19 @@
                 },
                 "handoff": {
                     "handler": "/builtin/handoff"
+                }
+            },
+            "luis_models": {
+                "ctm-intent": {
+                    "application_id": "{luisApplicationId}",
+                    "subscription_key": "{luisPredictionKey}",
+                    "staging": false,
+                    "verbose": true,
+                    "region": "{luisLocation}",
+                    "enabled": true,
+                    "description": "ctm-intent",
+                    "scope": "Top Level Dialog",
+                    "intents": []
                 }
             }
         }        
