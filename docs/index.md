@@ -12,22 +12,34 @@ urlFragment: "update-this-to-unique-url-stub"
 
 
 ### Requirements
-* Clone/Download this repository to you local drive
+* Clone this repository to you local drive
+```
+git clone https://github.com/microsoft/ClinicalTrialsBlueprint
+cd ClinicalTrialsBlueprint
+```
 * [Install the Azure PowerShell module](https://docs.microsoft.com/en-us/powershell/azure/install-az-ps?view=azps-3.3.0)
+* [Install the Azure AD Module](https://docs.microsoft.com/en-us/powershell/azure/active-directory/install-adv2?view=azureadps-2.0)
 
 
 ### Connect to Azure Subscription
 ```PowerShell
 Login-AzAccount
 
-Set-AzContext -Subscription <Your Subscription Name>
+$account = Set-AzContext -Subscription <Your Subscription Name>
+
+
+```
+
+### Connect to Azure AD 
+```PowerShell
+Connect-AzureAD -TenantId $account.Tenant.Id
 ```
 
 ### FHIR Server
-Create a Resource group for the FHIR server. It must be in a separate resource group.
+Create a Resource group for the FHIR server. It must be in a separate resource group from other resources in the blueprint becuase we are creating a Windows service plan
 
 ```PowerShell
-$fhirRg = New-AzResourceGroup -Name ctm-fhir-blueprint -Location eastus
+$fhirRg = New-AzResourceGroup -Name <service>-Fhir -Location eastus
 ```
 Assign Fhir Server Name
 ```PowerShell
@@ -49,14 +61,20 @@ $metadata.RawContent
 ```
 It will take a minute or so for the server to respond the first time.
 
-### Text Analytics for Healthcare
+### Matching and Bot resources
 Create Resource Group for the that will contain all the resources required for the blueprint
 
 ```PowerShell
-$rg = New-AzResourceGroup -Name ctm-blueprint -Location eastus
+$rg = New-AzResourceGroup -Name <service>-Matching -Location eastus
 ```
 
 ### Matching Service
+
+Create a service proncipal. We will need it to allow programtic access to Key Vault
+
+```Powershell
+$sp = New-AzADServicePrincipal -DisplayName <service principal name>
+```
 
 Assign strcuturing service name
 ```Powershell
@@ -65,12 +83,7 @@ $matchingServiceName = <ctm matching service>
 
 Create Matching Service deployment
 ```Powershell
-New-AzResourceGroupDeployment -TemplateFile ..\arm-templates\azuredeploy-matching.json -ResourceGroupName $rg.ResourceGroupName -serviceName $matchingServiceName
-```
-
-Check that the query engine is up and running
-```Powershell
-Invoke-WebRequest -Uri https://$matchingServiceName-qe-webapp.azurewebsites.net/matching
+$output = New-AzResourceGroupDeployment -TemplateFile ..\arm-templates\azuredeploy-matching.json -ResourceGroupName $rg.ResourceGroupName -serviceName $matchingServiceName  -servicePrincipalObjectId $sp.Id -servicePrincipleClientId $sp.ApplicationId -servicePrincipalClientSecret $sp.secret
 ```
 
 ### Healthcare Bot
@@ -86,7 +99,7 @@ $saasSubscriptionId = .\marketplace.ps1 -name $botServiceName -planId free
 Deploy Healthcare Bot resources
 
 ```powershell
-.\default_azuredeploy.ps1 -ResourceGroup $rg.ResourceGroupName -saasSubscriptionId $saasSubscriptionId  -serviceName $botServiceName -botLocation US
+.\azuredeploy-healthcarebot.ps1 -ResourceGroup $rg.ResourceGroupName -saasSubscriptionId $saasSubscriptionId  -serviceName $botServiceName -botLocation US
 ```
 This command can take few minutes to complete.
 

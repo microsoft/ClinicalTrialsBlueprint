@@ -34,23 +34,19 @@
     },
     "queryEngineImageName": {
       "type": "string",
-      "defaultValue": "DOCKER|ctmdev.azurecr.io/query-engine:latest"
+      "defaultValue": "ctmdev.azurecr.io/query-engine:latest"
     },
     "dynamicCreteriaSelectionImageName": {
       "type": "string",
-      "defaultValue": "DOCKER|ctmdev.azurecr.io/dynamic-criterion-selection:latest"
+      "defaultValue": "ctmdev.azurecr.io/dynamic-criterion-selection:latest"
     },
     "disqualificationImageName": {
       "type":"string",
-      "defaultValue":"DOCKER|ctmdev.azurecr.io/clinical-trials-disqualification:latest"      
+      "defaultValue":"ctmdev.azurecr.io/clinical-trials-disqualification:latest"      
     },
     "ayalonDockerImageName": {
         "type": "string",
         "defaultValue": "ctmdev.azurecr.io/cognitive-services-healthcare:latest"
-    },
-    "proxyApiKey": {
-        "type": "string",
-        "defaultValue":"[newGuid()]"
     },
     "proxyDockerImageName": {
         "type": "string",
@@ -67,54 +63,167 @@
     }
   },
   "variables": {
+    "proxyApiKey":"[uniqueString(subscription().id)]",
     "fhirServerEndpoint":"[concat('https://',parameters('fhirServerName'),'.azurewebsites.net/')]",
-    "identityName": "[concat(parameters('serviceName'),'-identity')]",
-    "containerGroupName": "[concat(parameters('serviceName'),'-aci')]",
-    "keyVaultName": "[concat(parameters('serviceName'),'-kv')]",
-    "mapsServiceName": "[concat(parameters('serviceName'),'-map')]",
-    "redisCacheName": "[concat(parameters('serviceName'),'-redis')]",
+    "insightsName": "[concat(parameters('serviceName'),'-ctm-insights')]",
+    "identityName": "[concat(parameters('serviceName'),'-ctm-identity')]",
+    "containerGroupName": "[concat(parameters('serviceName'),'-ctm-aci')]",
+    "keyVaultName": "[concat(parameters('serviceName'),'-ctm-kv')]",
+    "mapsServiceName": "[concat(parameters('serviceName'),'-ctm-map')]",
+    "redisCacheName": "[concat(parameters('serviceName'),'-ctm-redis')]",
     "ctmServicePlan": "[concat(parameters('serviceName'),'-ctm-plan')]",
     "ayalonServicePlan": "[concat(parameters('serviceName'),'-ayalon-plan')]",
+    "ayalonWebAppName": "[concat(parameters('serviceName'),'-ayalon-webapp')]",
     "queryEngineWebAppName": "[concat(parameters('serviceName'),'-ctm-qe-webapp')]",
     "dynamicCriteriaSelectionWebAppName": "[concat(parameters('serviceName'),'-ctm-dcs-webapp')]",
     "disqualificationWebAppName": "[concat(parameters('serviceName'),'-ctm-disq-webapp')]",
-    "textAnalyticsName": "[concat(parameters('serviceName'),'-ta')]",
-    "ayalonWebAppName": "[concat(parameters('serviceName'),'-ayalon-webapp')]",
-    "composeTextAnalytics": {
-                "version": "3.3",
-                "services": {
-                    "ta": {
-                        "image": "[parameters('ayalonDockerImageName')]",
-                        "environment": {
-                            "ApiKey": "${apikey}",
-                            "Billing": "[concat('https://',variables('textAnalyticsName'),'.cognitiveservices.azure.com')]",
-                            "Eula": "accept"
-                        },
-                        "ports": [
-                            "5000"
-                        ]
-                    },
-                    "proxy": {
-                        "depends_on": [
-                            "ta"
-                        ],
-                        "ports": [
-                            "8081:80"
-                        ],
-                        "image": "[parameters('proxyDockerImageName')]",
-                        "environment": {
-                            "PROXY_TO": "ta:5000",
-                            "KEY_VAULT_URL": "[concat('https://',variables('keyVaultName'),'.vault.azure.net/')]",
-                            "AZURE_TENANT_ID": "[subscription().tenantId]",
-                            "AZURE_CLIENT_ID": "[parameters('servicePrincipleClientId')]",
-                            "AZURE_CLIENT_SECRET": "[parameters('servicePrincipalClientSecret')]"
-                        }
-                    }
-                }
-            }
+    "textAnalyticsName": "[concat(parameters('serviceName'),'-ctm-ta')]",
+    "textAnalyticsCompose": {
+          "version": "3.3",
+          "services": {
+              "ta": {
+                  "image": "[parameters('ayalonDockerImageName')]",
+                  "environment": {
+                      "ApiKey": "${apikey}",
+                      "Billing": "[concat('https://',variables('textAnalyticsName'),'.cognitiveservices.azure.com')]",
+                      "Eula": "accept"
+                  },
+                  "ports": [
+                      "5000"
+                  ]
+              },
+              "proxy": {
+                  "depends_on": [
+                      "ta"
+                  ],
+                  "ports": [
+                      "8081:80"
+                  ],
+                  "image": "[parameters('proxyDockerImageName')]",
+                  "environment": {
+                      "PROXY_TO": "ta:5000",
+                      "KEY_VAULT_URL": "[concat('https://',variables('keyVaultName'),'.vault.azure.net/')]",
+                      "AZURE_TENANT_ID": "[subscription().tenantId]",
+                      "AZURE_CLIENT_ID": "[parameters('servicePrincipleClientId')]",
+                      "AZURE_CLIENT_SECRET": "[parameters('servicePrincipalClientSecret')]"
+                  }
+              }
+          }
+      },
+      "queryEngineCompose": {
+          "version": "3.3",
+          "services": {
+              "qe": {
+                  "image": "[parameters('queryEngineImageName')]",
+                  "environment": {
+                      "KEY_VAULT_URL": "[concat('https://',variables('keyVaultName'),'.vault.azure.net/')]",
+                      "AZURE_TENANT_ID": "[subscription().tenantId]",
+                      "AZURE_CLIENT_ID": "[parameters('servicePrincipleClientId')]",
+                      "AZURE_CLIENT_SECRET": "[parameters('servicePrincipalClientSecret')]"
+                  },
+                  "ports": [
+                      "8081"
+                  ]
+              },
+              "proxy": {
+                  "depends_on": [
+                      "qe"
+                  ],
+                  "ports": [
+                      "8081:80"
+                  ],
+                  "image": "[parameters('proxyDockerImageName')]",
+                  "environment": {
+                      "PROXY_TO": "qe:80",
+                      "KEY_VAULT_URL": "[concat('https://',variables('keyVaultName'),'.vault.azure.net/')]",
+                      "AZURE_TENANT_ID": "[subscription().tenantId]",
+                      "AZURE_CLIENT_ID": "[parameters('servicePrincipleClientId')]",
+                      "AZURE_CLIENT_SECRET": "[parameters('servicePrincipalClientSecret')]"
+                  }
+              }
+          }
+
+      },
+      "dynamicCriteriaSelectionCompose" : {
+          "version": "3.3",
+          "services": {
+              "dcs": {
+                  "image": "[parameters('dynamicCreteriaSelectionImageName')]",
+                  "environment": {
+                      "KEY_VAULT_URL": "[concat('https://',variables('keyVaultName'),'.vault.azure.net/')]",
+                      "AZURE_TENANT_ID": "[subscription().tenantId]",
+                      "AZURE_CLIENT_ID": "[parameters('servicePrincipleClientId')]",
+                      "AZURE_CLIENT_SECRET": "[parameters('servicePrincipalClientSecret')]"
+                  },
+                  "ports": [
+                      "8081"
+                  ]
+              },
+              "proxy": {
+                  "depends_on": [
+                      "dcs"
+                  ],
+                  "ports": [
+                      "8081:80"
+                  ],
+                  "image": "[parameters('proxyDockerImageName')]",
+                  "environment": {
+                      "PROXY_TO": "dcs:80",
+                      "KEY_VAULT_URL": "[concat('https://',variables('keyVaultName'),'.vault.azure.net/')]",
+                      "AZURE_TENANT_ID": "[subscription().tenantId]",
+                      "AZURE_CLIENT_ID": "[parameters('servicePrincipleClientId')]",
+                      "AZURE_CLIENT_SECRET": "[parameters('servicePrincipalClientSecret')]"
+                  }
+              }
+          }
+
+      },
+      "disqualificationCompose":{
+          "version": "3.3",
+          "services": {
+              "disq": {
+                  "image": "[parameters('disqualificationImageName')]",
+                  "environment": {
+                      "KEY_VAULT_URL": "[concat('https://',variables('keyVaultName'),'.vault.azure.net/')]",
+                      "AZURE_TENANT_ID": "[subscription().tenantId]",
+                      "AZURE_CLIENT_ID": "[parameters('servicePrincipleClientId')]",
+                      "AZURE_CLIENT_SECRET": "[parameters('servicePrincipalClientSecret')]"
+                  },
+                  "ports": [
+                      "8081"
+                  ]
+              },
+              "proxy": {
+                  "depends_on": [
+                      "disq"
+                  ],
+                  "ports": [
+                      "8081:80"
+                  ],
+                  "image": "[parameters('proxyDockerImageName')]",
+                  "environment": {
+                      "PROXY_TO": "disq:80",
+                      "KEY_VAULT_URL": "[concat('https://',variables('keyVaultName'),'.vault.azure.net/')]",
+                      "AZURE_TENANT_ID": "[subscription().tenantId]",
+                      "AZURE_CLIENT_ID": "[parameters('servicePrincipleClientId')]",
+                      "AZURE_CLIENT_SECRET": "[parameters('servicePrincipalClientSecret')]"
+                  }
+              }
+          }
+      }         
 
   },
   "resources": [
+    {
+        "type": "microsoft.insights/components",
+        "apiVersion": "2015-05-01",
+        "name": "[variables('insightsName')]",
+        "location": "[resourceGroup().location]",
+        "kind": "web",
+        "properties": {
+            "Application_Type": "web"
+        }
+    },
     {
         "type": "Microsoft.CognitiveServices/accounts",
         "apiVersion": "2017-04-18",
@@ -227,7 +336,7 @@
             ],
             "netFrameworkVersion": "v4.0",
             "linuxFxVersion": "[concat('COMPOSE|',base64(
-                        replace(string(variables('composeTextAnalytics')),'${apikey}',listKeys(variables('textAnalyticsName'), '2017-04-18').key1)
+                        replace(string(variables('textAnalyticsCompose')),'${apikey}',listKeys(variables('textAnalyticsName'), '2017-04-18').key1)
                         ))]",
             "requestTracingEnabled": false,
             "remoteDebuggingEnabled": false,
@@ -406,7 +515,19 @@
         "[concat('Microsoft.KeyVault/vaults/', variables('keyVaultName'))]"
       ],
       "properties": {
-        "value": "[parameters('proxyApiKey')]"
+        "value": "[variables('proxyApiKey')]"
+      }
+    },
+    {
+      "type": "Microsoft.KeyVault/vaults/secrets",
+      "name": "[concat(variables('keyVaultName'), '/instrumentation-key')]",
+      "apiVersion": "2016-10-01",
+      "dependsOn": [
+        "[concat('Microsoft.KeyVault/vaults/', variables('keyVaultName'))]",
+        "[concat('Microsoft.Insights/components/', variables('insightsName'))]"
+      ],
+      "properties": {
+        "value": "[reference(variables('insightsName'), '2015-05-01').instrumentationKey]"
       }
     },
     {
@@ -504,11 +625,8 @@
       "name": "[variables('ctmServicePlan')]",
       "location": "[resourceGroup().location]",
       "sku": {
-        "name": "B3",
-        "tier": "Basic",
-        "size": "B3",
-        "family": "B",
-        "capacity": 1
+          "name": "P2v2",
+          "capacity": 1
       },
       "kind": "linux",
       "tags": {
@@ -623,7 +741,7 @@
           "hostingstart.html"
         ],
         "netFrameworkVersion": "v4.0",
-        "linuxFxVersion": "[parameters('queryEngineImageName')]",
+        "linuxFxVersion": "[concat('COMPOSE|',base64(string(variables('queryEngineCompose'))))]",
         "requestTracingEnabled": false,
         "remoteDebuggingEnabled": false,
         "remoteDebuggingVersion": "VS2019",
@@ -782,7 +900,7 @@
           "hostingstart.html"
         ],
         "netFrameworkVersion": "v4.0",
-        "linuxFxVersion": "[parameters('dynamicCreteriaSelectionImageName')]",
+        "linuxFxVersion": "[concat('COMPOSE|',base64(string(variables('dynamicCriteriaSelectionCompose'))))]",
         "requestTracingEnabled": false,
         "remoteDebuggingEnabled": false,
         "remoteDebuggingVersion": "VS2019",
@@ -941,7 +1059,7 @@
           "hostingstart.html"
         ],
         "netFrameworkVersion": "v4.0",
-        "linuxFxVersion": "[parameters('disqualificationImageName')]",
+        "linuxFxVersion": "[concat('COMPOSE|', base64(string(variables('disqualificationCompose'))))]",
         "requestTracingEnabled": false,
         "remoteDebuggingEnabled": false,
         "remoteDebuggingVersion": "VS2019",
@@ -1006,5 +1124,23 @@
         "hostNameType": "Verified"
       }
     }
-  ]
+  ],
+  "outputs":{
+    "proxyApiKey": {
+      "type":"string",
+      "value":"[variables('proxyApiKey')]"
+    },
+    "queryEngineEndpoint": {
+      "type":"string",
+      "value":"[concat('https://', variables('queryEngineWebAppName'),'.azurewebsites.net')]"
+    },
+    "dynamicCriteriaSelectionEndpoint": {
+      "type":"string",
+      "value":"[concat('https://', variables('dynamicCriteriaSelectionWebAppName'),'.azurewebsites.net')]"
+    },
+    "disqualificationEndpoint": {
+      "type":"string",
+      "value":"[concat('https://', variables('disqualificationWebAppName'),'.azurewebsites.net')]"
+    }
+  }
 }

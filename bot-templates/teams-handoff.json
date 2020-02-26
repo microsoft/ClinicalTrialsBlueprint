@@ -25,7 +25,16 @@
             }
         }
     ],
-    "dataConnections": [],
+    "dataConnections": [
+        {
+            "type": "custom",
+            "name": "query-engine",
+            "description": "query-engine",
+            "base_url": "{qe-baseurl}",
+            "auth_provider": "",
+            "static_parameters": "[{\"key\":\"x-ctm-api-key\",\"type\":\"header\",\"value\":\"{ctm-api-key}\"}]"
+        }
+    ],
     "authenticationProviders": [],
     "skills": [],
     "localization": {

@@ -8,7 +8,9 @@ param(
     [ValidateSet("US","EU")]
     $botLocation,
     [Parameter(Mandatory=$true)]
-    $ResourceGroup
+    $ResourceGroup,
+    [Parameter(Mandatory=$true)]
+    $matchingParameters
 )
 
 . ./profile.ps1
@@ -72,8 +74,11 @@ Try {
     Get-ChildItem -Path $restorePath | ForEach-Object {
         Write-Host "Importing template from " $_.BaseName "..." -NoNewline
         $restoreJSON = Get-Content -Raw -Path $_.FullName
-        
+
         # Here you need to replace the place holders with real data
+
+        $restoreJSON = $restoreJSON.Replace('{ctm-api-key}', $matchingParameters.proxyApiKey.Value)
+        $restoreJSON = $restoreJSON.Replace('{qe-baseurl}', $qeBaseUrl)
 
         $saasTenant = Restore-HbsTenant -location $botLocation -tenant $saasTenant `
                                         -data $restoreJSON -saasSubscriptionId $saasSubscriptionId
