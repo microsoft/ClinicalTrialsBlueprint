@@ -118,20 +118,19 @@
                   "image": "[parameters('queryEngineImageName')]",
                   "environment": {
                       "key_vault__address": "[concat('https://',variables('keyVaultName'),'.vault.azure.net/')]",
-                      "AZURE_TENANT_ID": "[subscription().tenantId]",
-                      "AZURE_CLIENT_ID": "[parameters('servicePrincipleClientId')]",
-                      "AZURE_CLIENT_SECRET": "[parameters('servicePrincipalClientSecret')]"
-                  },
-                  "ports": [
-                      "8081"
-                  ]
+                      "AzureServicesAuthConnectionString":"[concat(
+                              'RunAs=App;AppId',parameters('servicePrincipleClientId'),
+                              ';TenantId=',subscription().tenantId,
+                              ';AppKey=',parameters('servicePrincipalClientSecret'))]"
+
+                  }
               },
               "proxy": {
                   "depends_on": [
                       "qe"
                   ],
                   "ports": [
-                      "8081:80"
+                      "80:80"
                   ],
                   "image": "[parameters('proxyDockerImageName')]",
                   "environment": {
@@ -152,20 +151,18 @@
                   "image": "[parameters('dynamicCreteriaSelectionImageName')]",
                   "environment": {
                       "key_vault__address": "[concat('https://',variables('keyVaultName'),'.vault.azure.net/')]",
-                      "AZURE_TENANT_ID": "[subscription().tenantId]",
-                      "AZURE_CLIENT_ID": "[parameters('servicePrincipleClientId')]",
-                      "AZURE_CLIENT_SECRET": "[parameters('servicePrincipalClientSecret')]"
-                  },
-                  "ports": [
-                      "8081"
-                  ]
+                      "AzureServicesAuthConnectionString":"[concat(
+                              'RunAs=App;AppId',parameters('servicePrincipleClientId'),
+                              ';TenantId=',subscription().tenantId,
+                              ';AppKey=',parameters('servicePrincipalClientSecret'))]"
+                  }
               },
               "proxy": {
                   "depends_on": [
                       "dcs"
                   ],
                   "ports": [
-                      "8081:80"
+                      "80:80"
                   ],
                   "image": "[parameters('proxyDockerImageName')]",
                   "environment": {
@@ -186,20 +183,19 @@
                   "image": "[parameters('disqualificationImageName')]",
                   "environment": {
                       "key_vault__address": "[concat('https://',variables('keyVaultName'),'.vault.azure.net/')]",
-                      "AZURE_TENANT_ID": "[subscription().tenantId]",
-                      "AZURE_CLIENT_ID": "[parameters('servicePrincipleClientId')]",
-                      "AZURE_CLIENT_SECRET": "[parameters('servicePrincipalClientSecret')]"
-                  },
-                  "ports": [
-                      "8081"
-                  ]
+                      "AzureServicesAuthConnectionString":"[concat(
+                              'RunAs=App;AppId',parameters('servicePrincipleClientId'),
+                              ';TenantId=',subscription().tenantId,
+                              ';AppKey=',parameters('servicePrincipalClientSecret'))]"
+
+                  }
               },
               "proxy": {
                   "depends_on": [
                       "disq"
                   ],
                   "ports": [
-                      "8081:80"
+                      "80:80"
                   ],
                   "image": "[parameters('proxyDockerImageName')]",
                   "environment": {
@@ -581,11 +577,19 @@
                 },
                 {
                   "name": "ayalon__address",
-                  "value": "[concat(variables('ayalonWebAppName'),'.azurewebsites.net','text/analytics/v3.0-preview.1/domains/health') ]"
+                  "value": "[concat('https://',variables('ayalonWebAppName'),'.azurewebsites.net','text/analytics/v3.0-preview.1/domains/health') ]"
                 },
                 {
                   "name": "redis__key",
                   "value": "[listKeys(resourceId('Microsoft.Cache/Redis', variables('redisCacheName')), '2015-08-01').primaryKey]"
+                },
+                {
+                  "name": "AzureServicesAuthConnectionString",
+                  "value": "[concat(
+                             'RunAs=App;AppId',parameters('servicePrincipleClientId'),
+                             ';TenantId=',subscription().tenantId,
+                             ';AppKey=',parameters('servicePrincipalClientSecret'))]"
+
                 }
               ],
               "resources": {
