@@ -19,7 +19,6 @@ param(
 
 $context = Get-AzContext
 $subscriptionId = $context.subscription.id
-$luisAuthLocation = "westus" # Authoring location is only in West US
 
 $env="-dev"
 $portalEndpoint = "https://us.healthbot$env.microsoft.com/account"
@@ -35,6 +34,7 @@ Try {
                                             -TemplateFile "../arm-templates/azuredeploy-healthcarebot.json"                                             
 
     $output
+    $luisAuthLocation = $output.Parameters.luisAuthLocation.Value
     
     $tenantId = $output.Outputs["serviceUniqueName"].Value    
 
@@ -108,9 +108,9 @@ Try {
         $restoreJSON = $restoreJSON.Replace('{qe-baseurl}', $matchingParameters.queryEngineEndpoint.Value)
         $restoreJSON = $restoreJSON.Replace('{dcs-baseurl}', $matchingParameters.dynamicCriteriaSelectionEndpoint.Value)
         $restoreJSON = $restoreJSON.Replace('{disq-baseurl}', $matchingParameters.dynamicCriteriaSelectionEndpoint.Value)
-        $restoreJSON = $restoreJSON.Replace('{luisApplicationId}', $luisApplications["ctm"])
+        $restoreJSON = $restoreJSON.Replace('{luisApplicationId}', $luisApplications["metadata_clinical_trials"])
         $restoreJSON = $restoreJSON.Replace('{luisPredictionKey}', $output.Outputs["luisPredictionKey"].Value)
-        $restoreJSON = $restoreJSON.Replace('{luisLocation}', $output.Parameters["luisLocation"].Value)
+        $restoreJSON = $restoreJSON.Replace('{luisLocation}', $output.Parameters.luisPredictionLocation.Value)
 
         $saasTenant = Restore-HbsTenant -location $botLocation -tenant $saasTenant `
                                         -data $restoreJSON -saasSubscriptionId $saasSubscriptionId
@@ -119,11 +119,10 @@ Try {
 
     $webchatSecret = $saasTenant.webchat_secret
 
-    Write-Host "Your Healthcare Bot is now ready! You can access various resources below:" -ForegroundColor Green
-    Write-Host " - Management Portal: " $portalEndpoint/$tenantId -ForegroundColor Green
-    Write-Host " - Marketplace SaaS Application: https://ms.portal.azure.com/#@/resource/providers/Microsoft.SaaS/saasresources/$saasSubscriptionId/overview" -ForegroundColor Green
-    Write-Host " - WebChat Client: https://hatenantstorageprod.blob.core.windows.net/public-websites/webchat/index.html?s=$webchatSecret" -ForegroundColor Green
-
+    Select-Object @{n = "portal"; e = {"$portalEndpoint/$tenantId"}},
+                  @{n = "SaaSApplication"; e = {"https://ms.portal.azure.com/#@/resource/providers/Microsoft.SaaS/saasresources/$saasSubscriptionId/overview"}},
+                  @{n = "WebChat"; e ={"https://hatenantstorageprod.blob.core.windows.net/public-websites/webchat/index.html?s=$webchatSecret"}} -InputObject ""
+    
 }    
 Catch {
     Write-Host

@@ -212,7 +212,7 @@
                             "xLocation": 214,
                             "yLocation": 660
                         },
-                        "dataConnection": "ctm-query-engine-dev",
+                        "dataConnection": "ctm-query-engine-prod",
                         "urlBase": "https://ctm-query-engine-webapp-eastus-dev.azurewebsites.net",
                         "urlPath": "exit",
                         "urlParams": "",

@@ -88,7 +88,7 @@ $saasSubscriptionId = .\marketplace.ps1 -name $botServiceName -planId free
 Deploy Healthcare Bot resources
 
 ```powershell
-.\azuredeploy-healthcarebot.ps1 -ResourceGroup $rg.ResourceGroupName -saasSubscriptionId $saasSubscriptionId  -serviceName $botServiceName -botLocation US -matchingParameters $matchingOutput
+.\azuredeploy-healthcarebot.ps1 -ResourceGroup $rg.ResourceGroupName -saasSubscriptionId $saasSubscriptionId  -serviceName $botServiceName -botLocation US -matchingParameters $matchingOutput.Outputs
 ```
 This command can take few minutes to complete.
 
