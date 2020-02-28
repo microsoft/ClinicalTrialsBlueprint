@@ -53,7 +53,7 @@ Try {
                                                      -authKey $output.Outputs["luisAuthotingKey"].Value
         if ($null -eq $luisApplication) {    
             Write-Host "Not found - Importing LUIS Application from " $_.BaseName "..." -NoNewline
-            $luisJSON = Get-Content -Raw -Path $_.FullName
+            $luisJSON = Get-Content -Raw -Path $_.FullName -Encoding UTF8
             $luisApplicationId = Import-LuisApplication -appName $_.BaseName -luisJSON $luisJSON -location $luisAuthLocation  `
                                                         -authKey $output.Outputs["luisAuthotingKey"].Value
             Write-Host "Done" -ForegroundColor Green

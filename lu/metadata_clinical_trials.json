@@ -21,8 +21,8 @@
     {
       "name": "gender",
       "roles": [
-        "male",
-        "female"
+        "female",
+        "male"
       ]
     },
     {

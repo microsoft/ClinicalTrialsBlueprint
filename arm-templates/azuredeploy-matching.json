@@ -118,10 +118,11 @@
                   "image": "[parameters('queryEngineImageName')]",
                   "environment": {
                       "key_vault__address": "[concat('https://',variables('keyVaultName'),'.vault.azure.net/')]",
-                      "AzureServicesAuthConnectionString":"[concat(
-                              'RunAs=App;AppId',parameters('servicePrincipleClientId'),
-                              ';TenantId=',subscription().tenantId,
-                              ';AppKey=',parameters('servicePrincipalClientSecret'))]"
+                      "AzureServicesAuthConnectionString":"[format(
+                              'RunAs=App;AppId={0};TenantId={1};AppKey={2}',
+                               parameters('servicePrincipleClientId'),
+                               subscription().tenantId,
+                               parameters('servicePrincipalClientSecret'))]"
 
                   }
               },
@@ -151,10 +152,11 @@
                   "image": "[parameters('dynamicCreteriaSelectionImageName')]",
                   "environment": {
                       "key_vault__address": "[concat('https://',variables('keyVaultName'),'.vault.azure.net/')]",
-                      "AzureServicesAuthConnectionString":"[concat(
-                              'RunAs=App;AppId',parameters('servicePrincipleClientId'),
-                              ';TenantId=',subscription().tenantId,
-                              ';AppKey=',parameters('servicePrincipalClientSecret'))]"
+                      "AzureServicesAuthConnectionString":"[format(
+                              'RunAs=App;AppId={0};TenantId={1};AppKey={2}',
+                               parameters('servicePrincipleClientId'),
+                               subscription().tenantId,
+                               parameters('servicePrincipalClientSecret'))]"
                   }
               },
               "proxy": {
@@ -183,10 +185,11 @@
                   "image": "[parameters('disqualificationImageName')]",
                   "environment": {
                       "key_vault__address": "[concat('https://',variables('keyVaultName'),'.vault.azure.net/')]",
-                      "AzureServicesAuthConnectionString":"[concat(
-                              'RunAs=App;AppId',parameters('servicePrincipleClientId'),
-                              ';TenantId=',subscription().tenantId,
-                              ';AppKey=',parameters('servicePrincipalClientSecret'))]"
+                      "AzureServicesAuthConnectionString":"[format(
+                              'RunAs=App;AppId={0};TenantId={1};AppKey={2}',
+                               parameters('servicePrincipleClientId'),
+                               subscription().tenantId,
+                               parameters('servicePrincipalClientSecret'))]"
 
                   }
               },
@@ -585,10 +588,11 @@
                 },
                 {
                   "name": "AzureServicesAuthConnectionString",
-                  "value": "[concat(
-                             'RunAs=App;AppId',parameters('servicePrincipleClientId'),
-                             ';TenantId=',subscription().tenantId,
-                             ';AppKey=',parameters('servicePrincipalClientSecret'))]"
+                  "value": "[format(
+                             'RunAs=App;AppId={0};TenantId={1};AppKey={2}',
+                              parameters('servicePrincipleClientId'),
+                              subscription().tenantId,
+                              parameters('servicePrincipalClientSecret'))]"
 
                 }
               ],

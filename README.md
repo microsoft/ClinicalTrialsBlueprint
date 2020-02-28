@@ -17,7 +17,6 @@ Login-AzAccount
 
 $account = Set-AzContext -Subscription <Your Subscription Name>
 
-
 ```
 
 ### Connect to Azure AD 
@@ -73,7 +72,7 @@ $matchingServiceName = <ctm matching service>
 
 Create Matching Service deployment
 ```Powershell
-$output = New-AzResourceGroupDeployment -TemplateFile ..\arm-templates\azuredeploy-matching.json -ResourceGroupName $rg.ResourceGroupName -serviceName $matchingServiceName  -servicePrincipalObjectId $sp.Id -servicePrincipleClientId $sp.ApplicationId -servicePrincipalClientSecret $sp.secret
+$matchingOutput = New-AzResourceGroupDeployment -TemplateFile ..\arm-templates\azuredeploy-matching.json -ResourceGroupName $rg.ResourceGroupName -serviceName $matchingServiceName  -servicePrincipalObjectId $sp.Id -servicePrincipleClientId $sp.ApplicationId -servicePrincipalClientSecret $sp.secret
 ```
 
 ### Healthcare Bot
@@ -89,7 +88,7 @@ $saasSubscriptionId = .\marketplace.ps1 -name $botServiceName -planId free
 Deploy Healthcare Bot resources
 
 ```powershell
-.\azuredeploy-healthcarebot.ps1 -ResourceGroup $rg.ResourceGroupName -saasSubscriptionId $saasSubscriptionId  -serviceName $botServiceName -botLocation US
+.\azuredeploy-healthcarebot.ps1 -ResourceGroup $rg.ResourceGroupName -saasSubscriptionId $saasSubscriptionId  -serviceName $botServiceName -botLocation US -matchingParameters $matchingOutput
 ```
 This command can take few minutes to complete.
 
