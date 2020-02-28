@@ -1,13 +1,3 @@
----
-page_type: sample
-languages:
-- csharp
-products:
-- dotnet
-description: "Add 150 character max description"
-urlFragment: "update-this-to-unique-url-stub"
----
-
 # Clinical Trials Matching Service Blueprint
 
 
@@ -18,21 +8,12 @@ git clone https://github.com/microsoft/ClinicalTrialsBlueprint
 cd ClinicalTrialsBlueprint
 ```
 * [Install the Azure PowerShell module](https://docs.microsoft.com/en-us/powershell/azure/install-az-ps?view=azps-3.3.0)
-* [Install the Azure AD Module](https://docs.microsoft.com/en-us/powershell/azure/active-directory/install-adv2?view=azureadps-2.0)
 
 
 ### Connect to Azure Subscription
 ```PowerShell
 Login-AzAccount
-
 $account = Set-AzContext -Subscription <Your Subscription Name>
-
-
-```
-
-### Connect to Azure AD 
-```PowerShell
-Connect-AzureAD -TenantId $account.Tenant.Id
 ```
 
 ### FHIR Server
@@ -52,7 +33,7 @@ Create the Fhir server deployment. You will to provide a admin password for the 
 New-AzResourceGroupDeployment -ResourceGroupName $fhirRg.ResourceGroupName -TemplateFile ..\arm-templates\azuredeploy-fhir.json -serviceName $fhirServiceName
 ```
 
-Verify that the Fhir Server is running
+Verify that the FHIR Server is running
 
 ```PowerShell
 $metadataUrl = "https://$fhirServiceName.azurewebsites.net/metadata" 
@@ -83,13 +64,13 @@ $matchingServiceName = <ctm matching service>
 
 Create Matching Service deployment
 ```Powershell
-$output = New-AzResourceGroupDeployment -TemplateFile ..\arm-templates\azuredeploy-matching.json -ResourceGroupName $rg.ResourceGroupName -serviceName $matchingServiceName  -servicePrincipalObjectId $sp.Id -servicePrincipleClientId $sp.ApplicationId -servicePrincipalClientSecret $sp.secret
+$matchingOutput = New-AzResourceGroupDeployment -TemplateFile ..\arm-templates\azuredeploy-matching.json -ResourceGroupName $rg.ResourceGroupName -serviceName $matchingServiceName  -servicePrincipalObjectId $sp.Id -servicePrincipleClientId $sp.ApplicationId -servicePrincipalClientSecret $sp.secret
 ```
 
 ### Healthcare Bot
 Assign the Healthcare Bot service name 
 ```Powershell
-$botServiceName = "ctm-bot"
+$botServiceName = <healthcare bot service>
 ```
 Create the Healthcare Bot SaaS Application
 ```powershell
@@ -99,8 +80,6 @@ $saasSubscriptionId = .\marketplace.ps1 -name $botServiceName -planId free
 Deploy Healthcare Bot resources
 
 ```powershell
-.\azuredeploy-healthcarebot.ps1 -ResourceGroup $rg.ResourceGroupName -saasSubscriptionId $saasSubscriptionId  -serviceName $botServiceName -botLocation US
+.\azuredeploy-healthcarebot.ps1 -ResourceGroup $rg.ResourceGroupName -saasSubscriptionId $saasSubscriptionId  -serviceName $botServiceName -botLocation US -matchingParameters $matchingOutput.Outputs
 ```
 This command can take few minutes to complete.
-
-
