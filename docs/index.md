@@ -2,7 +2,7 @@
 
 
 ### Requirements
-* Clone this repository to you local drive
+* Clone this repository to your local drive
 ```
 git clone https://github.com/microsoft/ClinicalTrialsBlueprint
 cd ClinicalTrialsBlueprint
@@ -16,7 +16,7 @@ Login-AzAccount
 $account = Set-AzContext -Subscription <Your Subscription Name>
 ```
 
-### FHIR Server
+### Setup the FHIR Server
 Create a Resource group for the FHIR server. It must be in a separate resource group from other resources in the blueprint becuase we are creating a Windows service plan
 
 ```PowerShell
@@ -42,32 +42,51 @@ $metadata.RawContent
 ```
 It will take a minute or so for the server to respond the first time.
 
-### Matching and Bot resources
+### Setup the Matching service
 Create Resource Group for the that will contain all the resources required for the blueprint
 
 ```PowerShell
 $rg = New-AzResourceGroup -Name <service>-Matching -Location eastus
 ```
 
-### Matching Service
-
-Create a service proncipal. We will need it to allow programtic access to Key Vault
+Create a service principal. It will enable the matching services a programmatic access to the Key Vault
 
 ```Powershell
 $sp = New-AzADServicePrincipal -DisplayName <service principal name>
 ```
 
-Assign strcuturing service name
+Assign a name for the matching service
 ```Powershell
 $matchingServiceName = <ctm matching service>
 ```
 
-Create Matching Service deployment
+Create Matching service Azure resources
 ```Powershell
 $matchingOutput = New-AzResourceGroupDeployment -TemplateFile ..\arm-templates\azuredeploy-matching.json -ResourceGroupName $rg.ResourceGroupName -serviceName $matchingServiceName  -servicePrincipalObjectId $sp.Id -servicePrincipleClientId $sp.ApplicationId -servicePrincipalClientSecret $sp.secret
 ```
 
-### Healthcare Bot
+Check that the TextAnalytics for Healthcare service is running
+```powershell
+$taUrl = "https://$matchingServiceName-ayalon-webapp.azurewebsites.net/status"
+$taResponse = Invoke-WebRequest -Uri $taUrl
+$taResponse.RawContent
+```
+
+Check that the Query Engine Service is running
+```powershell
+$queryEngineUrl = "https://$matchingServiceName-ctm-qe-webapp.azurewebsites.net/"
+$queryEngineResponse = Invoke-WebRequest -Uri $queryEngineUrl
+$queryEngineResponse.RawContent
+```
+
+Check that the Disqualification Engine Service is running
+```powershell
+$disqualificationEngineUrl = "https://$matchingServiceName-ctm-disq-webapp.azurewebsites.net/"
+$disqualificationEngineResponse = Invoke-WebRequest -Uri $disqualificationEngineUrl
+$disqualificationEngineResponse.RawContent
+```
+
+### Setup the Healthcare Bot Service
 Assign the Healthcare Bot service name 
 ```Powershell
 $botServiceName = <healthcare bot service>
