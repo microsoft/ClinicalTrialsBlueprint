@@ -57,12 +57,12 @@ $sp = New-AzADServicePrincipal -DisplayName <service principal name>
 
 Assign a name for the matching service
 ```Powershell
-$matchingServiceName = <ctm matching service>
+$ctmServiceName = <ctm matching service>
 ```
 
 Create Matching service Azure resources
 ```Powershell
-$matchingOutput = New-AzResourceGroupDeployment -TemplateFile ..\arm-templates\azuredeploy-matching.json -ResourceGroupName $rg.ResourceGroupName -serviceName $matchingServiceName  -servicePrincipalObjectId $sp.Id -servicePrincipleClientId $sp.ApplicationId -servicePrincipalClientSecret $sp.secret
+$matchingOutput = New-AzResourceGroupDeployment -TemplateFile ..\arm-templates\azuredeploy-ctm.json -ResourceGroupName $rg.ResourceGroupName -serviceName $matchingServiceName  -servicePrincipalObjectId $sp.Id -servicePrincipleClientId $sp.ApplicationId -servicePrincipalClientSecret $sp.secret
 ```
 
 Check that the TextAnalytics for Healthcare service is running
@@ -102,3 +102,13 @@ Deploy Healthcare Bot resources
 .\azuredeploy-healthcarebot.ps1 -ResourceGroup $rg.ResourceGroupName -saasSubscriptionId $saasSubscriptionId  -serviceName $botServiceName -botLocation US -matchingParameters $matchingOutput.Outputs
 ```
 This command can take few minutes to complete.
+
+### Setup PostgreSQL Server
+Install the PostgreSQL tools from [here](https://www.postgresql.org/download/windows/)
+
+Download as static copy of the AACT from [here](https://aact.ctti-clinicaltrials.org/snapshots)
+
+Restore the DB from the dump file with pg_restore utility
+```
+pg_restore -x --host findcare-ctm-postgresql.postgres.database.azure.com --port 5432 --username "arie@findcare-ctm-postgresql" --dbname "ctdb" --role="azure_superuser" --verbose "C:\Users\Arie\Downloads\20200229_clinical_trials\postgres_data.dmp"
+```

@@ -60,6 +60,12 @@
     },
     "servicePrincipalClientSecret": {
       "type":"securestring"
+    },
+    "postgreSqlAdministratorLogin": {
+        "type": "string"
+    },
+    "postgreSqladministratorLoginPassword": {
+        "type": "securestring"
     }
   },
   "variables": {
@@ -77,6 +83,7 @@
     "queryEngineWebAppName": "[concat(parameters('serviceName'),'-ctm-qe-webapp')]",
     "dynamicCriteriaSelectionWebAppName": "[concat(parameters('serviceName'),'-ctm-dcs-webapp')]",
     "disqualificationWebAppName": "[concat(parameters('serviceName'),'-ctm-disq-webapp')]",
+    "postgresqlServerFullName":"[concat(parameters('serviceName'),'-ctm-postgresql')]",
     "textAnalyticsName": "[concat(parameters('serviceName'),'-ctm-ta')]",
     "textAnalyticsCompose": {
           "version": "3.3",
@@ -1183,6 +1190,42 @@
         "siteName": "ctm-clinical-trials-disqualification-webapp-eastus-dev",
         "hostNameType": "Verified"
       }
+    },
+    {
+        "type": "Microsoft.DBforPostgreSQL/servers",
+        "apiVersion": "2017-12-01",
+        "name": "[variables('postgresqlServerFullName')]",
+        "location": "[resourceGroup().location]",
+        "sku": {
+            "name": "GP_Gen5_4",
+            "tier": "GeneralPurpose",
+            "family": "Gen5",
+            "capacity": 4
+        },
+        "properties": {
+            "administratorLogin": "[parameters('postgreSqlAdministratorLogin')]",
+            "administratorLoginPassword": "[parameters('postgreSqladministratorLoginPassword')]",                
+            "storageProfile": {
+                "storageMB": 102400,
+                "backupRetentionDays": 7,
+                "geoRedundantBackup": "Disabled",
+                "storageAutogrow": "Enabled"
+            },
+            "version": "11",
+            "sslEnforcement": "Disabled"
+        }
+    },
+    {
+        "type": "Microsoft.DBforPostgreSQL/servers/databases",
+        "apiVersion": "2017-12-01",
+        "name": "[concat(variables('postgresqlServerFullName'), '/ctdb')]",
+        "dependsOn": [
+            "[resourceId('Microsoft.DBforPostgreSQL/servers', variables('postgresqlServerFullName'))]"
+        ],
+        "properties": {
+            "charset": "UTF8",
+            "collation": "English_United States.1252"
+        }
     }
   ],
   "outputs":{
@@ -1201,6 +1244,12 @@
     "disqualificationEndpoint": {
       "type":"string",
       "value":"[concat('https://', variables('disqualificationWebAppName'),'.azurewebsites.net')]"
+    },
+    "postgresqlConnectionString":{
+        "type":"string",
+        "value":"[concat('psql \"host=',variables('postgresqlServerFullName'),'.postgres.database.azure.com port=5432 dbname=ctdb user=',
+                  parameters('postgreSqlAdministratorLogin'),'@',variables('postgresqlServerFullName'), ' password=<password> sslmode=require\"')]"
     }
+  
   }
 }

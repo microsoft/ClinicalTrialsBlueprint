@@ -2,12 +2,12 @@
 
 
 ### Requirements
-* Clone this repository to your local drive
+Clone this repository to your local drive
 ```
 git clone https://github.com/microsoft/ClinicalTrialsBlueprint
 cd ClinicalTrialsBlueprint
 ```
-* [Install the Azure PowerShell module](https://docs.microsoft.com/en-us/powershell/azure/install-az-ps?view=azps-3.3.0)
+[Install the Azure PowerShell module](https://docs.microsoft.com/en-us/powershell/azure/install-az-ps?view=azps-3.3.0)
 
 
 ### Connect to Azure Subscription
@@ -62,7 +62,7 @@ $matchingServiceName = <ctm matching service>
 
 Create Matching service Azure resources
 ```Powershell
-$matchingOutput = New-AzResourceGroupDeployment -TemplateFile ..\arm-templates\azuredeploy-matching.json -ResourceGroupName $rg.ResourceGroupName -serviceName $matchingServiceName  -servicePrincipalObjectId $sp.Id -servicePrincipleClientId $sp.ApplicationId -servicePrincipalClientSecret $sp.secret
+$matchingOutput = New-AzResourceGroupDeployment -TemplateFile ..\arm-templates\azuredeploy-ctm.json -ResourceGroupName $rg.ResourceGroupName -serviceName $matchingServiceName  -servicePrincipalObjectId $sp.Id -servicePrincipleClientId $sp.ApplicationId -servicePrincipalClientSecret $sp.secret
 ```
 
 Check that the TextAnalytics for Healthcare service is running
@@ -102,3 +102,10 @@ Deploy Healthcare Bot resources
 .\azuredeploy-healthcarebot.ps1 -ResourceGroup $rg.ResourceGroupName -saasSubscriptionId $saasSubscriptionId  -serviceName $botServiceName -botLocation US -matchingParameters $matchingOutput.Outputs
 ```
 This command can take few minutes to complete.
+
+### Setup PostgreSQL Server
+Install the PostgreSQL tools from [here](https://www.postgresql.org/download/windows/)
+
+Download as static copy of the AACT from [here](https://aact.ctti-clinicaltrials.org/snapshots)
+
+
