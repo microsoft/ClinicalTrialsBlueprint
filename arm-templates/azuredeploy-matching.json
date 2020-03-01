@@ -7,50 +7,50 @@
     },
     "env": {
       "type": "string",
-      "defaultValue": "dev_us"
+      "defaultValue": "prod_us"
     },
     "fhirServerName": {
       "type": "string",
-      "defaultValue": "fhirosr4sql"
+      "defaultValue": "ctm-fhir-service"
     },
     "acrServer": {
       "type": "string",
-      "defaultValue": "ctmdev.azurecr.io"
+      "defaultValue": "ctmprod.azurecr.io"
     },
     "acrUsername": {
       "type": "string",
-      "defaultValue": "ctmdev"
+      "defaultValue": "ctmprod"
     },
     "acrPassword": {
       "type": "securestring"
     },
     "structuringImageName": {
       "type": "string",
-      "defaultValue": "ctmdev.azurecr.io/clinical-trials-structuring"
+      "defaultValue": "ctmprod.azurecr.io/clinical-trials-structuring-subset"
     },
     "constituencyParserImageName": {
       "type": "string",
-      "defaultValue": "ctmdev.azurecr.io/constituency-parser-server"
+      "defaultValue": "ctmprod.azurecr.io/constituency-parser-server"
     },
     "queryEngineImageName": {
       "type": "string",
-      "defaultValue": "ctmdev.azurecr.io/query-engine:latest"
+      "defaultValue": "ctmprod.azurecr.io/query-engine:latest"
     },
     "dynamicCreteriaSelectionImageName": {
       "type": "string",
-      "defaultValue": "ctmdev.azurecr.io/dynamic-criterion-selection:latest"
+      "defaultValue": "ctmprod.azurecr.io/dynamic-criterion-selection:latest"
     },
     "disqualificationImageName": {
       "type":"string",
-      "defaultValue":"ctmdev.azurecr.io/clinical-trials-disqualification:latest"      
+      "defaultValue":"ctmprod.azurecr.io/clinical-trials-disqualification:latest"      
     },
     "ayalonDockerImageName": {
         "type": "string",
-        "defaultValue": "ctmdev.azurecr.io/cognitive-services-healthcare:latest"
+        "defaultValue": "ctmprod.azurecr.io/cognitive-services-healthcare:latest"
     },
     "proxyDockerImageName": {
         "type": "string",
-        "defaultValue": "ctmdev.azurecr.io/clinical-trials-proxy:latest"
+        "defaultValue": "ctmprod.azurecr.io/clinical-trials-proxy:latest"
     },
     "servicePrincipalObjectId":{
       "type": "string"
@@ -122,8 +122,15 @@
                               'RunAs=App;AppId={0};TenantId={1};AppKey={2}',
                                parameters('servicePrincipleClientId'),
                                subscription().tenantId,
-                               parameters('servicePrincipalClientSecret'))]"
-
+                               parameters('servicePrincipalClientSecret'))]",
+                      "ASPNETCORE_ENVIRONMENT":"[parameters('env')]",
+                      "ctti__host":"aact-db.ctti-clinicaltrials.org",
+                      "ctti__user_name":"arieschwartzman",
+                      "ctti__secret_name":"ctti-client-secret",
+                      "ctti__database":"aact",
+                      "redis__address":"[concat(variables('redisCacheName'),'.redis.cache.windows.net')]",
+                      "redis__secret_name":"redis-client-secret",
+                      "application_insight__instrumentation_key":"${insrumentation_key}"
                   }
               },
               "proxy": {
@@ -156,7 +163,16 @@
                               'RunAs=App;AppId={0};TenantId={1};AppKey={2}',
                                parameters('servicePrincipleClientId'),
                                subscription().tenantId,
-                               parameters('servicePrincipalClientSecret'))]"
+                               parameters('servicePrincipalClientSecret'))]",
+                      "ASPNETCORE_ENVIRONMENT":"[parameters('env')]",
+                      "ctti__host":"aact-db.ctti-clinicaltrials.org",
+                      "ctti__user_name":"arieschwartzman",
+                      "ctti__secret_name":"ctti-client-secret",
+                      "ctti__database":"aact",
+                      "redis__address":"[concat(variables('redisCacheName'),'.redis.cache.windows.net')]",
+                      "redis__secret_name":"redis-client-secret",
+                      "application_insight__instrumentation_key":"${insrumentation_key}"
+
                   }
               },
               "proxy": {
@@ -169,10 +185,10 @@
                   "image": "[parameters('proxyDockerImageName')]",
                   "environment": {
                       "PROXY_TO": "dcs:80",
-                      "key_vault__address": "[concat('https://',variables('keyVaultName'),'.vault.azure.net/')]",
+                      "KEY_VAULT_URL": "[concat('https://',variables('keyVaultName'),'.vault.azure.net/')]",
                       "AZURE_TENANT_ID": "[subscription().tenantId]",
                       "AZURE_CLIENT_ID": "[parameters('servicePrincipleClientId')]",
-                      "AZURE_CLIENT_SECRET": "[parameters('servicePrincipalClientSecret')]"
+                      "AZURE_CLIENT_SECRET": "[parameters('servicePrincipalClientSecret')]"                      
                   }
               }
           }
@@ -189,8 +205,15 @@
                               'RunAs=App;AppId={0};TenantId={1};AppKey={2}',
                                parameters('servicePrincipleClientId'),
                                subscription().tenantId,
-                               parameters('servicePrincipalClientSecret'))]"
-
+                               parameters('servicePrincipalClientSecret'))]",
+                              "ASPNETCORE_ENVIRONMENT":"[parameters('env')]",
+                              "ctti__host":"aact-db.ctti-clinicaltrials.org",
+                              "ctti__user_name":"arieschwartzman",
+                              "ctti__secret_name":"ctti-client-secret",
+                              "ctti__database":"aact",
+                              "redis__address":"[concat(variables('redisCacheName'),'.redis.cache.windows.net')]",
+                              "redis__secret_name":"redis-client-secret",
+                              "application_insight__instrumentation_key":"${insrumentation_key}"
                   }
               },
               "proxy": {
@@ -434,7 +457,7 @@
         "sku": {
           "name": "Standard",
           "family": "C",
-          "capacity": 0
+          "capacity": 2
         },
         "enableNonSslPort": false,
         "redisConfiguration": {
@@ -497,7 +520,7 @@
     },
     {
       "type": "Microsoft.KeyVault/vaults/secrets",
-      "name": "[concat(variables('keyVaultName'), '/redis-key')]",
+      "name": "[concat(variables('keyVaultName'), '/redis-client-secret')]",
       "apiVersion": "2016-10-01",
       "dependsOn": [
         "[concat('Microsoft.KeyVault/vaults/', variables('keyVaultName'))]",
@@ -547,7 +570,8 @@
       },
       "dependsOn": [
         "[resourceId('Microsoft.KeyVault/vaults', variables('keyVaultName'))]",
-        "[resourceId('Microsoft.Maps/accounts', variables('mapsServiceName'))]"
+        "[resourceId('Microsoft.Maps/accounts', variables('mapsServiceName'))]",
+        "[resourceId('Microsoft.Insights/components/', variables('insightsName'))]"      
       ],
       "properties": {
         "containers": [
@@ -559,7 +583,8 @@
                 "dotnet",
                 "ClinicalTrialsStructuring.dll",
                 "download",
-                "bootstrap"
+                "bootstrap",
+                "persist"
               ],
               "environmentVariables": [
                 {
@@ -575,7 +600,7 @@
                   "value": "[listKeys(variables('mapsServiceName'),'2018-05-01').primaryKey]"
                 },
                 {
-                  "name": "fhir__endpoint",
+                  "name": "fhir__address",
                   "value": "[variables('fhirServerEndpoint')]"
                 },
                 {
@@ -583,17 +608,36 @@
                   "value": "[concat('https://',variables('ayalonWebAppName'),'.azurewebsites.net','text/analytics/v3.0-preview.1/domains/health') ]"
                 },
                 {
-                  "name": "redis__key",
-                  "value": "[listKeys(resourceId('Microsoft.Cache/Redis', variables('redisCacheName')), '2015-08-01').primaryKey]"
+                  "name": "ctti__host",
+                  "value": "aact-db.ctti-clinicaltrials.org"              
                 },
                 {
-                  "name": "AzureServicesAuthConnectionString",
-                  "value": "[format(
-                             'RunAs=App;AppId={0};TenantId={1};AppKey={2}',
-                              parameters('servicePrincipleClientId'),
-                              subscription().tenantId,
-                              parameters('servicePrincipalClientSecret'))]"
-
+                  "name":"ctti_username",
+                  "value":"arieschwartzman"             
+                },
+                {
+                  "name":"ctti__secret_name",
+                  "value":"ctti-client-secret"
+                },
+                {
+                  "name":"ctti__database",
+                  "value":"aact"
+                },
+                {
+                  "name":"application_insight__instrumentation_key",
+                  "value":"[reference(variables('insightsName'), '2015-05-01').instrumentationKey]"
+                },
+                {
+                  "name":"redis__address",
+                  "value":"[concat(variables('redisCacheName'),'.redis.cache.windows.net')]"
+                },
+                {
+                  "name":"AzureServicesAuthConnectionString",
+                  "value":"[format(
+                              'RunAs=App;AppId={0};TenantId={1};AppKey={2}',
+                               parameters('servicePrincipleClientId'),
+                               subscription().tenantId,
+                               parameters('servicePrincipalClientSecret'))]"
                 }
               ],
               "resources": {
@@ -667,7 +711,8 @@
       },
       "dependsOn": [
         "[concat('Microsoft.ManagedIdentity/userAssignedIdentities/', variables('identityName'))]",
-        "[resourceId('Microsoft.Web/serverfarms', variables('ctmServicePlan'))]"      
+        "[resourceId('Microsoft.Web/serverfarms', variables('ctmServicePlan'))]",
+        "[concat('Microsoft.Insights/components/', variables('insightsName'))]"      
       ],
       "tags": {
         "CTM-Services": "query engine"
@@ -750,7 +795,9 @@
           "hostingstart.html"
         ],
         "netFrameworkVersion": "v4.0",
-        "linuxFxVersion": "[concat('COMPOSE|',base64(string(variables('queryEngineCompose'))))]",
+        "linuxFxVersion": "[concat('COMPOSE|',base64(
+                    replace(string(variables('queryEngineCompose')),'${insrumentation_key}',reference(variables('insightsName'), '2015-05-01').instrumentationKey)
+                    ))]",
         "requestTracingEnabled": false,
         "remoteDebuggingEnabled": false,
         "remoteDebuggingVersion": "VS2019",
@@ -909,7 +956,9 @@
           "hostingstart.html"
         ],
         "netFrameworkVersion": "v4.0",
-        "linuxFxVersion": "[concat('COMPOSE|',base64(string(variables('dynamicCriteriaSelectionCompose'))))]",
+        "linuxFxVersion": "[concat('COMPOSE|',base64(
+                    replace(string(variables('dynamicCriteriaSelectionCompose')),'${insrumentation_key}',reference(variables('insightsName'), '2015-05-01').instrumentationKey)
+                    ))]",
         "requestTracingEnabled": false,
         "remoteDebuggingEnabled": false,
         "remoteDebuggingVersion": "VS2019",
@@ -1068,7 +1117,9 @@
           "hostingstart.html"
         ],
         "netFrameworkVersion": "v4.0",
-        "linuxFxVersion": "[concat('COMPOSE|', base64(string(variables('disqualificationCompose'))))]",
+        "linuxFxVersion": "[concat('COMPOSE|',base64(
+                    replace(string(variables('disqualificationCompose')),'${insrumentation_key}',reference(variables('insightsName'), '2015-05-01').instrumentationKey)
+                    ))]",
         "requestTracingEnabled": false,
         "remoteDebuggingEnabled": false,
         "remoteDebuggingVersion": "VS2019",
