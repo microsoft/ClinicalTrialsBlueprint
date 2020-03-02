@@ -20,8 +20,6 @@ param(
 $context = Get-AzContext
 $subscriptionId = $context.subscription.id
 
-$env="-dev"
-$portalEndpoint = "https://us.healthbot$env.microsoft.com/account"
 
 $luisPath = "../lu"
 $restorePath = "../bot-templates"
@@ -118,6 +116,13 @@ Try {
     }
 
     $webchatSecret = $saasTenant.webchat_secret
+
+    if ($botLocation -eq 'US') {
+        $portalEndpoint = "https://us.healthbot.microsoft.com/account"
+    }
+    else {
+        $portalEndpoint = "https://eu.healthbot.microsoft.com/account"
+    }
 
     Select-Object @{n = "portal"; e = {"$portalEndpoint/$tenantId"}},
                   @{n = "SaaSApplication"; e = {"https://ms.portal.azure.com/#@/resource/providers/Microsoft.SaaS/saasresources/$saasSubscriptionId/overview"}},

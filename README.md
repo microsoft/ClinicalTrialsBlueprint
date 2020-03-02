@@ -67,21 +67,21 @@ $matchingOutput = New-AzResourceGroupDeployment -TemplateFile ..\arm-templates\a
 
 Check that the TextAnalytics for Healthcare service is running
 ```powershell
-$taUrl = "https://$matchingServiceName-ayalon-webapp.azurewebsites.net/status"
+$taUrl = "https://$ctmServiceName-ayalon-webapp.azurewebsites.net/status"
 $taResponse = Invoke-WebRequest -Uri $taUrl
 $taResponse.RawContent
 ```
 
 Check that the Query Engine Service is running
 ```powershell
-$queryEngineUrl = "https://$matchingServiceName-ctm-qe-webapp.azurewebsites.net/"
+$queryEngineUrl = "https://$ctmServiceName-ctm-qe-webapp.azurewebsites.net/"
 $queryEngineResponse = Invoke-WebRequest -Uri $queryEngineUrl
 $queryEngineResponse.RawContent
 ```
 
 Check that the Disqualification Engine Service is running
 ```powershell
-$disqualificationEngineUrl = "https://$matchingServiceName-ctm-disq-webapp.azurewebsites.net/"
+$disqualificationEngineUrl = "https://$ctmServiceName-ctm-disq-webapp.azurewebsites.net/"
 $disqualificationEngineResponse = Invoke-WebRequest -Uri $disqualificationEngineUrl
 $disqualificationEngineResponse.RawContent
 ```
