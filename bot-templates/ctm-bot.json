@@ -1,19 +1,19 @@
 {
     "scenarios": [
         {
-            "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A06.8605441Z'\"",
-            "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-            "RowKey": "9c3a9c71-d6b4-4626-a2cb-2c79dc45f9d7",
+            "odata.etag": "W/\"datetime'2020-03-02T06%3A30%3A25.5409153Z'\"",
+            "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+            "RowKey": "6a856398-65f0-4854-bc3b-fa581e8dcc16",
             "active": true,
             "currentUser": "",
             "description": "clinical_trials_matching_general",
             "name": "clinical_trials_matching_general",
             "scenario_trigger": "clinical_trials_matching_general",
             "updated@odata.type": "Edm.DateTime",
-            "updated": "2020-02-26T19:55:12.2380000Z",
-            "userDisplayName": "Guy Becker",
+            "updated": "2020-03-02T06:28:54.7250000Z",
+            "userDisplayName": "ariesch test",
             "version": 1,
-            "Timestamp": "2020-02-27T08:07:06.8605441Z",
+            "Timestamp": "2020-03-02T06:30:25.5409153Z",
             "code": {
                 "version": 3,
                 "steps": [
@@ -99,7 +99,7 @@
                         "designer": {
                             "xLocation": 113,
                             "yLocation": 500,
-                            "next": "fb7403c86d6a-1e24272165de9c1b-92f7"
+                            "next": "162067c1f357-741c663bd45a2170-d303"
                         },
                         "onInit": "// gender \nif (scenario.luis.gender != null) {\n    scenario.gender = scenario.luis.gender;\n} else {\n    if (scenario.genderValue.entity !== \"Prefer not to say\") {\n        scenario.gender = scenario.genderValue.entity.toLowerCase();\n    }\n}\n// age\nif (scenario.luis.age != null) {\n    scenario.age = scenario.luis.age;\n} else {\n    scenario.age = scenario.ageValue;\n}\n// condition\nif (scenario.luis.condition != null) {\n    scenario.condition = scenario.luis.condition;\n} else {\n    scenario.condition = scenario.conditionValue;\n}\n// location\nif (scenario.luis.location != null) {\n    scenario.searchLocationCity = scenario.luis.location.city;\n    scenario.searchLocationState = scenario.luis.location.country;\n} else {\n    scenario.searchLocationCity = scenario.cityValue != null ? scenario.cityValue : null;\n    scenario.searchLocationState = scenario.stateValue != null ? scenario.stateValue : null;\n}"
                     },
@@ -108,9 +108,9 @@
                         "type": "action",
                         "label": "Create Request",
                         "designer": {
-                            "xLocation": 114,
-                            "yLocation": 580,
-                            "next": "162067c1f357-741c663bd45a2170-d303"
+                            "xLocation": 351,
+                            "yLocation": 31,
+                            "next": "95f6b5f256da-ed1cea46c0187621-f7b9"
                         },
                         "onInit": "scenario.question_count = 0;\nscenario.trials_count = 0;\nscenario.parsed_answer = {};\nscenario.parsed_answer.result = 0;\n\n// initialize profile\nvar profile = {};\nprofile.gender = scenario.gender;\nprofile.age = scenario.age;\nprofile.location = scenario.location;\nprofile.searchLocationCity = scenario.searchLocationCity;\nprofile.searchLocationState = scenario.searchLocationState;\nprofile.distance = scenario.distance;\nprofile.condition = scenario.condition;\nprofile.askedCodes = [];\nscenario.profile = profile;\n\n// initialize matchingRequest\nvar matchingRequest = {};\nmatchingRequest.id = new Date().getTime().toString();\nmatchingRequest.profile = scenario.profile;\nscenario.matchingRequest = matchingRequest;\n"
                     },
@@ -119,7 +119,7 @@
                         "type": "datasource",
                         "designer": {
                             "xLocation": 349,
-                            "yLocation": 31,
+                            "yLocation": 110,
                             "errorStepId": "7cf5829caf3b-b595e08171a799bc-2f59",
                             "next": "c2cb2cc32790-39376ffe807a6893-5e86"
                         },
@@ -141,8 +141,8 @@
                         "id": "7cf5829caf3b-b595e08171a799bc-2f59",
                         "type": "statement",
                         "designer": {
-                            "xLocation": 232,
-                            "yLocation": 130,
+                            "xLocation": 552,
+                            "yLocation": 571,
                             "next": "58a41aa41b1d-1dd382bf9e601ed8-60a6"
                         },
                         "text": "Sorry, there seems to be a problem with the matching service. \r\nPlease try again later.",
@@ -154,7 +154,7 @@
                         "label": "Process the matching service response",
                         "designer": {
                             "xLocation": 354,
-                            "yLocation": 110,
+                            "yLocation": 180,
                             "next": "8eb78c0e15f8-3aa0bdbacd6795d8-0ac6"
                         },
                         "onInit": "scenario.trials = scenario.matchingResponse.trials;\nscenario.trialsCountPrev = scenario.trialsCount;\nscenario.trialsCount = scenario.trials.length;"
@@ -165,7 +165,7 @@
                         "condition": "scenario.trialsCount > 0",
                         "designer": {
                             "xLocation": 360,
-                            "yLocation": 220,
+                            "yLocation": 273,
                             "next": "e8e69e5b6b47-4c7e389965d6aef4-6dd1"
                         },
                         "targetStepId": "c38230cbc10d-7c8058bc6dc833c6-6a00",
@@ -186,7 +186,7 @@
                         "id": "6c395b7ffcbf-9a3ac0cb171f8c36-4154",
                         "type": "statement",
                         "designer": {
-                            "xLocation": 360,
+                            "xLocation": 340,
                             "yLocation": 480,
                             "next": "2093a915c20d-8fc2e7481038d764-affd"
                         },
@@ -199,8 +199,8 @@
                         "type": "action",
                         "label": "Create Card",
                         "designer": {
-                            "xLocation": 360,
-                            "yLocation": 586,
+                            "xLocation": 346,
+                            "yLocation": 600,
                             "next": "b880d5732a03-3c5ec70d6ab91ed6-6218"
                         },
                         "onInit": "scenario.card = {\n  \"$schema\": \"http://adaptivecards.io/schemas/adaptive-card.json\",\n  \"type\": \"AdaptiveCard\",\n  \"version\": \"0.5\",\n  \"body\": scenario.trials.map(trial => {\n      return {\n        \"type\": \"Container\",\n        \"style\": \"emphasis\",\n        \"spacing\": \"none\",\n        \"separator\": false,\n        \"items\": [{\n              \"type\": \"TextBlock\",\n              \"text\": \"**\"+trial.nctId+\"** - [\" + trial.title + \"](https://clinicaltrials.gov/ct2/show/\" + trial.nctId + \")\",\n              \"wrap\": true,\n              \"size\": \"default\",\n              \"weight\": \"bolder\",\n              \"color\": \"dark\"\n            }\n        ]\n      };\n  })\n};"
@@ -209,11 +209,11 @@
                         "id": "58a41aa41b1d-1dd382bf9e601ed8-60a6",
                         "type": "datasource",
                         "designer": {
-                            "xLocation": 214,
-                            "yLocation": 660
+                            "xLocation": 560,
+                            "yLocation": 673
                         },
                         "dataConnection": "ctm-query-engine-prod",
-                        "urlBase": "https://ctm-query-engine-webapp-eastus-dev.azurewebsites.net",
+                        "urlBase": "'https://ctm-query-engine-webapp-eastus-prod.azurewebsites.net'",
                         "urlPath": "exit",
                         "urlParams": "",
                         "contentType": "raw",
@@ -230,8 +230,8 @@
                         "id": "b880d5732a03-3c5ec70d6ab91ed6-6218",
                         "type": "statement",
                         "designer": {
-                            "xLocation": 352,
-                            "yLocation": 660,
+                            "xLocation": 340,
+                            "yLocation": 671,
                             "next": "58a41aa41b1d-1dd382bf9e601ed8-60a6"
                         },
                         "layout": "vertical",
@@ -248,9 +248,9 @@
                         "type": "branch",
                         "condition": "scenario.trialsCount < 6\r\n",
                         "designer": {
-                            "xLocation": 370,
-                            "yLocation": 360,
-                            "next": "c0b338e361df-f9260a30a63543e5-2d46",
+                            "xLocation": 360,
+                            "yLocation": 380,
+                            "next": "61caaf642c74-72573f74426573d9-fd1f",
                             "reverse": true
                         },
                         "targetStepId": "6c395b7ffcbf-9a3ac0cb171f8c36-4154",
@@ -271,9 +271,9 @@
                         "id": "162067c1f357-741c663bd45a2170-d303",
                         "type": "statement",
                         "designer": {
-                            "xLocation": 107,
-                            "yLocation": 668,
-                            "next": "95f6b5f256da-ed1cea46c0187621-f7b9"
+                            "xLocation": 106,
+                            "yLocation": 580,
+                            "next": "fb7403c86d6a-1e24272165de9c1b-92f7"
                         },
                         "text": "Matching clinical trials...This might take a few moments.",
                         "stringId": "stringId_a46894ffc1bf4ca9"
@@ -289,7 +289,7 @@
                         },
                         "text": "scenario.questions.stateQuestion",
                         "variable": "stateValue",
-                        "visible": "scenario.locationValue.entity === \"Specific state\"",
+                        "visible": "scenario.locationValue != null && scenario.locationValue.entity === \"Specific state\"",
                         "stringId": "stringId_75e3d09cf5a74d66",
                         "label": "State Question"
                     },
@@ -304,7 +304,7 @@
                         },
                         "text": "scenario.questions.cityQuestion",
                         "variable": "cityValue",
-                        "visible": "scenario.locationValue.entity === \"Specific city\"",
+                        "visible": "scenario.locationValue != null && scenario.locationValue.entity === \"Specific city\"",
                         "stringId": "stringId_75e3d09cf5a74d66",
                         "label": "City Question"
                     },
@@ -312,9 +312,10 @@
                         "id": "e1b411ce805e-e4e6c42e80ac9fdc-bed0",
                         "type": "datasource",
                         "designer": {
-                            "xLocation": 620,
-                            "yLocation": 20,
-                            "next": "d46040c72921-e874ae9773008129-3f14"
+                            "xLocation": 614,
+                            "yLocation": 120,
+                            "next": "d46040c72921-e874ae9773008129-3f14",
+                            "errorStepId": "7cf5829caf3b-b595e08171a799bc-2f59"
                         },
                         "dataConnection": "ctm-criteria-selector-prod",
                         "urlBase": "https://ctm-dynamic-criterion-selection-webapp-eastus-prod.azurewebsites.net",
@@ -334,9 +335,9 @@
                         "type": "action",
                         "label": "Create Criteria Request",
                         "designer": {
-                            "xLocation": 440,
-                            "yLocation": 20,
-                            "next": "61caaf642c74-72573f74426573d9-fd1f"
+                            "xLocation": 620,
+                            "yLocation": 40,
+                            "next": "e1b411ce805e-e4e6c42e80ac9fdc-bed0"
                         },
                         "onInit": "var trialIds = scenario.trials.map(trial => trial.nctId);\n\nscenario.criteriaRequest = {\n    trialIds,\n    profile: scenario.profile\n};"
                     },
@@ -345,8 +346,8 @@
                         "type": "action",
                         "label": "Create Question",
                         "designer": {
-                            "xLocation": 968,
-                            "yLocation": 93,
+                            "xLocation": 808,
+                            "yLocation": 40,
                             "next": "8cc8d6de3179-a14e044b3f7d5fd5-2360"
                         },
                         "onInit": "// keeping track for total questions\r\nscenario.totalQuestionsAsked++;\r\n\r\nvar criterion = scenario.criteriaResponse.criteria[scenario.questionIndex];\r\nscenario.questionArgs = {};\r\nscenario.questionArgs.question = criterion;"
@@ -355,21 +356,22 @@
                         "id": "8cc8d6de3179-a14e044b3f7d5fd5-2360",
                         "type": "beginScenario",
                         "designer": {
-                            "xLocation": 974,
-                            "yLocation": 180,
+                            "xLocation": 810,
+                            "yLocation": 112,
                             "next": "ac3e4757a04f-95c5731ff4cd2f2f-c783"
                         },
                         "scenario": "question_generation",
                         "variable": "questionAnswer",
-                        "args": "scenario.questionArgs"
+                        "args": "scenario.questionArgs",
+                        "label": "Question Generation"
                     },
                     {
                         "id": "bd61cf721cfb-286941d86a9f1950-d264",
                         "type": "branch",
                         "condition": "scenario.questionAnswer.answer == null",
                         "designer": {
-                            "xLocation": 971,
-                            "yLocation": 340,
+                            "xLocation": 806,
+                            "yLocation": 286,
                             "next": "e0aa647e710c-251bd3c3cfc5b610-d7d0"
                         },
                         "targetStepId": "c7320a2517ea-1c8780d20d47cb35-e956",
@@ -380,8 +382,8 @@
                         "type": "action",
                         "label": "Next Question",
                         "designer": {
-                            "xLocation": 1120,
-                            "yLocation": 160,
+                            "xLocation": 810,
+                            "yLocation": 380,
                             "next": "275cf280677e-52bf72c7f8f55bad-ae74"
                         },
                         "onInit": "scenario.questionIndex++;"
@@ -391,8 +393,8 @@
                         "type": "action",
                         "label": "Save answer to profile",
                         "designer": {
-                            "xLocation": 969,
-                            "yLocation": 270,
+                            "xLocation": 808,
+                            "yLocation": 200,
                             "next": "bd61cf721cfb-286941d86a9f1950-d264"
                         },
                         "onInit": "scenario.profile.askedCodes.push(scenario.questionAnswer);"
@@ -401,9 +403,10 @@
                         "id": "d5398bdc9019-e4c6eb78e63ffdc5-416a",
                         "type": "datasource",
                         "designer": {
-                            "xLocation": 968,
-                            "yLocation": 520,
-                            "next": "57b8d246f882-fccf0daa5e3e5f5e-a939"
+                            "xLocation": 1007,
+                            "yLocation": 120,
+                            "next": "57b8d246f882-fccf0daa5e3e5f5e-a939",
+                            "errorStepId": "7cf5829caf3b-b595e08171a799bc-2f59"
                         },
                         "dataConnection": "ctm-disqualifier-prod",
                         "urlBase": "https://ctm-clinical-trials-disqualification-webapp-eastus-prod.azurewebsites.net",
@@ -423,8 +426,8 @@
                         "type": "action",
                         "label": "Create Disqualify Request",
                         "designer": {
-                            "xLocation": 972,
-                            "yLocation": 434,
+                            "xLocation": 1012,
+                            "yLocation": 40,
                             "next": "d5398bdc9019-e4c6eb78e63ffdc5-416a"
                         },
                         "onInit": "scenario.disqualifyRequest = {};\nscenario.disqualifyRequest.trialIds = scenario.criteriaRequest.trialIds;\nscenario.disqualifyRequest.profile = scenario.profile;"
@@ -434,8 +437,8 @@
                         "type": "action",
                         "label": "Process disqualify response",
                         "designer": {
-                            "xLocation": 974,
-                            "yLocation": 586,
+                            "xLocation": 1010,
+                            "yLocation": 190,
                             "next": "70e84a689cf2-0be3990e764231e6-3051"
                         },
                         "onInit": "scenario.trials = scenario.disqualifyResponse.trials;\r\nscenario.trialsCountPrev = scenario.trialsCount;\r\nscenario.trialsCount = scenario.trials.length;"
@@ -445,8 +448,8 @@
                         "type": "action",
                         "label": "init questionIndex",
                         "designer": {
-                            "xLocation": 766,
-                            "yLocation": 0,
+                            "xLocation": 620,
+                            "yLocation": 190,
                             "next": "275cf280677e-52bf72c7f8f55bad-ae74"
                         },
                         "onInit": "scenario.questionIndex = 0;\r\n"
@@ -456,8 +459,8 @@
                         "type": "branch",
                         "condition": "scenario.questionIndex < scenario.criteriaResponse.criteria.length",
                         "designer": {
-                            "xLocation": 972,
-                            "yLocation": 7,
+                            "xLocation": 627,
+                            "yLocation": 300,
                             "next": "e1b411ce805e-e4e6c42e80ac9fdc-bed0"
                         },
                         "targetStepId": "22130a4fa790-7398bd4e67a60462-949a",
@@ -467,8 +470,8 @@
                         "id": "70e84a689cf2-0be3990e764231e6-3051",
                         "type": "statement",
                         "designer": {
-                            "xLocation": 970,
-                            "yLocation": 690,
+                            "xLocation": 1007,
+                            "yLocation": 280,
                             "next": "42bc07ec8bf1-57c03e2a91e4689e-f6cc"
                         },
                         "text": "\"Found \" + scenario.trialsCount.toString() + \" relevant trial\" + (scenario.trialsCount === 1 ? \"\" : \"s\") + \".\"",
@@ -480,8 +483,8 @@
                         "type": "prompt",
                         "dataType": "[\"Answer additional questions\", \"Get results\"]",
                         "designer": {
-                            "xLocation": 1246,
-                            "yLocation": 500,
+                            "xLocation": 1011,
+                            "yLocation": 428,
                             "listStyle": 3,
                             "next": "04bde4fbe4fd-cde1c2bb3509913a-e268"
                         },
@@ -495,8 +498,8 @@
                         "type": "branch",
                         "condition": "scenario.trialsCount > 0 && \r\n(scenario.trialsCountPrev === scenario.trialsCount || scenario.totalQuestionsAsked > 9)\r\n",
                         "designer": {
-                            "xLocation": 1220,
-                            "yLocation": 366,
+                            "xLocation": 1020,
+                            "yLocation": 348,
                             "next": "8eb78c0e15f8-3aa0bdbacd6795d8-0ac6"
                         },
                         "label": "Ask user to continue asking",
@@ -507,32 +510,32 @@
                         "type": "branch",
                         "condition": "scenario.continueAsking.entity === \"Answer additional questions\"",
                         "designer": {
-                            "xLocation": 1251,
-                            "yLocation": 600,
+                            "xLocation": 1020,
+                            "yLocation": 494,
                             "next": "2093a915c20d-8fc2e7481038d764-affd"
                         },
                         "label": "more questions?",
-                        "targetStepId": "c0b338e361df-f9260a30a63543e5-2d46"
+                        "targetStepId": "61caaf642c74-72573f74426573d9-fd1f"
                     },
                     {
                         "id": "2093a915c20d-8fc2e7481038d764-affd",
                         "type": "statement",
                         "designer": {
-                            "xLocation": 360,
+                            "xLocation": 340,
                             "yLocation": 540,
                             "next": "138c2cc32f4e-265ec16959d65e96-6083"
                         },
-                        "text": "Here are the clinical trials you may qualify for:",
+                        "text": "Here are the clinical trials the patient may qualify for:",
                         "stringId": "stringId_00902617ba8079bf",
-                        "label": "Relevant trials number"
+                        "label": "Here are the trials"
                     },
                     {
                         "id": "61caaf642c74-72573f74426573d9-fd1f",
                         "type": "statement",
                         "designer": {
-                            "xLocation": 529,
+                            "xLocation": 480,
                             "yLocation": 40,
-                            "next": "e1b411ce805e-e4e6c42e80ac9fdc-bed0"
+                            "next": "c0b338e361df-f9260a30a63543e5-2d46"
                         },
                         "text": "\"Found \" + scenario.trialsCount.toString() + \" relevant trial\" + (scenario.trialsCount === 1 ? \"\" : \"s\") + \".\"",
                         "stringId": "stringId_00902617ba8079bf",
@@ -546,9 +549,9 @@
             }
         },
         {
-            "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A06.8611585Z'\"",
-            "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-            "RowKey": "e1a6ad64-9bb4-4f53-b5dc-55dc38ca8512",
+            "odata.etag": "W/\"datetime'2020-02-28T18%3A27%3A04.0797697Z'\"",
+            "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+            "RowKey": "ba42af83-7794-492e-a9aa-9380c562e195",
             "active": true,
             "currentUser": "",
             "description": "",
@@ -558,7 +561,7 @@
             "updated": "2020-02-26T17:10:18.8140000Z",
             "userDisplayName": "Guy Becker",
             "version": 1,
-            "Timestamp": "2020-02-27T08:07:06.8611585Z",
+            "Timestamp": "2020-02-28T18:27:04.0797697Z",
             "code": {
                 "version": 3,
                 "steps": [
@@ -738,835 +741,55 @@
     ],
     "dataConnections": [
         {
-            "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.6616193Z'\"",
-            "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-            "RowKey": "1582790827417",
-            "auth_provider": "",
-            "base_url": "{qe-baseurl}",
-            "description": "ctm-query-engine-prod",
-            "name": "ctm-query-engine-prod",
-            "static_parameters": "[{\"key\":\"x-ctm-api-key\",\"type\":\"header\",\"value\":\"{ctm-api-key}\"}]",
-            "type": "custom",
-            "Timestamp": "2020-02-27T08:07:07.6616193Z"
-        },
-        {
-            "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.6713473Z'\"",
-            "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-            "RowKey": "1582790827419",
+            "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.7370241Z'\"",
+            "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+            "RowKey": "1582908375574",
             "auth_provider": "",
             "base_url": "{disq-baseurl}",
             "description": "ctm-disqualifier-prod",
             "name": "ctm-disqualifier-prod",
             "static_parameters": "[{\"key\":\"x-ctm-api-key\",\"type\":\"header\",\"value\":\"{ctm-api-key}\"}]",
             "type": "custom",
-            "Timestamp": "2020-02-27T08:07:07.6713473Z"
+            "Timestamp": "2020-02-28T18:18:52.7370241Z"
         },
         {
-            "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.7082113Z'\"",
-            "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-            "RowKey": "1582790827418",
+            "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.7469569Z'\"",
+            "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+            "RowKey": "1582908375575",
             "auth_provider": "",
             "base_url": "{dcs-baseurl}",
             "description": "ctm-criteria-selector-prod",
             "name": "ctm-criteria-selector-prod",
             "static_parameters": "[{\"key\":\"x-ctm-api-key\",\"type\":\"header\",\"value\":\"{ctm-api-key}\"}]",
             "type": "custom",
-            "Timestamp": "2020-02-27T08:07:07.7082113Z"
+            "Timestamp": "2020-02-28T18:18:52.7469569Z"
+        },
+        {
+            "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.7363073Z'\"",
+            "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+            "RowKey": "1582908375573",
+            "auth_provider": "",
+            "base_url": "{qe-baseurl}",
+            "description": "ctm-query-engine-prod",
+            "name": "ctm-query-engine-prod",
+            "static_parameters": "[{\"key\":\"x-ctm-api-key\",\"type\":\"header\",\"value\":\"{ctm-api-key}\"}]",
+            "type": "custom",
+            "Timestamp": "2020-02-28T18:18:52.7363073Z"
         }
     ],
     "authenticationProviders": [],
     "skills": [],
-    "languagesFiles": [
-        {
-            "name": "en-us.default.lg",
-            "content": "# Age_Prompt\r\n- @{Greeting()}, How old is @{Gender_Objects(1)} \r\n\r\n# Greeting\r\n- Good @{getTimeOfDay(utcNow())}\r\n\r\n\r\n# Gender_Objects(a)\r\n- IF: @{scenario.luis.gender == 'female'}\r\n    - she  @{a}?\r\n- ELSE: \r\n    - he?\r\n"
-        }
-    ],
-    "localization": {
-        "system": [
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A06.9969409Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfNTFlNzY4OTY1ZWQ3NzQ4Yw==",
-                "stringId": "stringId_51e768965ed7748c",
-                "en_us": "/^find.+provider$/i",
-                "Timestamp": "2020-02-27T08:07:06.9969409Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A06.9985793Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "Y29udmVyc2F0aW9uLi9idWlsdGluL2hlbHAubWVudV9pdGVtc18yOGI1NWYzNTkxYzI2ZDQ0",
-                "stringId": "conversation./builtin/help.menu_items_28b55f3591c26d44",
-                "en_us": "find provider: Find provider by location",
-                "Timestamp": "2020-02-27T08:07:06.9985793Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.0003201Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfM2Y4NWViNzJiNjc1NGUyZQ==",
-                "stringId": "stringId_3f85eb72b6754e2e",
-                "en_us": "/^(football|basketball|tennis)$/",
-                "Timestamp": "2020-02-27T08:07:07.0003201Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.0016513Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfOGQ2MjIyYTg0NDVhMDY1Ng==",
-                "stringId": "stringId_8d6222a8445a0656",
-                "en_us": "/^claim$/",
-                "Timestamp": "2020-02-27T08:07:07.0016513Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.0031873Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "Y29udmVyc2F0aW9uLi9idWlsdGluL2hlbHAubWVudV9pdGVtc19iMjA4ODY3NjA5MjZiNWQx",
-                "stringId": "conversation./builtin/help.menu_items_b20886760926b5d1",
-                "en_us": "claim: File a claim",
-                "Timestamp": "2020-02-27T08:07:07.0031873Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.0046209Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfMjZlMmM0NDVhMmE3ZjIxMQ==",
-                "stringId": "stringId_26e2c445a2a7f211",
-                "en_us": "/^sport$/",
-                "Timestamp": "2020-02-27T08:07:07.0046209Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-03T23%3A48%3A32.8380417Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "YXV0b193ZWxjb21lX21lc3NhZ2VfMmQ2MzNhOWRmZGRhOWFjMg==",
-                "stringId": "auto_welcome_message_2d633a9dfdda9ac2",
-                "en_us": "Hi! I’m the Contoso Health Demo Bot.\n\n\nI exist for demo purposes only, in order to show the capabilities of the Microsoft health bot project.\n\n\nIf you think that you are having a medical emergency, call 911 or the number for your local emergency service NOW. Always seek the advice of your physician or other qualified healthcare provider before starting any new treatment or stopping an existing treatment. Talk with your healthcare provider about any questions you may have regarding a medical condition. This bot is NOT intended to be used for medical diagnosis or treatment. Read our full disclaimer here.\n\n\n\nYou can ask me things like:\n\n\n“Sinus infection symptoms”\n“My arm hurts”\n“What type of doctor treats arthritis?”\n“Info about diabetes”\n\nType “help” for more options.",
-                "Timestamp": "2020-02-03T23:48:32.8380417Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.0064641Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "L2J1aWx0aW4vZ3JlZXRpbmcucmVwbHlfZjJlMzZkZjc2MTZiM2RjZg==",
-                "en_us": "Hello, I’m the **Clinical Trials Bot**. I can help you find clinical trials around the world. Tell me a bit more about the situation.",
-                "stringId": "/builtin/greeting.reply_f2e36df7616b3dcf",
-                "Timestamp": "2020-02-27T08:07:07.0064641Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.0078977Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "YXV0b193ZWxjb21lX21lc3NhZ2VfOTRjNjUwNWJmNzVhZGI3YQ==",
-                "en_us": "Hello, I’m the **Clinical Trials Matching Bot**. I can help you find clinical trials around the world. \nPlease tell me a bit more about the condition.\nPlease note that in case you are not sure what the answer is - you can always answer *Don't Know*.",
-                "stringId": "auto_welcome_message_94c6505bf75adb7a",
-                "Timestamp": "2020-02-27T08:07:07.0078977Z"
-            }
-        ],
-        "custom": [
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.1869953Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfZDA2YmVlNDE5NzQxM2JkYQ==",
-                "stringId": "stringId_d06bee4197413bda",
-                "en_us": "May I help you find a Contoso provider?",
-                "Timestamp": "2020-02-27T08:07:07.1869953Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.1903745Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfM2FhNjI3ZDZmNzMyOGJlZQ==",
-                "stringId": "stringId_3aa627d6f7328bee",
-                "en_us": "If you have any further questions, please don’t hesitate to contact me.",
-                "Timestamp": "2020-02-27T08:07:07.1903745Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.1922177Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfNjE0OTNmYjE0YTk2Y2UzOQ==",
-                "stringId": "stringId_61493fb14a96ce39",
-                "en_us": "What type of provider do you look for?",
-                "Timestamp": "2020-02-27T08:07:07.1922177Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.1938561Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfYTU1ZTFkMWZmZjdjZmYyMg==",
-                "stringId": "stringId_a55e1d1fff7cff22",
-                "en_us": "Are you interested in a specific specialty of the doctor? Please select from the list below:",
-                "Timestamp": "2020-02-27T08:07:07.1938561Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.1954945Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfM2EwZmRlYWNlYWNmODVlMQ==",
-                "stringId": "stringId_3a0fdeaceacf85e1",
-                "en_us": "Do you have any gender preference?",
-                "Timestamp": "2020-02-27T08:07:07.1954945Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.1969281Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfN2Y3MjZjZDE3OGQ2NjljOA==",
-                "stringId": "stringId_7f726cd178d669c8",
-                "en_us": "JSON.stringify(${err});",
-                "Timestamp": "2020-02-27T08:07:07.1969281Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.1987713Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfZjliNzFmMzQ2MTdmOGZmYQ==",
-                "stringId": "stringId_f9b71f34617f8ffa",
-                "en_us": "Got it! I will be happy to assist. Should I use your current location or would you like to specify a ZIP code?",
-                "Timestamp": "2020-02-27T08:07:07.1987713Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.2004097Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfM2RiYjk4ZjU1OWE0MzIzYQ==",
-                "stringId": "stringId_3dbb98f559a4323a",
-                "en_us": "No doctors were found that meet all criteria",
-                "Timestamp": "2020-02-27T08:07:07.2004097Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.2026625Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfYzc2NjQ5ZTQ2YzlkNDBkNA==",
-                "stringId": "stringId_c76649e46c9d40d4",
-                "en_us": "This option is not implemented yet. Please try another one.",
-                "Timestamp": "2020-02-27T08:07:07.2026625Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.2041985Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfNTc3MDY4MGRlOWZjYjM1MQ==",
-                "stringId": "stringId_5770680de9fcb351",
-                "en_us": "Developer notice!",
-                "Timestamp": "2020-02-27T08:07:07.2041985Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.2057345Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfY2YxNGViZDczYmZhZGRiYg==",
-                "stringId": "stringId_cf14ebd73bfaddbb",
-                "en_us": "Please enter a ZIP code",
-                "Timestamp": "2020-02-27T08:07:07.2057345Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.2071681Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfZmE5OThiM2JiODY3MWM1NA==",
-                "stringId": "stringId_fa998b3bb8671c54",
-                "en_us": "enter your location",
-                "Timestamp": "2020-02-27T08:07:07.2071681Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.2089089Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfNjMxZTAzYWRhZTkwNDM0YQ==",
-                "stringId": "stringId_631e03adae90434a",
-                "en_us": "Do you want to leave?",
-                "Timestamp": "2020-02-27T08:07:07.2089089Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.2104449Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfYTQ5NGQ2MTFjMjZmNjBmMw==",
-                "stringId": "stringId_a494d611c26f60f3",
-                "en_us": "Welcome to israel!",
-                "Timestamp": "2020-02-27T08:07:07.2104449Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.2118785Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfZWEyZDBhMDU2N2Y5OWYyMA==",
-                "stringId": "stringId_ea2d0a0567f99f20",
-                "en_us": "Have you incurred medical, vision, or dental expenses from a provider who did not bill the plan directly?\r\n",
-                "Timestamp": "2020-02-27T08:07:07.2118785Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.2136193Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfODc1NjFlNDIzN2IwMzIwNA==",
-                "stringId": "stringId_87561e4237b03204",
-                "en_us": "If you have any further questions, please don’t hesitate to contact me.",
-                "Timestamp": "2020-02-27T08:07:07.2136193Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.2161793Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfZDU1ODkxYjM3MmNhNGY4Yw==",
-                "stringId": "stringId_d55891b372ca4f8c",
-                "en_us": "I would be happy to assist you submitting your claim. \r\nPlease start by providing the following details :\r\n",
-                "Timestamp": "2020-02-27T08:07:07.2161793Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.2179201Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfNDdlYTVkZTM1NjdlYzQyYg==",
-                "stringId": "stringId_47ea5de3567ec42b",
-                "en_us": "What is your prefix and ID number ? (see ID card)",
-                "Timestamp": "2020-02-27T08:07:07.2179201Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.2197633Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfNDhiYjgwMGJkMDU5NzRiZQ==",
-                "stringId": "stringId_48bb800bd05974be",
-                "en_us": "What is your insurance Group number ? \r\n",
-                "Timestamp": "2020-02-27T08:07:07.2197633Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.2212993Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfNTc1NzMzYmM0YjAyNWYzMA==",
-                "stringId": "stringId_575733bc4b025f30",
-                "en_us": "What is the name of the provider ?\r\n",
-                "Timestamp": "2020-02-27T08:07:07.2212993Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.2229377Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfMTZmNjYzMjk2YTRkOTdkNw==",
-                "stringId": "stringId_16f663296a4d97d7",
-                "en_us": "Where was the service performed?\r\n",
-                "Timestamp": "2020-02-27T08:07:07.2229377Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.2246785Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfODhhMzdjMGZkYzU3NTM1Yg==",
-                "stringId": "stringId_88a37c0fdc57535b",
-                "en_us": "Please upload your bill by selecting the 'attachment' icon below",
-                "Timestamp": "2020-02-27T08:07:07.2246785Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.2264193Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfNjBmOTY0NjU5ZmU3NmM5MQ==",
-                "stringId": "stringId_60f964659fe76c91",
-                "en_us": "Thank you for filling in the details!\r\nWe will follow up with confirmation e-mail",
-                "Timestamp": "2020-02-27T08:07:07.2264193Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.2279553Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfOGVhNDFlN2U3ODA5MDM2Ng==",
-                "stringId": "stringId_8ea41e7e78090366",
-                "en_us": "'Summary of claim ' + ${refNumber}",
-                "Timestamp": "2020-02-27T08:07:07.2279553Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.2297985Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfNmJkNTU2YzYzMmExZjllYQ==",
-                "stringId": "stringId_6bd556c632a1f9ea",
-                "en_us": "${claimSummary}",
-                "Timestamp": "2020-02-27T08:07:07.2297985Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.2314369Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfMDBjYmYzYzI1ZDhmNWQyNA==",
-                "stringId": "stringId_00cbf3c25d8f5d24",
-                "en_us": "Is this claim due to an accidental injury?\r\n",
-                "Timestamp": "2020-02-27T08:07:07.2314369Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.2335873Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfOGFkNzhkMTllMTYxYTY5Zg==",
-                "stringId": "stringId_8ad78d19e161a69f",
-                "en_us": "Now, please attach the itemized bill. \r\nYour bill must contain all of the following information:\r\n- Name of the member who incurred the expense\r\n- Name, address, and tax identification number of the provider\r\n- Date and charge for each service rendered ",
-                "Timestamp": "2020-02-27T08:07:07.2335873Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.2355329Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfZGExNTI3OWQ1NDgyNmJlYg==",
-                "stringId": "stringId_da15279d54826beb",
-                "en_us": "multi choice?           ",
-                "Timestamp": "2020-02-27T08:07:07.2355329Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.2371713Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfYzNiZmQ2NTZmN2MzYWMwMw==",
-                "stringId": "stringId_c3bfd656f7c3ac03",
-                "en_us": "choise value?",
-                "Timestamp": "2020-02-27T08:07:07.2371713Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.2391169Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfZWFkNTA2MTEzMjYwMzM0Nw==",
-                "stringId": "stringId_ead5061132603347",
-                "en_us": "boolean prompt?",
-                "Timestamp": "2020-02-27T08:07:07.2391169Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.2409601Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfOGYxMGE5OTk1ZjU4MTFhYQ==",
-                "stringId": "stringId_8f10a9995f5811aa",
-                "en_us": "multi choise?",
-                "Timestamp": "2020-02-27T08:07:07.2409601Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.2428033Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfNGU1M2E2ZWM4Y2YyZjZhMw==",
-                "stringId": "stringId_4e53a6ec8cf2f6a3",
-                "en_us": "Welcome to USA!",
-                "Timestamp": "2020-02-27T08:07:07.2428033Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.2445441Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfOTZiMGJjYjNkOGU3MTY2Ng==",
-                "stringId": "stringId_96b0bcb3d8e71666",
-                "en_us": "\"welcome to \" + scenario.user_location ",
-                "Timestamp": "2020-02-27T08:07:07.2445441Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.2461825Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfYzFhNjZlNTVlMzlkMzE2NA==",
-                "stringId": "stringId_c1a66e55e39d3164",
-                "en_us": "Welcome to Israel",
-                "Timestamp": "2020-02-27T08:07:07.2461825Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.2478209Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfMGRiMDY2YmQ0YzY1N2EzYQ==",
-                "stringId": "stringId_0db066bd4c657a3a",
-                "en_us": "choise?",
-                "Timestamp": "2020-02-27T08:07:07.2478209Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.2493569Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfOTgwMGJmZjliODBiZTE3NQ==",
-                "stringId": "stringId_9800bff9b80be175",
-                "en_us": "Welcome to USA!",
-                "Timestamp": "2020-02-27T08:07:07.2493569Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.2510977Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfNjhmYWQyZjQ4ZGViNmQ0Ng==",
-                "stringId": "stringId_68fad2f48deb6d46",
-                "en_us": "Welcome to Israel",
-                "Timestamp": "2020-02-27T08:07:07.2510977Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.2526337Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfYzA2MjIxMDgxMDcxNmY3ZA==",
-                "stringId": "stringId_c062210810716f7d",
-                "en_us": "Which group is the best on site?",
-                "Timestamp": "2020-02-27T08:07:07.2526337Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.2542721Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfZDM4ZDMxMWMwMTg2NDMxOQ==",
-                "stringId": "stringId_d38d311c01864319",
-                "en_us": "Are you planning to eat soon?",
-                "Timestamp": "2020-02-27T08:07:07.2542721Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.2558081Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfYzE3NjkxNjcyZTBmMzdhMA==",
-                "stringId": "stringId_c17691672e0f37a0",
-                "en_us": "Are you hungry?",
-                "Timestamp": "2020-02-27T08:07:07.2558081Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.2574465Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfYmQzODEwZDM5NDY5MjM3YQ==",
-                "stringId": "stringId_bd3810d39469237a",
-                "en_us": "Whom are you going to eat with?",
-                "Timestamp": "2020-02-27T08:07:07.2574465Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.2589825Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfYmQyNTNhOTBkOGE5YmIzMg==",
-                "stringId": "stringId_bd253a90d8a9bb32",
-                "en_us": "Wrong Answer, try again...",
-                "Timestamp": "2020-02-27T08:07:07.2589825Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.2606209Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfYjRmZTI5ZGUyMjUxYzk3NQ==",
-                "stringId": "stringId_b4fe29de2251c975",
-                "en_us": "${with_whom_list} bon apetite!",
-                "Timestamp": "2020-02-27T08:07:07.2606209Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.2625665Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfNWRkMDBhYTkxMDkwZGVmNA==",
-                "stringId": "stringId_5dd00aa91090def4",
-                "en_us": "scenario.with_whom_list",
-                "Timestamp": "2020-02-27T08:07:07.2625665Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.2646145Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfZTgxYmQ4MmE0NTk4Mzc2OA==",
-                "stringId": "stringId_e81bd82a45983768",
-                "en_us": "scenario.with_whom_list.map(item => item.entity) + \" bon appetite!\"",
-                "Timestamp": "2020-02-27T08:07:07.2646145Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.2662529Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfOTZhYmRhNmYzZTJkMWE3ZQ==",
-                "stringId": "stringId_96abda6f3e2d1a7e",
-                "en_us": "scenario.with_whom_list.map(item => item.entity) + \" bon appetite!\"",
-                "Timestamp": "2020-02-27T08:07:07.2662529Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.2677889Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfYzFiYzYzMWZhZTEyZjdkZg==",
-                "stringId": "stringId_c1bc631fae12f7df",
-                "en_us": "Please select from the below list:",
-                "Timestamp": "2020-02-27T08:07:07.2677889Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.2692225Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfNGRkODhmNjVmYWQ1YWYwYQ==",
-                "stringId": "stringId_4dd88f65fad5af0a",
-                "en_us": "Got it! I will be happy to assist you in with setting an ${selectedServiceType} appointment.",
-                "Timestamp": "2020-02-27T08:07:07.2692225Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.2707585Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfNTAzMWM0NGI1MWQ1YzY5MA==",
-                "stringId": "stringId_5031c44b51d5c690",
-                "en_us": "\"output \" + scenario.output",
-                "Timestamp": "2020-02-27T08:07:07.2707585Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.2724993Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfNTlkOTU1Zjg0MjBiMTlmYw==",
-                "stringId": "stringId_59d955f8420b19fc",
-                "en_us": "Welcome to USA!",
-                "Timestamp": "2020-02-27T08:07:07.2724993Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.2741377Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfMTBiMjE3YTRjMzJlNzBjNg==",
-                "stringId": "stringId_10b217a4c32e70c6",
-                "en_us": "Welcome to Israel",
-                "Timestamp": "2020-02-27T08:07:07.2741377Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.2757761Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfODJmZGQ5YTM4ZTUxY2UzMw==",
-                "stringId": "stringId_82fdd9a38e51ce33",
-                "en_us": "Welcome to USA!",
-                "Timestamp": "2020-02-27T08:07:07.2757761Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.2776193Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfMDUwZDczOWQzN2E1Mjg3Mw==",
-                "stringId": "stringId_050d739d37a52873",
-                "en_us": "Welcome to Israel",
-                "Timestamp": "2020-02-27T08:07:07.2776193Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.2792577Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfMjQ2MzlhZGE2Nzg1ZDFlYg==",
-                "stringId": "stringId_24639ada6785d1eb",
-                "en_us": "Hi welcome Contoso Hospital and Medical Center Imaging Department! \\r\\nMay I help you schedule an appointment for one of our imaging services?",
-                "Timestamp": "2020-02-27T08:07:07.2792577Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.2807937Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfN2RkMmJiMmM1ODBhYjBkYw==",
-                "stringId": "stringId_7dd2bb2c580ab0dc",
-                "en_us": "If you have any further questions, please don’t hesitate to contact me.",
-                "Timestamp": "2020-02-27T08:07:07.2807937Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.2825345Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfNzYxYTZmNGZkM2MzZDFmNQ==",
-                "stringId": "stringId_761a6f4fd3c3d1f5",
-                "en_us": "I was not able to find open slots, please try again later.",
-                "Timestamp": "2020-02-27T08:07:07.2825345Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.2840705Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfMzBiMmM2MWU2YTJhMDFkNw==",
-                "stringId": "stringId_30b2c61e6a2a01d7",
-                "en_us": "Developer notice:\r\n(Delete this step before sharing this scenario with real users)",
-                "Timestamp": "2020-02-27T08:07:07.2840705Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.2855041Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfYjhjMDBiMDZlYWVlODcwNg==",
-                "stringId": "stringId_b8c00b06eaee8706",
-                "en_us": "During the **last 4 weeks**, how much have you been bothered by any of the following problems:",
-                "Timestamp": "2020-02-27T08:07:07.2855041Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.2871425Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfODE1N2Q5MDcxN2EwOGNhNQ==",
-                "stringId": "stringId_8157d90717a08ca5",
-                "en_us": "If you have had any problems, how difficult have these problems made it for you to do your work, take care of things at home, or get along with other people?\n",
-                "Timestamp": "2020-02-27T08:07:07.2871425Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.2894977Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfMTAwMTFjZTlkZmJlNDdmMA==",
-                "stringId": "stringId_10011ce9dfbe47f0",
-                "en_us": "Over the **last 2 weeks**, how often have you been bothered by any of the following problems:",
-                "Timestamp": "2020-02-27T08:07:07.2894977Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.2909313Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfOTM0MTk3M2Y5MGFjOGVjNg==",
-                "stringId": "stringId_9341973f90ac8ec6",
-                "en_us": "Over the **last 2 weeks**, how often have you been bothered by any of the following problems:",
-                "Timestamp": "2020-02-27T08:07:07.2909313Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.2923649Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfY2I0NGNjYTQ5ZDE3Njk3NQ==",
-                "stringId": "stringId_cb44cca49d176975",
-                "en_us": "Please let me know if I can help with anything else.",
-                "Timestamp": "2020-02-27T08:07:07.2923649Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.2939009Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfZmRiZjQzY2IxN2E4YzM0NQ==",
-                "stringId": "stringId_fdbf43cb17a8c345",
-                "en_us": "I’m going to ask you to fill out a short questionnaire.\r\n\r\nThis questionnaire is an important part of providing you with the best health care possible. \r\n\r\nYour answers will help in understanding problems that you may have. Please answer every question to the best of your ability.\r\n",
-                "Timestamp": "2020-02-27T08:07:07.2939009Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.2958465Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfZmM4OTViNWQ3MjEyZTkzMA==",
-                "stringId": "stringId_fc895b5d7212e930",
-                "en_us": "\"Thank you for answering these questions. You have just completed the **PHQ-15** questionnaire.\\n\\n\" +\r\n\"Your score in the questionnaire (**\"+ scenario.severity.score + \"**) is mapped to **\" + scenario.severity.severity + \" somatic symptom severity**.\"",
-                "Timestamp": "2020-02-27T08:07:07.2958465Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.2974849Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfMWRiNGY5NmZhOGZlNTZjYw==",
-                "stringId": "stringId_1db4f96fa8fe56cc",
-                "en_us": "I’d like to ask you just a few more questions.",
-                "Timestamp": "2020-02-27T08:07:07.2974849Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.2990209Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfODgzZmM5YmYyZmUwNzBiZQ==",
-                "stringId": "stringId_883fc9bf2fe070be",
-                "en_us": "Thank you. You have completed the **PHQ-SADS** screener. The answers you provided will be useful for your clinician.",
-                "Timestamp": "2020-02-27T08:07:07.2990209Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.3007617Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfNmY4YjcyMjRmNjlhZDI5ZQ==",
-                "stringId": "stringId_6f8b7224f69ad29e",
-                "en_us": "\"Thank you for answering these questions. You have just completed the **PHQ-9** questionnaire.\\n\\n\" +\r\n\"Your score in the questionnaire (**\"+ scenario.severity.score + \"**) is mapped to **\" + scenario.severity.severity + \" depression**.\"",
-                "Timestamp": "2020-02-27T08:07:07.3007617Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.3026049Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfZmQwOWY5MjlkMDViZGZiNA==",
-                "stringId": "stringId_fd09f929d05bdfb4",
-                "en_us": "\"Thank you for answering these questions. You have just completed the **GAD-7** questionnaire.\\n\\n\" +\r\n\"Your score in the questionnaire (**\"+ scenario.severity.score + \"**) is mapped to **\" + scenario.severity.severity + \" anxiety**.\"",
-                "Timestamp": "2020-02-27T08:07:07.3026049Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.3043457Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfODc0ZjhjNTZhYTUwYjZlZQ==",
-                "stringId": "stringId_874f8c56aa50b6ee",
-                "en_us": "scenario.questions[scenario.question_index]",
-                "Timestamp": "2020-02-27T08:07:07.3043457Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.3060865Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfMGI1OTBmMmZiOTRmZjhiNw==",
-                "stringId": "stringId_0b590f2fb94ff8b7",
-                "en_us": "Cannot find the mental health q&a",
-                "Timestamp": "2020-02-27T08:07:07.3060865Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.3084417Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfNmMxZTE3OTE3NDc5NjYwYw==",
-                "stringId": "stringId_6c1e17917479660c",
-                "en_us": "scenario.questions[scenario.question_index]",
-                "Timestamp": "2020-02-27T08:07:07.3084417Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.3100801Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfNmVkODJlOTdiYTViMDEyOQ==",
-                "stringId": "stringId_6ed82e97ba5b0129",
-                "en_us": "scenario.questions[scenario.question_index]",
-                "Timestamp": "2020-02-27T08:07:07.3100801Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.3118209Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfMDA5MDI2MTdiYTgwNzliZg==",
-                "en_us": "\"System found \" + ${trials_count}.toString() + \" relevant trials. Here are clinical trials that might be relevant for the situation\"",
-                "stringId": "stringId_00902617ba8079bf",
-                "Timestamp": "2020-02-27T08:07:07.3118209Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.3133569Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfNDJmZTI3OTk1ODcyOTlhOQ==",
-                "en_us": "${gender_question}",
-                "stringId": "stringId_42fe2799587299a9",
-                "Timestamp": "2020-02-27T08:07:07.3133569Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.3147905Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfNTM3ODgwZjUwNDI4NzAyMg==",
-                "en_us": "Sorry, no relevant trials were found",
-                "stringId": "stringId_537880f504287022",
-                "Timestamp": "2020-02-27T08:07:07.3147905Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.3167361Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfOGE3ODJkZTExMTI3NzM1Nw==",
-                "en_us": "\"found \" + ${trials_count}.toString() + \" relevant trials\"",
-                "stringId": "stringId_8a782de111277357",
-                "Timestamp": "2020-02-27T08:07:07.3167361Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.3184769Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfYTM4MTUyY2UzZTdmNmI1Zg==",
-                "en_us": "Sorry, there is seem to be a problem with an external data resource",
-                "stringId": "stringId_a38152ce3e7f6b5f",
-                "Timestamp": "2020-02-27T08:07:07.3184769Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.3201153Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfYTdmY2JlOTY3MDdiODc1OQ==",
-                "en_us": "${questions}[${question_index}].QUESTION",
-                "stringId": "stringId_a7fcbe96707b8759",
-                "Timestamp": "2020-02-27T08:07:07.3201153Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.3218561Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfYjNkZDQ1M2E0NDJjMzI2ZQ==",
-                "en_us": "${questions}[${question_index}].QUESTION",
-                "stringId": "stringId_b3dd453a442c326e",
-                "Timestamp": "2020-02-27T08:07:07.3218561Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.3236993Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfYjczYTRjYzBjNjA4NTA1ZQ==",
-                "en_us": "What would you like to do?",
-                "stringId": "stringId_b73a4cc0c608505e",
-                "Timestamp": "2020-02-27T08:07:07.3236993Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.3255425Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfYzcxZTc5OWRlODc4Njg3Yw==",
-                "en_us": "${condition_question}",
-                "stringId": "stringId_c71e799de878687c",
-                "Timestamp": "2020-02-27T08:07:07.3255425Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.3269761Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfZDk0MTA3ZWZlNWExNGMzOA==",
-                "en_us": "${preferance_question}",
-                "stringId": "stringId_d94107efe5a14c38",
-                "Timestamp": "2020-02-27T08:07:07.3269761Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.3285121Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfZWNkODJlZjRmNGZhNDA2MQ==",
-                "en_us": "${age_question}",
-                "stringId": "stringId_ecd82ef4f4fa4061",
-                "Timestamp": "2020-02-27T08:07:07.3285121Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.3300481Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfZjdmNWU4OWU3MTY0YmY1YQ==",
-                "en_us": "${living_place_question}",
-                "stringId": "stringId_f7f5e89e7164bf5a",
-                "Timestamp": "2020-02-27T08:07:07.3300481Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.3304577Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfYTdmODcxYjc3MzA0ODI2OA==",
-                "stringId": "stringId_a7f871b773048268",
-                "en_us": "scenario.questionText",
-                "Timestamp": "2020-02-27T08:07:07.3304577Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.3309697Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfYWU0MThkZTA5OWIzYThlOQ==",
-                "stringId": "stringId_ae418de099b3a8e9",
-                "en_us": "scenario.questionText",
-                "Timestamp": "2020-02-27T08:07:07.3309697Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-27T08%3A07%3A07.3313793Z'\"",
-                "PartitionKey": "291f5d3f-d500-422a-af6f-2ab47be83204",
-                "RowKey": "c3RyaW5nSWRfMDJlOTc0YTVkYTY2YTFmOA==",
-                "stringId": "stringId_02e974a5da66a1f8",
-                "en_us": "scenario.questionText",
-                "Timestamp": "2020-02-27T08:07:07.3313793Z"
-            }
-        ]
-    },
-    "files": [
-        {
-            "name": "mental_health_screener_questions.json",
-            "content": "ew0KICAiZ2FkN1F1ZXN0aW9ucyI6Ww0KICAgICJGZWVsaW5nIG5lcnZvdXMsIGFueGlvdXMgb3Igb24gZWRnZSIsDQogICAgIk5vdCBiZWluZyBhYmxlIHRvIHN0b3Agb3IgY29udHJvbCB3b3JyeWluZyIsDQogICAgIldvcnJ5aW5nIHRvbyBtdWNoIGFib3V0IGRpZmZlcmVudCB0aGluZ3MiLA0KICAgICJUcm91YmxlIHJlbGF4aW5nIiwNCiAgICAiQmVpbmcgc28gcmVzdGxlc3MgdGhhdCBpdCBpcyBoYXJkIHRvIHNpdCBzdGlsbCIsDQogICAgIkJlY29taW5nIGVhc2lseSBhbm5veWVkIG9yIGlycml0YWJsZSIsDQogICAgIkZlZWxpbmcgYWZyYWlkIGFzIGlmIHNvbWV0aGluZyBhd2Z1bCBtaWdodCBoYXBwZW4iDQogIF0sDQogIA0KICAicGhxOVF1ZXN0aW9ucyI6IFsNCiAgICAiTGl0dGxlIGludGVyZXN0IG9yIHBsZWFzdXJlIGluIGRvaW5nIHRoaW5ncyIsDQogICAgIkZlZWxpbmcgZG93biwgZGVwcmVzc2VkLCBvciBob3BlbGVzcyIsDQogICAgIlRyb3VibGUgZmFsbGluZyBvciBzdGF5aW5nIGFzbGVlcCwgb3Igc2xlZXBpbmcgdG9vIG11Y2giLA0KICAgICJGZWVsaW5nIHRpcmVkIG9yIGhhdmluZyBsaXR0bGUgZW5lcmd5IiwNCiAgICAiUG9vciBhcHBldGl0ZSBvciBvdmVyZWF0aW5nIiwNCiAgICAiRmVlbGluZyBiYWQgYWJvdXQgeW91cnNlbGYg4oCUIG9yIHRoYXQgeW91IGFyZSBhIGZhaWx1cmUgb3IgaGF2ZSBsZXQgeW91cnNlbGYgb3IgeW91ciBmYW1pbHkgZG93biIsDQogICAgIlRyb3VibGUgY29uY2VudHJhdGluZyBvbiB0aGluZ3MsIHN1Y2ggYXMgcmVhZGluZyB0aGUgbmV3c3BhcGVyIG9yIHdhdGNoaW5nIHRlbGV2aXNpb24iLA0KICAgICJNb3Zpbmcgb3Igc3BlYWtpbmcgc28gc2xvd2x5IHRoYXQgb3RoZXIgcGVvcGxlIGNvdWxkIGhhdmUgbm90aWNlZD8gT3IgdGhlIG9wcG9zaXRlIOKAlCBiZWluZyBzbyBmaWRnZXR5IG9yIHJlc3RsZXNzIHRoYXQgeW91IGhhdmUgYmVlbiBtb3ZpbmcgYXJvdW5kIGEgbG90IG1vcmUgdGhhbiB1c3VhbCIsDQogICAgIlRob3VnaHRzIHRoYXQgeW91IHdvdWxkIGJlIGJldHRlciBvZmYgZGVhZCBvciBvZiBodXJ0aW5nIHlvdXJzZWxmIGluIHNvbWUgd2F5Ig0KICBdLA0KICAicGhxMTVRdWVzdGlvbnMiOiBbDQoJIlN0b21hY2ggcGFpbiIsDQoJIkJhY2sgcGFpbiIsDQoJIlBhaW4gaW4geW91ciBhcm1zLCBsZWdzLCBvciBqb2ludHMgKGtuZWVzLCBoaXBzLCBldGMpIiwNCgkiRmVlbGluZyB0aXJlZCBvciBoYXZpbmcgbGl0dGxlIGVuZXJneSIsDQoJIlRyb3VibGUgZmFsbGluZyBvciBzdGF5aW5nIGFzbGVlcCwgb3Igc2xlZXBpbmcgdG9vIG11Y2giLA0KCSJNZW5zdHJ1YWwgY3JhbXBzIG9yIG90aGVyIHByb2JsZW1zIHdpdGggeW91ciBwZXJpb2RzIiwNCgkiUGFpbiBvciBwcm9ibGVtcyBkdXJpbmcgc2V4dWFsIGludGVyY291cnNlIiwNCgkiSGVhZGFjaGVzIiwNCgkiQ2hlc3QgcGFpbiIsDQoJIkRpenppbmVzcyIsDQoJIkZhaW50aW5nIHNwZWxscyIsDQoJIkZlZWxpbmcgeW91ciBoZWFydCBwb3VuZCBvciByYWNlIiwNCgkiU2hvcnRuZXNzIG9mIGJyZWF0aCIsDQoJIkNvbnN0aXBhdGlvbiwgbG9vc2UgYm93ZWxzLCBvciBkaWFycmhlYSIsDQoJIk5hdXNlYSwgZ2FzLCBvciBpbmRpZ2VzdGlvbiINCg0KICBdLA0KICAiYW54aWV0eUF0dGFja3MiOiBbDQogICAgIkluIHRoZSBsYXN0IDQgd2Vla3MsIGhhdmUgeW91IGhhZCBhbiBhbnhpZXR5IGF0dGFjayAtIHN1ZGRlbmx5IGZlZWxpbmcgZmVhciBvciBwYW5pYz8iLA0KCSJIYXMgdGhpcyBldmVyIGhhcHBlbmVkIGJlZm9yZT8iLA0KCSJEbyBzb21lIG9mIHRoZXNlIGF0dGFja3MgY29tZSBzdWRkZW5seSBvdXQgb2YgdGhlIGJsdWUgLSB0aGF0IGlzLCBpbiBzaXR1YXRpb25zIHdoZXJlIHlvdSBkb27igJl0IGV4cGVjdCB0byBiZSBuZXJ2b3VzIG9yIHVuY29tZm9ydGFibGU/IiwNCgkiRG8gdGhlc2UgYXR0YWNrcyBib3RoZXIgeW91IGEgbG90IG9yIGFyZSB5b3Ugd29ycmllZCBhYm91dCBoYXZpbmcgYW5vdGhlciBhdHRhY2s/IiwNCgkiRHVyaW5nIHlvdXIgbGFzdCBiYWQgYW54aWV0eSBhdHRhY2ssIGRpZCB5b3UgaGF2ZSBzeW1wdG9tcyBsaWtlIHNob3J0bmVzcyBvZiBicmVhdGgsIHN3ZWF0aW5nLCBvciB5b3VyIGhlYXJ0IHJhY2luZywgcG91bmRpbmcgb3Igc2tpcHBpbmc/Ig0KICBdDQp9"
-        },
-        {
-            "name": "UmlsCodesMapping.json",
-            "content": "ew0KICAgInNvdXJjZSI6IkNUTSBQUkQ6IGh0dHBzOi8vbWljcm9zb2Z0LnNoYXJlcG9pbnQuY29tLzp3Oi90L01TSGVhbHRoSUwvRWV4bE1Cd1pBa2RMczZPUkZ3T0xCU0FCcnAxUDlwQUR3ZVNrLTBzWTNzU3ZoUT9lPTV5bzR5ZSIsDQogICAiZmlsdGVyZWRDb25jZXB0cyI6IHsNCiAgICAgICAiQzAwMTI2MzQiOiB7DQogICAgICAgICAgICJjb2RlIjoiQzAwMTI2MzQiLA0KICAgICAgICAgICAibmFtZSI6ImRpc2Vhc2UiDQogICAgICAgIH0sDQogICAgICAgIkMwNTQzNDY3Ijogew0KICAgICAgICAgICAiY29kZSI6IkMwNTQzNDY3IiwNCiAgICAgICAgICAgIm5hbWUiOiJzdXJnZXJ5Ig0KICAgICAgICB9LA0KICAgICAgICJDMDA4NzExMSI6IHsNCiAgICAgICAgICAgImNvZGUiOiJDMDA4NzExMSIsDQogICAgICAgICAgICJuYW1lIjoidHJlYXRtZW50Ig0KICAgICAgICB9LA0KICAgICAgICJDMTUxNDQ2MyI6IHsNCiAgICAgICAgICAgImNvZGUiOiJDMTUxNDQ2MyIsDQogICAgICAgICAgICJuYW1lIjoidHJlYXRtZW50Ig0KICAgICAgICB9LA0KICAgICAgICJDMTQ1Nzg4NyI6IHsNCiAgICAgICAgICAgImNvZGUiOiJDMTQ1Nzg4NyIsDQogICAgICAgICAgICJuYW1lIjoic3ltcHRvbXMiDQogICAgICAgIH0sDQogICAgICAgIkMwMDEzMjI3Ijogew0KICAgICAgICAgICAiY29kZSI6IkMwMDEzMjI3IiwNCiAgICAgICAgICAgIm5hbWUiOiJtZWRpY2F0aW9uIg0KICAgICAgICB9LA0KICAgICAgICJDMDAyMjg4NSI6IHsNCiAgICAgICAgICAgImNvZGUiOiJDMDAyMjg4NSIsDQogICAgICAgICAgICJuYW1lIjoibGFib3JhdG9yeSB0ZXN0cyINCiAgICAgICAgfSwNCiAgICAgICAiQzAxODQ2NjEiOiB7DQogICAgICAgICAgICJjb2RlIjoiQzAxODQ2NjEiLA0KICAgICAgICAgICAibmFtZSI6InByb2NlZHVyZXMiDQogICAgICAgIH0sDQogICAgICAgIkMxNTMzNjg1Ijogew0KICAgICAgICAgICAiY29kZSI6IkMxNTMzNjg1IiwNCiAgICAgICAgICAgIm5hbWUiOiJpbmplY3Rpb24iDQogICAgICAgIH0sDQogICAgICAgIkMwMDA2ODI2Ijogew0KICAgICAgICAgICAiY29kZSI6IkMwMDA2ODI2IiwNCiAgICAgICAgICAgIm5hbWUiOiJjYW5jZXIiDQogICAgICAgIH0sDQogICAgICAgIkMzNzE0NTE0Ijogew0KICAgICAgICAgICAiY29kZSI6IkMzNzE0NTE0IiwNCiAgICAgICAgICAgIm5hbWUiOiJpbmZlY3Rpb24iDQogICAgICAgIH0sDQogICAgICAgIkMzODMxMTE4Ijogew0KICAgICAgICAgICAiY29kZSI6IkMzODMxMTE4IiwNCiAgICAgICAgICAgIm5hbWUiOiJjaGlsZGJlYXJpbmcgcG90ZW50aWFsIg0KICAgICAgICB9LA0KICAgICAgICJDMDIwNTQ2MiI6IHsNCiAgICAgICAgICAgImNvZGUiOiJDMDIwNTQ2MiIsDQogICAgICAgICAgICJuYW1lIjoiaGlzdG9sb2dpYyINCiAgICAgICAgfSwNCiAgICAgICAiQzAwMjQ0ODUiOiB7DQogICAgICAgICAgICJjb2RlIjoiQzAwMjQ0ODUiLA0KICAgICAgICAgICAibmFtZSI6Im1yaSINCiAgICAgICAgfSwNCiAgICAgICAiQzAyMjE0MjMiOiB7DQogICAgICAgICAgICJjb2RlIjoiQzAyMjE0MjMiLA0KICAgICAgICAgICAibmFtZSI6IklsbG5lc3MiDQogICAgICAgIH0sDQogICAgICAgIkMwMDMyOTc2Ijogew0KICAgICAgICAgICAiY29kZSI6IkMwMDMyOTc2IiwNCiAgICAgICAgICAgIm5hbWUiOiJwcmVnbmFuY3kgdGVzdHMiDQogICAgICAgIH0sDQogICAgICAgIkMwMDIzNjcxIjogew0KICAgICAgICAgICAiY29kZSI6IkMwMDIzNjcxIiwNCiAgICAgICAgICAgIm5hbWUiOiJsaWZlIGV4cGVjdGFuY2llcyINCiAgICAgICAgfSwNCiAgICAgICAiQzAwMTMyMzAiOiB7DQogICAgICAgICAgICJjb2RlIjoiQzAwMTMyMzAiLA0KICAgICAgICAgICAibmFtZSI6ImludmVzdGlnYXRpb25hbCBkcnVnIg0KICAgICAgICB9LA0KICAgICAgICJDMDAyMDUxNyI6IHsNCiAgICAgICAgICAgImNvZGUiOiJDMDAyMDUxNyIsDQogICAgICAgICAgICJuYW1lIjoiYWxsZXJneSINCiAgICAgICAgfSwNCiAgICAgICAiQzAwMjc2NTEiOiB7DQogICAgICAgICAgICJjb2RlIjoiQzAwMjc2NTEiLA0KICAgICAgICAgICAibmFtZSI6Ik5lb3BsYXNtcyINCiAgICAgICAgfQ0KICAgIH0sDQoJImNvbmNlcHRzIjogew0KCQkiQzAwMzIxODEiOiB7DQoJCQkiY29kZSI6ICJDMDAzMjE4MSIsDQoJCQkibmFtZSI6ICJCbG9vZCBQbGF0ZWxldCBDb3VudHMiLA0KCQkJInF1ZXN0aW9uIjogIldoYXQgaXMgdGhlIHBhdGllbnQncyAlcDElIGNvdW50PyINCgkJfSwNCgkJIkMwOTQ4NzYyIjogew0KCQkJImNvZGUiOiAiQzA5NDg3NjIiLA0KCQkJIm5hbWUiOiAiQWJzb2x1dGUgbmV1dHJvcGhpbCBjb3VudCIsDQoJCQkicXVlc3Rpb24iOiAiV2hhdCBpcyB0aGUgcGF0aWVudCdzICVwMSU/Ig0KCQl9LA0KCQkiQzAwMTkwNDYiOiB7DQoJCQkiY29kZSI6ICJDMDAxOTA0NiIsDQoJCQkibmFtZSI6ICJIZW1vZ2xvYmluIiwNCgkJCSJxdWVzdGlvbiI6ICJXaGF0IGlzIHRoZSBwYXRpZW50J3MgJXAxJT8gY291bnQiDQoJCX0sDQoJCSJDMDIwMTkxMyI6IHsNCgkJCSJjb2RlIjogIkMwMjAxOTEzIiwNCgkJCSJuYW1lIjogIlRvdGFsIEJpbGlydWJpbiBNZWFzdXJlbWVudCIsDQoJCQkicXVlc3Rpb24iOiAiV2hhdCBpcyB0aGUgcGF0aWVudCdzICVwMSU/Ig0KCQl9LA0KCQkiQzE1MjI0NDkiOiB7DQoJCQkiY29kZSI6ICJDMTUyMjQ0OSIsDQoJCQkibmFtZSI6ICJSYWRpb3RoZXJhcGllcyIsDQoJCQkicXVlc3Rpb24iOiAiRGlkIHRoZSBwYXRpZW50IGdvIHRocm91Z2ggJXAxJT8iDQoJCX0sDQoJCSJDMzY2NTQ3MiI6IHsNCgkJCSJjb2RlIjogIkMzNjY1NDcyIiwNCgkJCSJuYW1lIjogIkNoZW1vdGhlcmFweSIsDQoJCQkicXVlc3Rpb24iOiAiRGlkIHRoZSBwYXRpZW50IGdvIHRocm91Z2ggJXAxJT8iDQoJCX0sDQoJCSJDMDAxOTE2MyI6IHsNCgkJCSJjb2RlIjogIkMwMDE5MTYzIiwNCgkJCSJuYW1lIjogIkhlcGF0aXRpcyBCIiwNCgkJCSJxdWVzdGlvbiI6ICJXYXMgdGhlIHBhdGllbnQgZGlhZ25vc2VkIHdpdGggJXAxJT8iDQoJCX0sDQoJCSJDMDAxOTY5MyI6IHsNCgkJCSJjb2RlIjogIkMwMDE5NjkzIiwNCgkJCSJuYW1lIjogIkhJViBpbmZlY3Rpb24iLA0KCQkJInF1ZXN0aW9uIjogIldhcyB0aGUgcGF0aWVudCBkaWFnbm9zZWQgd2l0aCAlcDElPyINCgkJfSwNCgkJIkMwMDIwNTM4Ijogew0KCQkJImNvZGUiOiAiQzAwMjA1MzgiLA0KCQkJIm5hbWUiOiAiSHlwZXJ0ZW5zaW9uIiwNCgkJCSJxdWVzdGlvbiI6ICJXYXMgdGhlIHBhdGllbnQgZGlhZ25vc2VkIHdpdGggJXAxJT8iDQoJCX0sDQoJCSJDMDAxODgwMiI6IHsNCgkJCSJjb2RlIjogIkMwMDE4ODAyIiwNCgkJCSJuYW1lIjogIkNvbmdlc3RpdmUgaGVhcnQgZmFpbHVyZSIsDQoJCQkicXVlc3Rpb24iOiAiV2FzIHRoZSBwYXRpZW50IGRpYWdub3NlZCB3aXRoICVwMSU/Ig0KCQl9LA0KCQkiQzAwMTE4NDciOiB7DQoJCQkiY29kZSI6ICJDMDAxMTg0NyIsDQoJCQkibmFtZSI6ICJEaWFiZXRlcyIsDQoJCQkicXVlc3Rpb24iOiAiV2FzIHRoZSBwYXRpZW50IGRpYWdub3NlZCB3aXRoICVwMSU/Ig0KCQl9LA0KCQkiQzAwMDM4MTEiOiB7DQoJCQkiY29kZSI6ICJDMDAwMzgxMSIsDQoJCQkibmFtZSI6ICJDQVJESUFDIEFSUkhZVEhNSUEiLA0KCQkJInF1ZXN0aW9uIjogIldhcyB0aGUgcGF0aWVudCBkaWFnbm9zZWQgd2l0aCAlcDElPyINCgkJfSwNCgkJIkMwMDE5MTk2Ijogew0KCQkJImNvZGUiOiAiQzAwMTkxOTYiLA0KCQkJIm5hbWUiOiAiSGVwYXRpdGlzIEMiLA0KCQkJInF1ZXN0aW9uIjogIldhcyB0aGUgcGF0aWVudCBkaWFnbm9zZWQgd2l0aCAlcDElPyINCgkJfSwNCgkJIkMwMDA0MzY0Ijogew0KCQkJImNvZGUiOiAiQzAwMDQzNjQiLA0KCQkJIm5hbWUiOiAiQXV0b2ltbXVuZSBEaXNlYXNlcyIsDQoJCQkicXVlc3Rpb24iOiAiV2FzIHRoZSBwYXRpZW50IGRpYWdub3NlZCB3aXRoICVwMSU/Ig0KCQl9LA0KCQkiQzEzMDU4NTUiOiB7DQoJCQkiY29kZSI6ICJDMTMwNTg1NSIsDQoJCQkibmFtZSI6ICJCb2R5IE1hc3MgSW5kZXgiLA0KCQkJInF1ZXN0aW9uIjogIldoYXQgaXMgdGhlIHBhdGllbnQncyBCb2R5IE1hc3MgSW5kZXg/Ig0KCQl9LA0KCQkiQzE1MTIxNjIiOiB7DQoJCQkiY29kZSI6ICJDMTUxMjE2MiIsDQoJCQkibmFtZSI6ICJFQ09HIiwNCgkJCSJjaG9pY2VzIjogWyAiMCIsICIxIiwgIjIiLCAiMyIsICI0IiBdLA0KCQkJInF1ZXN0aW9uIjogIldoYXQgaXMgdGhlIHBhdGllbnQncyBFQ09HIHNjb3JlPyINCgkJfSwNCgkJIkMwMDA0OTM2Ijogew0KCQkJImNvZGUiOiAiQzAwMDQ5MzYiLA0KCQkJIm5hbWUiOiAibWVudGFsIGhlYWx0aCBkeXNmdW5jdGlvbiIsDQoJCQkicXVlc3Rpb24iOiAiV2FzIHRoZSBwYXRpZW50IGRpYWdub3NlZCB3aXRoIG1lbnRhbCBoZWFsdGggb3IgYmVoYXZpb3VyYWwgZHlzZnVuY3Rpb24/Ig0KCQl9LA0KCQkiQzAwMzg0NTQiOiB7DQoJCQkiY29kZSI6ICJDMDAzODQ1NCIsDQoJCQkibmFtZSI6ICJzdG9rZSIsDQoJCQkicXVlc3Rpb24iOiAiRGlkIHRoZSBwYXRpZW50IGV4cGVyaWVuY2Ugc3Rva2Ugb3IgY2VyZWJyb3Zhc2N1bGFyIGFjY2lkZW50PyINCgkJfSwNCgkJIkMwMDAyOTY1Ijogew0KCQkJImNvZGUiOiAiQzAwMDI5NjUiLA0KCQkJIm5hbWUiOiAidW5zdGFibGUgYW5naW5hIiwNCgkJCSJxdWVzdGlvbiI6ICJXYXMgdGhlIHBhdGllbnQgZGlhZ25vc2VkIHdpdGggdW5zdGFibGUgYW5naW5hPyINCgkJfSwNCgkJIkMwMDI3MDUxIjogew0KCQkJImNvZGUiOiAiQzAwMjcwNTEiLA0KCQkJIm5hbWUiOiAiaGVhcnQgYXR0YWNrIiwNCgkJCSJxdWVzdGlvbiI6ICJEaWQgdGhlIHBhdGllbnQgZXhwZXJpZW5jZSBhIGhlYXJ0IGF0dGFjaz8iDQoJCX0sDQoJCSJDMDAzMjk2MSI6IHsNCgkJCSJjb2RlIjogIkMwMDMyOTYxIiwNCgkJCSJuYW1lIjogIlByZWduYW5jaWVzIiwNCgkJCSJxdWVzdGlvbiI6ICJJcyB0aGUgcGF0aWVudCBwcmVnbmFudCBvciBicmVhc3RmZWVkaW5nPyINCgkJfSwNCgkJIkMwNTQ5MjA2Ijogew0KCQkJImNvZGUiOiAiQzA1NDkyMDYiLA0KCQkJIm5hbWUiOiAicHJlZ25hbnQiLA0KCQkJIm1hcHBlZFRvIjogIkMwMDMyOTYxIg0KCQl9LA0KCQkiQzE2MjMwNDAiOiB7DQoJCQkiY29kZSI6ICJDMTYyMzA0MCIsDQoJCQkibmFtZSI6ICJCcmVhc3QgZmVlZGluZyIsDQoJCQkibWFwcGVkVG8iOiAiQzAwMzI5NjEiDQoJCX0sDQoJCSJDMzY2ODgzMSI6IHsNCgkJCSJjb2RlIjogIkMzNjY4ODMxIiwNCgkJCSJuYW1lIjogIkxhY3RhdGlvbiIsDQoJCQkibWFwcGVkVG8iOiAiQzAwMzI5NjEiDQoJCX0sDQoJCSJDMDcwMDU4OSI6IHsNCgkJCSJjb2RlIjogIkMwNzAwNTg5IiwNCgkJCSJuYW1lIjogImNvbnRyYWNlcHRpb24iLA0KCQkJInF1ZXN0aW9uIjogIklzIHRoZSBwYXRpZW50IHVzaW5nIGNvbnRyYWNlcHRpb24/Ig0KCQl9LA0KCQkiQzAwMDE2MTciOiB7DQoJCQkiY29kZSI6ICJDMDAwMTYxNyIsDQoJCQkibmFtZSI6ICJBZHJlbmFsIENvcnRleCBIb3Jtb25lcyIsDQoJCQkicXVlc3Rpb24iOiAiSXMgdGhlIHBhdGllbnQgdXNpbmcgJXAxJT8iDQoJCX0NCgl9LA0KICAgImVudGl0eVR5cGVzIjogew0KICAgICAgICJNRURJQ0FUSU9OX05BTUUiOiB7DQogICAgICAgICAgICJxdWVzdGlvbiI6IklzIHRoZSBwYXRpZW50IHVzaW5nICVwMSU/IiwNCgkJCSJuYW1lIjoiTUVESUNBVElPTl9OQU1FIg0KICAgICAgICB9LA0KICAgICAgICJNRURJQ0FUSU9OX0NMQVNTIjogew0KICAgICAgICAgICAicXVlc3Rpb24iOiJJcyB0aGUgcGF0aWVudCB1c2luZyAlcDElPyIsDQoJCQkibmFtZSI6Ik1FRElDQVRJT05fQ0xBU1MiDQogICAgICAgIH0NCiAgICB9DQp9"
-        }
-    ],
     "configuration": {
+        "handoff": {
+            "teams": {
+                "tenantId": "{tenantId}",
+                "groupObjectId": "{groupObjectId}",
+                "clientId": "{clientId}",
+                "clientSecret": "{clientSecret}",
+                "organizerObjectId": "{organizerObjectId}"
+            },
+            "enable": true
+        },
         "language_understanding": {
             "luis_models": {
                 "clinical_trials_matching_model": {
@@ -1595,5 +818,795 @@
         "environment_variables": {
             "variables": []
         }
+    },
+    "files": [
+        {
+            "name": "UmlsCodesMapping.json",
+            "content": "ew0KCSJzb3VyY2UiOg0KCQkiQ1RNIFBSRDogaHR0cHM6Ly9taWNyb3NvZnQuc2hhcmVwb2ludC5jb20vOnc6L3QvTVNIZWFsdGhJTC9FZXhsTUJ3WkFrZExzNk9SRndPTEJTQUJycDFQOXBBRHdlU2stMHNZM3NTdmhRP2U9NXlvNHllIiwNCgkiZmlsdGVyZWRDb25jZXB0cyI6IHsNCgkJIkMwMDEyNjM0Ijogew0KCQkJImNvZGUiOiAiQzAwMTI2MzQiLA0KCQkJIm5hbWUiOiAiZGlzZWFzZSINCgkJfSwNCgkJIkMwNTQzNDY3Ijogew0KCQkJImNvZGUiOiAiQzA1NDM0NjciLA0KCQkJIm5hbWUiOiAic3VyZ2VyeSINCgkJfSwNCgkJIkMwMDg3MTExIjogew0KCQkJImNvZGUiOiAiQzAwODcxMTEiLA0KCQkJIm5hbWUiOiAidHJlYXRtZW50Ig0KCQl9LA0KCQkiQzE1MTQ0NjMiOiB7DQoJCQkiY29kZSI6ICJDMTUxNDQ2MyIsDQoJCQkibmFtZSI6ICJ0cmVhdG1lbnQiDQoJCX0sDQoJCSJDMTQ1Nzg4NyI6IHsNCgkJCSJjb2RlIjogIkMxNDU3ODg3IiwNCgkJCSJuYW1lIjogInN5bXB0b21zIg0KCQl9LA0KCQkiQzAwMTMyMjciOiB7DQoJCQkiY29kZSI6ICJDMDAxMzIyNyIsDQoJCQkibmFtZSI6ICJtZWRpY2F0aW9uIg0KCQl9LA0KCQkiQzAwMjI4ODUiOiB7DQoJCQkiY29kZSI6ICJDMDAyMjg4NSIsDQoJCQkibmFtZSI6ICJsYWJvcmF0b3J5IHRlc3RzIg0KCQl9LA0KCQkiQzAxODQ2NjEiOiB7DQoJCQkiY29kZSI6ICJDMDE4NDY2MSIsDQoJCQkibmFtZSI6ICJwcm9jZWR1cmVzIg0KCQl9LA0KCQkiQzE1MzM2ODUiOiB7DQoJCQkiY29kZSI6ICJDMTUzMzY4NSIsDQoJCQkibmFtZSI6ICJpbmplY3Rpb24iDQoJCX0sDQoJCSJDMDAwNjgyNiI6IHsNCgkJCSJjb2RlIjogIkMwMDA2ODI2IiwNCgkJCSJuYW1lIjogImNhbmNlciINCgkJfSwNCgkJIkMzNzE0NTE0Ijogew0KCQkJImNvZGUiOiAiQzM3MTQ1MTQiLA0KCQkJIm5hbWUiOiAiaW5mZWN0aW9uIg0KCQl9LA0KCQkiQzM4MzExMTgiOiB7DQoJCQkiY29kZSI6ICJDMzgzMTExOCIsDQoJCQkibmFtZSI6ICJjaGlsZGJlYXJpbmcgcG90ZW50aWFsIg0KCQl9LA0KCQkiQzAyMDU0NjIiOiB7DQoJCQkiY29kZSI6ICJDMDIwNTQ2MiIsDQoJCQkibmFtZSI6ICJoaXN0b2xvZ2ljIg0KCQl9LA0KCQkiQzAwMjQ0ODUiOiB7DQoJCQkiY29kZSI6ICJDMDAyNDQ4NSIsDQoJCQkibmFtZSI6ICJtcmkiDQoJCX0sDQoJCSJDMDIyMTQyMyI6IHsNCgkJCSJjb2RlIjogIkMwMjIxNDIzIiwNCgkJCSJuYW1lIjogIklsbG5lc3MiDQoJCX0sDQoJCSJDMDAzMjk3NiI6IHsNCgkJCSJjb2RlIjogIkMwMDMyOTc2IiwNCgkJCSJuYW1lIjogInByZWduYW5jeSB0ZXN0cyINCgkJfSwNCgkJIkMwMDIzNjcxIjogew0KCQkJImNvZGUiOiAiQzAwMjM2NzEiLA0KCQkJIm5hbWUiOiAibGlmZSBleHBlY3RhbmNpZXMiDQoJCX0sDQoJCSJDMDAxMzIzMCI6IHsNCgkJCSJjb2RlIjogIkMwMDEzMjMwIiwNCgkJCSJuYW1lIjogImludmVzdGlnYXRpb25hbCBkcnVnIg0KCQl9LA0KCQkiQzAwMjA1MTciOiB7DQoJCQkiY29kZSI6ICJDMDAyMDUxNyIsDQoJCQkibmFtZSI6ICJhbGxlcmd5Ig0KCQl9LA0KCQkiQzAwMjc2NTEiOiB7DQoJCQkiY29kZSI6ICJDMDAyNzY1MSIsDQoJCQkibmFtZSI6ICJOZW9wbGFzbXMiDQoJCX0NCgl9LA0KCSJjb25jZXB0cyI6IHsNCgkJIkMwMDMyMTgxIjogew0KCQkJImNvZGUiOiAiQzAwMzIxODEiLA0KCQkJIm5hbWUiOiAiUGxhdGVsZXQgY291bnQiLA0KCQkJInF1ZXN0aW9uIjogIldoYXQgaXMgdGhlIHBhdGllbnQncyAlcDElPyIsDQoJCQkiYW5zd2VyVHlwZSI6ICJOdW1lcmljIg0KCQl9LA0KCQkiQzA5NDg3NjIiOiB7DQoJCQkiY29kZSI6ICJDMDk0ODc2MiIsDQoJCQkibmFtZSI6ICJBYnNvbHV0ZSBuZXV0cm9waGlsIGNvdW50IiwNCgkJCSJxdWVzdGlvbiI6ICJXaGF0IGlzIHRoZSBwYXRpZW50J3MgJXAxJT8iLA0KCQkJImFuc3dlclR5cGUiOiAiTnVtZXJpYyINCgkJfSwNCgkJIkMwMDE5MDQ2Ijogew0KCQkJImNvZGUiOiAiQzAwMTkwNDYiLA0KCQkJIm5hbWUiOiAiSGVtb2dsb2JpbiBsZXZlbCIsDQoJCQkicXVlc3Rpb24iOiAiV2hhdCBpcyB0aGUgcGF0aWVudCdzICVwMSU/IiwNCgkJCSJhbnN3ZXJUeXBlIjogIk51bWVyaWMiDQoJCX0sDQoJCSJDMDIwMTkxMyI6IHsNCgkJCSJjb2RlIjogIkMwMjAxOTEzIiwNCgkJCSJuYW1lIjogIlRvdGFsIEJpbGlydWJpbiIsDQoJCQkicXVlc3Rpb24iOiAiV2hhdCBpcyB0aGUgcGF0aWVudCdzICVwMSU/IiwNCgkJCSJhbnN3ZXJUeXBlIjogIk51bWVyaWMiDQoJCX0sDQoJCSJDMTUyMjQ0OSI6IHsNCgkJCSJjb2RlIjogIkMxNTIyNDQ5IiwNCgkJCSJuYW1lIjogIlJhZGlvdGhlcmFweSIsDQoJCQkicXVlc3Rpb24iOiAiRGlkIHRoZSBwYXRpZW50IGdvIHRocm91Z2ggJXAxJT8iLA0KCQkJImFuc3dlclR5cGUiOiAiQm9vbGVhbiINCgkJfSwNCgkJIkMzNjY1NDcyIjogew0KCQkJImNvZGUiOiAiQzM2NjU0NzIiLA0KCQkJIm5hbWUiOiAiQ2hlbW90aGVyYXB5IiwNCgkJCSJxdWVzdGlvbiI6ICJEaWQgdGhlIHBhdGllbnQgZ28gdGhyb3VnaCAlcDElPyIsDQoJCQkiYW5zd2VyVHlwZSI6ICJCb29sZWFuIg0KCQl9LA0KCQkiQzAwMTkxNjMiOiB7DQoJCQkiY29kZSI6ICJDMDAxOTE2MyIsDQoJCQkibmFtZSI6ICJIZXBhdGl0aXMgQiIsDQoJCQkicXVlc3Rpb24iOiAiV2FzIHRoZSBwYXRpZW50IGRpYWdub3NlZCB3aXRoICVwMSU/IiwNCgkJCSJhbnN3ZXJUeXBlIjogIkJvb2xlYW4iDQoJCX0sDQoJCSJDMDAxOTY5MyI6IHsNCgkJCSJjb2RlIjogIkMwMDE5NjkzIiwNCgkJCSJuYW1lIjogIkhJViIsDQoJCQkicXVlc3Rpb24iOiAiV2FzIHRoZSBwYXRpZW50IGRpYWdub3NlZCB3aXRoICVwMSU/IiwNCgkJCSJhbnN3ZXJUeXBlIjogIkJvb2xlYW4iDQoJCX0sDQoJCQkiQzM4NTQyMjIiOiB7DQoJCQkiY29kZSI6ICJDMzg1NDIyMiIsDQoJCQkibmFtZSI6ICJISVYiLA0KCQkJIm1hcHBlZFRvIjogIkMwMDE5NjkzIg0KCQl9LA0KCQkiQzAwMjA1MzgiOiB7DQoJCQkiY29kZSI6ICJDMDAyMDUzOCIsDQoJCQkibmFtZSI6ICJIeXBlcnRlbnNpb24iLA0KCQkJInF1ZXN0aW9uIjogIldhcyB0aGUgcGF0aWVudCBkaWFnbm9zZWQgd2l0aCAlcDElPyIsDQoJCQkiYW5zd2VyVHlwZSI6ICJCb29sZWFuIg0KCQl9LA0KCQkiQzAwMTg4MDIiOiB7DQoJCQkiY29kZSI6ICJDMDAxODgwMiIsDQoJCQkibmFtZSI6ICJDb25nZXN0aXZlIGhlYXJ0IGZhaWx1cmUiLA0KCQkJInF1ZXN0aW9uIjogIldhcyB0aGUgcGF0aWVudCBkaWFnbm9zZWQgd2l0aCAlcDElPyIsDQoJCQkiYW5zd2VyVHlwZSI6ICJCb29sZWFuIg0KCQl9LA0KCQkiQzAwMTE4NDciOiB7DQoJCQkiY29kZSI6ICJDMDAxMTg0NyIsDQoJCQkibmFtZSI6ICJEaWFiZXRlcyIsDQoJCQkicXVlc3Rpb24iOiAiV2FzIHRoZSBwYXRpZW50IGRpYWdub3NlZCB3aXRoICVwMSU/IiwNCgkJCSJhbnN3ZXJUeXBlIjogIkJvb2xlYW4iDQoJCX0sDQoJCSJDMDAwMzgxMSI6IHsNCgkJCSJjb2RlIjogIkMwMDAzODExIiwNCgkJCSJuYW1lIjogIkNhcmRpYWMgYXJyaHl0aG1pYSIsDQoJCQkicXVlc3Rpb24iOiAiV2FzIHRoZSBwYXRpZW50IGRpYWdub3NlZCB3aXRoICVwMSU/IiwNCgkJCSJhbnN3ZXJUeXBlIjogIkJvb2xlYW4iDQoJCX0sDQoJCSJDMDAxOTE5NiI6IHsNCgkJCSJjb2RlIjogIkMwMDE5MTk2IiwNCgkJCSJuYW1lIjogIkhlcGF0aXRpcyBDIiwNCgkJCSJxdWVzdGlvbiI6ICJXYXMgdGhlIHBhdGllbnQgZGlhZ25vc2VkIHdpdGggJXAxJT8iLA0KCQkJImFuc3dlclR5cGUiOiAiQm9vbGVhbiINCgkJfSwNCgkJIkMwMDA0MzY0Ijogew0KCQkJImNvZGUiOiAiQzAwMDQzNjQiLA0KCQkJIm5hbWUiOiAiQXV0b2ltbXVuZSBEaXNlYXNlcyIsDQoJCQkicXVlc3Rpb24iOiAiV2FzIHRoZSBwYXRpZW50IGRpYWdub3NlZCB3aXRoICVwMSU/IiwNCgkJCSJhbnN3ZXJUeXBlIjogIkJvb2xlYW4iDQoJCX0sDQoJCSJDMTMwNTg1NSI6IHsNCgkJCSJjb2RlIjogIkMxMzA1ODU1IiwNCgkJCSJuYW1lIjogIkJvZHkgTWFzcyBJbmRleCIsDQoJCQkicXVlc3Rpb24iOiAiV2hhdCBpcyB0aGUgcGF0aWVudCdzICVwMSU/IiwNCgkJCSJhbnN3ZXJUeXBlIjogIk51bWVyaWMiDQoJCX0sDQoJCSJDMTUxMjE2MiI6IHsNCgkJCSJjb2RlIjogIkMxNTEyMTYyIiwNCgkJCSJuYW1lIjogIkVDT0ciLA0KCQkJImNob2ljZXMiOiBbICIwIiwgIjEiLCAiMiIsICIzIiwgIjQiIF0sDQoJCQkicXVlc3Rpb24iOiAiV2hhdCBpcyB0aGUgcGF0aWVudCdzIEVDT0cgc2NvcmU/IiwNCgkJCSJhbnN3ZXJUeXBlIjogIkNob2ljZSINCgkJfSwNCgkJIkMxNTIwMjI0Ijogew0KCQkJImNvZGUiOiAiQzE1MjAyMjQiLA0KCQkJIm5hbWUiOiAiRWFzdGVybiBDb29wZXJhdGl2ZSBPbmNvbG9neSBHcm91cCBwZXJmb3JtYW5jZSBzdGF0dXMiLA0KCQkJIm1hcHBlZFRvIjogIkMxNTEyMTYyIg0KCQl9LA0KCQkiQzAwMDQ5MzYiOiB7DQoJCQkiY29kZSI6ICJDMDAwNDkzNiIsDQoJCQkibmFtZSI6ICJtZW50YWwgaGVhbHRoIGR5c2Z1bmN0aW9uIiwNCgkJCSJxdWVzdGlvbiI6ICJXYXMgdGhlIHBhdGllbnQgZGlhZ25vc2VkIHdpdGggbWVudGFsIGhlYWx0aCBvciBiZWhhdmlvcmFsIGR5c2Z1bmN0aW9uPyIsDQoJCQkiYW5zd2VyVHlwZSI6ICJCb29sZWFuIg0KCQl9LA0KCQkiQzAwMzg0NTQiOiB7DQoJCQkiY29kZSI6ICJDMDAzODQ1NCIsDQoJCQkibmFtZSI6ICJzdG9rZSIsDQoJCQkicXVlc3Rpb24iOiAiRGlkIHRoZSBwYXRpZW50IGV4cGVyaWVuY2Ugc3Rva2Ugb3IgY2VyZWJyb3Zhc2N1bGFyIGFjY2lkZW50PyIsDQoJCQkiYW5zd2VyVHlwZSI6ICJCb29sZWFuIg0KCQl9LA0KCQkiQzAwMDI5NjUiOiB7DQoJCQkiY29kZSI6ICJDMDAwMjk2NSIsDQoJCQkibmFtZSI6ICJ1bnN0YWJsZSBhbmdpbmEiLA0KCQkJInF1ZXN0aW9uIjogIldhcyB0aGUgcGF0aWVudCBkaWFnbm9zZWQgd2l0aCB1bnN0YWJsZSBhbmdpbmE/IiwNCgkJCSJhbnN3ZXJUeXBlIjogIkJvb2xlYW4iDQoJCX0sDQoJCSJDMDAyNzA1MSI6IHsNCgkJCSJjb2RlIjogIkMwMDI3MDUxIiwNCgkJCSJuYW1lIjogImhlYXJ0IGF0dGFjayIsDQoJCQkicXVlc3Rpb24iOiAiRGlkIHRoZSBwYXRpZW50IGV4cGVyaWVuY2UgYSBoZWFydCBhdHRhY2s/IiwNCgkJCSJhbnN3ZXJUeXBlIjogIkJvb2xlYW4iDQoJCX0sDQoJCSJDMDAzMjk2MSI6IHsNCgkJCSJjb2RlIjogIkMwMDMyOTYxIiwNCgkJCSJuYW1lIjogIlByZWduYW5jaWVzIiwNCgkJCSJxdWVzdGlvbiI6ICJJcyB0aGUgcGF0aWVudCBwcmVnbmFudCBvciBicmVhc3RmZWVkaW5nPyIsDQoJCQkiYW5zd2VyVHlwZSI6ICJCb29sZWFuIg0KCQl9LA0KCQkiQzA1NDkyMDYiOiB7DQoJCQkiY29kZSI6ICJDMDU0OTIwNiIsDQoJCQkibmFtZSI6ICJwcmVnbmFudCIsDQoJCQkibWFwcGVkVG8iOiAiQzAwMzI5NjEiDQoJCX0sDQoJCSJDMTYyMzA0MCI6IHsNCgkJCSJjb2RlIjogIkMxNjIzMDQwIiwNCgkJCSJuYW1lIjogIkJyZWFzdCBmZWVkaW5nIiwNCgkJCSJtYXBwZWRUbyI6ICJDMDAzMjk2MSINCgkJfSwNCgkJIkMzNjY4ODMxIjogew0KCQkJImNvZGUiOiAiQzM2Njg4MzEiLA0KCQkJIm5hbWUiOiAiTGFjdGF0aW9uIiwNCgkJCSJtYXBwZWRUbyI6ICJDMDAzMjk2MSINCgkJfSwNCgkJIkMwNzAwNTg5Ijogew0KCQkJImNvZGUiOiAiQzA3MDA1ODkiLA0KCQkJIm5hbWUiOiAiY29udHJhY2VwdGlvbiIsDQoJCQkicXVlc3Rpb24iOiAiSXMgdGhlIHBhdGllbnQgdXNpbmcgY29udHJhY2VwdGlvbj8iLA0KCQkJImFuc3dlclR5cGUiOiAiQm9vbGVhbiINCgkJfSwNCgkJIkMwMDAxNjE3Ijogew0KCQkJImNvZGUiOiAiQzAwMDE2MTciLA0KCQkJIm5hbWUiOiAiQWRyZW5hbCBDb3J0ZXggSG9ybW9uZXMiLA0KCQkJInF1ZXN0aW9uIjogIklzIHRoZSBwYXRpZW50IHVzaW5nICVwMSU/IiwNCgkJCSJhbnN3ZXJUeXBlIjogIkJvb2xlYW4iDQoJCX0NCgl9LA0KCSJlbnRpdHlUeXBlcyI6IHsNCgkJIk1FRElDQVRJT05fTkFNRSI6IHsNCgkJCSJxdWVzdGlvbiI6ICJJcyB0aGUgcGF0aWVudCB1c2luZyAlcDElPyIsDQoJCQkibmFtZSI6ICJNRURJQ0FUSU9OX05BTUUiLA0KCQkJImFuc3dlclR5cGUiOiAiQm9vbGVhbiINCgkJfSwNCgkJIk1FRElDQVRJT05fQ0xBU1MiOiB7DQoJCQkicXVlc3Rpb24iOiAiSXMgdGhlIHBhdGllbnQgdXNpbmcgJXAxJT8iLA0KCQkJIm5hbWUiOiAiTUVESUNBVElPTl9DTEFTUyIsDQoJCQkiYW5zd2VyVHlwZSI6ICJCb29sZWFuIg0KCQl9DQoJfQ0KfQ=="
+        },
+        {
+            "name": "mental_health_screener_questions.json",
+            "content": "ew0KICAiZ2FkN1F1ZXN0aW9ucyI6Ww0KICAgICJGZWVsaW5nIG5lcnZvdXMsIGFueGlvdXMgb3Igb24gZWRnZSIsDQogICAgIk5vdCBiZWluZyBhYmxlIHRvIHN0b3Agb3IgY29udHJvbCB3b3JyeWluZyIsDQogICAgIldvcnJ5aW5nIHRvbyBtdWNoIGFib3V0IGRpZmZlcmVudCB0aGluZ3MiLA0KICAgICJUcm91YmxlIHJlbGF4aW5nIiwNCiAgICAiQmVpbmcgc28gcmVzdGxlc3MgdGhhdCBpdCBpcyBoYXJkIHRvIHNpdCBzdGlsbCIsDQogICAgIkJlY29taW5nIGVhc2lseSBhbm5veWVkIG9yIGlycml0YWJsZSIsDQogICAgIkZlZWxpbmcgYWZyYWlkIGFzIGlmIHNvbWV0aGluZyBhd2Z1bCBtaWdodCBoYXBwZW4iDQogIF0sDQogIA0KICAicGhxOVF1ZXN0aW9ucyI6IFsNCiAgICAiTGl0dGxlIGludGVyZXN0IG9yIHBsZWFzdXJlIGluIGRvaW5nIHRoaW5ncyIsDQogICAgIkZlZWxpbmcgZG93biwgZGVwcmVzc2VkLCBvciBob3BlbGVzcyIsDQogICAgIlRyb3VibGUgZmFsbGluZyBvciBzdGF5aW5nIGFzbGVlcCwgb3Igc2xlZXBpbmcgdG9vIG11Y2giLA0KICAgICJGZWVsaW5nIHRpcmVkIG9yIGhhdmluZyBsaXR0bGUgZW5lcmd5IiwNCiAgICAiUG9vciBhcHBldGl0ZSBvciBvdmVyZWF0aW5nIiwNCiAgICAiRmVlbGluZyBiYWQgYWJvdXQgeW91cnNlbGYg4oCUIG9yIHRoYXQgeW91IGFyZSBhIGZhaWx1cmUgb3IgaGF2ZSBsZXQgeW91cnNlbGYgb3IgeW91ciBmYW1pbHkgZG93biIsDQogICAgIlRyb3VibGUgY29uY2VudHJhdGluZyBvbiB0aGluZ3MsIHN1Y2ggYXMgcmVhZGluZyB0aGUgbmV3c3BhcGVyIG9yIHdhdGNoaW5nIHRlbGV2aXNpb24iLA0KICAgICJNb3Zpbmcgb3Igc3BlYWtpbmcgc28gc2xvd2x5IHRoYXQgb3RoZXIgcGVvcGxlIGNvdWxkIGhhdmUgbm90aWNlZD8gT3IgdGhlIG9wcG9zaXRlIOKAlCBiZWluZyBzbyBmaWRnZXR5IG9yIHJlc3RsZXNzIHRoYXQgeW91IGhhdmUgYmVlbiBtb3ZpbmcgYXJvdW5kIGEgbG90IG1vcmUgdGhhbiB1c3VhbCIsDQogICAgIlRob3VnaHRzIHRoYXQgeW91IHdvdWxkIGJlIGJldHRlciBvZmYgZGVhZCBvciBvZiBodXJ0aW5nIHlvdXJzZWxmIGluIHNvbWUgd2F5Ig0KICBdLA0KICAicGhxMTVRdWVzdGlvbnMiOiBbDQoJIlN0b21hY2ggcGFpbiIsDQoJIkJhY2sgcGFpbiIsDQoJIlBhaW4gaW4geW91ciBhcm1zLCBsZWdzLCBvciBqb2ludHMgKGtuZWVzLCBoaXBzLCBldGMpIiwNCgkiRmVlbGluZyB0aXJlZCBvciBoYXZpbmcgbGl0dGxlIGVuZXJneSIsDQoJIlRyb3VibGUgZmFsbGluZyBvciBzdGF5aW5nIGFzbGVlcCwgb3Igc2xlZXBpbmcgdG9vIG11Y2giLA0KCSJNZW5zdHJ1YWwgY3JhbXBzIG9yIG90aGVyIHByb2JsZW1zIHdpdGggeW91ciBwZXJpb2RzIiwNCgkiUGFpbiBvciBwcm9ibGVtcyBkdXJpbmcgc2V4dWFsIGludGVyY291cnNlIiwNCgkiSGVhZGFjaGVzIiwNCgkiQ2hlc3QgcGFpbiIsDQoJIkRpenppbmVzcyIsDQoJIkZhaW50aW5nIHNwZWxscyIsDQoJIkZlZWxpbmcgeW91ciBoZWFydCBwb3VuZCBvciByYWNlIiwNCgkiU2hvcnRuZXNzIG9mIGJyZWF0aCIsDQoJIkNvbnN0aXBhdGlvbiwgbG9vc2UgYm93ZWxzLCBvciBkaWFycmhlYSIsDQoJIk5hdXNlYSwgZ2FzLCBvciBpbmRpZ2VzdGlvbiINCg0KICBdLA0KICAiYW54aWV0eUF0dGFja3MiOiBbDQogICAgIkluIHRoZSBsYXN0IDQgd2Vla3MsIGhhdmUgeW91IGhhZCBhbiBhbnhpZXR5IGF0dGFjayAtIHN1ZGRlbmx5IGZlZWxpbmcgZmVhciBvciBwYW5pYz8iLA0KCSJIYXMgdGhpcyBldmVyIGhhcHBlbmVkIGJlZm9yZT8iLA0KCSJEbyBzb21lIG9mIHRoZXNlIGF0dGFja3MgY29tZSBzdWRkZW5seSBvdXQgb2YgdGhlIGJsdWUgLSB0aGF0IGlzLCBpbiBzaXR1YXRpb25zIHdoZXJlIHlvdSBkb27igJl0IGV4cGVjdCB0byBiZSBuZXJ2b3VzIG9yIHVuY29tZm9ydGFibGU/IiwNCgkiRG8gdGhlc2UgYXR0YWNrcyBib3RoZXIgeW91IGEgbG90IG9yIGFyZSB5b3Ugd29ycmllZCBhYm91dCBoYXZpbmcgYW5vdGhlciBhdHRhY2s/IiwNCgkiRHVyaW5nIHlvdXIgbGFzdCBiYWQgYW54aWV0eSBhdHRhY2ssIGRpZCB5b3UgaGF2ZSBzeW1wdG9tcyBsaWtlIHNob3J0bmVzcyBvZiBicmVhdGgsIHN3ZWF0aW5nLCBvciB5b3VyIGhlYXJ0IHJhY2luZywgcG91bmRpbmcgb3Igc2tpcHBpbmc/Ig0KICBdDQp9"
+        }
+    ],
+    "languagesFiles": [
+        {
+            "name": "en-us.default.lg",
+            "content": "# Age_Prompt\r\n- @{Greeting()}, How old is @{Gender_Objects(1)} \r\n\r\n# Greeting\r\n- Good @{getTimeOfDay(utcNow())}\r\n\r\n\r\n# Gender_Objects(a)\r\n- IF: @{scenario.luis.gender == 'female'}\r\n    - she  @{a}?\r\n- ELSE: \r\n    - he?\r\n"
+        }
+    ],
+    "localization": {
+        "system": [
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.2985473Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfNTFlNzY4OTY1ZWQ3NzQ4Yw==",
+                "stringId": "stringId_51e768965ed7748c",
+                "en_us": "/^find.+provider$/i",
+                "Timestamp": "2020-02-28T18:18:52.2985473Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.3000833Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "Y29udmVyc2F0aW9uLi9idWlsdGluL2hlbHAubWVudV9pdGVtc18yOGI1NWYzNTkxYzI2ZDQ0",
+                "stringId": "conversation./builtin/help.menu_items_28b55f3591c26d44",
+                "en_us": "find provider: Find provider by location",
+                "Timestamp": "2020-02-28T18:18:52.3000833Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.3019265Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfM2Y4NWViNzJiNjc1NGUyZQ==",
+                "stringId": "stringId_3f85eb72b6754e2e",
+                "en_us": "/^(football|basketball|tennis)$/",
+                "Timestamp": "2020-02-28T18:18:52.3019265Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.3037697Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfOGQ2MjIyYTg0NDVhMDY1Ng==",
+                "stringId": "stringId_8d6222a8445a0656",
+                "en_us": "/^claim$/",
+                "Timestamp": "2020-02-28T18:18:52.3037697Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.3053057Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "Y29udmVyc2F0aW9uLi9idWlsdGluL2hlbHAubWVudV9pdGVtc19iMjA4ODY3NjA5MjZiNWQx",
+                "stringId": "conversation./builtin/help.menu_items_b20886760926b5d1",
+                "en_us": "claim: File a claim",
+                "Timestamp": "2020-02-28T18:18:52.3053057Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.3068417Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfMjZlMmM0NDVhMmE3ZjIxMQ==",
+                "stringId": "stringId_26e2c445a2a7f211",
+                "en_us": "/^sport$/",
+                "Timestamp": "2020-02-28T18:18:52.3068417Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.3085825Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "YXV0b193ZWxjb21lX21lc3NhZ2VfMmQ2MzNhOWRmZGRhOWFjMg==",
+                "stringId": "auto_welcome_message_2d633a9dfdda9ac2",
+                "en_us": "Hi! I??Tm the Contoso Health Demo Bot.\n\n\nI exist for demo purposes only, in order to show the capabilities of the Microsoft health bot project.\n\n\nIf you think that you are having a medical emergency, call 911 or the number for your local emergency service NOW. Always seek the advice of your physician or other qualified healthcare provider before starting any new treatment or stopping an existing treatment. Talk with your healthcare provider about any questions you may have regarding a medical condition. This bot is NOT intended to be used for medical diagnosis or treatment. Read our full disclaimer here.\n\n\n\nYou can ask me things like:\n\n\n??�Sinus infection symptoms??�\n??�My arm hurts??�\n??�What type of doctor treats arthritis???�\n??�Info about diabetes??�\n\nType ??�help??� for more options.",
+                "Timestamp": "2020-02-28T18:18:52.3085825Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.3100161Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "L2J1aWx0aW4vZ3JlZXRpbmcucmVwbHlfZjJlMzZkZjc2MTZiM2RjZg==",
+                "en_us": "Hello, I??Tm the **Clinical Trials Bot**. I can help you find clinical trials around the world. Tell me a bit more about the situation.",
+                "stringId": "/builtin/greeting.reply_f2e36df7616b3dcf",
+                "Timestamp": "2020-02-28T18:18:52.3100161Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.3118593Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "YXV0b193ZWxjb21lX21lc3NhZ2VfOTRjNjUwNWJmNzVhZGI3YQ==",
+                "en_us": "Hello, I??Tm the **Clinical Trials Matching Bot**. I can help you find clinical trials around the world. \nPlease tell me a bit more about the condition.\nPlease note that in case you are not sure what the answer is - you can always answer *Don't Know*.",
+                "stringId": "auto_welcome_message_94c6505bf75adb7a",
+                "Timestamp": "2020-02-28T18:18:52.3118593Z"
+            }
+        ],
+        "custom": [
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.4831745Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfZDA2YmVlNDE5NzQxM2JkYQ==",
+                "stringId": "stringId_d06bee4197413bda",
+                "en_us": "May I help you find a Contoso provider?",
+                "Timestamp": "2020-02-28T18:18:52.4831745Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.4848129Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfM2FhNjI3ZDZmNzMyOGJlZQ==",
+                "stringId": "stringId_3aa627d6f7328bee",
+                "en_us": "If you have any further questions, please don??Tt hesitate to contact me.",
+                "Timestamp": "2020-02-28T18:18:52.4848129Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.4862465Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfNjE0OTNmYjE0YTk2Y2UzOQ==",
+                "stringId": "stringId_61493fb14a96ce39",
+                "en_us": "What type of provider do you look for?",
+                "Timestamp": "2020-02-28T18:18:52.4862465Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.4877825Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfYTU1ZTFkMWZmZjdjZmYyMg==",
+                "stringId": "stringId_a55e1d1fff7cff22",
+                "en_us": "Are you interested in a specific specialty of the doctor? Please select from the list below:",
+                "Timestamp": "2020-02-28T18:18:52.4877825Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.4895233Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfM2EwZmRlYWNlYWNmODVlMQ==",
+                "stringId": "stringId_3a0fdeaceacf85e1",
+                "en_us": "Do you have any gender preference?",
+                "Timestamp": "2020-02-28T18:18:52.4895233Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.4910593Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfN2Y3MjZjZDE3OGQ2NjljOA==",
+                "stringId": "stringId_7f726cd178d669c8",
+                "en_us": "JSON.stringify(${err});",
+                "Timestamp": "2020-02-28T18:18:52.4910593Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.4929025Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfZjliNzFmMzQ2MTdmOGZmYQ==",
+                "stringId": "stringId_f9b71f34617f8ffa",
+                "en_us": "Got it! I will be happy to assist. Should I use your current location or would you like to specify a ZIP code?",
+                "Timestamp": "2020-02-28T18:18:52.4929025Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.4950529Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfM2RiYjk4ZjU1OWE0MzIzYQ==",
+                "stringId": "stringId_3dbb98f559a4323a",
+                "en_us": "No doctors were found that meet all criteria",
+                "Timestamp": "2020-02-28T18:18:52.4950529Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.4966913Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfYzc2NjQ5ZTQ2YzlkNDBkNA==",
+                "stringId": "stringId_c76649e46c9d40d4",
+                "en_us": "This option is not implemented yet. Please try another one.",
+                "Timestamp": "2020-02-28T18:18:52.4966913Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.4983297Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfNTc3MDY4MGRlOWZjYjM1MQ==",
+                "stringId": "stringId_5770680de9fcb351",
+                "en_us": "Developer notice!",
+                "Timestamp": "2020-02-28T18:18:52.4983297Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.4999681Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfY2YxNGViZDczYmZhZGRiYg==",
+                "stringId": "stringId_cf14ebd73bfaddbb",
+                "en_us": "Please enter a ZIP code",
+                "Timestamp": "2020-02-28T18:18:52.4999681Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5015041Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfZmE5OThiM2JiODY3MWM1NA==",
+                "stringId": "stringId_fa998b3bb8671c54",
+                "en_us": "enter your location",
+                "Timestamp": "2020-02-28T18:18:52.5015041Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5029377Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfNjMxZTAzYWRhZTkwNDM0YQ==",
+                "stringId": "stringId_631e03adae90434a",
+                "en_us": "Do you want to leave?",
+                "Timestamp": "2020-02-28T18:18:52.5029377Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5044737Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfYTQ5NGQ2MTFjMjZmNjBmMw==",
+                "stringId": "stringId_a494d611c26f60f3",
+                "en_us": "Welcome to israel!",
+                "Timestamp": "2020-02-28T18:18:52.5044737Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5060097Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfZWEyZDBhMDU2N2Y5OWYyMA==",
+                "stringId": "stringId_ea2d0a0567f99f20",
+                "en_us": "Have you incurred medical, vision, or dental expenses from a provider who did not bill the plan directly?\r\n",
+                "Timestamp": "2020-02-28T18:18:52.5060097Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5075457Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfODc1NjFlNDIzN2IwMzIwNA==",
+                "stringId": "stringId_87561e4237b03204",
+                "en_us": "If you have any further questions, please don??Tt hesitate to contact me.",
+                "Timestamp": "2020-02-28T18:18:52.5075457Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5093889Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfZDU1ODkxYjM3MmNhNGY4Yw==",
+                "stringId": "stringId_d55891b372ca4f8c",
+                "en_us": "I would be happy to assist you submitting your claim. \r\nPlease start by providing the following details :\r\n",
+                "Timestamp": "2020-02-28T18:18:52.5093889Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5112321Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfNDdlYTVkZTM1NjdlYzQyYg==",
+                "stringId": "stringId_47ea5de3567ec42b",
+                "en_us": "What is your prefix and ID number ? (see ID card)",
+                "Timestamp": "2020-02-28T18:18:52.5112321Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5126657Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfNDhiYjgwMGJkMDU5NzRiZQ==",
+                "stringId": "stringId_48bb800bd05974be",
+                "en_us": "What is your insurance Group number ? \r\n",
+                "Timestamp": "2020-02-28T18:18:52.5126657Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5142017Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfNTc1NzMzYmM0YjAyNWYzMA==",
+                "stringId": "stringId_575733bc4b025f30",
+                "en_us": "What is the name of the provider ?\r\n",
+                "Timestamp": "2020-02-28T18:18:52.5142017Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5158401Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfMTZmNjYzMjk2YTRkOTdkNw==",
+                "stringId": "stringId_16f663296a4d97d7",
+                "en_us": "Where was the service performed?\r\n",
+                "Timestamp": "2020-02-28T18:18:52.5158401Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5174785Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfODhhMzdjMGZkYzU3NTM1Yg==",
+                "stringId": "stringId_88a37c0fdc57535b",
+                "en_us": "Please upload your bill by selecting the 'attachment' icon below",
+                "Timestamp": "2020-02-28T18:18:52.5174785Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5190145Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfNjBmOTY0NjU5ZmU3NmM5MQ==",
+                "stringId": "stringId_60f964659fe76c91",
+                "en_us": "Thank you for filling in the details!\r\nWe will follow up with confirmation e-mail",
+                "Timestamp": "2020-02-28T18:18:52.5190145Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5208577Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfOGVhNDFlN2U3ODA5MDM2Ng==",
+                "stringId": "stringId_8ea41e7e78090366",
+                "en_us": "'Summary of claim ' + ${refNumber}",
+                "Timestamp": "2020-02-28T18:18:52.5208577Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5222913Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfNmJkNTU2YzYzMmExZjllYQ==",
+                "stringId": "stringId_6bd556c632a1f9ea",
+                "en_us": "${claimSummary}",
+                "Timestamp": "2020-02-28T18:18:52.5222913Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5238273Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfMDBjYmYzYzI1ZDhmNWQyNA==",
+                "stringId": "stringId_00cbf3c25d8f5d24",
+                "en_us": "Is this claim due to an accidental injury?\r\n",
+                "Timestamp": "2020-02-28T18:18:52.5238273Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5254657Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfOGFkNzhkMTllMTYxYTY5Zg==",
+                "stringId": "stringId_8ad78d19e161a69f",
+                "en_us": "Now, please attach the itemized bill. \r\nYour bill must contain all of the following information:\r\n- Name of the member who incurred the expense\r\n- Name, address, and tax identification number of the provider\r\n- Date and charge for each service rendered ",
+                "Timestamp": "2020-02-28T18:18:52.5254657Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5272065Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfZGExNTI3OWQ1NDgyNmJlYg==",
+                "stringId": "stringId_da15279d54826beb",
+                "en_us": "multi choice?           ",
+                "Timestamp": "2020-02-28T18:18:52.5272065Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5288449Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfYzNiZmQ2NTZmN2MzYWMwMw==",
+                "stringId": "stringId_c3bfd656f7c3ac03",
+                "en_us": "choise value?",
+                "Timestamp": "2020-02-28T18:18:52.5288449Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5302785Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfZWFkNTA2MTEzMjYwMzM0Nw==",
+                "stringId": "stringId_ead5061132603347",
+                "en_us": "boolean prompt?",
+                "Timestamp": "2020-02-28T18:18:52.5302785Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5319169Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfOGYxMGE5OTk1ZjU4MTFhYQ==",
+                "stringId": "stringId_8f10a9995f5811aa",
+                "en_us": "multi choise?",
+                "Timestamp": "2020-02-28T18:18:52.5319169Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5335553Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfNGU1M2E2ZWM4Y2YyZjZhMw==",
+                "stringId": "stringId_4e53a6ec8cf2f6a3",
+                "en_us": "Welcome to USA!",
+                "Timestamp": "2020-02-28T18:18:52.5335553Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5350913Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfOTZiMGJjYjNkOGU3MTY2Ng==",
+                "stringId": "stringId_96b0bcb3d8e71666",
+                "en_us": "\"welcome to \" + scenario.user_location ",
+                "Timestamp": "2020-02-28T18:18:52.5350913Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5369345Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfYzFhNjZlNTVlMzlkMzE2NA==",
+                "stringId": "stringId_c1a66e55e39d3164",
+                "en_us": "Welcome to Israel",
+                "Timestamp": "2020-02-28T18:18:52.5369345Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5384705Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfMGRiMDY2YmQ0YzY1N2EzYQ==",
+                "stringId": "stringId_0db066bd4c657a3a",
+                "en_us": "choise?",
+                "Timestamp": "2020-02-28T18:18:52.5384705Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5399041Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfOTgwMGJmZjliODBiZTE3NQ==",
+                "stringId": "stringId_9800bff9b80be175",
+                "en_us": "Welcome to USA!",
+                "Timestamp": "2020-02-28T18:18:52.5399041Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5417473Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfNjhmYWQyZjQ4ZGViNmQ0Ng==",
+                "stringId": "stringId_68fad2f48deb6d46",
+                "en_us": "Welcome to Israel",
+                "Timestamp": "2020-02-28T18:18:52.5417473Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5444097Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfYzA2MjIxMDgxMDcxNmY3ZA==",
+                "stringId": "stringId_c062210810716f7d",
+                "en_us": "Which group is the best on site?",
+                "Timestamp": "2020-02-28T18:18:52.5444097Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5459457Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfZDM4ZDMxMWMwMTg2NDMxOQ==",
+                "stringId": "stringId_d38d311c01864319",
+                "en_us": "Are you planning to eat soon?",
+                "Timestamp": "2020-02-28T18:18:52.5459457Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5474817Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfYzE3NjkxNjcyZTBmMzdhMA==",
+                "stringId": "stringId_c17691672e0f37a0",
+                "en_us": "Are you hungry?",
+                "Timestamp": "2020-02-28T18:18:52.5474817Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5490177Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfYmQzODEwZDM5NDY5MjM3YQ==",
+                "stringId": "stringId_bd3810d39469237a",
+                "en_us": "Whom are you going to eat with?",
+                "Timestamp": "2020-02-28T18:18:52.5490177Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5506561Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfYmQyNTNhOTBkOGE5YmIzMg==",
+                "stringId": "stringId_bd253a90d8a9bb32",
+                "en_us": "Wrong Answer, try again...",
+                "Timestamp": "2020-02-28T18:18:52.5506561Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5524993Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfYjRmZTI5ZGUyMjUxYzk3NQ==",
+                "stringId": "stringId_b4fe29de2251c975",
+                "en_us": "${with_whom_list} bon apetite!",
+                "Timestamp": "2020-02-28T18:18:52.5524993Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5540353Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfNWRkMDBhYTkxMDkwZGVmNA==",
+                "stringId": "stringId_5dd00aa91090def4",
+                "en_us": "scenario.with_whom_list",
+                "Timestamp": "2020-02-28T18:18:52.5540353Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5557761Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfZTgxYmQ4MmE0NTk4Mzc2OA==",
+                "stringId": "stringId_e81bd82a45983768",
+                "en_us": "scenario.with_whom_list.map(item => item.entity) + \" bon appetite!\"",
+                "Timestamp": "2020-02-28T18:18:52.5557761Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5582337Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfOTZhYmRhNmYzZTJkMWE3ZQ==",
+                "stringId": "stringId_96abda6f3e2d1a7e",
+                "en_us": "scenario.with_whom_list.map(item => item.entity) + \" bon appetite!\"",
+                "Timestamp": "2020-02-28T18:18:52.5582337Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5599745Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfYzFiYzYzMWZhZTEyZjdkZg==",
+                "stringId": "stringId_c1bc631fae12f7df",
+                "en_us": "Please select from the below list:",
+                "Timestamp": "2020-02-28T18:18:52.5599745Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5616129Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfNGRkODhmNjVmYWQ1YWYwYQ==",
+                "stringId": "stringId_4dd88f65fad5af0a",
+                "en_us": "Got it! I will be happy to assist you in with setting an ${selectedServiceType} appointment.",
+                "Timestamp": "2020-02-28T18:18:52.5616129Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5630465Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfNTAzMWM0NGI1MWQ1YzY5MA==",
+                "stringId": "stringId_5031c44b51d5c690",
+                "en_us": "\"output \" + scenario.output",
+                "Timestamp": "2020-02-28T18:18:52.5630465Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5645825Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfNTlkOTU1Zjg0MjBiMTlmYw==",
+                "stringId": "stringId_59d955f8420b19fc",
+                "en_us": "Welcome to USA!",
+                "Timestamp": "2020-02-28T18:18:52.5645825Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5661185Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfMTBiMjE3YTRjMzJlNzBjNg==",
+                "stringId": "stringId_10b217a4c32e70c6",
+                "en_us": "Welcome to Israel",
+                "Timestamp": "2020-02-28T18:18:52.5661185Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5676545Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfODJmZGQ5YTM4ZTUxY2UzMw==",
+                "stringId": "stringId_82fdd9a38e51ce33",
+                "en_us": "Welcome to USA!",
+                "Timestamp": "2020-02-28T18:18:52.5676545Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5690881Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfMDUwZDczOWQzN2E1Mjg3Mw==",
+                "stringId": "stringId_050d739d37a52873",
+                "en_us": "Welcome to Israel",
+                "Timestamp": "2020-02-28T18:18:52.5690881Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5706241Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfMjQ2MzlhZGE2Nzg1ZDFlYg==",
+                "stringId": "stringId_24639ada6785d1eb",
+                "en_us": "Hi welcome Contoso Hospital and Medical Center Imaging Department! \\r\\nMay I help you schedule an appointment for one of our imaging services?",
+                "Timestamp": "2020-02-28T18:18:52.5706241Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5722625Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfN2RkMmJiMmM1ODBhYjBkYw==",
+                "stringId": "stringId_7dd2bb2c580ab0dc",
+                "en_us": "If you have any further questions, please don??Tt hesitate to contact me.",
+                "Timestamp": "2020-02-28T18:18:52.5722625Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5739009Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfNzYxYTZmNGZkM2MzZDFmNQ==",
+                "stringId": "stringId_761a6f4fd3c3d1f5",
+                "en_us": "I was not able to find open slots, please try again later.",
+                "Timestamp": "2020-02-28T18:18:52.5739009Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5754369Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfMzBiMmM2MWU2YTJhMDFkNw==",
+                "stringId": "stringId_30b2c61e6a2a01d7",
+                "en_us": "Developer notice:\r\n(Delete this step before sharing this scenario with real users)",
+                "Timestamp": "2020-02-28T18:18:52.5754369Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5769729Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfYjhjMDBiMDZlYWVlODcwNg==",
+                "stringId": "stringId_b8c00b06eaee8706",
+                "en_us": "During the **last 4 weeks**, how much have you been bothered by any of the following problems:",
+                "Timestamp": "2020-02-28T18:18:52.5769729Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5788161Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfODE1N2Q5MDcxN2EwOGNhNQ==",
+                "stringId": "stringId_8157d90717a08ca5",
+                "en_us": "If you have had any problems, how difficult have these problems made it for you to do your work, take care of things at home, or get along with other people?\n",
+                "Timestamp": "2020-02-28T18:18:52.5788161Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5803521Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfMTAwMTFjZTlkZmJlNDdmMA==",
+                "stringId": "stringId_10011ce9dfbe47f0",
+                "en_us": "Over the **last 2 weeks**, how often have you been bothered by any of the following problems:",
+                "Timestamp": "2020-02-28T18:18:52.5803521Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5819905Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfOTM0MTk3M2Y5MGFjOGVjNg==",
+                "stringId": "stringId_9341973f90ac8ec6",
+                "en_us": "Over the **last 2 weeks**, how often have you been bothered by any of the following problems:",
+                "Timestamp": "2020-02-28T18:18:52.5819905Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5837313Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfY2I0NGNjYTQ5ZDE3Njk3NQ==",
+                "stringId": "stringId_cb44cca49d176975",
+                "en_us": "Please let me know if I can help with anything else.",
+                "Timestamp": "2020-02-28T18:18:52.5837313Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5855745Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfZmRiZjQzY2IxN2E4YzM0NQ==",
+                "stringId": "stringId_fdbf43cb17a8c345",
+                "en_us": "I??Tm going to ask you to fill out a short questionnaire.\r\n\r\nThis questionnaire is an important part of providing you with the best health care possible. \r\n\r\nYour answers will help in understanding problems that you may have. Please answer every question to the best of your ability.\r\n",
+                "Timestamp": "2020-02-28T18:18:52.5855745Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5870081Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfZmM4OTViNWQ3MjEyZTkzMA==",
+                "stringId": "stringId_fc895b5d7212e930",
+                "en_us": "\"Thank you for answering these questions. You have just completed the **PHQ-15** questionnaire.\\n\\n\" +\r\n\"Your score in the questionnaire (**\"+ scenario.severity.score + \"**) is mapped to **\" + scenario.severity.severity + \" somatic symptom severity**.\"",
+                "Timestamp": "2020-02-28T18:18:52.5870081Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5886465Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfMWRiNGY5NmZhOGZlNTZjYw==",
+                "stringId": "stringId_1db4f96fa8fe56cc",
+                "en_us": "I??Td like to ask you just a few more questions.",
+                "Timestamp": "2020-02-28T18:18:52.5886465Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5901825Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfODgzZmM5YmYyZmUwNzBiZQ==",
+                "stringId": "stringId_883fc9bf2fe070be",
+                "en_us": "Thank you. You have completed the **PHQ-SADS** screener. The answers you provided will be useful for your clinician.",
+                "Timestamp": "2020-02-28T18:18:52.5901825Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5918209Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfNmY4YjcyMjRmNjlhZDI5ZQ==",
+                "stringId": "stringId_6f8b7224f69ad29e",
+                "en_us": "\"Thank you for answering these questions. You have just completed the **PHQ-9** questionnaire.\\n\\n\" +\r\n\"Your score in the questionnaire (**\"+ scenario.severity.score + \"**) is mapped to **\" + scenario.severity.severity + \" depression**.\"",
+                "Timestamp": "2020-02-28T18:18:52.5918209Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5936641Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfZmQwOWY5MjlkMDViZGZiNA==",
+                "stringId": "stringId_fd09f929d05bdfb4",
+                "en_us": "\"Thank you for answering these questions. You have just completed the **GAD-7** questionnaire.\\n\\n\" +\r\n\"Your score in the questionnaire (**\"+ scenario.severity.score + \"**) is mapped to **\" + scenario.severity.severity + \" anxiety**.\"",
+                "Timestamp": "2020-02-28T18:18:52.5936641Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5955073Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfODc0ZjhjNTZhYTUwYjZlZQ==",
+                "stringId": "stringId_874f8c56aa50b6ee",
+                "en_us": "scenario.questions[scenario.question_index]",
+                "Timestamp": "2020-02-28T18:18:52.5955073Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5973505Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfMGI1OTBmMmZiOTRmZjhiNw==",
+                "stringId": "stringId_0b590f2fb94ff8b7",
+                "en_us": "Cannot find the mental health q&a",
+                "Timestamp": "2020-02-28T18:18:52.5973505Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5992961Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfNmMxZTE3OTE3NDc5NjYwYw==",
+                "stringId": "stringId_6c1e17917479660c",
+                "en_us": "scenario.questions[scenario.question_index]",
+                "Timestamp": "2020-02-28T18:18:52.5992961Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.6010369Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfNmVkODJlOTdiYTViMDEyOQ==",
+                "stringId": "stringId_6ed82e97ba5b0129",
+                "en_us": "scenario.questions[scenario.question_index]",
+                "Timestamp": "2020-02-28T18:18:52.6010369Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.6027777Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfMDA5MDI2MTdiYTgwNzliZg==",
+                "en_us": "\"System found \" + ${trials_count}.toString() + \" relevant trials. Here are clinical trials that might be relevant for the situation\"",
+                "stringId": "stringId_00902617ba8079bf",
+                "Timestamp": "2020-02-28T18:18:52.6027777Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.6047233Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfNDJmZTI3OTk1ODcyOTlhOQ==",
+                "en_us": "${gender_question}",
+                "stringId": "stringId_42fe2799587299a9",
+                "Timestamp": "2020-02-28T18:18:52.6047233Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.6062593Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfNTM3ODgwZjUwNDI4NzAyMg==",
+                "en_us": "Sorry, no relevant trials were found",
+                "stringId": "stringId_537880f504287022",
+                "Timestamp": "2020-02-28T18:18:52.6062593Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.6080001Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfOGE3ODJkZTExMTI3NzM1Nw==",
+                "en_us": "\"found \" + ${trials_count}.toString() + \" relevant trials\"",
+                "stringId": "stringId_8a782de111277357",
+                "Timestamp": "2020-02-28T18:18:52.6080001Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.6098433Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfYTM4MTUyY2UzZTdmNmI1Zg==",
+                "en_us": "Sorry, there is seem to be a problem with an external data resource",
+                "stringId": "stringId_a38152ce3e7f6b5f",
+                "Timestamp": "2020-02-28T18:18:52.6098433Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.6115841Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfYTdmY2JlOTY3MDdiODc1OQ==",
+                "en_us": "${questions}[${question_index}].QUESTION",
+                "stringId": "stringId_a7fcbe96707b8759",
+                "Timestamp": "2020-02-28T18:18:52.6115841Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.6132225Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfYjNkZDQ1M2E0NDJjMzI2ZQ==",
+                "en_us": "${questions}[${question_index}].QUESTION",
+                "stringId": "stringId_b3dd453a442c326e",
+                "Timestamp": "2020-02-28T18:18:52.6132225Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.6149633Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfYjczYTRjYzBjNjA4NTA1ZQ==",
+                "en_us": "What would you like to do?",
+                "stringId": "stringId_b73a4cc0c608505e",
+                "Timestamp": "2020-02-28T18:18:52.6149633Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.6164993Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfYzcxZTc5OWRlODc4Njg3Yw==",
+                "en_us": "${condition_question}",
+                "stringId": "stringId_c71e799de878687c",
+                "Timestamp": "2020-02-28T18:18:52.6164993Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.6180353Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfZDk0MTA3ZWZlNWExNGMzOA==",
+                "en_us": "${preferance_question}",
+                "stringId": "stringId_d94107efe5a14c38",
+                "Timestamp": "2020-02-28T18:18:52.6180353Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.6197761Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfZWNkODJlZjRmNGZhNDA2MQ==",
+                "en_us": "${age_question}",
+                "stringId": "stringId_ecd82ef4f4fa4061",
+                "Timestamp": "2020-02-28T18:18:52.6197761Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.6213121Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfZjdmNWU4OWU3MTY0YmY1YQ==",
+                "en_us": "${living_place_question}",
+                "stringId": "stringId_f7f5e89e7164bf5a",
+                "Timestamp": "2020-02-28T18:18:52.6213121Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.6230529Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfYTdmODcxYjc3MzA0ODI2OA==",
+                "stringId": "stringId_a7f871b773048268",
+                "en_us": "scenario.questionText",
+                "Timestamp": "2020-02-28T18:18:52.6230529Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.6247937Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfYWU0MThkZTA5OWIzYThlOQ==",
+                "stringId": "stringId_ae418de099b3a8e9",
+                "en_us": "scenario.questionText",
+                "Timestamp": "2020-02-28T18:18:52.6247937Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.6264321Z'\"",
+                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
+                "RowKey": "c3RyaW5nSWRfMDJlOTc0YTVkYTY2YTFmOA==",
+                "stringId": "stringId_02e974a5da66a1f8",
+                "en_us": "scenario.questionText",
+                "Timestamp": "2020-02-28T18:18:52.6264321Z"
+            }
+        ]
     }
 }
