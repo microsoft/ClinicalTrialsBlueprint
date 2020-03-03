@@ -106,9 +106,9 @@ This command can take few minutes to complete.
 ### Setup PostgreSQL Server
 Install the PostgreSQL tools from [here](https://www.postgresql.org/download/windows/)
 
-Download as static copy of the AACT from [here](https://aact.ctti-clinicaltrials.org/snapshots)
+Download as static copy of the AACT from [here](https://aact.ctti-clinicaltrials.org/snapshots) an
 
 Restore the DB from the dump file with pg_restore utility
-```
-pg_restore -x --host findcare-ctm-postgresql.postgres.database.azure.com --port 5432 --username "arie@findcare-ctm-postgresql" --dbname "ctdb" --role="azure_superuser" --verbose "C:\Users\Arie\Downloads\20200229_clinical_trials\postgres_data.dmp"
+```powershell
+.\pg_restore --clean --host $ctmServiceName-ctm-postgresql.postgres.database.azure.com --port 5432 --username "<username>@$ctmServiceName-ctm-postgresql" --no-owner --dbname "ctdb" --verbose "<dmpfile>"
 ```

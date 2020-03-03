@@ -137,6 +137,7 @@
                       "ctti__database":"aact",
                       "redis__address":"[concat(variables('redisCacheName'),'.redis.cache.windows.net')]",
                       "redis__secret_name":"redis-client-secret",
+                      "ayalon__taBaseAddress":"[concat('https://',variables('ayalonWebAppName'),'.azurewebsites.net/') ]",
                       "application_insight__instrumentation_key":"${insrumentation_key}"
                   }
               },
@@ -177,6 +178,7 @@
                       "ctti__secret_name":"ctti-client-secret",
                       "ctti__database":"aact",
                       "redis__address":"[concat(variables('redisCacheName'),'.redis.cache.windows.net')]",
+                      "ayalon__taBaseAddress":"[concat('https://',variables('ayalonWebAppName'),'.azurewebsites.net/') ]",
                       "redis__secret_name":"redis-client-secret",
                       "application_insight__instrumentation_key":"${insrumentation_key}"
 
@@ -219,6 +221,7 @@
                               "ctti__secret_name":"ctti-client-secret",
                               "ctti__database":"aact",
                               "redis__address":"[concat(variables('redisCacheName'),'.redis.cache.windows.net')]",
+                              "ayalon__taBaseAddress":"[concat('https://',variables('ayalonWebAppName'),'.azurewebsites.net/') ]",  
                               "redis__secret_name":"redis-client-secret",
                               "application_insight__instrumentation_key":"${insrumentation_key}"
                   }
@@ -561,6 +564,17 @@
       }
     },
     {
+      "type": "Microsoft.KeyVault/vaults/secrets",
+      "name": "[concat(variables('keyVaultName'), '/ctti-ctm-client-secret')]",
+      "apiVersion": "2016-10-01",
+      "dependsOn": [
+        "[concat('Microsoft.KeyVault/vaults/', variables('keyVaultName'))]"
+      ],
+      "properties": {
+        "value": "[parameters('postgreSqladministratorLoginPassword')]"
+      }
+    },
+    {
       "name": "[variables('containerGroupName')]",
       "type": "Microsoft.ContainerInstance/containerGroups",
       "apiVersion": "2018-10-01",
@@ -611,8 +625,8 @@
                   "value": "[variables('fhirServerEndpoint')]"
                 },
                 {
-                  "name": "ayalon__address",
-                  "value": "[concat('https://',variables('ayalonWebAppName'),'.azurewebsites.net','text/analytics/v3.0-preview.1/domains/health') ]"
+                  "name": "ayalon__taBaseAddress",
+                  "value": "[concat('https://',variables('ayalonWebAppName'),'.azurewebsites.net/') ]"
                 },
                 {
                   "name": "ctti__host",
