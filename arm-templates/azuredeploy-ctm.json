@@ -113,7 +113,7 @@
                       "AZURE_TENANT_ID": "[subscription().tenantId]",
                       "AZURE_CLIENT_ID": "[parameters('servicePrincipleClientId')]",
                       "AZURE_CLIENT_SECRET": "[parameters('servicePrincipalClientSecret')]",
-                      "ALLOWED_PATHS":"/status"
+                      "ALLOWED_PATHS":"/ready"
                   }
               }
           }

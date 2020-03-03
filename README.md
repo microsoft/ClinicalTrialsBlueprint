@@ -62,7 +62,7 @@ $ctmServiceName = <ctm matching service>
 
 Create Matching service Azure resources
 ```Powershell
-$matchingOutput = New-AzResourceGroupDeployment -TemplateFile ..\arm-templates\azuredeploy-ctm.json -ResourceGroupName $rg.ResourceGroupName -serviceName $matchingServiceName  -servicePrincipalObjectId $sp.Id -servicePrincipleClientId $sp.ApplicationId -servicePrincipalClientSecret $sp.secret
+$matchingOutput = New-AzResourceGroupDeployment -TemplateFile ..\arm-templates\azuredeploy-ctm.json -ResourceGroupName $rg.ResourceGroupName -serviceName $ctmServiceName  -servicePrincipalObjectId $sp.Id -servicePrincipleClientId $sp.ApplicationId -servicePrincipalClientSecret $sp.secret
 ```
 
 Check that the TextAnalytics for Healthcare service is running
