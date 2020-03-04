@@ -113,7 +113,7 @@
                       "AZURE_TENANT_ID": "[subscription().tenantId]",
                       "AZURE_CLIENT_ID": "[parameters('servicePrincipleClientId')]",
                       "AZURE_CLIENT_SECRET": "[parameters('servicePrincipalClientSecret')]",
-                      "ALLOWED_PATHS":"/status"
+                      "ALLOWED_PATHS":"/ready"
                   }
               }
           }
@@ -137,7 +137,7 @@
                       "ctti__database":"aact",
                       "redis__address":"[concat(variables('redisCacheName'),'.redis.cache.windows.net')]",
                       "redis__secret_name":"redis-client-secret",
-                      "ayalon__taBaseAddress":"[concat('https://',variables('ayalonWebAppName'),'.azurewebsites.net/') ]",
+                      "ayalon__address":"[concat('https://',variables('ayalonWebAppName'),'.azurewebsites.net/') ]",
                       "application_insight__instrumentation_key":"${insrumentation_key}"
                   }
               },
@@ -178,7 +178,7 @@
                       "ctti__secret_name":"ctti-client-secret",
                       "ctti__database":"aact",
                       "redis__address":"[concat(variables('redisCacheName'),'.redis.cache.windows.net')]",
-                      "ayalon__taBaseAddress":"[concat('https://',variables('ayalonWebAppName'),'.azurewebsites.net/') ]",
+                      "ayalon__address":"[concat('https://',variables('ayalonWebAppName'),'.azurewebsites.net/') ]",
                       "redis__secret_name":"redis-client-secret",
                       "application_insight__instrumentation_key":"${insrumentation_key}"
 
@@ -221,7 +221,7 @@
                               "ctti__secret_name":"ctti-client-secret",
                               "ctti__database":"aact",
                               "redis__address":"[concat(variables('redisCacheName'),'.redis.cache.windows.net')]",
-                              "ayalon__taBaseAddress":"[concat('https://',variables('ayalonWebAppName'),'.azurewebsites.net/') ]",  
+                              "ayalon__address":"[concat('https://',variables('ayalonWebAppName'),'.azurewebsites.net/') ]",  
                               "redis__secret_name":"redis-client-secret",
                               "application_insight__instrumentation_key":"${insrumentation_key}"
                   }
@@ -263,7 +263,7 @@
         "name": "[variables('textAnalyticsName')]",
         "location": "[resourceGroup().location]",
         "sku": {
-            "name": "F0"
+            "name": "S"
         },
         "kind": "TextAnalytics",
         "properties": {
@@ -625,7 +625,7 @@
                   "value": "[variables('fhirServerEndpoint')]"
                 },
                 {
-                  "name": "ayalon__taBaseAddress",
+                  "name": "ayalon__address",
                   "value": "[concat('https://',variables('ayalonWebAppName'),'.azurewebsites.net/') ]"
                 },
                 {
