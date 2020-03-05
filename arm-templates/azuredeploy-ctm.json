@@ -10,8 +10,7 @@
       "defaultValue": "prod_us"
     },
     "fhirServerName": {
-      "type": "string",
-      "defaultValue": "ctm-fhir-service"
+      "type": "string"
     },
     "acrServer": {
       "type": "string",

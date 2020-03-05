@@ -20,23 +20,28 @@ $account = Set-AzContext -Subscription <Your Subscription Name>
 Create a Resource group for the FHIR server. It must be in a separate resource group from other resources in the blueprint becuase we are creating a Windows service plan
 
 ```PowerShell
-$fhirRg = New-AzResourceGroup -Name <service>-Fhir -Location eastus
+$fhirRg = New-AzResourceGroup -Name <fhir server group name> -Location eastus
 ```
 Assign Fhir Server Name
 ```PowerShell
-$fhirServiceName = "<fhir service name>"
+$fhirServerName = "<fhir server name>"
 ```
 
 Create the Fhir server deployment. You will to provide a admin password for the SQL server
 
 ```PowerShell
-New-AzResourceGroupDeployment -ResourceGroupName $fhirRg.ResourceGroupName -TemplateFile .\arm-templates\azuredeploy-fhir.json -serviceName $fhirServiceName
+New-AzResourceGroupDeployment -ResourceGroupName $fhirRg.ResourceGroupName -TemplateFile .\arm-templates\azuredeploy-fhir.json -serviceName $fhirServerName
+```
+
+Scale-up the Fhir Server database
+```Powershell
+$database = Set-AzSqlDatabase -ResourceGroupName $fhirRg.ResourceGroupName  -ServerName $fhirServerName -DatabaseName FHIR -Edition "Standard" -RequestedServiceObjectiveName "S1"  
 ```
 
 Verify that the FHIR Server is running
 
 ```PowerShell
-$metadataUrl = "https://$fhirServiceName.azurewebsites.net/metadata" 
+$metadataUrl = "https://$fhirServerName.azurewebsites.net/metadata" 
 $metadata = Invoke-WebRequest -Uri $metadataUrl
 $metadata.RawContent
 ```
@@ -66,7 +71,7 @@ $acrPassword = ConvertTo-SecureString  -AsPlainText <acr password>
 
 Create Clinical Trials Matching service Azure resources
 ```Powershell
-$matchingOutput = New-AzResourceGroupDeployment -TemplateFile .\arm-templates\azuredeploy-ctm.json -ResourceGroupName $rg.ResourceGroupName -serviceName $ctmServiceName  -servicePrincipalObjectId $sp.Id -servicePrincipleClientId $sp.ApplicationId -servicePrincipalClientSecret $sp.secret -acrPassword $acrPassword
+$matchingOutput = New-AzResourceGroupDeployment -TemplateFile .\arm-templates\azuredeploy-ctm.json -ResourceGroupName $rg.ResourceGroupName -serviceName $ctmServiceName  -fhirServerName $fhirServerName -servicePrincipalObjectId $sp.Id -servicePrincipleClientId $sp.ApplicationId -servicePrincipalClientSecret $sp.secret -acrPassword $acrPassword
 ```
 
 Check that the TextAnalytics for Healthcare service is running and ready
