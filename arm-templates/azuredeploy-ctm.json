@@ -113,7 +113,7 @@
                       "AZURE_TENANT_ID": "[subscription().tenantId]",
                       "AZURE_CLIENT_ID": "[parameters('servicePrincipleClientId')]",
                       "AZURE_CLIENT_SECRET": "[parameters('servicePrincipalClientSecret')]",
-                      "ALLOWED_PATHS":"/ready"
+                      "ALLOWED_PATHS":"/,/ready,/status,/swagger/*"
                   }
               }
           }
@@ -197,7 +197,7 @@
                       "KEY_VAULT_URL": "[concat('https://',variables('keyVaultName'),'.vault.azure.net/')]",
                       "AZURE_TENANT_ID": "[subscription().tenantId]",
                       "AZURE_CLIENT_ID": "[parameters('servicePrincipleClientId')]",
-                      "AZURE_CLIENT_SECRET": "[parameters('servicePrincipalClientSecret')]"                      
+                      "AZURE_CLIENT_SECRET": "[parameters('servicePrincipalClientSecret')]"
                   }
               }
           }

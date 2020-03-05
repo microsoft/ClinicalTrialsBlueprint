@@ -13,23 +13,23 @@ param(
     $matchingParameters
 )
 
-. ./profile.ps1
-. ./luis.ps1
-. ./tenant.ps1
+. ./scripts/profile.ps1
+. ./scripts/luis.ps1
+. ./scripts/tenant.ps1
 
 $context = Get-AzContext
 $subscriptionId = $context.subscription.id
 
 
-$luisPath = "../lu"
-$restorePath = "../bot-templates"
+$luisPath = "./lu"
+$restorePath = "./bot-templates"
 
 Try {
     Write-Host "Running Template Deployment..."
     $output = New-AzResourceGroupDeployment -serviceName $serviceName `
                                             -ResourceGroupName $ResourceGroup  `
                                             -saasSubscriptionId $saasSubscriptionId `
-                                            -TemplateFile "../arm-templates/azuredeploy-healthcarebot.json"                                             
+                                            -TemplateFile "./arm-templates/azuredeploy-healthcarebot.json"                                             
 
     $output
     $luisAuthLocation = $output.Parameters.luisAuthLocation.Value
