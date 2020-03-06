@@ -20,33 +20,38 @@ $account = Set-AzContext -Subscription <Your Subscription Name>
 Create a Resource group for the FHIR server. It must be in a separate resource group from other resources in the blueprint becuase we are creating a Windows service plan
 
 ```PowerShell
-$fhirRg = New-AzResourceGroup -Name <service>-Fhir -Location eastus
+$fhirRg = New-AzResourceGroup -Name <fhir server group name> -Location eastus
 ```
 Assign Fhir Server Name
 ```PowerShell
-$fhirServiceName = <fhir service name>
+$fhirServerName = "<fhir server name>"
 ```
 
 Create the Fhir server deployment. You will to provide a admin password for the SQL server
 
 ```PowerShell
-New-AzResourceGroupDeployment -ResourceGroupName $fhirRg.ResourceGroupName -TemplateFile ..\arm-templates\azuredeploy-fhir.json -serviceName $fhirServiceName
+New-AzResourceGroupDeployment -ResourceGroupName $fhirRg.ResourceGroupName -TemplateFile .\arm-templates\azuredeploy-fhir.json -serviceName $fhirServerName
+```
+
+Scale-up the Fhir Server database
+```Powershell
+$database = Set-AzSqlDatabase -ResourceGroupName $fhirRg.ResourceGroupName  -ServerName $fhirServerName -DatabaseName FHIR -Edition "Standard" -RequestedServiceObjectiveName "S1"  
 ```
 
 Verify that the FHIR Server is running
 
 ```PowerShell
-$metadataUrl = "https://$fhirServiceName.azurewebsites.net/metadata" 
+$metadataUrl = "https://$fhirServerName.azurewebsites.net/metadata" 
 $metadata = Invoke-WebRequest -Uri $metadataUrl
 $metadata.RawContent
 ```
 It will take a minute or so for the server to respond the first time.
 
 ### Setup the Matching service
-Create Resource Group for the that will contain all the resources required for the blueprint
+Create Resource Group that will contain all the resources required for the blueprint resources
 
 ```PowerShell
-$rg = New-AzResourceGroup -Name <service>-Matching -Location eastus
+$rg = New-AzResourceGroup -Name <service Name> -Location eastus
 ```
 
 Create a service principal. It will enable the matching services a programmatic access to the Key Vault
@@ -57,51 +62,74 @@ $sp = New-AzADServicePrincipal -DisplayName <service principal name>
 
 Assign a name for the matching service
 ```Powershell
-$ctmServiceName = <ctm matching service>
+$ctmServiceName = "<ctm matching service>"
 ```
-
-Create Matching service Azure resources
+Assign the password of the Docker Container Registry
 ```Powershell
-$matchingOutput = New-AzResourceGroupDeployment -TemplateFile ..\arm-templates\azuredeploy-ctm.json -ResourceGroupName $rg.ResourceGroupName -serviceName $ctmServiceName  -servicePrincipalObjectId $sp.Id -servicePrincipleClientId $sp.ApplicationId -servicePrincipalClientSecret $sp.secret
+$acrPassword = ConvertTo-SecureString  -AsPlainText <acr password>
 ```
 
-Check that the TextAnalytics for Healthcare service is running
+Create Clinical Trials Matching service Azure resources
+```Powershell
+$matchingOutput = New-AzResourceGroupDeployment -TemplateFile .\arm-templates\azuredeploy-ctm.json -ResourceGroupName $rg.ResourceGroupName -serviceName $ctmServiceName  -fhirServerName $fhirServerName -servicePrincipalObjectId $sp.Id -servicePrincipleClientId $sp.ApplicationId -servicePrincipalClientSecret $sp.secret -acrPassword $acrPassword
+```
+
+Check that the TextAnalytics for Healthcare service is running and ready
 ```powershell
-$taUrl = "https://$ctmServiceName-ayalon-webapp.azurewebsites.net/status"
-$taResponse = Invoke-WebRequest -Uri $taUrl
-$taResponse.RawContent
+$taReadyUrl = "https://$ctmServiceName-ayalon-webapp.azurewebsites.net/ready"
+$taReadyResponse = Invoke-WebRequest -Uri $taReadyUrl
+$taReadyResponse.RawContent
 ```
 
 Check that the Query Engine Service is running
 ```powershell
-$queryEngineUrl = "https://$ctmServiceName-ctm-qe-webapp.azurewebsites.net/"
-$queryEngineResponse = Invoke-WebRequest -Uri $queryEngineUrl
-$queryEngineResponse.RawContent
+$queryUrl = "https://$ctmServiceName-ctm-qe-webapp.azurewebsites.net/"
+$queryResponse = Invoke-WebRequest -Uri $queryUrl
+$queryResponse.RawContent
 ```
 
 Check that the Disqualification Engine Service is running
 ```powershell
-$disqualificationEngineUrl = "https://$ctmServiceName-ctm-disq-webapp.azurewebsites.net/"
-$disqualificationEngineResponse = Invoke-WebRequest -Uri $disqualificationEngineUrl
-$disqualificationEngineResponse.RawContent
+$disqualificationUrl = "https://$ctmServiceName-ctm-disq-webapp.azurewebsites.net/"
+$disqualificationResponse = Invoke-WebRequest -Uri $disqualificationUrl
+$disqualificationResponse.RawContent
+```
+
+Check that the Dynamic Criteria Selection Service is running and ready
+
+```powershell
+$dynamicCriteriaSelectionUrl = "https://$ctmServiceName-ctm-disq-webapp.azurewebsites.net/"
+$dynamicCriteriaSelectionUrlResponse = Invoke-WebRequest -Uri $dynamicCriteriaSelectionUrl
+$dynamicCriteriaSelectionUrlResponse.RawContent
 ```
 
 ### Setup the Healthcare Bot Service
 Assign the Healthcare Bot service name 
 ```Powershell
-$botServiceName = <healthcare bot service>
-```
-Create the Healthcare Bot SaaS Application
-```powershell
-$saasSubscriptionId = .\marketplace.ps1 -name $botServiceName -planId free
+$botServiceName = "<healthcare bot service>"
 ```
 
-Deploy Healthcare Bot resources
+Load the marketplace script
+```powershell
+. .\scripts\marketplace.ps1
+```
+
+Create the Healthcare Bot Azure Marketplace SaaS Application
+```powershell
+$saasSubscriptionId =  New-HbsSaaSApplication -name $botServiceName -planId free
+```
+
+You can also see all your existing SaaS applications by running this command. 
+```powershell
+Get-HbsSaaSApplication
+```
+
+Deploy Healthcare Bot resources for the Marketplace SaaS application you just created or already had before.
 
 ```powershell
-.\azuredeploy-healthcarebot.ps1 -ResourceGroup $rg.ResourceGroupName -saasSubscriptionId $saasSubscriptionId  -serviceName $botServiceName -botLocation US -matchingParameters $matchingOutput.Outputs
+.\scripts\azuredeploy-healthcarebot.ps1 -ResourceGroup $rg.ResourceGroupName -saasSubscriptionId $saasSubscriptionId  -serviceName $botServiceName -botLocation US -matchingParameters $matchingOutput.Outputs
 ```
-This command can take few minutes to complete.
+This command can take few minutes to complete
 
 ### Setup PostgreSQL Server
 Install the PostgreSQL tools from [here](https://www.postgresql.org/download/windows/)

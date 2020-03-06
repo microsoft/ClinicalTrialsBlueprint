@@ -13,23 +13,23 @@ param(
     $matchingParameters
 )
 
-. ./profile.ps1
-. ./luis.ps1
-. ./tenant.ps1
+. ./scripts/profile.ps1
+. ./scripts/luis.ps1
+. ./scripts/tenant.ps1
 
 $context = Get-AzContext
 $subscriptionId = $context.subscription.id
 
 
-$luisPath = "../lu"
-$restorePath = "../bot-templates"
+$luisPath = "./lu"
+$restorePath = "./bot-templates"
 
 Try {
     Write-Host "Running Template Deployment..."
     $output = New-AzResourceGroupDeployment -serviceName $serviceName `
                                             -ResourceGroupName $ResourceGroup  `
                                             -saasSubscriptionId $saasSubscriptionId `
-                                            -TemplateFile "../arm-templates/azuredeploy-healthcarebot.json"                                             
+                                            -TemplateFile "./arm-templates/azuredeploy-healthcarebot.json"                                             
 
     $output
     $luisAuthLocation = $output.Parameters.luisAuthLocation.Value
@@ -105,7 +105,7 @@ Try {
         $restoreJSON = $restoreJSON.Replace('{ctm-api-key}', $matchingParameters.proxyApiKey.Value)
         $restoreJSON = $restoreJSON.Replace('{qe-baseurl}', $matchingParameters.queryEngineEndpoint.Value)
         $restoreJSON = $restoreJSON.Replace('{dcs-baseurl}', $matchingParameters.dynamicCriteriaSelectionEndpoint.Value)
-        $restoreJSON = $restoreJSON.Replace('{disq-baseurl}', $matchingParameters.dynamicCriteriaSelectionEndpoint.Value)
+        $restoreJSON = $restoreJSON.Replace('{disq-baseurl}', $matchingParameters.disqualificationEndpoint.Value)
         $restoreJSON = $restoreJSON.Replace('{luisApplicationId}', $luisApplications["metadata_clinical_trials"])
         $restoreJSON = $restoreJSON.Replace('{luisPredictionKey}', $output.Outputs["luisPredictionKey"].Value)
         $restoreJSON = $restoreJSON.Replace('{luisLocation}', $output.Parameters.luisPredictionLocation.Value)

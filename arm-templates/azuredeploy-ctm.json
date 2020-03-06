@@ -10,8 +10,7 @@
       "defaultValue": "prod_us"
     },
     "fhirServerName": {
-      "type": "string",
-      "defaultValue": "ctm-fhir-service"
+      "type": "string"
     },
     "acrServer": {
       "type": "string",
@@ -113,7 +112,7 @@
                       "AZURE_TENANT_ID": "[subscription().tenantId]",
                       "AZURE_CLIENT_ID": "[parameters('servicePrincipleClientId')]",
                       "AZURE_CLIENT_SECRET": "[parameters('servicePrincipalClientSecret')]",
-                      "ALLOWED_PATHS":"/ready"
+                      "ALLOWED_PATHS":"/,/ready,/status,/swagger/*"
                   }
               }
           }
@@ -137,7 +136,7 @@
                       "ctti__database":"aact",
                       "redis__address":"[concat(variables('redisCacheName'),'.redis.cache.windows.net')]",
                       "redis__secret_name":"redis-client-secret",
-                      "ayalon__taBaseAddress":"[concat('https://',variables('ayalonWebAppName'),'.azurewebsites.net/') ]",
+                      "ayalon__address":"[concat('https://',variables('ayalonWebAppName'),'.azurewebsites.net/') ]",
                       "application_insight__instrumentation_key":"${insrumentation_key}"
                   }
               },
@@ -178,7 +177,7 @@
                       "ctti__secret_name":"ctti-client-secret",
                       "ctti__database":"aact",
                       "redis__address":"[concat(variables('redisCacheName'),'.redis.cache.windows.net')]",
-                      "ayalon__taBaseAddress":"[concat('https://',variables('ayalonWebAppName'),'.azurewebsites.net/') ]",
+                      "ayalon__address":"[concat('https://',variables('ayalonWebAppName'),'.azurewebsites.net/') ]",
                       "redis__secret_name":"redis-client-secret",
                       "application_insight__instrumentation_key":"${insrumentation_key}"
 
@@ -197,7 +196,7 @@
                       "KEY_VAULT_URL": "[concat('https://',variables('keyVaultName'),'.vault.azure.net/')]",
                       "AZURE_TENANT_ID": "[subscription().tenantId]",
                       "AZURE_CLIENT_ID": "[parameters('servicePrincipleClientId')]",
-                      "AZURE_CLIENT_SECRET": "[parameters('servicePrincipalClientSecret')]"                      
+                      "AZURE_CLIENT_SECRET": "[parameters('servicePrincipalClientSecret')]"
                   }
               }
           }
@@ -221,7 +220,7 @@
                               "ctti__secret_name":"ctti-client-secret",
                               "ctti__database":"aact",
                               "redis__address":"[concat(variables('redisCacheName'),'.redis.cache.windows.net')]",
-                              "ayalon__taBaseAddress":"[concat('https://',variables('ayalonWebAppName'),'.azurewebsites.net/') ]",  
+                              "ayalon__address":"[concat('https://',variables('ayalonWebAppName'),'.azurewebsites.net/') ]",  
                               "redis__secret_name":"redis-client-secret",
                               "application_insight__instrumentation_key":"${insrumentation_key}"
                   }
@@ -263,7 +262,7 @@
         "name": "[variables('textAnalyticsName')]",
         "location": "[resourceGroup().location]",
         "sku": {
-            "name": "F0"
+            "name": "S"
         },
         "kind": "TextAnalytics",
         "properties": {
@@ -625,7 +624,7 @@
                   "value": "[variables('fhirServerEndpoint')]"
                 },
                 {
-                  "name": "ayalon__taBaseAddress",
+                  "name": "ayalon__address",
                   "value": "[concat('https://',variables('ayalonWebAppName'),'.azurewebsites.net/') ]"
                 },
                 {
