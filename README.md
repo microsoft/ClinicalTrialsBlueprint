@@ -30,12 +30,16 @@ $fhirServerName = "<fhir server name>"
 Create the Fhir server deployment. You will to provide a admin password for the SQL server
 
 ```PowerShell
-New-AzResourceGroupDeployment -ResourceGroupName $fhirRg.ResourceGroupName -TemplateFile .\arm-templates\azuredeploy-fhir.json -serviceName $fhirServerName
+New-AzResourceGroupDeployment -ResourceGroupName $fhirRg.ResourceGroupName `
+                              -TemplateFile .\arm-templates\azuredeploy-fhir.json `
+                              -serviceName $fhirServerName
 ```
 
 Scale-up the Fhir Server database
 ```Powershell
-$database = Set-AzSqlDatabase -ResourceGroupName $fhirRg.ResourceGroupName  -ServerName $fhirServerName -DatabaseName FHIR -Edition "Standard" -RequestedServiceObjectiveName "S1"  
+$database = Set-AzSqlDatabase -ResourceGroupName $fhirRg.ResourceGroupName  `
+                              -ServerName $fhirServerName -DatabaseName FHIR -Edition "Standard" `
+                              -RequestedServiceObjectiveName "S1"  
 ```
 
 Verify that the FHIR Server is running
@@ -71,7 +75,11 @@ $acrPassword = ConvertTo-SecureString  -AsPlainText <acr password>
 
 Create Clinical Trials Matching service Azure resources
 ```Powershell
-$matchingOutput = New-AzResourceGroupDeployment -TemplateFile .\arm-templates\azuredeploy-ctm.json -ResourceGroupName $rg.ResourceGroupName -serviceName $ctmServiceName  -fhirServerName $fhirServerName -servicePrincipalObjectId $sp.Id -servicePrincipleClientId $sp.ApplicationId -servicePrincipalClientSecret $sp.secret -acrPassword $acrPassword
+$matchingOutput = New-AzResourceGroupDeployment -TemplateFile .\arm-templates\azuredeploy-ctm.json `
+                  -ResourceGroupName $rg.ResourceGroupName -serviceName $ctmServiceName `
+                  -fhirServerName $fhirServerName -servicePrincipalObjectId $sp.Id `
+                  -servicePrincipleClientId $sp.ApplicationId -servicePrincipalClientSecret $sp.secret `
+                  -acrPassword $acrPassword
 ```
 
 Check that the TextAnalytics for Healthcare service is running and ready
@@ -127,7 +135,9 @@ Get-HbsSaaSApplication
 Deploy Healthcare Bot resources for the Marketplace SaaS application you just created or already had before.
 
 ```powershell
-.\scripts\azuredeploy-healthcarebot.ps1 -ResourceGroup $rg.ResourceGroupName -saasSubscriptionId $saasSubscriptionId  -serviceName $botServiceName -botLocation US -matchingParameters $matchingOutput.Outputs
+.\scripts\azuredeploy-healthcarebot.ps1 -ResourceGroup $rg.ResourceGroupName `
+                    -saasSubscriptionId $saasSubscriptionId  -serviceName $botServiceName `
+                    -botLocation US -matchingParameters $matchingOutput.Outputs
 ```
 This command can take few minutes to complete
 
