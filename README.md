@@ -148,5 +148,7 @@ Download as static copy of the AACT from [here](https://aact.ctti-clinicaltrials
 
 Restore the DB from the dump file with pg_restore utility
 ```powershell
-.\pg_restore --clean --host $ctmServiceName-ctm-postgresql.postgres.database.azure.com --port 5432 --username "<username>@$ctmServiceName-ctm-postgresql" --no-owner --dbname "ctdb" --verbose "<dmpfile>"
+.\pg_restore --clean --host $ctmServiceName-ctm-postgresql.postgres.database.azure.com `
+             --port 5432 --username "<username>@$ctmServiceName-ctm-postgresql" --no-owner `
+             --dbname "ctdb" --verbose "<dmpfile>"
 ```
