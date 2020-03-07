@@ -61,7 +61,7 @@ $rg = New-AzResourceGroup -Name <service Name> -Location eastus
 Create a service principal. It will enable the matching services a programmatic access to the Key Vault
 
 ```Powershell
-$sp = New-AzADServicePrincipal -DisplayName <service principal name>
+$sp = New-AzADServicePrincipal -SkipAssignment -DisplayName <service principal name>
 ```
 
 Assign a name for the matching service
