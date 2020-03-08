@@ -892,14 +892,14 @@
                 "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
                 "RowKey": "YXV0b193ZWxjb21lX21lc3NhZ2VfMmQ2MzNhOWRmZGRhOWFjMg==",
                 "stringId": "auto_welcome_message_2d633a9dfdda9ac2",
-                "en_us": "Hi! I??Tm the Contoso Health Demo Bot.\n\n\nI exist for demo purposes only, in order to show the capabilities of the Microsoft health bot project.\n\n\nIf you think that you are having a medical emergency, call 911 or the number for your local emergency service NOW. Always seek the advice of your physician or other qualified healthcare provider before starting any new treatment or stopping an existing treatment. Talk with your healthcare provider about any questions you may have regarding a medical condition. This bot is NOT intended to be used for medical diagnosis or treatment. Read our full disclaimer here.\n\n\n\nYou can ask me things like:\n\n\n??�Sinus infection symptoms??�\n??�My arm hurts??�\n??�What type of doctor treats arthritis???�\n??�Info about diabetes??�\n\nType ??�help??� for more options.",
+                "en_us": "Hi! I'm the Contoso Health Demo Bot.\n\n\nI exist for demo purposes only, in order to show the capabilities of the Microsoft health bot project.\n\n\nIf you think that you are having a medical emergency, call 911 or the number for your local emergency service NOW. Always seek the advice of your physician or other qualified healthcare provider before starting any new treatment or stopping an existing treatment. Talk with your healthcare provider about any questions you may have regarding a medical condition. This bot is NOT intended to be used for medical diagnosis or treatment. Read our full disclaimer here.\n\n\n\nYou can ask me things like:\n\n\n??�Sinus infection symptoms??�\n??�My arm hurts??�\n??�What type of doctor treats arthritis???�\n??�Info about diabetes??�\n\nType ??�help??� for more options.",
                 "Timestamp": "2020-02-28T18:18:52.3085825Z"
             },
             {
                 "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.3100161Z'\"",
                 "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
                 "RowKey": "L2J1aWx0aW4vZ3JlZXRpbmcucmVwbHlfZjJlMzZkZjc2MTZiM2RjZg==",
-                "en_us": "Hello, I??Tm the **Clinical Trials Bot**. I can help you find clinical trials around the world. Tell me a bit more about the situation.",
+                "en_us": "Hello, I'm the **Clinical Trials Bot**. I can help you find clinical trials around the world. Tell me a bit more about the situation.",
                 "stringId": "/builtin/greeting.reply_f2e36df7616b3dcf",
                 "Timestamp": "2020-02-28T18:18:52.3100161Z"
             },
@@ -907,7 +907,7 @@
                 "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.3118593Z'\"",
                 "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
                 "RowKey": "YXV0b193ZWxjb21lX21lc3NhZ2VfOTRjNjUwNWJmNzVhZGI3YQ==",
-                "en_us": "Hello, I??Tm the **Clinical Trials Matching Bot**. I can help you find clinical trials around the world. \nPlease tell me a bit more about the condition.\nPlease note that in case you are not sure what the answer is - you can always answer *Don't Know*.",
+                "en_us": "Hello, I'm the **Clinical Trials Matching Bot**. I can help you find clinical trials around the world. \nPlease tell me a bit more about the condition.\nPlease note that in case you are not sure what the answer is - you can always answer *Don't Know*.",
                 "stringId": "auto_welcome_message_94c6505bf75adb7a",
                 "Timestamp": "2020-02-28T18:18:52.3118593Z"
             }
