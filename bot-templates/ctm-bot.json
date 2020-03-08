@@ -26,7 +26,7 @@
                             "yLocation": 28,
                             "next": "26f08a4aca2e-734b7ed483cc7215-a262"
                         },
-                        "onInit": "scenario.totalQuestionsAsked = 0;\nscenario.messageText = session.message.text;\nscenario.luis = {};\nvar locationCity = null;\nvar locationCountry = null;\nif(scenario.scenarioArgs.entities != null) {\n    // iterate all LUIS entities and set their values to scenario\n    scenario.scenarioArgs.entities.forEach(ent => {\n        switch(ent.type) {\n                case \"gender\":\n                    scenario.luis.gender = ent.role;\n                    break;\n                case \"builtin.age\":\n                    scenario.luis.age = ent.resolution.value;\n                    break;\n                case \"disease\":\n                    scenario.luis.condition = scenario.messageText.substring(ent.startIndex, ent.endIndex + 1);\n                    break;\n                case \"builtin.geographyV2.city\":\n                    locationCity = ent.entity;\n                    break;\n                case \"builtin.geographyV2.countryRegion\":\n                    locationCountry = ent.entity;\n                    break;\n                case \"builtin.geographyV2.state\":\n                    locationCountry = ent.entity;\n                    break;\n                default:\n                    scenario.notMapped.push(ent.entity)\n            }\n    });\n}\n// one of location types was initialized\nif(locationCity != null || locationCountry != null) {\n    scenario.luis.location = { \n        city: \"\",\n        country: \"\"\n    };\n    if(locationCity != null) {\n        scenario.luis.location.city = locationCity;\n    }\n    if(locationCountry != null) {\n        scenario.luis.location.country = locationCountry;\n    }\n};"
+                        "onInit": "scenario.totalQuestionsAsked = 0;\nscenario.messageText = session.message.text;\nscenario.luis = {};\nvar locationCity = null;\nvar locationCountry = null;\nscenario.notMapped = [];\nif(scenario.scenarioArgs.entities != null) {\n    // iterate all LUIS entities and set their values to scenario\n    scenario.scenarioArgs.entities.forEach(ent => {\n        switch(ent.type) {\n                case \"gender\":\n                    scenario.luis.gender = ent.role;\n                    break;\n                case \"builtin.age\":\n                    scenario.luis.age = ent.resolution.value;\n                    break;\n                case \"disease\":\n                    scenario.luis.condition = scenario.messageText.substring(ent.startIndex, ent.endIndex + 1);\n                    break;\n                case \"builtin.geographyV2.city\":\n                    locationCity = ent.entity;\n                    break;\n                case \"builtin.geographyV2.countryRegion\":\n                    locationCountry = ent.entity;\n                    break;\n                case \"builtin.geographyV2.state\":\n                    locationCountry = ent.entity;\n                    break;\n                default:\n                    scenario.notMapped.push(ent.entity);\n            }\n    });\n}\n// one of location types was initialized\nif(locationCity != null || locationCountry != null) {\n    scenario.luis.location = { \n        city: \"\",\n        country: \"\"\n    };\n    if(locationCity != null) {\n        scenario.luis.location.city = locationCity;\n    }\n    if(locationCountry != null) {\n        scenario.luis.location.country = locationCountry;\n    }\n};"
                     },
                     {
                         "id": "38d94695a028-665828e3737523ec-bd42",
@@ -112,7 +112,7 @@
                             "yLocation": 31,
                             "next": "95f6b5f256da-ed1cea46c0187621-f7b9"
                         },
-                        "onInit": "scenario.question_count = 0;\nscenario.trials_count = 0;\nscenario.parsed_answer = {};\nscenario.parsed_answer.result = 0;\n\n// initialize profile\nvar profile = {};\nprofile.gender = scenario.gender;\nprofile.age = scenario.age;\nprofile.location = scenario.location;\nprofile.searchLocationCity = scenario.searchLocationCity;\nprofile.searchLocationState = scenario.searchLocationState;\nprofile.distance = scenario.distance;\nprofile.condition = scenario.condition;\nprofile.askedCodes = [];\nscenario.profile = profile;\n\n// initialize matchingRequest\nvar matchingRequest = {};\nmatchingRequest.id = new Date().getTime().toString();\nmatchingRequest.profile = scenario.profile;\nscenario.matchingRequest = matchingRequest;\n"
+                        "onInit": "// initialize profile\nvar profile = {};\nprofile.gender = scenario.gender;\nprofile.age = scenario.age;\nprofile.location = scenario.location;\nprofile.searchLocationCity = scenario.searchLocationCity;\nprofile.searchLocationState = scenario.searchLocationState;\nprofile.distance = scenario.distance;\nprofile.condition = scenario.condition;\nprofile.askedCodes = [];\nscenario.profile = profile;\n\n// initialize matchingRequest\nvar matchingRequest = {};\nmatchingRequest.id = new Date().getTime().toString();\nmatchingRequest.profile = scenario.profile;\nscenario.matchingRequest = matchingRequest;\n"
                     },
                     {
                         "id": "95f6b5f256da-ed1cea46c0187621-f7b9",
@@ -314,11 +314,11 @@
                         "designer": {
                             "xLocation": 614,
                             "yLocation": 120,
-                            "next": "d46040c72921-e874ae9773008129-3f14",
+                            "next": "ba24c6c14552-29a155c3df1c4f2f-b738",
                             "errorStepId": "7cf5829caf3b-b595e08171a799bc-2f59"
                         },
                         "dataConnection": "ctm-criteria-selector-prod",
-                        "urlBase": "https://ctm-dynamic-criterion-selection-webapp-eastus-prod.azurewebsites.net",
+                        "urlBase": "'https://ctm-dynamic-criterion-selection-webapp-eastus-prod.azurewebsites.net'",
                         "urlPath": "criteria",
                         "urlParams": "",
                         "contentType": "raw",
@@ -449,7 +449,7 @@
                         "label": "init questionIndex",
                         "designer": {
                             "xLocation": 620,
-                            "yLocation": 190,
+                            "yLocation": 300,
                             "next": "275cf280677e-52bf72c7f8f55bad-ae74"
                         },
                         "onInit": "scenario.questionIndex = 0;\r\n"
@@ -459,9 +459,9 @@
                         "type": "branch",
                         "condition": "scenario.questionIndex < scenario.criteriaResponse.criteria.length",
                         "designer": {
-                            "xLocation": 627,
-                            "yLocation": 300,
-                            "next": "e1b411ce805e-e4e6c42e80ac9fdc-bed0"
+                            "xLocation": 628,
+                            "yLocation": 391,
+                            "next": "c0b338e361df-f9260a30a63543e5-2d46"
                         },
                         "targetStepId": "22130a4fa790-7398bd4e67a60462-949a",
                         "label": "Still have questions"
@@ -541,6 +541,18 @@
                         "stringId": "stringId_00902617ba8079bf",
                         "label": "Relevant trials number",
                         "visible": "scenario.totalQuestionsAsked == 0"
+                    },
+                    {
+                        "id": "ba24c6c14552-29a155c3df1c4f2f-b738",
+                        "type": "branch",
+                        "condition": "(scenario.criteriaResponse == null || \r\n scenario.criteriaResponse.criteria == null || \r\n scenario.criteriaResponse.criteria.length === 0)",
+                        "designer": {
+                            "xLocation": 620,
+                            "yLocation": 200,
+                            "next": "d46040c72921-e874ae9773008129-3f14"
+                        },
+                        "label": "Bad response",
+                        "targetStepId": "7cf5829caf3b-b595e08171a799bc-2f59"
                     }
                 ],
                 "returningMessage": "",
