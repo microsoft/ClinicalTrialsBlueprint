@@ -662,8 +662,8 @@
               ],
               "resources": {
                 "requests": {
-                  "cpu": 1,
-                  "memoryInGB": 1.5
+                  "cpu": 2,
+                  "memoryInGB": 4
                 }
               }
             }
@@ -674,7 +674,7 @@
               "image": "[parameters('constituencyParserImageName')]",
               "resources": {
                 "requests": {
-                  "cpu": 1,
+                  "cpu": 2,
                   "memoryInGB": 4
                 }
               }
