@@ -66,6 +66,9 @@
     "postgreSqladministratorLoginPassword": {
         "type": "securestring"
     },
+    "cttiClientSecrect": {
+      "type": "securestring"
+    },
     "resourceTags": {
        "type": "object",
        "defaultValue": {
@@ -573,14 +576,14 @@
     },
     {
       "type": "Microsoft.KeyVault/vaults/secrets",
-      "name": "[concat(variables('keyVaultName'), '/ctti-ctm-client-secret')]",
+      "name": "[concat(variables('keyVaultName'), '/ctti-client-secret')]",
       "apiVersion": "2016-10-01",
       "tags": "[parameters('resourceTags')]",
       "dependsOn": [
         "[concat('Microsoft.KeyVault/vaults/', variables('keyVaultName'))]"
       ],
       "properties": {
-        "value": "[parameters('postgreSqladministratorLoginPassword')]"
+        "value": "[parameters('cttiClientSecrect')]"
       }
     },
     {
