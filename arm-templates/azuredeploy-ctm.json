@@ -698,7 +698,7 @@
       "name": "[variables('ctmServicePlan')]",
       "location": "[resourceGroup().location]",
       "sku": {
-          "name": "P2v2",
+          "name": "P3v2",
           "capacity": 1
       },
       "kind": "linux",

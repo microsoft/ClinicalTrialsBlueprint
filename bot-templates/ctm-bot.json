@@ -186,8 +186,8 @@
                         "id": "6c395b7ffcbf-9a3ac0cb171f8c36-4154",
                         "type": "statement",
                         "designer": {
-                            "xLocation": 340,
-                            "yLocation": 480,
+                            "xLocation": 352,
+                            "yLocation": 489,
                             "next": "2093a915c20d-8fc2e7481038d764-affd"
                         },
                         "text": "\"Found \" + scenario.trialsCount.toString() + \" relevant trial\" + (scenario.trialsCount === 1 ? \"\" : \"s\") + \".\"",
@@ -199,18 +199,18 @@
                         "type": "action",
                         "label": "Create Card",
                         "designer": {
-                            "xLocation": 346,
-                            "yLocation": 600,
+                            "xLocation": 360,
+                            "yLocation": 614,
                             "next": "b880d5732a03-3c5ec70d6ab91ed6-6218"
                         },
-                        "onInit": "scenario.card = {\n  \"$schema\": \"http://adaptivecards.io/schemas/adaptive-card.json\",\n  \"type\": \"AdaptiveCard\",\n  \"version\": \"0.5\",\n  \"body\": scenario.trials.map(trial => {\n      return {\n        \"type\": \"Container\",\n        \"style\": \"emphasis\",\n        \"spacing\": \"none\",\n        \"separator\": false,\n        \"items\": [{\n              \"type\": \"TextBlock\",\n              \"text\": \"**\"+trial.nctId+\"** - [\" + trial.title + \"](https://clinicaltrials.gov/ct2/show/\" + trial.nctId + \")\",\n              \"wrap\": true,\n              \"size\": \"default\",\n              \"weight\": \"bolder\",\n              \"color\": \"dark\"\n            }\n        ]\n      };\n  })\n};"
+                        "onInit": "scenario.cardBody = scenario.trials.map(trial => {\n      return [\n        {\n            \"type\": \"TextBlock\",\n            \"text\": \"RECRUITING\",\n            \"separator\": true,\n            \"color\": \"dark\"\n        },\n        {\n            \"type\": \"TextBlock\",\n            \"color\": \"accent\",\n            \"text\": \"[\" + trial.title + \"](https://clinicaltrials.gov/ct2/show/\" + trial.nctId + \")\",\n            \"spacing\": \"none\",\n            \"wrap\": true,\n            \"color\": \"blue\"\n        }, \n        {\n            \"type\": \"TextBlock\",\n            \"text\": \"Clinical trial ID: \" + trial.nctId,\n            \"isSubtle\": true,\n            \"weight\": \"lighter\"\n        }\n    ]      \n  })\n  \nfunction flat(arr){\n    return arr.reduce((acc, items) => {acc.push(...items); return acc;}, [])\n}\n\nscenario.card = {\n  \"$schema\": \"http://adaptivecards.io/schemas/adaptive-card.json\",\n  \"type\": \"AdaptiveCard\",\n  \"version\": \"1.0\",\n  \"body\": flat(scenario.cardBody)\n};"
                     },
                     {
                         "id": "58a41aa41b1d-1dd382bf9e601ed8-60a6",
                         "type": "datasource",
                         "designer": {
-                            "xLocation": 560,
-                            "yLocation": 673
+                            "xLocation": 551,
+                            "yLocation": 669
                         },
                         "dataConnection": "ctm-query-engine-prod",
                         "urlBase": "'https://ctm-query-engine-webapp-eastus-prod.azurewebsites.net'",
@@ -230,8 +230,8 @@
                         "id": "b880d5732a03-3c5ec70d6ab91ed6-6218",
                         "type": "statement",
                         "designer": {
-                            "xLocation": 340,
-                            "yLocation": 671,
+                            "xLocation": 353,
+                            "yLocation": 692,
                             "next": "58a41aa41b1d-1dd382bf9e601ed8-60a6"
                         },
                         "layout": "vertical",
@@ -521,8 +521,8 @@
                         "id": "2093a915c20d-8fc2e7481038d764-affd",
                         "type": "statement",
                         "designer": {
-                            "xLocation": 340,
-                            "yLocation": 540,
+                            "xLocation": 352,
+                            "yLocation": 551,
                             "next": "138c2cc32f4e-265ec16959d65e96-6083"
                         },
                         "text": "Here are the clinical trials the patient may qualify for:",
@@ -552,7 +552,7 @@
                             "next": "d46040c72921-e874ae9773008129-3f14"
                         },
                         "label": "Bad response",
-                        "targetStepId": "6c395b7ffcbf-9a3ac0cb171f8c36-4154"
+                        "targetStepId": "2093a915c20d-8fc2e7481038d764-affd"
                     }
                 ],
                 "returningMessage": "",
