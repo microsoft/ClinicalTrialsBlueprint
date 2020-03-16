@@ -66,6 +66,10 @@
     "postgreSqladministratorLoginPassword": {
         "type": "securestring"
     },
+    "cttiUserName": {
+      "type":"string",
+      "defaultValue":"arieschwartzman"
+    },
     "cttiClientSecrect": {
       "type": "securestring"
     },
@@ -141,7 +145,7 @@
                                parameters('servicePrincipalClientSecret'))]",
                       "ASPNETCORE_ENVIRONMENT":"[parameters('env')]",
                       "ctti__host":"aact-db.ctti-clinicaltrials.org",
-                      "ctti__user_name":"arieschwartzman",
+                      "ctti__user_name":"[parameters('cttiUserName')]",
                       "ctti__secret_name":"ctti-client-secret",
                       "ctti__database":"aact",
                       "redis__address":"[concat(variables('redisCacheName'),'.redis.cache.windows.net')]",
@@ -183,7 +187,7 @@
                                parameters('servicePrincipalClientSecret'))]",
                       "ASPNETCORE_ENVIRONMENT":"[parameters('env')]",
                       "ctti__host":"aact-db.ctti-clinicaltrials.org",
-                      "ctti__user_name":"arieschwartzman",
+                      "ctti__user_name":"[parameters('cttiUserName')]",
                       "ctti__secret_name":"ctti-client-secret",
                       "ctti__database":"aact",
                       "redis__address":"[concat(variables('redisCacheName'),'.redis.cache.windows.net')]",
@@ -226,7 +230,7 @@
                                parameters('servicePrincipalClientSecret'))]",
                               "ASPNETCORE_ENVIRONMENT":"[parameters('env')]",
                               "ctti__host":"aact-db.ctti-clinicaltrials.org",
-                              "ctti__user_name":"arieschwartzman",
+                              "ctti__user_name":"[parameters('cttiUserName')]",
                               "ctti__secret_name":"ctti-client-secret",
                               "ctti__database":"aact",
                               "redis__address":"[concat(variables('redisCacheName'),'.redis.cache.windows.net')]",
@@ -644,7 +648,7 @@
                 },
                 {
                   "name":"ctti_username",
-                  "value":"arieschwartzman"             
+                  "value":"[parameters('cttiUserName')]"             
                 },
                 {
                   "name":"ctti__secret_name",
