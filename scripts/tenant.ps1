@@ -26,6 +26,7 @@ function New-HbsTenant {
         Authorization = Get-AzBearerToken
     }
 
+    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
     $result = Invoke-WebRequest -Uri $onboardingEndpoint/saas/tenants/?api-version=2019-07-01 `
         -Method "post" `
         -ContentType "application/json" `
