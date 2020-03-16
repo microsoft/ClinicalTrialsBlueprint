@@ -65,7 +65,14 @@
     },
     "postgreSqladministratorLoginPassword": {
         "type": "securestring"
-    }
+    },
+    "resourceTags": {
+       "type": "object",
+       "defaultValue": {
+           "Environment": "Dev",
+           "Project": "Tutorial"
+       }
+   }
   },
   "variables": {
     "proxyApiKey":"[uniqueString(subscription().id)]",
@@ -252,6 +259,7 @@
         "name": "[variables('insightsName')]",
         "location": "[resourceGroup().location]",
         "kind": "web",
+        "tags": "[parameters('resourceTags')]",
         "properties": {
             "Application_Type": "web"
         }
@@ -264,6 +272,7 @@
         "sku": {
             "name": "S"
         },
+        "tags": "[parameters('resourceTags')]",
         "kind": "TextAnalytics",
         "properties": {
             "customSubDomainName": "[variables('textAnalyticsName')]"
@@ -274,6 +283,7 @@
         "apiVersion": "2018-02-01",
         "name": "[variables('ayalonServicePlan')]",
         "location": "[resourceGroup().location]",
+        "tags": "[parameters('resourceTags')]",
         "sku": {
             "name": "P3v2",
             "capacity": 2
@@ -294,6 +304,7 @@
         "type": "Microsoft.Web/sites",
         "apiVersion": "2018-11-01",
         "name": "[variables('ayalonWebAppName')]",
+        "tags": "[parameters('resourceTags')]",
         "location": "[resourceGroup().location]",
         "dependsOn": [
             "[resourceId('Microsoft.Web/serverfarms', variables('ayalonServicePlan'))]",            
@@ -349,6 +360,7 @@
         "apiVersion": "2018-11-01",
         "name": "[concat(variables('ayalonWebAppName'), '/web')]",
         "location": "East US",
+        "tags": "[parameters('resourceTags')]",
         "dependsOn": [
             "[resourceId('Microsoft.Web/sites', variables('ayalonWebAppName'))]",
             "[resourceId('Microsoft.CognitiveServices/accounts', variables('textAnalyticsName'))]"
@@ -423,6 +435,7 @@
     {
         "type": "Microsoft.Web/sites/hostNameBindings",
         "apiVersion": "2018-11-01",
+        "tags": "[parameters('resourceTags')]",
         "name": "[concat(variables('ayalonWebAppName'), '/', variables('ayalonWebAppName'), '.azurewebsites.net')]",
         "location": "[resourceGroup().location]",
         "dependsOn": [
@@ -436,20 +449,16 @@
     {
       "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
       "name": "[variables('identityName')]",
+      "tags": "[parameters('resourceTags')]",
       "apiVersion": "2018-11-30",
-      "location": "[resourceGroup().location]",
-      "tags": {
-        "CTM-Services": "managed identity"
-      }
+      "location": "[resourceGroup().location]"
     },
     {
       "name": "[variables('mapsServiceName')]",
       "type": "Microsoft.Maps/accounts",
       "apiVersion": "2018-05-01",
       "location": "global",
-      "tags": {
-        "CTM-Services": "maps"
-      },
+      "tags": "[parameters('resourceTags')]",
       "sku": {
         "name": "S0"
       }
@@ -459,9 +468,7 @@
       "apiVersion": "2019-07-01",
       "name": "[variables('redisCacheName')]",
       "location": "[resourceGroup().location]",
-      "tags": {
-        "CTM-Services": "redis"
-      },
+      "tags": "[parameters('resourceTags')]",
       "properties": {
         "sku": {
           "name": "Standard",
@@ -482,9 +489,7 @@
       "name": "[variables('keyVaultName')]",
       "location": "[resourceGroup().location]",
       "apiVersion": "2016-10-01",
-      "tags": {
-        "CTM-Services": "KeyVault"
-      },
+      "tags": "[parameters('resourceTags')]",
       "dependsOn": [
         "[concat('Microsoft.ManagedIdentity/userAssignedIdentities/', variables('identityName'))]"
       ],
@@ -519,6 +524,7 @@
       "type": "Microsoft.KeyVault/vaults/secrets",
       "name": "[concat(variables('keyVaultName'), '/azuremaps-key')]",
       "apiVersion": "2016-10-01",
+      "tags": "[parameters('resourceTags')]",
       "dependsOn": [
         "[concat('Microsoft.KeyVault/vaults/', variables('keyVaultName'))]",
         "[concat('Microsoft.Maps/accounts/', variables('mapsServiceName'))]"
@@ -530,6 +536,7 @@
     {
       "type": "Microsoft.KeyVault/vaults/secrets",
       "name": "[concat(variables('keyVaultName'), '/redis-client-secret')]",
+      "tags": "[parameters('resourceTags')]",
       "apiVersion": "2016-10-01",
       "dependsOn": [
         "[concat('Microsoft.KeyVault/vaults/', variables('keyVaultName'))]",
@@ -542,6 +549,7 @@
     {
       "type": "Microsoft.KeyVault/vaults/secrets",
       "name": "[concat(variables('keyVaultName'), '/proxy-api-key')]",
+      "tags": "[parameters('resourceTags')]",
       "apiVersion": "2016-10-01",
       "dependsOn": [
         "[concat('Microsoft.KeyVault/vaults/', variables('keyVaultName'))]"
@@ -554,6 +562,7 @@
       "type": "Microsoft.KeyVault/vaults/secrets",
       "name": "[concat(variables('keyVaultName'), '/instrumentation-key')]",
       "apiVersion": "2016-10-01",
+      "tags": "[parameters('resourceTags')]",
       "dependsOn": [
         "[concat('Microsoft.KeyVault/vaults/', variables('keyVaultName'))]",
         "[concat('Microsoft.Insights/components/', variables('insightsName'))]"
@@ -566,6 +575,7 @@
       "type": "Microsoft.KeyVault/vaults/secrets",
       "name": "[concat(variables('keyVaultName'), '/ctti-ctm-client-secret')]",
       "apiVersion": "2016-10-01",
+      "tags": "[parameters('resourceTags')]",
       "dependsOn": [
         "[concat('Microsoft.KeyVault/vaults/', variables('keyVaultName'))]"
       ],
@@ -577,6 +587,7 @@
       "name": "[variables('containerGroupName')]",
       "type": "Microsoft.ContainerInstance/containerGroups",
       "apiVersion": "2018-10-01",
+      "tags": "[parameters('resourceTags')]",
       "location": "[resourceGroup().location]",
       "identity": {
         "type": "UserAssigned",
@@ -584,9 +595,6 @@
           "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities/',variables('identityName'))]": {
           }
         }
-      },
-      "tags": {
-        "CTM-Services": "containerGroups"
       },
       "dependsOn": [
         "[resourceId('Microsoft.KeyVault/vaults', variables('keyVaultName'))]",
@@ -696,15 +704,13 @@
       "type": "Microsoft.Web/serverfarms",
       "apiVersion": "2018-02-01",
       "name": "[variables('ctmServicePlan')]",
+      "tags": "[parameters('resourceTags')]",
       "location": "[resourceGroup().location]",
       "sku": {
           "name": "P3v2",
           "capacity": 1
       },
       "kind": "linux",
-      "tags": {
-        "CTM-Services": "web app plan"
-      },
       "properties": {
         "perSiteScaling": false,
         "maximumElasticWorkerCount": 1,
@@ -721,6 +727,7 @@
       "apiVersion": "2018-11-01",
       "name": "[variables('queryEngineWebAppName')]",
       "location": "[resourceGroup().location]",
+      "tags": "[parameters('resourceTags')]",
       "kind": "app,linux,container",
       "identity": {
         "type": "UserAssigned",
@@ -734,9 +741,6 @@
         "[resourceId('Microsoft.Web/serverfarms', variables('ctmServicePlan'))]",
         "[concat('Microsoft.Insights/components/', variables('insightsName'))]"      
       ],
-      "tags": {
-        "CTM-Services": "query engine"
-      },
       "properties": {
         "enabled": true,
         "hostNameSslStates": [
@@ -796,6 +800,7 @@
     {
       "type": "Microsoft.Web/sites/config",
       "apiVersion": "2018-11-01",
+      "tags": "[parameters('resourceTags')]",
       "name": "[concat(variables('queryEngineWebAppName'), '/web')]",
       "location": "[resourceGroup().location]",
       "dependsOn": [
@@ -873,6 +878,7 @@
       "type": "Microsoft.Web/sites/hostNameBindings",
       "apiVersion": "2018-11-01",
       "name": "[concat(variables('queryEngineWebAppName'), '/', variables('queryEngineWebAppName'), '.azurewebsites.net')]",
+      "tags": "[parameters('resourceTags')]",
       "location": "[resourceGroup().location]",
       "dependsOn": [
         "[resourceId('Microsoft.Web/sites', variables('queryEngineWebAppName'))]"
@@ -885,6 +891,7 @@
     {
       "type": "Microsoft.Web/sites",
       "apiVersion": "2018-11-01",
+      "tags": "[parameters('resourceTags')]",
       "name": "[variables('dynamicCriteriaSelectionWebAppName')]",
       "location": "[resourceGroup().location]",
       "kind": "app,linux,container",
@@ -958,6 +965,7 @@
       "type": "Microsoft.Web/sites/config",
       "apiVersion": "2018-11-01",
       "name": "[concat(variables('dynamicCriteriaSelectionWebAppName'), '/web')]",
+      "tags": "[parameters('resourceTags')]",
       "location": "[resourceGroup().location]",
       "dependsOn": [
         "[resourceId('Microsoft.Web/sites', variables('dynamicCriteriaSelectionWebAppName'))]"
@@ -1033,6 +1041,7 @@
     {
       "type": "Microsoft.Web/sites/hostNameBindings",
       "apiVersion": "2018-11-01",
+      "tags": "[parameters('resourceTags')]",
       "name": "[concat(variables('dynamicCriteriaSelectionWebAppName'), '/', variables('dynamicCriteriaSelectionWebAppName'), '.azurewebsites.net')]",
       "location": "[resourceGroup().location]",
       "dependsOn": [
@@ -1046,6 +1055,7 @@
     {
       "type": "Microsoft.Web/sites",
       "apiVersion": "2018-11-01",
+      "tags": "[parameters('resourceTags')]",
       "name": "[variables('disqualificationWebAppName')]",
       "location": "[resourceGroup().location]",
       "kind": "app,linux,container",
@@ -1112,6 +1122,7 @@
     {
       "type": "Microsoft.Web/sites/config",
       "apiVersion": "2018-11-01",
+      "tags": "[parameters('resourceTags')]",
       "name": "[concat(variables('disqualificationWebAppName'), '/web')]",
       "location": "[resourceGroup().location]",
       "dependsOn": [
@@ -1194,6 +1205,7 @@
     {
       "type": "Microsoft.Web/sites/hostNameBindings",
       "apiVersion": "2018-11-01",
+      "tags": "[parameters('resourceTags')]",
       "name": "[concat(variables('disqualificationWebAppName'), '/', variables('disqualificationWebAppName'), '.azurewebsites.net')]",
       "location": "[resourceGroup().location]",
       "dependsOn": [
@@ -1208,6 +1220,7 @@
         "type": "Microsoft.DBforPostgreSQL/servers",
         "apiVersion": "2017-12-01",
         "name": "[variables('postgresqlServerFullName')]",
+        "tags": "[parameters('resourceTags')]",
         "location": "[resourceGroup().location]",
         "sku": {
             "name": "GP_Gen5_4",
@@ -1231,6 +1244,7 @@
     {
         "type": "Microsoft.DBforPostgreSQL/servers/databases",
         "apiVersion": "2017-12-01",
+        "tags": "[parameters('resourceTags')]",
         "name": "[concat(variables('postgresqlServerFullName'), '/ctdb')]",
         "dependsOn": [
             "[resourceId('Microsoft.DBforPostgreSQL/servers', variables('postgresqlServerFullName'))]"
