@@ -58,12 +58,6 @@ Create Resource Group that will contain all the resources required for the bluep
 $rg = New-AzResourceGroup -Name <service Name> -Location eastus
 ```
 
-Create a service principal. It will enable the matching services a programmatic access to the Key Vault
-
-```Powershell
-$sp = New-AzADServicePrincipal -SkipAssignment -DisplayName <service principal name>
-```
-
 Assign a name for the matching service
 ```Powershell
 $ctmServiceName = "<ctm matching service>"
@@ -76,10 +70,8 @@ $acrPassword = ConvertTo-SecureString  -AsPlainText <acr password>
 Create Clinical Trials Matching service Azure resources
 ```Powershell
 $matchingOutput = New-AzResourceGroupDeployment -TemplateFile .\arm-templates\azuredeploy-ctm.json `
-                  -ResourceGroupName $rg.ResourceGroupName -serviceName $ctmServiceName `
-                  -fhirServerName $fhirServerName -servicePrincipalObjectId $sp.Id `
-                  -servicePrincipleClientId $sp.ApplicationId -servicePrincipalClientSecret $sp.secret `
-                  -acrPassword $acrPassword
+                -ResourceGroupName $rg.ResourceGroupName -serviceName $ctmServiceName `
+                -fhirServerName $fhirServerName -acrPassword $acrPassword
 ```
 
 Check that the TextAnalytics for Healthcare service is running and ready

@@ -25,40 +25,11 @@
     },
     "structuringImageName": {
       "type": "string",
-      "defaultValue": "ctmprod.azurecr.io/clinical-trials-structuring"
+      "defaultValue": "ctmprod.azurecr.io/clinical-trials-structuring-debug"
     },
     "constituencyParserImageName": {
       "type": "string",
       "defaultValue": "ctmprod.azurecr.io/constituency-parser-server"
-    },
-    "queryEngineImageName": {
-      "type": "string",
-      "defaultValue": "ctmprod.azurecr.io/query-engine:latest"
-    },
-    "dynamicCreteriaSelectionImageName": {
-      "type": "string",
-      "defaultValue": "ctmprod.azurecr.io/dynamic-criterion-selection:latest"
-    },
-    "disqualificationImageName": {
-      "type":"string",
-      "defaultValue":"ctmprod.azurecr.io/clinical-trials-disqualification:latest"      
-    },
-    "ayalonDockerImageName": {
-        "type": "string",
-        "defaultValue": "ctmprod.azurecr.io/cognitive-services-healthcare:latest"
-    },
-    "proxyDockerImageName": {
-        "type": "string",
-        "defaultValue": "ctmprod.azurecr.io/clinical-trials-proxy:latest"
-    },
-    "servicePrincipalObjectId":{
-      "type": "string"
-    },
-    "servicePrincipleClientId": {
-      "type": "string"
-    },
-    "servicePrincipalClientSecret": {
-      "type":"securestring"
     },
     "postgreSqlAdministratorLogin": {
         "type": "string"
@@ -92,172 +63,30 @@
     "redisCacheName": "[concat(parameters('serviceName'),'-ctm-redis')]",
     "ctmServicePlan": "[concat(parameters('serviceName'),'-ctm-plan')]",
     "ayalonServicePlan": "[concat(parameters('serviceName'),'-ayalon-plan')]",
+    "gatewayWebAppName": "[concat(parameters('serviceName'),'-gateway-webapp')]",
+    "gatewayResourceId": "[resourceId('Microsoft.Web/sites',variables('gatewayWebAppName'))]",
     "ayalonWebAppName": "[concat(parameters('serviceName'),'-ayalon-webapp')]",
     "queryEngineWebAppName": "[concat(parameters('serviceName'),'-ctm-qe-webapp')]",
+    "queryEngineResourceId": "[resourceId('Microsoft.Web/sites',variables('queryEngineWebAppName'))]",
     "dynamicCriteriaSelectionWebAppName": "[concat(parameters('serviceName'),'-ctm-dcs-webapp')]",
+    "dynamicCriteriaSelectionResourceId": "[resourceId('Microsoft.Web/sites',variables('dynamicCriteriaSelectionWebAppName'))]",
     "disqualificationWebAppName": "[concat(parameters('serviceName'),'-ctm-disq-webapp')]",
+    "disqualificationResourceId": "[resourceId('Microsoft.Web/sites',variables('disqualificationWebAppName'))]",
     "postgresqlServerFullName":"[concat(parameters('serviceName'),'-ctm-postgresql')]",
     "textAnalyticsName": "[concat(parameters('serviceName'),'-ctm-ta')]",
-    "textAnalyticsCompose": {
-          "version": "3.3",
-          "services": {
-              "ta": {
-                  "image": "[parameters('ayalonDockerImageName')]",
-                  "environment": {
-                      "ApiKey": "${apikey}",
-                      "Billing": "[concat('https://',variables('textAnalyticsName'),'.cognitiveservices.azure.com')]",
-                      "Eula": "accept"
-                  },
-                  "ports": [
-                      "5000"
-                  ]
-              },
-              "proxy": {
-                  "depends_on": [
-                      "ta"
-                  ],
-                  "ports": [
-                      "8081:80"
-                  ],
-                  "image": "[parameters('proxyDockerImageName')]",
-                  "environment": {
-                      "PROXY_TO": "ta:5000",
-                      "KEY_VAULT_URL": "[concat('https://',variables('keyVaultName'),'.vault.azure.net/')]",
-                      "AZURE_TENANT_ID": "[subscription().tenantId]",
-                      "AZURE_CLIENT_ID": "[parameters('servicePrincipleClientId')]",
-                      "AZURE_CLIENT_SECRET": "[parameters('servicePrincipalClientSecret')]",
-                      "ALLOWED_PATHS":"/,/ready,/status,/swagger/*"
-                  }
-              }
-          }
-      },
-      "queryEngineCompose": {
-          "version": "3.3",
-          "services": {
-              "qe": {
-                  "image": "[parameters('queryEngineImageName')]",
-                  "environment": {
-                      "key_vault__address": "[concat('https://',variables('keyVaultName'),'.vault.azure.net/')]",
-                      "AzureServicesAuthConnectionString":"[format(
-                              'RunAs=App;AppId={0};TenantId={1};AppKey={2}',
-                               parameters('servicePrincipleClientId'),
-                               subscription().tenantId,
-                               parameters('servicePrincipalClientSecret'))]",
-                      "ASPNETCORE_ENVIRONMENT":"[parameters('env')]",
-                      "ctti__host":"aact-db.ctti-clinicaltrials.org",
-                      "ctti__user_name":"[parameters('cttiUserName')]",
-                      "ctti__secret_name":"ctti-client-secret",
-                      "ctti__database":"aact",
-                      "redis__address":"[concat(variables('redisCacheName'),'.redis.cache.windows.net')]",
-                      "redis__secret_name":"redis-client-secret",
-                      "ayalon__address":"[concat('https://',variables('ayalonWebAppName'),'.azurewebsites.net/') ]",
-                      "application_insight__instrumentation_key":"${insrumentation_key}"
-                  }
-              },
-              "proxy": {
-                  "depends_on": [
-                      "qe"
-                  ],
-                  "ports": [
-                      "80:80"
-                  ],
-                  "image": "[parameters('proxyDockerImageName')]",
-                  "environment": {
-                      "PROXY_TO": "qe:80",
-                      "KEY_VAULT_URL": "[concat('https://',variables('keyVaultName'),'.vault.azure.net/')]",
-                      "AZURE_TENANT_ID": "[subscription().tenantId]",
-                      "AZURE_CLIENT_ID": "[parameters('servicePrincipleClientId')]",
-                      "AZURE_CLIENT_SECRET": "[parameters('servicePrincipalClientSecret')]"
-                  }
-              }
-          }
-
-      },
-      "dynamicCriteriaSelectionCompose" : {
-          "version": "3.3",
-          "services": {
-              "dcs": {
-                  "image": "[parameters('dynamicCreteriaSelectionImageName')]",
-                  "environment": {
-                      "key_vault__address": "[concat('https://',variables('keyVaultName'),'.vault.azure.net/')]",
-                      "AzureServicesAuthConnectionString":"[format(
-                              'RunAs=App;AppId={0};TenantId={1};AppKey={2}',
-                               parameters('servicePrincipleClientId'),
-                               subscription().tenantId,
-                               parameters('servicePrincipalClientSecret'))]",
-                      "ASPNETCORE_ENVIRONMENT":"[parameters('env')]",
-                      "ctti__host":"aact-db.ctti-clinicaltrials.org",
-                      "ctti__user_name":"[parameters('cttiUserName')]",
-                      "ctti__secret_name":"ctti-client-secret",
-                      "ctti__database":"aact",
-                      "redis__address":"[concat(variables('redisCacheName'),'.redis.cache.windows.net')]",
-                      "ayalon__address":"[concat('https://',variables('ayalonWebAppName'),'.azurewebsites.net/') ]",
-                      "redis__secret_name":"redis-client-secret",
-                      "application_insight__instrumentation_key":"${insrumentation_key}"
-
-                  }
-              },
-              "proxy": {
-                  "depends_on": [
-                      "dcs"
-                  ],
-                  "ports": [
-                      "80:80"
-                  ],
-                  "image": "[parameters('proxyDockerImageName')]",
-                  "environment": {
-                      "PROXY_TO": "dcs:80",
-                      "KEY_VAULT_URL": "[concat('https://',variables('keyVaultName'),'.vault.azure.net/')]",
-                      "AZURE_TENANT_ID": "[subscription().tenantId]",
-                      "AZURE_CLIENT_ID": "[parameters('servicePrincipleClientId')]",
-                      "AZURE_CLIENT_SECRET": "[parameters('servicePrincipalClientSecret')]"
-                  }
-              }
-          }
-
-      },
-      "disqualificationCompose":{
-          "version": "3.3",
-          "services": {
-              "disq": {
-                  "image": "[parameters('disqualificationImageName')]",
-                  "environment": {
-                      "key_vault__address": "[concat('https://',variables('keyVaultName'),'.vault.azure.net/')]",
-                      "AzureServicesAuthConnectionString":"[format(
-                              'RunAs=App;AppId={0};TenantId={1};AppKey={2}',
-                               parameters('servicePrincipleClientId'),
-                               subscription().tenantId,
-                               parameters('servicePrincipalClientSecret'))]",
-                              "ASPNETCORE_ENVIRONMENT":"[parameters('env')]",
-                              "ctti__host":"aact-db.ctti-clinicaltrials.org",
-                              "ctti__user_name":"[parameters('cttiUserName')]",
-                              "ctti__secret_name":"ctti-client-secret",
-                              "ctti__database":"aact",
-                              "redis__address":"[concat(variables('redisCacheName'),'.redis.cache.windows.net')]",
-                              "ayalon__address":"[concat('https://',variables('ayalonWebAppName'),'.azurewebsites.net/') ]",  
-                              "redis__secret_name":"redis-client-secret",
-                              "application_insight__instrumentation_key":"${insrumentation_key}"
-                  }
-              },
-              "proxy": {
-                  "depends_on": [
-                      "disq"
-                  ],
-                  "ports": [
-                      "80:80"
-                  ],
-                  "image": "[parameters('proxyDockerImageName')]",
-                  "environment": {
-                      "PROXY_TO": "disq:80",
-                      "KEY_VAULT_URL": "[concat('https://',variables('keyVaultName'),'.vault.azure.net/')]",
-                      "AZURE_TENANT_ID": "[subscription().tenantId]",
-                      "AZURE_CLIENT_ID": "[parameters('servicePrincipleClientId')]",
-                      "AZURE_CLIENT_SECRET": "[parameters('servicePrincipalClientSecret')]"
-                  }
-              }
-          }
-      }         
-
+    "gatewayDockerImageName":"DOCKER|ctmprod.azurecr.io/clinical-trials-gateway:latest",
+    "ayalonDockerImageName":"DOCKER|ctmprod.azurecr.io/cognitive-services-healthcare:latest",
+    "queryEngineDockerImageName":"DOCKER|ctmprod.azurecr.io/query-engine:latest",
+    "dynamicCriteriaSelectionDockerImageName":"DOCKER|ctmprod.azurecr.io/dynamic-criterion-selection:latest",
+    "disqualificationDockerImageName":"DOCKER|ctmprod.azurecr.io/clinical-trials-disqualification:latest",
+    "containerGroupResourceId":"[resourceId('Microsoft.ContainerInstance/containerGroups',variables('containerGroupName'))]",
+    "services": {
+      "ta4h":"[concat('https://',variables('ayalonWebAppName'),'.azurewebsites.net')]",
+      "qe":  "[concat('https://',variables('queryEngineWebAppName'),'.azurewebsites.net')]", 
+      "disq":"[concat('https://',variables('disqualificationWebAppName'),'.azurewebsites.net')]", 
+      "dcs": "[concat('https://',variables('dynamicCriteriaSelectionWebAppName'),'.azurewebsites.net')]",      
+      "fhir": "[variables('fhirServerEndpoint')]"      
+    }
   },
   "resources": [
     {
@@ -310,6 +139,161 @@
     {
         "type": "Microsoft.Web/sites",
         "apiVersion": "2018-11-01",
+        "name": "[variables('gatewayWebAppName')]",
+        "location": "[resourceGroup().location]",
+        "tags": "[parameters('resourceTags')]",
+        "kind": "app,linux,container",
+        "identity": {
+            "type": "SystemAssigned"
+        },
+        "properties": {
+            "enabled": true,
+            "hostNameSslStates": [
+                {
+                    "name": "[concat(variables('gatewayWebAppName'), '.azurewebsites.net')]",
+                    "sslState": "Disabled",
+                    "hostType": "Standard"
+                },
+                {
+                    "name": "[concat(variables('gatewayWebAppName'), '.scm.azurewebsites.net')]",
+                    "sslState": "Disabled",
+                    "hostType": "Repository"
+                }
+            ],
+            "serverFarmId": "[variables('ctmServicePlan')]",
+            "reserved": true,
+            "isXenon": false,
+            "hyperV": false,
+            "scmSiteAlsoStopped": false,
+            "clientAffinityEnabled": false,
+            "clientCertEnabled": false,
+            "hostNamesDisabled": false,
+            "containerSize": 0,
+            "dailyMemoryTimeQuota": 0,
+            "httpsOnly": false,
+            "redundancyMode": "None",
+            "siteConfig":{
+              "appSettings": [
+                {
+                    "name": "DOCKER_REGISTRY_SERVER_URL",
+                    "value": "[parameters('acrServer')]"
+                },
+                {
+                    "name": "DOCKER_REGISTRY_SERVER_USERNAME",
+                    "value": "[parameters('acrUsername')]"
+                },
+                {
+                    "name": "DOCKER_REGISTRY_SERVER_PASSWORD",
+                    "value": "[parameters('acrPassword')]"
+                },
+                {
+                  "name":"KEYVAULT_URL",
+                  "value":"[concat('https://',variables('keyVaultName'),'.vault.azure.net/')]"
+                },
+                {
+                  "name":"SERVICES",
+                  "value":"[string(variables('services'))]"
+                },
+                {
+                  "name":"ALLOWED_PATHS",
+                  "value":"/status,/,/ready,/swagger/*,/metadata"
+                }
+              ]
+            }
+        }
+    },
+    {
+        "type": "Microsoft.Web/sites/config",
+        "apiVersion": "2018-11-01",
+        "name": "[concat(variables('gatewayWebAppName'), '/web')]",
+        "tags": "[parameters('resourceTags')]",
+        "location": "East US",
+        "dependsOn": [
+            "[resourceId('Microsoft.Web/sites', variables('gatewayWebAppName'))]"
+        ],
+        "properties": {
+            "numberOfWorkers": 1,
+            "defaultDocuments": [
+                "Default.htm",
+                "Default.html",
+                "Default.asp",
+                "index.htm",
+                "index.html",
+                "iisstart.htm",
+                "default.aspx",
+                "index.php",
+                "hostingstart.html"
+            ],
+            "netFrameworkVersion": "v4.0",
+            "linuxFxVersion": "[variables('gatewayDockerImageName')]",
+            "requestTracingEnabled": false,
+            "remoteDebuggingEnabled": false,
+            "remoteDebuggingVersion": "VS2019",
+            "httpLoggingEnabled": true,
+            "logsDirectorySizeLimit": 35,
+            "detailedErrorLoggingEnabled": false,
+            "publishingUsername": "$findcare-ctm-gateway-webapp",
+            "scmType": "None",
+            "use32BitWorkerProcess": true,
+            "webSocketsEnabled": false,
+            "alwaysOn": true,
+            "managedPipelineMode": "Integrated",
+            "virtualApplications": [
+                {
+                    "virtualPath": "/",
+                    "physicalPath": "site\\wwwroot",
+                    "preloadEnabled": true
+                }
+            ],
+            "loadBalancing": "LeastRequests",
+            "experiments": {
+                "rampUpRules": []
+            },
+            "autoHealEnabled": false,
+            "localMySqlEnabled": false,
+            "managedServiceIdentityId": 1713,
+            "ipSecurityRestrictions": [
+                {
+                    "ipAddress": "Any",
+                    "action": "Allow",
+                    "priority": 1,
+                    "name": "Allow all",
+                    "description": "Allow all access"
+                }
+            ],
+            "scmIpSecurityRestrictions": [
+                {
+                    "ipAddress": "Any",
+                    "action": "Allow",
+                    "priority": 1,
+                    "name": "Allow all",
+                    "description": "Allow all access"
+                }
+            ],
+            "scmIpSecurityRestrictionsUseMain": false,
+            "http20Enabled": false,
+            "minTlsVersion": "1.2",
+            "ftpsState": "AllAllowed",
+            "reservedInstanceCount": 0
+        }
+    },
+    {
+        "type": "Microsoft.Web/sites/hostNameBindings",
+        "apiVersion": "2018-11-01",
+        "name": "[concat(variables('gatewayWebAppName'), '/', variables('gatewayWebAppName'), '.azurewebsites.net')]",
+        "location": "[resourceGroup().location]",
+        "tags": "[parameters('resourceTags')]",
+        "dependsOn": [
+            "[resourceId('Microsoft.Web/sites', variables('gatewayWebAppName'))]"
+        ],
+        "properties": {
+            "siteName": "[variables('ayalonWebAppName')]",
+            "hostNameType": "Verified"
+        }
+    },
+    {
+        "type": "Microsoft.Web/sites",
+        "apiVersion": "2018-11-01",
         "name": "[variables('ayalonWebAppName')]",
         "tags": "[parameters('resourceTags')]",
         "location": "[resourceGroup().location]",
@@ -357,6 +341,18 @@
                     {
                         "name": "DOCKER_REGISTRY_SERVER_PASSWORD",
                         "value": "[parameters('acrPassword')]"
+                    },
+                    {
+                        "name":"ApiKey",
+                        "value":"[listKeys(variables('textAnalyticsName'), '2017-04-18').key1]"
+                    },
+                    {
+                        "name":"Billing",
+                        "value":"[concat('https://',variables('textAnalyticsName'),'.cognitiveservices.azure.com')]"
+                    },
+                    {
+                        "name":"Eula",
+                        "value":"accept"
                     }
                 ]
             }
@@ -386,9 +382,7 @@
                 "hostingstart.html"
             ],
             "netFrameworkVersion": "v4.0",
-            "linuxFxVersion": "[concat('COMPOSE|',base64(
-                        replace(string(variables('textAnalyticsCompose')),'${apikey}',listKeys(variables('textAnalyticsName'), '2017-04-18').key1)
-                        ))]",
+            "linuxFxVersion": "[variables('ayalonDockerImageName')]",
             "requestTracingEnabled": false,
             "remoteDebuggingEnabled": false,
             "httpLoggingEnabled": false,
@@ -498,7 +492,12 @@
       "apiVersion": "2016-10-01",
       "tags": "[parameters('resourceTags')]",
       "dependsOn": [
-        "[concat('Microsoft.ManagedIdentity/userAssignedIdentities/', variables('identityName'))]"
+        "[concat('Microsoft.ManagedIdentity/userAssignedIdentities/', variables('identityName'))]",
+        "[variables('gatewayResourceId')]",
+        "[variables('queryEngineResourceId')]",
+        "[variables('dynamicCriteriaSelectionResourceId')]",
+        "[variables('disqualificationResourceId')]",
+        "[variables('containerGroupResourceId')]"
       ],
       "properties": {
         "enabledForDeployment": false,
@@ -507,14 +506,54 @@
         "tenantId": "[subscription().tenantId]",
         "accessPolicies": [
           {
-            "tenantId": "[subscription().tenantId]",
-            "objectId": "[parameters('servicePrincipalObjectId')]",
-            "permissions": {
-                "secrets": [
-                    "get",
-                    "list"
-                ]
-            }
+              "tenantId": "[reference(variables('gatewayResourceId'), '2015-08-01', 'Full').Identity.tenantId]",
+              "objectId": "[reference(variables('gatewayResourceId'), '2015-08-01', 'Full').Identity.principalId]",
+              "permissions": {
+                  "secrets": [
+                      "get",
+                      "list"
+                  ]
+              }
+          },
+          {
+              "tenantId": "[reference(variables('queryEngineResourceId'), '2015-08-01', 'Full').Identity.tenantId]",
+              "objectId": "[reference(variables('queryEngineResourceId'), '2015-08-01', 'Full').Identity.principalId]",
+              "permissions": {
+                  "secrets": [
+                      "get",
+                      "list"
+                  ]
+              }
+          },
+          {
+              "tenantId": "[reference(variables('dynamicCriteriaSelectionResourceId'), '2015-08-01', 'Full').Identity.tenantId]",
+              "objectId": "[reference(variables('dynamicCriteriaSelectionResourceId'), '2015-08-01', 'Full').Identity.principalId]",
+              "permissions": {
+                  "secrets": [
+                      "get",
+                      "list"
+                  ]
+              }
+          },
+          {
+              "tenantId": "[reference(variables('disqualificationResourceId'), '2015-08-01', 'Full').Identity.tenantId]",
+              "objectId": "[reference(variables('disqualificationResourceId'), '2015-08-01', 'Full').Identity.principalId]",
+              "permissions": {
+                  "secrets": [
+                      "get",
+                      "list"
+                  ]
+              }
+          },
+          {
+              "tenantId": "[reference(variables('containerGroupResourceId'), '2019-12-01', 'Full').Identity.tenantId]",
+              "objectId": "[reference(variables('containerGroupResourceId'), '2019-12-01', 'Full').Identity.principalId]",
+              "permissions": {
+                  "secrets": [
+                      "get",
+                      "list"
+                  ]
+              }
           }
         ],
         "sku": {
@@ -597,14 +636,9 @@
       "tags": "[parameters('resourceTags')]",
       "location": "[resourceGroup().location]",
       "identity": {
-        "type": "UserAssigned",
-        "userAssignedIdentities": {
-          "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities/',variables('identityName'))]": {
-          }
-        }
+        "type": "SystemAssigned"
       },
       "dependsOn": [
-        "[resourceId('Microsoft.KeyVault/vaults', variables('keyVaultName'))]",
         "[resourceId('Microsoft.Maps/accounts', variables('mapsServiceName'))]",
         "[resourceId('Microsoft.Insights/components/', variables('insightsName'))]"      
       ],
@@ -644,7 +678,7 @@
                 },
                 {
                   "name": "ctti__host",
-                  "value": "aact-db.ctti-clinicaltrials.org"              
+                  "value": "[concat(variables('postgresqlServerFullName'),'.postgres.database.azure.com')]"              
                 },
                 {
                   "name":"ctti_username",
@@ -665,14 +699,6 @@
                 {
                   "name":"redis__address",
                   "value":"[concat(variables('redisCacheName'),'.redis.cache.windows.net')]"
-                },
-                {
-                  "name":"AzureServicesAuthConnectionString",
-                  "value":"[format(
-                              'RunAs=App;AppId={0};TenantId={1};AppKey={2}',
-                               parameters('servicePrincipleClientId'),
-                               subscription().tenantId,
-                               parameters('servicePrincipalClientSecret'))]"
                 }
               ],
               "resources": {
@@ -737,11 +763,7 @@
       "tags": "[parameters('resourceTags')]",
       "kind": "app,linux,container",
       "identity": {
-        "type": "UserAssigned",
-        "userAssignedIdentities": {
-          "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities/',variables('identityName'))]": {
-          }
-        }
+        "type": "SystemAssigned"
       },
       "dependsOn": [
         "[concat('Microsoft.ManagedIdentity/userAssignedIdentities/', variables('identityName'))]",
@@ -799,6 +821,42 @@
             {
               "name": "WEBSITES_ENABLE_APP_SERVICE_STORAGE",
               "value": "false"
+            },
+            {
+              "name":"key_vault__address",
+              "value":"[concat('https://',variables('keyVaultName'),'.vault.azure.net/')]"
+            },
+            {
+                "name": "ctti__host",
+                "value": "[concat(variables('postgresqlServerFullName'),'.postgres.database.azure.com')]"              
+            },
+            {
+              "name":"ctti__user_name",
+              "value":"[parameters('cttiUserName')]"             
+            },
+            {
+              "name":"ctti__secret_name",
+              "value":"ctti-client-secret"             
+            },
+            {
+              "name":"ctti__database",
+              "value":"aact"
+            },
+            {
+              "name":"redis__address",
+              "value":"[concat(variables('redisCacheName'),'.redis.cache.windows.net')]"
+            },
+            {
+              "name":"redis__secret_name",
+              "value":"redis-client-secret"
+            },
+            {
+              "name":"ayalon__address",
+              "value":"[concat('https://',variables('ayalonWebAppName'),'.azurewebsites.net/') ]"
+            },
+            {
+              "name":"application_insight__instrumentation_key",
+              "value":"[reference(variables('insightsName'), '2015-05-01').instrumentationKey]"
             }
           ]
         }
@@ -827,9 +885,7 @@
           "hostingstart.html"
         ],
         "netFrameworkVersion": "v4.0",
-        "linuxFxVersion": "[concat('COMPOSE|',base64(
-                    replace(string(variables('queryEngineCompose')),'${insrumentation_key}',reference(variables('insightsName'), '2015-05-01').instrumentationKey)
-                    ))]",
+        "linuxFxVersion": "[variables('queryEngineDockerImageName')]",
         "requestTracingEnabled": false,
         "remoteDebuggingEnabled": false,
         "remoteDebuggingVersion": "VS2019",
@@ -907,10 +963,7 @@
         "[concat('Microsoft.ManagedIdentity/userAssignedIdentities/', variables('identityName'))]"
       ],
       "identity": {
-        "type": "UserAssigned",
-        "userAssignedIdentities": {
-          "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities/',variables('identityName'))]":{}
-        }
+        "type": "SystemAssigned"
       },
       "properties": {
         "enabled": true,
@@ -963,6 +1016,42 @@
             {
               "name": "WEBSITES_ENABLE_APP_SERVICE_STORAGE",
               "value": "false"
+            },
+            {
+              "name":"key_vault__address",
+              "value":"[concat('https://',variables('keyVaultName'),'.vault.azure.net/')]"
+            },
+            {
+                "name": "ctti__host",
+                "value": "[concat(variables('postgresqlServerFullName'),'.postgres.database.azure.com')]"              
+            },
+            {
+              "name":"ctti__user_name",
+              "value":"[parameters('cttiUserName')]"             
+            },
+            {
+              "name":"ctti__secret_name",
+              "value":"ctti-client-secret"             
+            },
+            {
+              "name":"ctti__database",
+              "value":"aact"
+            },
+            {
+              "name":"redis__address",
+              "value":"[concat(variables('redisCacheName'),'.redis.cache.windows.net')]"
+            },
+            {
+              "name":"redis__secret_name",
+              "value":"redis-client-secret"
+            },
+            {
+              "name":"ayalon__address",
+              "value":"[concat('https://',variables('ayalonWebAppName'),'.azurewebsites.net/') ]"
+            },
+            {
+              "name":"application_insight__instrumentation_key",
+              "value":"[reference(variables('insightsName'), '2015-05-01').instrumentationKey]"
             }
           ]
         }
@@ -991,9 +1080,7 @@
           "hostingstart.html"
         ],
         "netFrameworkVersion": "v4.0",
-        "linuxFxVersion": "[concat('COMPOSE|',base64(
-                    replace(string(variables('dynamicCriteriaSelectionCompose')),'${insrumentation_key}',reference(variables('insightsName'), '2015-05-01').instrumentationKey)
-                    ))]",
+        "linuxFxVersion": "[variables('dynamicCriteriaSelectionDockerImageName')]",
         "requestTracingEnabled": false,
         "remoteDebuggingEnabled": false,
         "remoteDebuggingVersion": "VS2019",
@@ -1065,6 +1152,9 @@
       "tags": "[parameters('resourceTags')]",
       "name": "[variables('disqualificationWebAppName')]",
       "location": "[resourceGroup().location]",
+      "identity":{
+        "type":"SystemAssigned"
+      },
       "kind": "app,linux,container",
       "dependsOn":[
         "[resourceId('Microsoft.Web/serverfarms', variables('ctmServicePlan'))]",
@@ -1121,6 +1211,42 @@
             {
               "name": "WEBSITES_ENABLE_APP_SERVICE_STORAGE",
               "value": "false"
+            },
+            {
+              "name":"key_vault__address",
+              "value":"[concat('https://',variables('keyVaultName'),'.vault.azure.net/')]"
+            },
+            {
+                "name": "ctti__host",
+                "value": "[concat(variables('postgresqlServerFullName'),'.postgres.database.azure.com')]"              
+            },
+            {
+              "name":"ctti__user_name",
+              "value":"[parameters('cttiUserName')]"             
+            },
+            {
+              "name":"ctti__secret_name",
+              "value":"ctti-client-secret"             
+            },
+            {
+              "name":"ctti__database",
+              "value":"aact"
+            },
+            {
+              "name":"redis__address",
+              "value":"[concat(variables('redisCacheName'),'.redis.cache.windows.net')]"
+            },
+            {
+              "name":"redis__secret_name",
+              "value":"redis-client-secret"
+            },
+            {
+              "name":"ayalon__address",
+              "value":"[concat('https://',variables('ayalonWebAppName'),'.azurewebsites.net/') ]"
+            },
+            {
+              "name":"application_insight__instrumentation_key",
+              "value":"[reference(variables('insightsName'), '2015-05-01').instrumentationKey]"
             }
           ]
         }
@@ -1136,10 +1262,7 @@
         "[resourceId('Microsoft.Web/sites', variables('disqualificationWebAppName'))]"
       ],
       "identity": {
-        "type": "UserAssigned",
-        "userAssignedIdentities": {
-          "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities/',variables('identityName'))]":{}
-        }
+        "type": "SystemAssigned"
       },
       "properties": {
         "numberOfWorkers": 1,
@@ -1155,9 +1278,7 @@
           "hostingstart.html"
         ],
         "netFrameworkVersion": "v4.0",
-        "linuxFxVersion": "[concat('COMPOSE|',base64(
-                    replace(string(variables('disqualificationCompose')),'${insrumentation_key}',reference(variables('insightsName'), '2015-05-01').instrumentationKey)
-                    ))]",
+        "linuxFxVersion": "[variables('disqualificationDockerImageName')]",
         "requestTracingEnabled": false,
         "remoteDebuggingEnabled": false,
         "remoteDebuggingVersion": "VS2019",
