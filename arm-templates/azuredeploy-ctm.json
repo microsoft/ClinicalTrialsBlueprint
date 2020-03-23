@@ -44,6 +44,10 @@
     "cttiClientSecrect": {
       "type": "securestring"
     },
+    "cttiHost":{
+      "type":"string",
+      "defaultValue":"aact-db.ctti-clinicaltrials.org"
+    },
     "resourceTags": {
        "type": "object",
        "defaultValue": {
@@ -54,13 +58,11 @@
   },
   "variables": {
     "proxyApiKey":"[uniqueString(subscription().id)]",
-    "fhirServerEndpoint":"[concat('https://',parameters('fhirServerName'),'.azurewebsites.net/')]",
     "insightsName": "[concat(parameters('serviceName'),'-ctm-insights')]",
-    "identityName": "[concat(parameters('serviceName'),'-ctm-identity')]",
-    "containerGroupName": "[concat(parameters('serviceName'),'-ctm-aci')]",
+    "structuringName": "[concat(parameters('serviceName'),'-ctm-struct-aci')]",
     "keyVaultName": "[concat(parameters('serviceName'),'-ctm-kv')]",
     "mapsServiceName": "[concat(parameters('serviceName'),'-ctm-map')]",
-    "redisCacheName": "[concat(parameters('serviceName'),'-ctm-redis')]",
+    "redisCacheName": "[concat(parameters('serviceName'),'-ctm-redis')]",    
     "ctmServicePlan": "[concat(parameters('serviceName'),'-ctm-plan')]",
     "ayalonServicePlan": "[concat(parameters('serviceName'),'-ayalon-plan')]",
     "gatewayWebAppName": "[concat(parameters('serviceName'),'-gateway-webapp')]",
@@ -79,13 +81,13 @@
     "queryEngineDockerImageName":"DOCKER|ctmprod.azurecr.io/query-engine:latest",
     "dynamicCriteriaSelectionDockerImageName":"DOCKER|ctmprod.azurecr.io/dynamic-criterion-selection:latest",
     "disqualificationDockerImageName":"DOCKER|ctmprod.azurecr.io/clinical-trials-disqualification:latest",
-    "containerGroupResourceId":"[resourceId('Microsoft.ContainerInstance/containerGroups',variables('containerGroupName'))]",
+    "structuringResourceId":"[resourceId('Microsoft.ContainerInstance/containerGroups',variables('structuringName'))]",
     "services": {
       "ta4h":"[concat('https://',variables('ayalonWebAppName'),'.azurewebsites.net')]",
       "qe":  "[concat('https://',variables('queryEngineWebAppName'),'.azurewebsites.net')]", 
       "disq":"[concat('https://',variables('disqualificationWebAppName'),'.azurewebsites.net')]", 
       "dcs": "[concat('https://',variables('dynamicCriteriaSelectionWebAppName'),'.azurewebsites.net')]",      
-      "fhir": "[variables('fhirServerEndpoint')]"      
+      "fhir": "[concat('https://',parameters('fhirServerName'),'.azurewebsites.net/')]"      
     }
   },
   "resources": [
@@ -448,13 +450,6 @@
         }
     },
     {
-      "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
-      "name": "[variables('identityName')]",
-      "tags": "[parameters('resourceTags')]",
-      "apiVersion": "2018-11-30",
-      "location": "[resourceGroup().location]"
-    },
-    {
       "name": "[variables('mapsServiceName')]",
       "type": "Microsoft.Maps/accounts",
       "apiVersion": "2018-05-01",
@@ -492,12 +487,11 @@
       "apiVersion": "2016-10-01",
       "tags": "[parameters('resourceTags')]",
       "dependsOn": [
-        "[concat('Microsoft.ManagedIdentity/userAssignedIdentities/', variables('identityName'))]",
         "[variables('gatewayResourceId')]",
         "[variables('queryEngineResourceId')]",
         "[variables('dynamicCriteriaSelectionResourceId')]",
         "[variables('disqualificationResourceId')]",
-        "[variables('containerGroupResourceId')]"
+        "[variables('structuringResourceId')]"
       ],
       "properties": {
         "enabledForDeployment": false,
@@ -546,8 +540,8 @@
               }
           },
           {
-              "tenantId": "[reference(variables('containerGroupResourceId'), '2019-12-01', 'Full').Identity.tenantId]",
-              "objectId": "[reference(variables('containerGroupResourceId'), '2019-12-01', 'Full').Identity.principalId]",
+              "tenantId": "[reference(variables('structuringResourceId'), '2019-12-01', 'Full').Identity.tenantId]",
+              "objectId": "[reference(variables('structuringResourceId'), '2019-12-01', 'Full').Identity.principalId]",
               "permissions": {
                   "secrets": [
                       "get",
@@ -630,7 +624,7 @@
       }
     },
     {
-      "name": "[variables('containerGroupName')]",
+      "name": "[variables('structuringName')]",
       "type": "Microsoft.ContainerInstance/containerGroups",
       "apiVersion": "2018-10-01",
       "tags": "[parameters('resourceTags')]",
@@ -670,15 +664,15 @@
                 },
                 {
                   "name": "fhir__address",
-                  "value": "[variables('fhirServerEndpoint')]"
+                  "value": "[concat('https://',variables('gatewayWebAppName'),'.azurewebsites.net/fhir')]"
                 },
                 {
                   "name": "ayalon__address",
-                  "value": "[concat('https://',variables('ayalonWebAppName'),'.azurewebsites.net/') ]"
+                  "value": "[concat('https://',variables('gatewayWebAppName'),'.azurewebsites.net/ta4h') ]"
                 },
                 {
                   "name": "ctti__host",
-                  "value": "[concat(variables('postgresqlServerFullName'),'.postgres.database.azure.com')]"              
+                  "value": "[parameters('cttiHost')]"              
                 },
                 {
                   "name":"ctti_username",
@@ -766,7 +760,6 @@
         "type": "SystemAssigned"
       },
       "dependsOn": [
-        "[concat('Microsoft.ManagedIdentity/userAssignedIdentities/', variables('identityName'))]",
         "[resourceId('Microsoft.Web/serverfarms', variables('ctmServicePlan'))]",
         "[concat('Microsoft.Insights/components/', variables('insightsName'))]"      
       ],
@@ -828,7 +821,7 @@
             },
             {
                 "name": "ctti__host",
-                "value": "[concat(variables('postgresqlServerFullName'),'.postgres.database.azure.com')]"              
+                "value": "[parameters('cttiHost')]"
             },
             {
               "name":"ctti__user_name",
@@ -960,7 +953,6 @@
       "kind": "app,linux,container",
       "dependsOn": [
         "[resourceId('Microsoft.Web/serverfarms', variables('ctmServicePlan'))]",
-        "[concat('Microsoft.ManagedIdentity/userAssignedIdentities/', variables('identityName'))]"
       ],
       "identity": {
         "type": "SystemAssigned"
@@ -1023,7 +1015,7 @@
             },
             {
                 "name": "ctti__host",
-                "value": "[concat(variables('postgresqlServerFullName'),'.postgres.database.azure.com')]"              
+                "value": "[parameters('cttiHost')]"              
             },
             {
               "name":"ctti__user_name",
@@ -1157,8 +1149,7 @@
       },
       "kind": "app,linux,container",
       "dependsOn":[
-        "[resourceId('Microsoft.Web/serverfarms', variables('ctmServicePlan'))]",
-        "[concat('Microsoft.ManagedIdentity/userAssignedIdentities/', variables('identityName'))]"
+        "[resourceId('Microsoft.Web/serverfarms', variables('ctmServicePlan'))]"
       ],
       "properties": {
         "enabled": true,
@@ -1218,7 +1209,7 @@
             },
             {
                 "name": "ctti__host",
-                "value": "[concat(variables('postgresqlServerFullName'),'.postgres.database.azure.com')]"              
+                "value": "[parameters('cttiHost')]"              
             },
             {
               "name":"ctti__user_name",
@@ -1388,6 +1379,14 @@
       "type":"string",
       "value":"[variables('proxyApiKey')]"
     },
+    "gatewayName": {
+      "type":"string",
+      "value": "[variables('gatewayWebAppName')]"
+    },
+    "gatewayEndpoint": {
+      "type":"string",
+      "value":"[concat('https://', variables('gatewayWebAppName'),'.azurewebsites.net')]"
+    },
     "queryEngineEndpoint": {
       "type":"string",
       "value":"[concat('https://', variables('queryEngineWebAppName'),'.azurewebsites.net')]"
@@ -1404,7 +1403,6 @@
         "type":"string",
         "value":"[concat('psql \"host=',variables('postgresqlServerFullName'),'.postgres.database.azure.com port=5432 dbname=ctdb user=',
                   parameters('postgreSqlAdministratorLogin'),'@',variables('postgresqlServerFullName'), ' password=<password> sslmode=require\"')]"
-    }
-  
+    }  
   }
 }

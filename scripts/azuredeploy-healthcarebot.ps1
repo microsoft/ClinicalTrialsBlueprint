@@ -103,9 +103,9 @@ Try {
         # Here you need to replace the place holders with real data
 
         $restoreJSON = $restoreJSON.Replace('{ctm-api-key}', $matchingParameters.proxyApiKey.Value)
-        $restoreJSON = $restoreJSON.Replace('{qe-baseurl}', $matchingParameters.queryEngineEndpoint.Value)
-        $restoreJSON = $restoreJSON.Replace('{dcs-baseurl}', $matchingParameters.dynamicCriteriaSelectionEndpoint.Value)
-        $restoreJSON = $restoreJSON.Replace('{disq-baseurl}', $matchingParameters.disqualificationEndpoint.Value)
+        $restoreJSON = $restoreJSON.Replace('{qe-baseurl}', $matchingParameters.gatewayEndpoint.Value)
+        $restoreJSON = $restoreJSON.Replace('{dcs-baseurl}', $matchingParameters.gatewayEndpoint.Value)
+        $restoreJSON = $restoreJSON.Replace('{disq-baseurl}', $matchingParameters.gatewayEndpoint.Value)
         $restoreJSON = $restoreJSON.Replace('{luisApplicationId}', $luisApplications["metadata_clinical_trials"])
         $restoreJSON = $restoreJSON.Replace('{luisPredictionKey}', $output.Outputs["luisPredictionKey"].Value)
         $restoreJSON = $restoreJSON.Replace('{luisLocation}', $output.Parameters.luisPredictionLocation.Value)
