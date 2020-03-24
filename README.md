@@ -76,21 +76,21 @@ $matchingOutput = New-AzResourceGroupDeployment -TemplateFile .\arm-templates\az
 
 Check that the TextAnalytics for Healthcare service is running and ready
 ```powershell
-$taReadyUrl = "https://$ctmServiceName-ayalon-webapp.azurewebsites.net/ready"
+$taReadyUrl = $matchingOutput.Outputs.gatewayEndpoint.Value + "/ta4h/ready"
 $taReadyResponse = Invoke-WebRequest -Uri $taReadyUrl
 $taReadyResponse.RawContent
 ```
 
 Check that the Query Engine Service is running
 ```powershell
-$queryUrl = "https://$ctmServiceName-ctm-qe-webapp.azurewebsites.net/"
+$queryUrl = $matchingOutput.Outputs.gatewayEndpoint.Value + "/qe"
 $queryResponse = Invoke-WebRequest -Uri $queryUrl
 $queryResponse.RawContent
 ```
 
 Check that the Disqualification Engine Service is running
 ```powershell
-$disqualificationUrl = "https://$ctmServiceName-ctm-disq-webapp.azurewebsites.net/"
+$disqualificationUrl = $matchingOutput.Outputs.gatewayEndpoint.Value + "/disq"
 $disqualificationResponse = Invoke-WebRequest -Uri $disqualificationUrl
 $disqualificationResponse.RawContent
 ```
@@ -98,9 +98,20 @@ $disqualificationResponse.RawContent
 Check that the Dynamic Criteria Selection Service is running and ready
 
 ```powershell
-$dynamicCriteriaSelectionUrl = "https://$ctmServiceName-ctm-disq-webapp.azurewebsites.net/"
+$dynamicCriteriaSelectionUrl = $matchingOutput.Outputs.gatewayEndpoint.Value + "/dcs"
 $dynamicCriteriaSelectionUrlResponse = Invoke-WebRequest -Uri $dynamicCriteriaSelectionUrl
 $dynamicCriteriaSelectionUrlResponse.RawContent
+```
+
+### Restrict Access to service
+
+```powershell
+. .\scripts\restrictAccess.ps1
+```
+
+
+```powershell
+Add-HbsRestrictIPs -resourceGroupName $rg.ResourceGroupName -serviceName $ctmServiceName -fhirResoureGroupName ctm-fhir-blueprint -fhirServiceName $fhirServerName
 ```
 
 ### Setup the Healthcare Bot Service

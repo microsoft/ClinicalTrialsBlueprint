@@ -1387,13 +1387,25 @@
       "type":"string",
       "value":"[concat('https://', variables('gatewayWebAppName'),'.azurewebsites.net')]"
     },
+    "queryEngineName": {
+      "type":"string",
+      "value":"[variables('queryEngineWebAppName')]"
+    },
     "queryEngineEndpoint": {
       "type":"string",
       "value":"[concat('https://', variables('queryEngineWebAppName'),'.azurewebsites.net')]"
     },
+    "dynamicCriteriaSelectionName": {
+      "type":"string",
+      "value":"[variables('dynamicCriteriaSelectionWebAppName')]"
+    },
     "dynamicCriteriaSelectionEndpoint": {
       "type":"string",
       "value":"[concat('https://', variables('dynamicCriteriaSelectionWebAppName'),'.azurewebsites.net')]"
+    },
+    "disqualificationName" : {
+      "type":"string",
+      "value":"[variables('disqualificationWebAppName')]"
     },
     "disqualificationEndpoint": {
       "type":"string",
