@@ -664,11 +664,11 @@
                 },
                 {
                   "name": "fhir__address",
-                  "value": "[concat('https://',variables('gatewayWebAppName'),'.azurewebsites.net/fhir')]"
+                  "value": "[concat('https://',variables('gatewayWebAppName'),'.azurewebsites.net/fhir/')]"
                 },
                 {
                   "name": "ayalon__address",
-                  "value": "[concat('https://',variables('gatewayWebAppName'),'.azurewebsites.net/ta4h') ]"
+                  "value": "[concat('https://',variables('gatewayWebAppName'),'.azurewebsites.net/ta4h/') ]"
                 },
                 {
                   "name": "ctti__host",
