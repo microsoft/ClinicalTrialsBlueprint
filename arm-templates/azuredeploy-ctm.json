@@ -643,7 +643,7 @@
                   "name": "ASPNETCORE_ENVIRONMENT",
                   "value": "[parameters('env')]"
                 },
-				{
+				        {
                   "name": "PGPASSWORD",
                   "value": "[parameters('postgreSqladministratorLoginPassword')]"
                 },
