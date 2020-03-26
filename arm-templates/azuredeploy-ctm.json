@@ -671,7 +671,7 @@
                   "name": "ctti__user_name",
                   "value": "[parameters('postgreSqlAdministratorLogin')]"
                 },
-				 {
+          			{
                   "name": "ctti__secret_name",
                   "value": "ctti-client-secret"
                 },
@@ -1328,7 +1328,7 @@
             "family": "Gen5",
             "capacity": 4
         },
-		"resources": [{
+		    "resources": [{
                     "name": "AllowAzureServices",
                     "type": "firewallRules",
                     "apiVersion": "2017-12-01",
@@ -1338,8 +1338,8 @@
                     },
 					"dependsOn": [
 					  "[variables('postgresqlServerFullName')]"
-					],
-                }],
+				  ]
+        }],
         "properties": {
             "administratorLogin": "[parameters('postgreSqlAdministratorLogin')]",
             "administratorLoginPassword": "[parameters('postgreSqladministratorLoginPassword')]",                
