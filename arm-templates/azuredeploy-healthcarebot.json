@@ -14,6 +14,13 @@
         },
         "luisSku": {
             "type": "string",
+            "defaultValue": "S0",
+            "allowedValues": [
+                "S0"
+            ]
+        },
+        "luisAuthoringSku": {
+            "type": "string",
             "defaultValue": "F0",
             "allowedValues": [
                 "F0"
@@ -74,7 +81,7 @@
             "type": "Microsoft.CognitiveServices/accounts",
             "kind": "LUIS.Authoring",
             "sku": {
-                "name": "[parameters('luisSku')]"
+                "name": "[parameters('luisAuthoringSku')]"
             },
             "properties": {
                 "statisticsEnabled": false

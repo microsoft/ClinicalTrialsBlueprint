@@ -25,7 +25,7 @@
     },
     "structuringImageName": {
       "type": "string",
-      "defaultValue": "ctmprod.azurecr.io/clinical-trials-structuring-debug"
+      "defaultValue": "ctmprod.azurecr.io/clinical-trials-structuring"
     },
     "constituencyParserImageName": {
       "type": "string",
