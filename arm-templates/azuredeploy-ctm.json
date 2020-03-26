@@ -37,17 +37,6 @@
     "postgreSqladministratorLoginPassword": {
         "type": "securestring"
     },
-    "cttiUserName": {
-      "type":"string",
-      "defaultValue":"arieschwartzman"
-    },
-    "cttiClientSecrect": {
-      "type": "securestring"
-    },
-    "cttiHost":{
-      "type":"string",
-      "defaultValue":"aact-db.ctti-clinicaltrials.org"
-    },
     "resourceTags": {
        "type": "object",
        "defaultValue": {
@@ -620,7 +609,7 @@
         "[concat('Microsoft.KeyVault/vaults/', variables('keyVaultName'))]"
       ],
       "properties": {
-        "value": "[parameters('cttiClientSecrect')]"
+        "value": "[parameters('postgreSqladministratorLoginPassword')]"
       }
     },
     {
@@ -654,6 +643,10 @@
                   "name": "ASPNETCORE_ENVIRONMENT",
                   "value": "[parameters('env')]"
                 },
+				{
+                  "name": "PGPASSWORD",
+                  "value": "[parameters('postgreSqladministratorLoginPassword')]"
+                },
                 {
                   "name": "key_vault__address",
                   "value": "[concat('https://', variables('keyVaultName'), '.vault.azure.net/')]"
@@ -672,19 +665,15 @@
                 },
                 {
                   "name": "ctti__host",
-                  "value": "[parameters('cttiHost')]"              
+                  "value": "[concat(variables('postgresqlServerFullName'),'.postgres.database.azure.com')]"              
                 },
                 {
-                  "name":"ctti_username",
-                  "value":"[parameters('cttiUserName')]"             
+                  "name": "ctti__user_name",
+                  "value": "[parameters('postgreSqlAdministratorLogin')]"
                 },
-                {
-                  "name":"ctti__secret_name",
-                  "value":"ctti-client-secret"
-                },
-                {
-                  "name":"ctti__database",
-                  "value":"aact"
+				 {
+                  "name": "ctti__secret_name",
+                  "value": "ctti-client-secret"
                 },
                 {
                   "name":"application_insight__instrumentation_key",
@@ -821,11 +810,11 @@
             },
             {
                 "name": "ctti__host",
-                "value": "[parameters('cttiHost')]"
+                "value": "[concat(variables('postgresqlServerFullName'),'.postgres.database.azure.com')]"
             },
             {
               "name":"ctti__user_name",
-              "value":"[parameters('cttiUserName')]"             
+              "value":"[parameters('postgreSqlAdministratorLogin')]"             
             },
             {
               "name":"ctti__secret_name",
@@ -1015,19 +1004,15 @@
             },
             {
                 "name": "ctti__host",
-                "value": "[parameters('cttiHost')]"              
+                "value": "[concat(variables('postgresqlServerFullName'),'.postgres.database.azure.com')]"              
             },
             {
               "name":"ctti__user_name",
-              "value":"[parameters('cttiUserName')]"             
+              "value":"[parameters('postgreSqlAdministratorLogin')]"             
             },
             {
               "name":"ctti__secret_name",
               "value":"ctti-client-secret"             
-            },
-            {
-              "name":"ctti__database",
-              "value":"aact"
             },
             {
               "name":"redis__address",
@@ -1209,19 +1194,15 @@
             },
             {
                 "name": "ctti__host",
-                "value": "[parameters('cttiHost')]"              
+                "value": "[concat(variables('postgresqlServerFullName'),'.postgres.database.azure.com')]"              
             },
             {
               "name":"ctti__user_name",
-              "value":"[parameters('cttiUserName')]"             
+              "value":"[parameters('postgreSqlAdministratorLogin')]"             
             },
             {
               "name":"ctti__secret_name",
               "value":"ctti-client-secret"             
-            },
-            {
-              "name":"ctti__database",
-              "value":"aact"
             },
             {
               "name":"redis__address",
@@ -1347,6 +1328,18 @@
             "family": "Gen5",
             "capacity": 4
         },
+		"resources": [{
+                    "name": "AllowAzureServices",
+                    "type": "firewallRules",
+                    "apiVersion": "2017-12-01",
+                    "properties": {
+                        "startIpAddress": "0.0.0.0",
+                        "endIpAddress": "0.0.0.0"
+                    },
+					"dependsOn": [
+					  "[variables('postgresqlServerFullName')]"
+					],
+                }],
         "properties": {
             "administratorLogin": "[parameters('postgreSqlAdministratorLogin')]",
             "administratorLoginPassword": "[parameters('postgreSqladministratorLoginPassword')]",                

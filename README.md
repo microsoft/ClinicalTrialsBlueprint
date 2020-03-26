@@ -143,15 +143,3 @@ Deploy Healthcare Bot resources for the Marketplace SaaS application you just cr
                     -botLocation US -matchingParameters $matchingOutput.Outputs
 ```
 This command can take few minutes to complete
-
-### Setup PostgreSQL Server
-Install the PostgreSQL tools from [here](https://www.postgresql.org/download/windows/)
-
-Download as static copy of the AACT from [here](https://aact.ctti-clinicaltrials.org/snapshots) an
-
-Restore the DB from the dump file with pg_restore utility
-```powershell
-.\pg_restore --clean --host $ctmServiceName-ctm-postgresql.postgres.database.azure.com `
-             --port 5432 --username "<username>@$ctmServiceName-ctm-postgresql" --no-owner `
-             --dbname "ctdb" --verbose "<dmpfile>"
-```
