@@ -57,6 +57,10 @@
     "postgreSqladministratorLoginPassword": {
         "type": "securestring"
     },
+	"restoreCtti": {
+      "type": "string",
+      "defaultValue": ""
+    },
     "resourceTags": {
        "type": "object",
        "defaultValue": {
@@ -91,7 +95,7 @@
     "dynamicCriteriaSelectionDockerImageName":"DOCKER|ctmprod.azurecr.io/dynamic-criterion-selection:latest",
     "disqualificationDockerImageName":"DOCKER|ctmprod.azurecr.io/clinical-trials-disqualification:latest",
     "structuringResourceId":"[resourceId('Microsoft.ContainerInstance/containerGroups',variables('structuringName'))]",
-	"ctti_user_name":"[concat(concat(parameters('postgreSqlAdministratorLogin'),'@'),concat(variables('postgresqlServerFullName'),'.postgres.database.azure.com'))]"
+    "ctti_user_name":"[concat(concat(parameters('postgreSqlAdministratorLogin'),'@'),concat(variables('postgresqlServerFullName'),'.postgres.database.azure.com'))]",
     "services": {
       "ta4h":"[concat('https://',variables('ayalonWebAppName'),'.azurewebsites.net')]",
       "qe":  "[concat('https://',variables('queryEngineWebAppName'),'.azurewebsites.net')]", 
@@ -655,7 +659,7 @@
               "command": [
                 "dotnet",
                 "ClinicalTrialsStructuring.dll",
-				"restoreCttiDb"
+				"[parameters('restoreCtti')]"
               ],
               "environmentVariables": [
                 {
@@ -848,8 +852,8 @@
                 "value": "[concat(variables('postgresqlServerFullName'),'.postgres.database.azure.com')]"
             },
             {
-				  "name": "ctti__user_name",
-                  "value": "[variables('ctti_user_name')]"         
+              "name": "ctti__user_name",
+              "value": "[variables('ctti_user_name')]"         
             },
             {
               "name":"ctti__secret_name",
@@ -1042,8 +1046,8 @@
                 "value": "[concat(variables('postgresqlServerFullName'),'.postgres.database.azure.com')]"              
             },
             {
-                  "name": "ctti__user_name",
-                  "value": "[variables('ctti_user_name')]"        
+              "name": "ctti__user_name",
+              "value": "[variables('ctti_user_name')]"    
             },
             {
               "name":"ctti__secret_name",
@@ -1228,12 +1232,12 @@
               "value":"[concat('https://',variables('keyVaultName'),'.vault.azure.net/')]"
             },
             {
-                "name": "ctti__host",
-                "value": "[concat(variables('postgresqlServerFullName'),'.postgres.database.azure.com')]"              
+              "name": "ctti__host",
+              "value": "[concat(variables('postgresqlServerFullName'),'.postgres.database.azure.com')]"              
             },
             {
-				  "name": "ctti__user_name",
-                  "value": "[variables('ctti_user_name')]"           
+              "name": "ctti__user_name",
+              "value": "[variables('ctti_user_name')]"         
             },
             {
               "name":"ctti__secret_name",
