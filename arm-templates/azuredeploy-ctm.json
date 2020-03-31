@@ -879,27 +879,26 @@
               "name":"application_insight__instrumentation_key",
               "value":"[reference(variables('insightsName'), '2015-05-01').instrumentationKey]"
             },
-			,
-			{
-			  "name": "query__country",
-			  "value": "[parameters('queryCountry')]"
-			},
-			{
-			  "name": "query__phases",
-			  "value": "[parameters('queryPhases')]"
-			},
-			{
-			  "name": "query__recruitment",
-			  "value": "[parameters('queryRecruitment')]"
-			},
-			{
-			  "name": "query__sponsors",
-			  "value": "[parameters('querySponsors')]"
-			},
-			{
-			  "name": "query__conditions",
-			  "value": "[parameters('queryConditions')]"
-			}
+            {
+              "name": "query__country",
+              "value": "[parameters('queryCountry')]"
+            },
+            {
+              "name": "query__phases",
+              "value": "[parameters('queryPhases')]"
+            },
+            {
+              "name": "query__recruitment",
+              "value": "[parameters('queryRecruitment')]"
+            },
+            {
+              "name": "query__sponsors",
+              "value": "[parameters('querySponsors')]"
+            },
+            {
+              "name": "query__conditions",
+              "value": "[parameters('queryConditions')]"
+            }
           ]
         }
       }
