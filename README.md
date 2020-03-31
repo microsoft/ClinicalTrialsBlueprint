@@ -160,7 +160,7 @@ Deploy Healthcare Bot resources for the Marketplace SaaS application you just cr
 ```powershell
 .\scripts\azuredeploy-healthcarebot.ps1 -ResourceGroup $rg.ResourceGroupName `
                     -saasSubscriptionId $saasSubscriptionId  -serviceName $botServiceName `
-                    -botLocation US -matchingParameters $matchingOutput.Outputs
+                    -botLocation US -matchingParameters $matchingOutput.Outputs -restoreCtti restoreCttiDb
 ```
 
 This command can take few minutes to complete
