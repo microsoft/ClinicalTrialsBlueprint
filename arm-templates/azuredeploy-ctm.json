@@ -27,6 +27,26 @@
       "type": "string",
       "defaultValue": "ctmprod.azurecr.io/clinical-trials-structuring"
     },
+    "queryCountry": {
+      "type": "string",
+      "defaultValue": ""
+    },
+    "queryPhases": {
+      "type": "string",
+      "defaultValue": "phase_1,phase_2,phase_3,phase_4,not_applicable"
+    },
+    "queryRecruitment": {
+      "type": "string",
+      "defaultValue": "recruiting"
+    },
+    "querySponsors": {
+      "type": "string",
+      "defaultValue": ""
+    },
+    "queryConditions": {
+      "type": "string",
+      "defaultValue": ""
+    },
     "constituencyParserImageName": {
       "type": "string",
       "defaultValue": "ctmprod.azurecr.io/constituency-parser-server"
@@ -633,10 +653,7 @@
               "image": "[parameters('structuringImageName')]",
               "command": [
                 "dotnet",
-                "ClinicalTrialsStructuring.dll",
-                "download",
-                "bootstrap",
-                "persist"
+                "ClinicalTrialsStructuring.dll"
               ],
               "environmentVariables": [
                 {
@@ -646,6 +663,26 @@
 				        {
                   "name": "PGPASSWORD",
                   "value": "[parameters('postgreSqladministratorLoginPassword')]"
+                },
+                {
+                  "name": "query__country",
+                  "value": "[parameters('queryCountry')]"
+                },
+                {
+                  "name": "query__phases",
+                  "value": "[parameters('queryPhases')]"
+                },
+                {
+                  "name": "query__recruitment",
+                  "value": "[parameters('queryRecruitment')]"
+                },
+                {
+                  "name": "query__sponsors",
+                  "value": "[parameters('querySponsors')]"
+                },
+                {
+                  "name": "query__conditions",
+                  "value": "[parameters('queryConditions')]"
                 },
                 {
                   "name": "key_vault__address",
