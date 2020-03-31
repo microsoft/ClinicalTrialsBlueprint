@@ -91,6 +91,8 @@
     "dynamicCriteriaSelectionDockerImageName":"DOCKER|ctmprod.azurecr.io/dynamic-criterion-selection:latest",
     "disqualificationDockerImageName":"DOCKER|ctmprod.azurecr.io/clinical-trials-disqualification:latest",
     "structuringResourceId":"[resourceId('Microsoft.ContainerInstance/containerGroups',variables('structuringName'))]",
+	"ctti_user_name":"[concat(concat(parameters('postgreSqlAdministratorLogin'),'@'),concat(variables('postgresqlServerFullName'),'.postgres.database.azure.com'))]"
+          
     "services": {
       "ta4h":"[concat('https://',variables('ayalonWebAppName'),'.azurewebsites.net')]",
       "qe":  "[concat('https://',variables('queryEngineWebAppName'),'.azurewebsites.net')]", 
@@ -703,7 +705,7 @@
                 },
                 {
                   "name": "ctti__user_name",
-                  "value": "[parameters('postgreSqlAdministratorLogin')]"
+                  "value": "[variables('ctti_user_name')]"
                 },
           			{
                   "name": "ctti__secret_name",
@@ -847,8 +849,8 @@
                 "value": "[concat(variables('postgresqlServerFullName'),'.postgres.database.azure.com')]"
             },
             {
-              "name":"ctti__user_name",
-              "value":"[parameters('postgreSqlAdministratorLogin')]"             
+				  "name": "ctti__user_name",
+                  "value": "[variables('ctti_user_name')]"         
             },
             {
               "name":"ctti__secret_name",
@@ -1041,8 +1043,8 @@
                 "value": "[concat(variables('postgresqlServerFullName'),'.postgres.database.azure.com')]"              
             },
             {
-              "name":"ctti__user_name",
-              "value":"[parameters('postgreSqlAdministratorLogin')]"             
+                  "name": "ctti__user_name",
+                  "value": "[variables('ctti_user_name')]"        
             },
             {
               "name":"ctti__secret_name",
@@ -1231,8 +1233,8 @@
                 "value": "[concat(variables('postgresqlServerFullName'),'.postgres.database.azure.com')]"              
             },
             {
-              "name":"ctti__user_name",
-              "value":"[parameters('postgreSqlAdministratorLogin')]"             
+				  "name": "ctti__user_name",
+                  "value": "[variables('ctti_user_name')]"           
             },
             {
               "name":"ctti__secret_name",
