@@ -92,7 +92,6 @@
     "disqualificationDockerImageName":"DOCKER|ctmprod.azurecr.io/clinical-trials-disqualification:latest",
     "structuringResourceId":"[resourceId('Microsoft.ContainerInstance/containerGroups',variables('structuringName'))]",
 	"ctti_user_name":"[concat(concat(parameters('postgreSqlAdministratorLogin'),'@'),concat(variables('postgresqlServerFullName'),'.postgres.database.azure.com'))]"
-          
     "services": {
       "ta4h":"[concat('https://',variables('ayalonWebAppName'),'.azurewebsites.net')]",
       "qe":  "[concat('https://',variables('queryEngineWebAppName'),'.azurewebsites.net')]", 
