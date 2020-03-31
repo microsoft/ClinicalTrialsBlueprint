@@ -653,16 +653,13 @@
               "image": "[parameters('structuringImageName')]",
               "command": [
                 "dotnet",
-                "ClinicalTrialsStructuring.dll"
+                "ClinicalTrialsStructuring.dll",
+				"restoreCttiDb"
               ],
               "environmentVariables": [
                 {
                   "name": "ASPNETCORE_ENVIRONMENT",
                   "value": "[parameters('env')]"
-                },
-				        {
-                  "name": "PGPASSWORD",
-                  "value": "[parameters('postgreSqladministratorLoginPassword')]"
                 },
                 {
                   "name": "query__country",
@@ -1388,19 +1385,6 @@
             },
             "version": "11",
             "sslEnforcement": "Disabled"
-        }
-    },
-    {
-        "type": "Microsoft.DBforPostgreSQL/servers/databases",
-        "apiVersion": "2017-12-01",
-        "tags": "[parameters('resourceTags')]",
-        "name": "[concat(variables('postgresqlServerFullName'), '/ctdb')]",
-        "dependsOn": [
-            "[resourceId('Microsoft.DBforPostgreSQL/servers', variables('postgresqlServerFullName'))]"
-        ],
-        "properties": {
-            "charset": "UTF8",
-            "collation": "English_United States.1252"
         }
     }
   ],
