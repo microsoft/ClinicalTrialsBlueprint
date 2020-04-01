@@ -40,7 +40,7 @@ New-AzResourceGroupDeployment -ResourceGroupName $fhirRg.ResourceGroupName `
                               -serviceName $fhirServerName
 ```
 
-Scale-up the Fhir Server database
+Scale-up the FHIR Server database
 
 ```Powershell
 $database = Set-AzSqlDatabase -ResourceGroupName $fhirRg.ResourceGroupName  `
@@ -78,12 +78,20 @@ Assign the password of the Docker Container Registry
 $acrPassword = ConvertTo-SecureString  -AsPlainText <acr password>
 ```
 
-Create Clinical Trials Matching service Azure resources
+Create Primary Clinical Trials Matching service Azure resources
 
 ```Powershell
 $matchingOutput = New-AzResourceGroupDeployment -TemplateFile .\arm-templates\azuredeploy-ctm.json `
                 -ResourceGroupName $rg.ResourceGroupName -serviceName $ctmServiceName `
                 -fhirServerName $fhirServerName -acrPassword $acrPassword
+```
+
+Create Secondary Clinical Trials Matching service that will be used as the primary service is being serviced
+
+```Powershell
+$matchingOutput = New-AzResourceGroupDeployment -TemplateFile .\arm-templates\azuredeploy-ctm.json `
+                -ResourceGroupName $rg.ResourceGroupName -serviceName $ctmServiceName `
+                -fhirServerName $fhirServerName -acrPassword $acrPassword -isSecondary $true
 ```
 
 Check that the TextAnalytics for Healthcare service is running and ready

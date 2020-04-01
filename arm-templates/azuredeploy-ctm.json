@@ -78,9 +78,12 @@
     "suffix":"[if(parameters('isSecondary'), '-s','')]",
     "structuringName": "[concat(parameters('serviceName'),'-ctm-struct-aci',variables('suffix'))]",    
     "redisCacheName": "[concat(parameters('serviceName'),'-ctm-redis',variables('suffix'))]",    
-    "queryEngineWebAppName": "[concat(parameters('serviceName'),'-ctm-qe-webapp',variables('suffix'))]",
-    "dynamicCriteriaSelectionWebAppName": "[concat(parameters('serviceName'),'-ctm-dcs-webapp',variables('suffix'))]",
-    "disqualificationWebAppName": "[concat(parameters('serviceName'),'-ctm-disq-webapp',variables('suffix'))]",
+    "queryEngineWebAppBaseName":"[concat(parameters('serviceName'),'-ctm-qe-webapp')]",
+    "queryEngineWebAppName": "[concat(variables('queryEngineWebAppBaseName'),variables('suffix'))]",
+    "dynamicCriteriaSelectionWebAppBaseName":"[concat(parameters('serviceName'),'-ctm-dcs-webapp')]",
+    "dynamicCriteriaSelectionWebAppName": "[concat(variables('dynamicCriteriaSelectionWebAppBaseName'),variables('suffix'))]",
+    "disqualificationWebAppBaseName":"[concat(parameters('serviceName'),'-ctm-disq-webapp')]",
+    "disqualificationWebAppName": "[concat(variables('disqualificationWebAppBaseName'),variables('suffix'))]",
     "postgresqlServerFullName":"[concat(parameters('serviceName'),'-ctm-postgresql',variables('suffix'))]",
     "keyVaultName": "[concat(parameters('serviceName'),'-ctm-kv',variables('suffix'))]",
     // Unique resources
@@ -115,11 +118,11 @@
       "fhir": "[concat('https://',parameters('fhirServerName'),'.azurewebsites.net/')]"      
     },
     "servicesSecondary": {
-      "ta4h":"[concat('https://',variables('ayalonWebAppName'),variables('suffix'),'.azurewebsites.net')]",
-      "qe":  "[concat('https://',variables('queryEngineWebAppName'),variables('suffix'),'.azurewebsites.net')]", 
-      "disq":"[concat('https://',variables('disqualificationWebAppName'),variables('suffix'),'.azurewebsites.net')]", 
-      "dcs": "[concat('https://',variables('dynamicCriteriaSelectionWebAppName'),variables('suffix'),'.azurewebsites.net')]",      
-      "fhir": "[concat('https://',parameters('fhirServerName'),variables('suffix'),'.azurewebsites.net/')]"      
+      "ta4h":"[concat('https://',variables('ayalonWebAppName'),'.azurewebsites.net')]",
+      "qe":  "[concat('https://',variables('queryEngineWebAppBaseName'),'-s.azurewebsites.net')]", 
+      "disq":"[concat('https://',variables('disqualificationWebAppBaseName'),'-s.azurewebsites.net')]", 
+      "dcs": "[concat('https://',variables('dynamicCriteriaSelectionWebAppBaseName'),'-s.azurewebsites.net')]",      
+      "fhir": "[concat('https://',parameters('fhirServerName'),'-s.azurewebsites.net/')]"      
     }
   },
   "resources": [
@@ -173,6 +176,7 @@
     {
         "type": "Microsoft.Web/sites",
         "apiVersion": "2018-11-01",
+        "condition":"[not(parameters('isSecondary'))]",
         "name": "[variables('gatewayWebAppName')]",
         "location": "[resourceGroup().location]",
         "tags": "[parameters('resourceTags')]",
@@ -242,6 +246,7 @@
     },
     {
         "type": "Microsoft.Web/sites/config",
+        "condition":"[not(parameters('isSecondary'))]",
         "apiVersion": "2018-11-01",
         "name": "[concat(variables('gatewayWebAppName'), '/web')]",
         "tags": "[parameters('resourceTags')]",
@@ -317,6 +322,7 @@
     },
     {
         "type": "Microsoft.Web/sites/hostNameBindings",
+        "condition":"[not(parameters('isSecondary'))]",
         "apiVersion": "2018-11-01",
         "name": "[concat(variables('gatewayWebAppName'), '/', variables('gatewayWebAppName'), '.azurewebsites.net')]",
         "location": "[resourceGroup().location]",
@@ -330,8 +336,9 @@
         }
     },
     {
+        "condition":"[not(parameters('isSecondary'))]",
         "type": "Microsoft.Web/sites/slots",
-        "apiVersion": "2018-11-01",
+        "apiVersion": "2018-11-01",        
         "name": "[concat(variables('gatewayWebAppName'), '/secondary')]",
         "location": "[resourceGroup().location]",
         "tags": "[parameters('resourceTags')]",
@@ -400,10 +407,10 @@
                 }
               ]
             }
-
         }
     },
     {
+        "condition":"[not(parameters('isSecondary'))]",
         "type": "Microsoft.Web/sites/slots/config",
         "apiVersion": "2018-11-01",
         "name": "[concat(variables('gatewayWebAppName'), '/secondary/web')]",
@@ -480,6 +487,7 @@
         }
     },
     {
+        "condition":"[not(parameters('isSecondary'))]",
         "type": "Microsoft.Web/sites/slots/hostNameBindings",
         "apiVersion": "2018-11-01",
         "name": "[concat(variables('gatewayWebAppName'), '/secondary/', variables('gatewayWebAppName'), '-secondary.azurewebsites.net')]",
