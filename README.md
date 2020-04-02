@@ -89,7 +89,7 @@ $matchingOutput = New-AzResourceGroupDeployment -TemplateFile .\arm-templates\az
 Create Secondary Clinical Trials Matching service that will be used as the primary service is being serviced
 
 ```Powershell
-$matchingOutput = New-AzResourceGroupDeployment -TemplateFile .\arm-templates\azuredeploy-ctm.json `
+$matchingSecondaryOutput = New-AzResourceGroupDeployment -TemplateFile .\arm-templates\azuredeploy-ctm.json `
                 -ResourceGroupName $rg.ResourceGroupName -serviceName $ctmServiceName `
                 -fhirServerName $fhirServerName -acrPassword $acrPassword -isSecondary $true
 ```
@@ -143,6 +143,7 @@ Assign the Healthcare Bot service name
 
 ```Powershell
 $botServiceName = "<healthcare bot service>"
+$secondaryBotServiceName = "<secondary healthcare bot service>"
 ```
 
 Load the marketplace script
@@ -151,10 +152,11 @@ Load the marketplace script
 . .\scripts\marketplace.ps1
 ```
 
-Create the Healthcare Bot Azure Marketplace SaaS Application
+Create the Healthcare primary and secondary bots Azure Marketplace SaaS Application
 
 ```powershell
 $saasSubscriptionId =  New-HbsSaaSApplication -name $botServiceName -planId free
+$secondarySaaSSubscriptionId =  New-HbsSaaSApplication -name $secondaryBotServiceName -planId free
 ```
 
 You can also see all your existing SaaS applications by running this command. 
@@ -165,10 +167,16 @@ Get-HbsSaaSApplication
 
 Deploy Healthcare Bot resources for the Marketplace SaaS application you just created or already had before.
 
-```powershell
+```Powershell
 .\scripts\azuredeploy-healthcarebot.ps1 -ResourceGroup $rg.ResourceGroupName `
-                    -saasSubscriptionId $saasSubscriptionId  -serviceName $botServiceName `
-                    -botLocation US -matchingParameters $matchingOutput.Outputs
+                -saasSubscriptionId $saasSubscriptionId  -serviceName $botServiceName `
+                -botLocation US -matchingParameters $matchingOutput.Outputs
 ```
 
-This command can take few minutes to complete
+You can now create a secondary Healthcare bot by creating new marketplace SaaS application and running this command
+
+```Powershell
+.\scripts\azuredeploy-healthcarebot.ps1 -ResourceGroup $rg.ResourceGroupName `
+                -saasSubscriptionId $secondarySaaSSubscriptionId  -serviceName $secondaryBotServiceName `
+                -botLocation US -matchingParameters $matchingSecondaryOutput.Outputs
+```
