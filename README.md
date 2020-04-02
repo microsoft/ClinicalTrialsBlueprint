@@ -165,7 +165,7 @@ You can also see all your existing SaaS applications by running this command.
 Get-HbsSaaSApplication
 ```
 
-Deploy Healthcare Bot resources for the Marketplace SaaS application you just created or already had before.
+Deploy a primary Healthcare Bot resources for the Marketplace SaaS application you just created or already had before.
 
 ```Powershell
 .\scripts\azuredeploy-healthcarebot.ps1 -ResourceGroup $rg.ResourceGroupName `
@@ -173,7 +173,7 @@ Deploy Healthcare Bot resources for the Marketplace SaaS application you just cr
                 -botLocation US -matchingParameters $matchingOutput.Outputs
 ```
 
-You can now create a secondary Healthcare bot by creating new marketplace SaaS application and running this command
+You can now deploy a secondary Healthcare bot by running this command
 
 ```Powershell
 .\scripts\azuredeploy-healthcarebot.ps1 -ResourceGroup $rg.ResourceGroupName `
