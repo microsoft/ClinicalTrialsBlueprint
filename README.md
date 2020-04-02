@@ -180,3 +180,19 @@ You can now deploy a secondary Healthcare bot by running this command
                 -saasSubscriptionId $secondarySaaSSubscriptionId  -serviceName $secondaryBotServiceName `
                 -botLocation US -matchingParameters $matchingSecondaryOutput.Outputs
 ```
+
+### Restructuring Clinical Trials
+
+When you want to update the CMT databases with latest clinical trials from clinicaltrials.gov, you can run the following script
+
+Load the script
+
+```Powershell
+. .\script\structuring.ps1
+```
+
+Restart the structuring
+
+```Powershell
+Restart-CtmStructuring -resourceGroupName <resource group name> -containerGroupName <structuring container group name>
+```

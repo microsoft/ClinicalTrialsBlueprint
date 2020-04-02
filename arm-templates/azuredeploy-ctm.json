@@ -1610,7 +1610,8 @@
     },
     "gatewayEndpoint": {
       "type":"string",
-      "value":"[concat('https://', variables('gatewayWebAppName'),'.azurewebsites.net')]"
+      "value":"[if(parameters('isSecondary'), concat('https://', variables('gatewayWebAppName'),'-secondary.azurewebsites.net'),
+                                              concat('https://', variables('gatewayWebAppName'),'.azurewebsites.net')) ]"
     },
     "queryEngineName": {
       "type":"string",
