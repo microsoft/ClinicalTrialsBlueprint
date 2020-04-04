@@ -64,8 +64,8 @@
     "resourceTags": {
        "type": "object",
        "defaultValue": {
-           "Environment": "Dev",
-           "Project": "Tutorial"
+           "Environment": "Prod",
+           "Project": "CTM"
        }
    },
    "isSecondary": {
@@ -73,7 +73,7 @@
      "defaultValue": false
    }
   },
-  "variables": {
+  "variables": {    
     // Duplicated resources
     "suffix":"[if(parameters('isSecondary'), '-s','')]",
     "structuringName": "[concat(parameters('serviceName'),'-ctm-struct-aci',variables('suffix'))]",    
