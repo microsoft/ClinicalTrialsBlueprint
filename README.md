@@ -202,3 +202,11 @@ Restart the structuring
 ```Powershell
 Restart-CtmStructuring -resourceGroupName <resource group name> -containerGroupName <structuring container group name>
 ```
+
+Swap primary and secondary environments
+
+```PowerShell
+Switch-AzWebAppSlot -SourceSlotName secondary -DestinationSlotName production `
+                    -ResourceGroupName $rg.ResourceGroupName `
+                    -Name $matchingOutput.Outputs.gatewayName.Value
+ ```
