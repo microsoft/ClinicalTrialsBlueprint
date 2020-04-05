@@ -93,12 +93,13 @@ $matchingOutput = New-AzResourceGroupDeployment -TemplateFile .\arm-templates\az
                 -acrPassword $acrPassword
 ```
 
-Create Secondary Clinical Trials Matching service that will be used as the primary service is being serviced
+Create Secondary Clinical Trials Matching service that will be used as the primary service is being serviced. You need only to pass isSecondary parameter as true
 
 ```Powershell
 $matchingSecondaryOutput = New-AzResourceGroupDeployment -TemplateFile .\arm-templates\azuredeploy-ctm.json `
                 -ResourceGroupName $rg.ResourceGroupName -serviceName $ctmServiceName `
-                -fhirServerName $fhirSecondaryServerName -acrPassword $acrPassword -isSecondary $true
+                -fhirServerName $fhirServerName -fhirSecondaryServerName $fhirSecondaryServerName `
+                -acrPassword $acrPassword -isSecondary $true
 ```
 
 Check that the TextAnalytics for Healthcare service is running and ready
