@@ -27,6 +27,10 @@
       "type": "string",
       "defaultValue": "ctmprod.azurecr.io/clinical-trials-structuring"
     },
+    "structuringImageTag": {
+      "type": "string",
+      "defaultValue": "latest"
+    },
     "queryCountry": {
       "type": "string",
       "defaultValue": ""
@@ -64,37 +68,52 @@
     "resourceTags": {
        "type": "object",
        "defaultValue": {
-           "Environment": "Dev",
-           "Project": "Tutorial"
+           "Environment": "Prod",
+           "Project": "CTM"
        }
+   },
+   "isSecondary": {
+     "type":"bool",
+     "defaultValue": false
    }
   },
-  "variables": {
-    "proxyApiKey":"[uniqueString(subscription().id)]",
+  "variables": {    
+    // Duplicated resources
+    "suffix":"[if(parameters('isSecondary'), '-s','')]",
+    "structuringName": "[concat(parameters('serviceName'),'-ctm-struct-aci',variables('suffix'))]",    
+    "redisCacheName": "[concat(parameters('serviceName'),'-ctm-redis',variables('suffix'))]",    
+    "queryEngineWebAppBaseName":"[concat(parameters('serviceName'),'-ctm-qe-webapp')]",
+    "queryEngineWebAppName": "[concat(variables('queryEngineWebAppBaseName'),variables('suffix'))]",
+    "dynamicCriteriaSelectionWebAppBaseName":"[concat(parameters('serviceName'),'-ctm-dcs-webapp')]",
+    "dynamicCriteriaSelectionWebAppName": "[concat(variables('dynamicCriteriaSelectionWebAppBaseName'),variables('suffix'))]",
+    "disqualificationWebAppBaseName":"[concat(parameters('serviceName'),'-ctm-disq-webapp')]",
+    "disqualificationWebAppName": "[concat(variables('disqualificationWebAppBaseName'),variables('suffix'))]",
+    "postgresqlServerFullName":"[concat(parameters('serviceName'),'-ctm-postgresql',variables('suffix'))]",
+    "keyVaultName": "[concat(parameters('serviceName'),'-ctm-kv',variables('suffix'))]",
+    // Unique resources
     "insightsName": "[concat(parameters('serviceName'),'-ctm-insights')]",
-    "structuringName": "[concat(parameters('serviceName'),'-ctm-struct-aci')]",
-    "keyVaultName": "[concat(parameters('serviceName'),'-ctm-kv')]",
+    "proxyApiKey":"[uniqueString(subscription().id)]",
     "mapsServiceName": "[concat(parameters('serviceName'),'-ctm-map')]",
-    "redisCacheName": "[concat(parameters('serviceName'),'-ctm-redis')]",    
     "ctmServicePlan": "[concat(parameters('serviceName'),'-ctm-plan')]",
     "ayalonServicePlan": "[concat(parameters('serviceName'),'-ayalon-plan')]",
     "gatewayWebAppName": "[concat(parameters('serviceName'),'-gateway-webapp')]",
-    "gatewayResourceId": "[resourceId('Microsoft.Web/sites',variables('gatewayWebAppName'))]",
     "ayalonWebAppName": "[concat(parameters('serviceName'),'-ayalon-webapp')]",
-    "queryEngineWebAppName": "[concat(parameters('serviceName'),'-ctm-qe-webapp')]",
-    "queryEngineResourceId": "[resourceId('Microsoft.Web/sites',variables('queryEngineWebAppName'))]",
-    "dynamicCriteriaSelectionWebAppName": "[concat(parameters('serviceName'),'-ctm-dcs-webapp')]",
-    "dynamicCriteriaSelectionResourceId": "[resourceId('Microsoft.Web/sites',variables('dynamicCriteriaSelectionWebAppName'))]",
-    "disqualificationWebAppName": "[concat(parameters('serviceName'),'-ctm-disq-webapp')]",
-    "disqualificationResourceId": "[resourceId('Microsoft.Web/sites',variables('disqualificationWebAppName'))]",
-    "postgresqlServerFullName":"[concat(parameters('serviceName'),'-ctm-postgresql')]",
     "textAnalyticsName": "[concat(parameters('serviceName'),'-ctm-ta')]",
+    // Resource Ids
+    "gatewayResourceId": "[resourceId('Microsoft.Web/sites',variables('gatewayWebAppName'))]",
+    "queryEngineResourceId": "[resourceId('Microsoft.Web/sites',variables('queryEngineWebAppName'))]",
+    "dynamicCriteriaSelectionResourceId": "[resourceId('Microsoft.Web/sites',variables('dynamicCriteriaSelectionWebAppName'))]",
+    "gatewaySecondaryResourceId":"[resourceId('Microsoft.Web/sites/slots',variables('gatewayWebAppName'),'secondary')]",
+    "disqualificationResourceId": "[resourceId('Microsoft.Web/sites',variables('disqualificationWebAppName'))]",
+    "structuringResourceId":"[resourceId('Microsoft.ContainerInstance/containerGroups',variables('structuringName'))]",
+    // Docker Image Names
     "gatewayDockerImageName":"DOCKER|ctmprod.azurecr.io/clinical-trials-gateway:latest",
     "ayalonDockerImageName":"DOCKER|ctmprod.azurecr.io/cognitive-services-healthcare:latest",
     "queryEngineDockerImageName":"DOCKER|ctmprod.azurecr.io/query-engine:latest",
     "dynamicCriteriaSelectionDockerImageName":"DOCKER|ctmprod.azurecr.io/dynamic-criterion-selection:latest",
     "disqualificationDockerImageName":"DOCKER|ctmprod.azurecr.io/clinical-trials-disqualification:latest",
-    "structuringResourceId":"[resourceId('Microsoft.ContainerInstance/containerGroups',variables('structuringName'))]",
+    "structuringImageFullName":"[concat(parameters('structuringImageName'),':', parameters('structuringImageTag'))]",
+    // Gateway services
     "ctti_user_name":"[concat(concat(parameters('postgreSqlAdministratorLogin'),'@'),concat(variables('postgresqlServerFullName'),'.postgres.database.azure.com'))]",
     "services": {
       "ta4h":"[concat('https://',variables('ayalonWebAppName'),'.azurewebsites.net')]",
@@ -102,6 +121,13 @@
       "disq":"[concat('https://',variables('disqualificationWebAppName'),'.azurewebsites.net')]", 
       "dcs": "[concat('https://',variables('dynamicCriteriaSelectionWebAppName'),'.azurewebsites.net')]",      
       "fhir": "[concat('https://',parameters('fhirServerName'),'.azurewebsites.net/')]"      
+    },
+    "servicesSecondary": {
+      "ta4h":"[concat('https://',variables('ayalonWebAppName'),'.azurewebsites.net')]",
+      "qe":  "[concat('https://',variables('queryEngineWebAppBaseName'),'-s.azurewebsites.net')]", 
+      "disq":"[concat('https://',variables('disqualificationWebAppBaseName'),'-s.azurewebsites.net')]", 
+      "dcs": "[concat('https://',variables('dynamicCriteriaSelectionWebAppBaseName'),'-s.azurewebsites.net')]",      
+      "fhir": "[concat('https://',parameters('fhirServerName'),'-s.azurewebsites.net/')]"      
     }
   },
   "resources": [
@@ -155,6 +181,7 @@
     {
         "type": "Microsoft.Web/sites",
         "apiVersion": "2018-11-01",
+        "condition":"[not(parameters('isSecondary'))]",
         "name": "[variables('gatewayWebAppName')]",
         "location": "[resourceGroup().location]",
         "tags": "[parameters('resourceTags')]",
@@ -213,6 +240,10 @@
                 {
                   "name":"ALLOWED_PATHS",
                   "value":"/status,/,/ready,/swagger/*,/metadata"
+                },
+                {
+                  "name":"SLOT",
+                  "value":"primary"
                 }
               ]
             }
@@ -220,6 +251,7 @@
     },
     {
         "type": "Microsoft.Web/sites/config",
+        "condition":"[not(parameters('isSecondary'))]",
         "apiVersion": "2018-11-01",
         "name": "[concat(variables('gatewayWebAppName'), '/web')]",
         "tags": "[parameters('resourceTags')]",
@@ -295,6 +327,7 @@
     },
     {
         "type": "Microsoft.Web/sites/hostNameBindings",
+        "condition":"[not(parameters('isSecondary'))]",
         "apiVersion": "2018-11-01",
         "name": "[concat(variables('gatewayWebAppName'), '/', variables('gatewayWebAppName'), '.azurewebsites.net')]",
         "location": "[resourceGroup().location]",
@@ -304,6 +337,173 @@
         ],
         "properties": {
             "siteName": "[variables('ayalonWebAppName')]",
+            "hostNameType": "Verified"
+        }
+    },
+    {
+        "condition":"[not(parameters('isSecondary'))]",
+        "type": "Microsoft.Web/sites/slots",
+        "apiVersion": "2018-11-01",        
+        "name": "[concat(variables('gatewayWebAppName'), '/secondary')]",
+        "location": "[resourceGroup().location]",
+        "tags": "[parameters('resourceTags')]",
+        "dependsOn": [
+            "[resourceId('Microsoft.Web/sites', variables('gatewayWebAppName'))]"
+        ],
+        "kind": "app,linux,container",
+        "identity": {
+            "type": "SystemAssigned"
+        },
+        "properties": {
+            "enabled": true,
+            "hostNameSslStates": [
+                {
+                    "name": "[concat(variables('gatewayWebAppName'),'-secondary.azurewebsites.net')]",
+                    "sslState": "Disabled",
+                    "hostType": "Standard"
+                },
+                {
+                    "name": "[concat(variables('gatewayWebAppName'),'-secondary.scm.azurewebsites.net')]",
+                    "sslState": "Disabled",
+                    "hostType": "Repository"
+                }
+            ],
+            "serverFarmId": "[variables('ctmServicePlan')]",
+            "reserved": true,
+            "isXenon": false,
+            "hyperV": false,
+            "scmSiteAlsoStopped": false,
+            "clientAffinityEnabled": false,
+            "clientCertEnabled": false,
+            "hostNamesDisabled": false,
+            "containerSize": 0,
+            "dailyMemoryTimeQuota": 0,
+            "httpsOnly": false,
+            "redundancyMode": "None",
+            "siteConfig":{
+              "appSettings": [
+                {
+                    "name": "DOCKER_REGISTRY_SERVER_URL",
+                    "value": "[parameters('acrServer')]"
+                },
+                {
+                    "name": "DOCKER_REGISTRY_SERVER_USERNAME",
+                    "value": "[parameters('acrUsername')]"
+                },
+                {
+                    "name": "DOCKER_REGISTRY_SERVER_PASSWORD",
+                    "value": "[parameters('acrPassword')]"
+                },
+                {
+                  "name":"KEYVAULT_URL",
+                  "value":"[concat('https://',variables('keyVaultName'),'.vault.azure.net/')]"
+                },
+                {
+                  "name":"SERVICES",
+                  "value":"[string(variables('servicesSecondary'))]"
+                },
+                {
+                  "name":"ALLOWED_PATHS",
+                  "value":"/status,/,/ready,/swagger/*,/metadata"
+                },
+                {
+                  "name":"SLOT",
+                  "value":"secondary"
+                }
+              ]
+            }
+        }
+    },
+    {
+        "condition":"[not(parameters('isSecondary'))]",
+        "type": "Microsoft.Web/sites/slots/config",
+        "apiVersion": "2018-11-01",
+        "name": "[concat(variables('gatewayWebAppName'), '/secondary/web')]",
+        "location": "[resourceGroup().location]",
+        "tags": "[parameters('resourceTags')]",
+        "dependsOn": [
+            "[resourceId('Microsoft.Web/sites/slots', variables('gatewayWebAppName'), 'secondary')]",
+            "[resourceId('Microsoft.Web/sites', variables('gatewayWebAppName'))]"
+        ],
+        "properties": {
+            "numberOfWorkers": 1,
+            "defaultDocuments": [
+                "Default.htm",
+                "Default.html",
+                "Default.asp",
+                "index.htm",
+                "index.html",
+                "iisstart.htm",
+                "default.aspx",
+                "index.php",
+                "hostingstart.html"
+            ],
+            "netFrameworkVersion": "v4.0",
+            "linuxFxVersion": "[variables('gatewayDockerImageName')]",
+            "requestTracingEnabled": false,
+            "remoteDebuggingEnabled": false,
+            "remoteDebuggingVersion": "VS2019",
+            "httpLoggingEnabled": true,
+            "logsDirectorySizeLimit": 35,
+            "detailedErrorLoggingEnabled": false,
+            "publishingUsername": "$findcare-gateway-webapp__secondary",
+            "scmType": "None",
+            "use32BitWorkerProcess": true,
+            "webSocketsEnabled": false,
+            "alwaysOn": true,
+            "managedPipelineMode": "Integrated",
+            "virtualApplications": [
+                {
+                    "virtualPath": "/",
+                    "physicalPath": "site\\wwwroot",
+                    "preloadEnabled": true
+                }
+            ],
+            "loadBalancing": "LeastRequests",
+            "experiments": {
+                "rampUpRules": []
+            },
+            "autoHealEnabled": false,
+            "localMySqlEnabled": false,
+            "managedServiceIdentityId": 1788,
+            "ipSecurityRestrictions": [
+                {
+                    "ipAddress": "Any",
+                    "action": "Allow",
+                    "priority": 1,
+                    "name": "Allow all",
+                    "description": "Allow all access"
+                }
+            ],
+            "scmIpSecurityRestrictions": [
+                {
+                    "ipAddress": "Any",
+                    "action": "Allow",
+                    "priority": 1,
+                    "name": "Allow all",
+                    "description": "Allow all access"
+                }
+            ],
+            "scmIpSecurityRestrictionsUseMain": false,
+            "http20Enabled": false,
+            "minTlsVersion": "1.2",
+            "ftpsState": "AllAllowed",
+            "reservedInstanceCount": 0
+        }
+    },
+    {
+        "condition":"[not(parameters('isSecondary'))]",
+        "type": "Microsoft.Web/sites/slots/hostNameBindings",
+        "apiVersion": "2018-11-01",
+        "name": "[concat(variables('gatewayWebAppName'), '/secondary/', variables('gatewayWebAppName'), '-secondary.azurewebsites.net')]",
+        "location": "[resourceGroup().location]",
+        "tags": "[parameters('resourceTags')]",
+        "dependsOn": [
+            "[resourceId('Microsoft.Web/sites/slots', variables('gatewayWebAppName'), 'secondary')]",
+            "[resourceId('Microsoft.Web/sites', variables('gatewayWebAppName'))]"
+        ],
+        "properties": {
+            "siteName": "[concat(variables('gatewayWebAppName'),'-gateway-webapp(secondary)')]",
             "hostNameType": "Verified"
         }
     },
@@ -502,6 +702,7 @@
       "tags": "[parameters('resourceTags')]",
       "dependsOn": [
         "[variables('gatewayResourceId')]",
+        "[variables('gatewaySecondaryResourceId')]",
         "[variables('queryEngineResourceId')]",
         "[variables('dynamicCriteriaSelectionResourceId')]",
         "[variables('disqualificationResourceId')]",
@@ -516,6 +717,16 @@
           {
               "tenantId": "[reference(variables('gatewayResourceId'), '2015-08-01', 'Full').Identity.tenantId]",
               "objectId": "[reference(variables('gatewayResourceId'), '2015-08-01', 'Full').Identity.principalId]",
+              "permissions": {
+                  "secrets": [
+                      "get",
+                      "list"
+                  ]
+              }
+          },
+          {
+              "tenantId": "[reference(variables('gatewaySecondaryResourceId'), '2015-08-01', 'Full').Identity.tenantId]",
+              "objectId": "[reference(variables('gatewaySecondaryResourceId'), '2015-08-01', 'Full').Identity.principalId]",
               "permissions": {
                   "secrets": [
                       "get",
@@ -655,11 +866,11 @@
           {
             "name": "structuring",
             "properties": {
-              "image": "[parameters('structuringImageName')]",
+              "image": "[variables('structuringImageFullName')]",
               "command": [
                 "dotnet",
                 "ClinicalTrialsStructuring.dll",
-				"[parameters('restoreCtti')]"
+				        "restoreCttiDb"
               ],
               "environmentVariables": [
                 {
@@ -1000,7 +1211,7 @@
       "location": "[resourceGroup().location]",
       "kind": "app,linux,container",
       "dependsOn": [
-        "[resourceId('Microsoft.Web/serverfarms', variables('ctmServicePlan'))]",
+        "[resourceId('Microsoft.Web/serverfarms', variables('ctmServicePlan'))]"
       ],
       "identity": {
         "type": "SystemAssigned"
@@ -1424,7 +1635,8 @@
     },
     "gatewayEndpoint": {
       "type":"string",
-      "value":"[concat('https://', variables('gatewayWebAppName'),'.azurewebsites.net')]"
+      "value":"[if(parameters('isSecondary'), concat('https://', variables('gatewayWebAppName'),'-secondary.azurewebsites.net'),
+                                              concat('https://', variables('gatewayWebAppName'),'.azurewebsites.net')) ]"
     },
     "queryEngineName": {
       "type":"string",

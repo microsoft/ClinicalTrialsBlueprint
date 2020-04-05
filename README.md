@@ -26,10 +26,16 @@ Create a Resource group for the FHIR server. It must be in a separate resource g
 $fhirRg = New-AzResourceGroup -Name <fhir server group name> -Location eastus
 ```
 
-Assign Fhir Server Name
+Assign primary FHIR server Name
 
 ```PowerShell
 $fhirServerName = "<fhir server name>"
+```
+
+Assign secondary FHIR server name
+
+```PowerShell
+$fhirSecondaryServerName = "<fhir secondary server name>"
 ```
 
 Create the FHIR server deployment. You will to provide a admin password for the SQL server
@@ -40,12 +46,12 @@ New-AzResourceGroupDeployment -ResourceGroupName $fhirRg.ResourceGroupName `
                               -serviceName $fhirServerName
 ```
 
-Scale-up the Fhir Server database
+Create secondary FHIR server
 
-```Powershell
-$database = Set-AzSqlDatabase -ResourceGroupName $fhirRg.ResourceGroupName  `
-                              -ServerName $fhirServerName -DatabaseName FHIR -Edition "Standard" `
-                              -RequestedServiceObjectiveName "S1"  
+```PowerShell
+New-AzResourceGroupDeployment -ResourceGroupName $fhirRg.ResourceGroupName `
+                              -TemplateFile .\arm-templates\azuredeploy-fhir.json `
+                              -serviceName $fhirSecondaryServerName
 ```
 
 Verify that the FHIR Server is running
@@ -78,7 +84,7 @@ Assign the password of the Docker Container Registry
 $acrPassword = ConvertTo-SecureString  -AsPlainText <acr password>
 ```
 
-Create Clinical Trials Matching service Azure resources
+Create Primary Clinical Trials Matching service Azure resources
 
 ```Powershell
 $matchingOutput = New-AzResourceGroupDeployment -TemplateFile .\arm-templates\azuredeploy-ctm.json `
@@ -86,9 +92,17 @@ $matchingOutput = New-AzResourceGroupDeployment -TemplateFile .\arm-templates\az
                 -fhirServerName $fhirServerName -acrPassword $acrPassword
 ```
 
+Create Secondary Clinical Trials Matching service that will be used as the primary service is being serviced
+
+```Powershell
+$matchingSecondaryOutput = New-AzResourceGroupDeployment -TemplateFile .\arm-templates\azuredeploy-ctm.json `
+                -ResourceGroupName $rg.ResourceGroupName -serviceName $ctmServiceName `
+                -fhirServerName $fhirSecondaryServerName -acrPassword $acrPassword -isSecondary $true
+```
+
 Check that the TextAnalytics for Healthcare service is running and ready
 
-```powershell
+```PowerShell
 $taReadyUrl = $matchingOutput.Outputs.gatewayEndpoint.Value + "/ta4h/ready"
 $taReadyResponse = Invoke-WebRequest -Uri $taReadyUrl
 $taReadyResponse.RawContent
@@ -96,7 +110,7 @@ $taReadyResponse.RawContent
 
 Check that the Query Engine Service is running
 
-```powershell
+```PowerShell
 $queryUrl = $matchingOutput.Outputs.gatewayEndpoint.Value + "/qe"
 $queryResponse = Invoke-WebRequest -Uri $queryUrl
 $queryResponse.RawContent
@@ -104,7 +118,7 @@ $queryResponse.RawContent
 
 Check that the Disqualification Engine Service is running
 
-```powershell
+```PowerShell
 $disqualificationUrl = $matchingOutput.Outputs.gatewayEndpoint.Value + "/disq"
 $disqualificationResponse = Invoke-WebRequest -Uri $disqualificationUrl
 $disqualificationResponse.RawContent
@@ -112,7 +126,7 @@ $disqualificationResponse.RawContent
 
 Check that the Dynamic Criteria Selection Service is running and ready
 
-```powershell
+```PowerShell
 $dynamicCriteriaSelectionUrl = $matchingOutput.Outputs.gatewayEndpoint.Value + "/dcs"
 $dynamicCriteriaSelectionUrlResponse = Invoke-WebRequest -Uri $dynamicCriteriaSelectionUrl
 $dynamicCriteriaSelectionUrlResponse.RawContent
@@ -124,7 +138,7 @@ $dynamicCriteriaSelectionUrlResponse.RawContent
 . .\scripts\restrictAccess.ps1
 ```
 
-```powershell
+```PowerShell
 Add-HbsRestrictIPs -resourceGroupName $rg.ResourceGroupName -serviceName $ctmServiceName `
                    -fhirResoureGroupName ctm-fhir-blueprint -fhirServiceName $fhirServerName
 ```
@@ -133,34 +147,66 @@ Add-HbsRestrictIPs -resourceGroupName $rg.ResourceGroupName -serviceName $ctmSer
 
 Assign the Healthcare Bot service name 
 
-```Powershell
+```PowerShell
 $botServiceName = "<healthcare bot service>"
+$secondaryBotServiceName = "<secondary healthcare bot service>"
 ```
 
 Load the marketplace script
 
-```powershell
+```PowerShell
 . .\scripts\marketplace.ps1
 ```
 
-Create the Healthcare Bot Azure Marketplace SaaS Application
+Create the Healthcare primary and secondary bots Azure Marketplace SaaS Application
 
-```powershell
+```PowerShell
 $saasSubscriptionId =  New-HbsSaaSApplication -name $botServiceName -planId free
+$secondarySaaSSubscriptionId =  New-HbsSaaSApplication -name $secondaryBotServiceName -planId free
 ```
 
 You can also see all your existing SaaS applications by running this command. 
 
-```powershell
+```PowerShell
 Get-HbsSaaSApplication
 ```
 
-Deploy Healthcare Bot resources for the Marketplace SaaS application you just created or already had before.
+Deploy a primary Healthcare Bot resources for the Marketplace SaaS application you just created or already had before.
 
-```powershell
+```PowerShell
 .\scripts\azuredeploy-healthcarebot.ps1 -ResourceGroup $rg.ResourceGroupName `
-                    -saasSubscriptionId $saasSubscriptionId  -serviceName $botServiceName `
-                    -botLocation US -matchingParameters $matchingOutput.Outputs -restoreCtti restoreCttiDb
+                -saasSubscriptionId $saasSubscriptionId  -serviceName $botServiceName `
+                -botLocation US -matchingParameters $matchingOutput.Outputs 
 ```
 
-This command can take few minutes to complete
+You can now deploy a secondary Healthcare bot by running this command
+
+```PowerShell
+.\scripts\azuredeploy-healthcarebot.ps1 -ResourceGroup $rg.ResourceGroupName `
+                -saasSubscriptionId $secondarySaaSSubscriptionId  -serviceName $secondaryBotServiceName `
+                -botLocation US -matchingParameters $matchingSecondaryOutput.Outputs
+```
+
+### Restructuring Clinical Trials
+
+When you want to update the CMT databases with latest clinical trials from clinicaltrials.gov, you can run the following script
+
+Load the script
+
+```Powershell
+. .\script\structuring.ps1
+```
+
+Restart the structuring
+
+```Powershell
+Restart-CtmStructuring -resourceGroupName <resource group name> -containerGroupName <structuring container group name>
+```
+
+Swap primary and secondary environments
+
+```PowerShell
+Switch-AzWebAppSlot -SourceSlotName secondary -DestinationSlotName production `
+                    -ResourceGroupName $rg.ResourceGroupName `
+                    -Name $matchingOutput.Outputs.gatewayName.Value
+ ```

@@ -131,8 +131,8 @@
         "resourceTags": {
         "type": "object",
         "defaultValue": {
-            "Environment": "Dev",
-            "Project": "Tutorial"
+            "Environment": "Prod",
+            "Project": "FHIR Server"
             }
         }
 
