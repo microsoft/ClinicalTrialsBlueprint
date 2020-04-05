@@ -89,7 +89,8 @@ Create Primary Clinical Trials Matching service Azure resources
 ```Powershell
 $matchingOutput = New-AzResourceGroupDeployment -TemplateFile .\arm-templates\azuredeploy-ctm.json `
                 -ResourceGroupName $rg.ResourceGroupName -serviceName $ctmServiceName `
-                -fhirServerName $fhirServerName -acrPassword $acrPassword
+                -fhirServerName $fhirServerName -fhirSecondaryServerName $fhirSecondaryServerName `
+                -acrPassword $acrPassword
 ```
 
 Create Secondary Clinical Trials Matching service that will be used as the primary service is being serviced

@@ -12,6 +12,9 @@
     "fhirServerName": {
       "type": "string"
     },
+    "fhirSecondaryServerName": {
+      "type": "string"
+    },
     "acrServer": {
       "type": "string",
       "defaultValue": "ctmprod.azurecr.io"
@@ -122,7 +125,7 @@
       "qe":  "[concat('https://',variables('queryEngineWebAppBaseName'),'-s.azurewebsites.net')]", 
       "disq":"[concat('https://',variables('disqualificationWebAppBaseName'),'-s.azurewebsites.net')]", 
       "dcs": "[concat('https://',variables('dynamicCriteriaSelectionWebAppBaseName'),'-s.azurewebsites.net')]",      
-      "fhir": "[concat('https://',parameters('fhirServerName'),'-s.azurewebsites.net/')]"      
+      "fhir": "[concat('https://',parameters('fhirSecondaryServerName'),'.azurewebsites.net/')]"      
     }
   },
   "resources": [
