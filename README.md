@@ -81,7 +81,7 @@ $ctmServiceName = "<ctm matching service>"
 Assign the password of the Docker Container Registry
 
 ```Powershell
-$acrPassword = ConvertTo-SecureString  -AsPlainText <acr password>
+$acrPassword = ConvertTo-SecureString  -AsPlainText <acr password> -Force
 ```
 
 Create Primary Clinical Trials Matching service Azure resources
@@ -98,7 +98,6 @@ Create Secondary Clinical Trials Matching service that will be used as the prima
 ```Powershell
 $matchingSecondaryOutput = New-AzResourceGroupDeployment -TemplateFile .\arm-templates\azuredeploy-ctm.json `
                 -ResourceGroupName $rg.ResourceGroupName -serviceName $ctmServiceName `
-                -fhirServerName $fhirServerName -fhirSecondaryServerName $fhirSecondaryServerName `
                 -acrPassword $acrPassword -isSecondary $true
 ```
 

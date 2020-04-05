@@ -10,10 +10,12 @@
       "defaultValue": "prod_us"
     },
     "fhirServerName": {
-      "type": "string"
+      "type": "string",
+      "defaultValue":""
     },
     "fhirSecondaryServerName": {
-      "type": "string"
+      "type": "string",
+      "defaultValue":""
     },
     "acrServer": {
       "type": "string",
