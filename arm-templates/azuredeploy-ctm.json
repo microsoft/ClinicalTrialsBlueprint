@@ -907,7 +907,8 @@
                 },
                 {
                   "name": "fhir__address",
-                  "value": "[concat('https://',variables('gatewayWebAppName'),'.azurewebsites.net/fhir/')]"
+                  "value": "[if(parameters('isSecondary'), concat('https://',concat(variables('gatewayWebAppName'),'-secondary'),'.azurewebsites.net/fhir/'),
+                                concat('https://',concat(variables('gatewayWebAppName')),'.azurewebsites.net/fhir/'))]"
                 },
                 {
                   "name": "ayalon__address",
