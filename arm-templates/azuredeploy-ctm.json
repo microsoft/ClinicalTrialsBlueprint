@@ -239,7 +239,7 @@
                 },
                 {
                   "name":"ALLOWED_PATHS",
-                  "value":"/status,/,/ready,/swagger/*,/metadata"
+                  "value":"/status,/,/ready,/warmup,/swagger/*,/metadata"
                 },
                 {
                   "name":"SLOT",
