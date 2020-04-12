@@ -66,6 +66,10 @@
     "postgreSqladministratorLoginPassword": {
         "type": "securestring"
     },
+	"restoreCtti": {
+      "type": "string",
+      "defaultValue": ""
+    },
     "resourceTags": {
        "type": "object",
        "defaultValue": {
@@ -115,6 +119,7 @@
     "disqualificationDockerImageName":"DOCKER|ctmprod.azurecr.io/clinical-trials-disqualification:latest",
     "structuringImageFullName":"[concat(parameters('structuringImageName'),':', parameters('structuringImageTag'))]",
     // Gateway services
+    "ctti_user_name":"[concat(concat(parameters('postgreSqlAdministratorLogin'),'@'),concat(variables('postgresqlServerFullName'),'.postgres.database.azure.com'))]",
     "services": {
       "ta4h":"[concat('https://',variables('ayalonWebAppName'),'.azurewebsites.net')]",
       "qe":  "[concat('https://',variables('queryEngineWebAppName'),'.azurewebsites.net')]", 
@@ -924,7 +929,7 @@
                 },
                 {
                   "name": "ctti__user_name",
-                  "value": "[parameters('postgreSqlAdministratorLogin')]"
+                  "value": "[variables('ctti_user_name')]"
                 },
           			{
                   "name": "ctti__secret_name",
@@ -1068,8 +1073,8 @@
                 "value": "[concat(variables('postgresqlServerFullName'),'.postgres.database.azure.com')]"
             },
             {
-              "name":"ctti__user_name",
-              "value":"[parameters('postgreSqlAdministratorLogin')]"             
+              "name": "ctti__user_name",
+              "value": "[variables('ctti_user_name')]"         
             },
             {
               "name":"ctti__secret_name",
@@ -1094,6 +1099,26 @@
             {
               "name":"application_insight__instrumentation_key",
               "value":"[reference(variables('insightsName'), '2015-05-01').instrumentationKey]"
+            },
+            {
+              "name": "query__country",
+              "value": "[parameters('queryCountry')]"
+            },
+            {
+              "name": "query__phases",
+              "value": "[parameters('queryPhases')]"
+            },
+            {
+              "name": "query__recruitment",
+              "value": "[parameters('queryRecruitment')]"
+            },
+            {
+              "name": "query__sponsors",
+              "value": "[parameters('querySponsors')]"
+            },
+            {
+              "name": "query__conditions",
+              "value": "[parameters('queryConditions')]"
             }
           ]
         }
@@ -1262,8 +1287,8 @@
                 "value": "[concat(variables('postgresqlServerFullName'),'.postgres.database.azure.com')]"              
             },
             {
-              "name":"ctti__user_name",
-              "value":"[parameters('postgreSqlAdministratorLogin')]"             
+              "name": "ctti__user_name",
+              "value": "[variables('ctti_user_name')]"    
             },
             {
               "name":"ctti__secret_name",
@@ -1448,12 +1473,12 @@
               "value":"[concat('https://',variables('keyVaultName'),'.vault.azure.net/')]"
             },
             {
-                "name": "ctti__host",
-                "value": "[concat(variables('postgresqlServerFullName'),'.postgres.database.azure.com')]"              
+              "name": "ctti__host",
+              "value": "[concat(variables('postgresqlServerFullName'),'.postgres.database.azure.com')]"              
             },
             {
-              "name":"ctti__user_name",
-              "value":"[parameters('postgreSqlAdministratorLogin')]"             
+              "name": "ctti__user_name",
+              "value": "[variables('ctti_user_name')]"         
             },
             {
               "name":"ctti__secret_name",
