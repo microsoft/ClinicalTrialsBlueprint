@@ -78,6 +78,14 @@ Assign a name for the matching service
 $ctmServiceName = "<ctm matching service>"
 ```
 
+Create Logic Applications to manage automatic restructuring (preview)
+
+```Powershell
+$logicAppsOutput = New-AzResourceGroupDeployment -ResourceGroupName $rg.ResourceGroupName `
+                  -TemplateFile .\arm-templates\azuredeploy-logicapps.json `
+                  -serviceName $ctmServiceName
+```
+
 Assign the password of the Docker Container Registry
 
 ```Powershell
