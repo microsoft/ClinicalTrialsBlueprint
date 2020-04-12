@@ -879,7 +879,7 @@
               "command": [
                 "dotnet",
                 "ClinicalTrialsStructuring.dll",
-				        "restoreCttiDb"
+				        "[parameters('restoreCtti')]"
               ],
               "environmentVariables": [
                 {
