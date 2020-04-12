@@ -189,6 +189,10 @@
         "identity": {
             "type": "SystemAssigned"
         },
+        "dependsOn": [
+          "[resourceId('Microsoft.Web/serverfarms', variables('ctmServicePlan'))]",
+          "[concat('Microsoft.Insights/components/', variables('insightsName'))]"      
+        ],
         "properties": {
             "enabled": true,
             "hostNameSslStates": [
