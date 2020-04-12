@@ -81,7 +81,7 @@ $ctmServiceName = "<ctm matching service>"
 Assign the password of the Docker Container Registry
 
 ```Powershell
-$acrPassword = ConvertTo-SecureString  -AsPlainText <acr password>
+$acrPassword = ConvertTo-SecureString  -AsPlainText <acr password> -Force
 ```
 
 Create Primary Clinical Trials Matching service Azure resources
@@ -89,15 +89,16 @@ Create Primary Clinical Trials Matching service Azure resources
 ```Powershell
 $matchingOutput = New-AzResourceGroupDeployment -TemplateFile .\arm-templates\azuredeploy-ctm.json `
                 -ResourceGroupName $rg.ResourceGroupName -serviceName $ctmServiceName `
-                -fhirServerName $fhirServerName -acrPassword $acrPassword
+                -fhirServerName $fhirServerName -fhirSecondaryServerName $fhirSecondaryServerName `
+                -acrPassword $acrPassword
 ```
 
-Create Secondary Clinical Trials Matching service that will be used as the primary service is being serviced
+Create Secondary Clinical Trials Matching service that will be used as the primary service is being serviced. You need only to pass isSecondary parameter as true
 
 ```Powershell
 $matchingSecondaryOutput = New-AzResourceGroupDeployment -TemplateFile .\arm-templates\azuredeploy-ctm.json `
                 -ResourceGroupName $rg.ResourceGroupName -serviceName $ctmServiceName `
-                -fhirServerName $fhirSecondaryServerName -acrPassword $acrPassword -isSecondary $true
+                -acrPassword $acrPassword -isSecondary $true
 ```
 
 Check that the TextAnalytics for Healthcare service is running and ready

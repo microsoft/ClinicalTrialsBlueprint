@@ -10,7 +10,12 @@
       "defaultValue": "prod_us"
     },
     "fhirServerName": {
-      "type": "string"
+      "type": "string",
+      "defaultValue":""
+    },
+    "fhirSecondaryServerName": {
+      "type": "string",
+      "defaultValue":""
     },
     "acrServer": {
       "type": "string",
@@ -127,7 +132,7 @@
       "qe":  "[concat('https://',variables('queryEngineWebAppBaseName'),'-s.azurewebsites.net')]", 
       "disq":"[concat('https://',variables('disqualificationWebAppBaseName'),'-s.azurewebsites.net')]", 
       "dcs": "[concat('https://',variables('dynamicCriteriaSelectionWebAppBaseName'),'-s.azurewebsites.net')]",      
-      "fhir": "[concat('https://',parameters('fhirServerName'),'-s.azurewebsites.net/')]"      
+      "fhir": "[concat('https://',parameters('fhirSecondaryServerName'),'.azurewebsites.net/')]"      
     }
   },
   "resources": [
@@ -239,7 +244,7 @@
                 },
                 {
                   "name":"ALLOWED_PATHS",
-                  "value":"/status,/,/ready,/swagger/*,/metadata"
+                  "value":"/status,/,/ready,/warmup,/swagger/*,/metadata"
                 },
                 {
                   "name":"SLOT",
@@ -907,7 +912,8 @@
                 },
                 {
                   "name": "fhir__address",
-                  "value": "[concat('https://',variables('gatewayWebAppName'),'.azurewebsites.net/fhir/')]"
+                  "value": "[if(parameters('isSecondary'), concat('https://',concat(variables('gatewayWebAppName'),'-secondary'),'.azurewebsites.net/fhir/'),
+                                concat('https://',concat(variables('gatewayWebAppName')),'.azurewebsites.net/fhir/'))]"
                 },
                 {
                   "name": "ayalon__address",
