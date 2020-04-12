@@ -1,6 +1,6 @@
 
 
-function Add-HbsRestrictIPs {
+function Add-CTMRestrictIPs {
     param (
         [Parameter(Mandatory=$true)]
         $resourceGroupName,
@@ -9,11 +9,13 @@ function Add-HbsRestrictIPs {
         [Parameter(Mandatory=$true)]
         $fhirResoureGroupName,
         [Parameter(Mandatory=$true)]
-        $fhirServiceName
+        $fhirServiceName,
+        [Parameter(Mandatory=$true)]
+        $fhirSecondaryServiceName
     )
     
     $gatewayWebApp = "$serviceName-gateway-webapp"
-    Write-Host "Getting outbound IPs of Gateway..." -NoNewline
+    Write-Host "Getting outbound IPs of Primary Gateway..." -NoNewline
     $ips = (Get-AzWebApp -ResourceGroup $resourceGroupName -name $gatewayWebApp).OutboundIpAddresses.Split(',')
     Write-Host "Done" -ForegroundColor Green    
     foreach  ($ip in $ips) {
@@ -22,6 +24,16 @@ function Add-HbsRestrictIPs {
         Add-RestrictRule -resourceGroupName $resourceGroupName -appName "$serviceName-ctm-disq-webapp" -ip $ip
         Add-RestrictRule -resourceGroupName $resourceGroupName -appName "$serviceName-ayalon-webapp" -ip $ip
         Add-RestrictRule -resourceGroupName $fhirResoureGroupName -appName $fhirServiceName -ip $ip
+    }
+
+    Write-Host "Getting outbound IPs of Secondary Gateway..." -NoNewline
+    $ips = (Get-AzWebAppSlot -ResourceGroup $resourceGroupName -name $gatewayWebApp -Slot secondary).OutboundIpAddresses.Split(',')
+    Write-Host "Done" -ForegroundColor Green    
+    foreach  ($ip in $ips) {
+        Add-RestrictRule -resourceGroupName $resourceGroupName -appName "$serviceName-ctm-qe-webapp-s" -ip $ip
+        Add-RestrictRule -resourceGroupName $resourceGroupName -appName "$serviceName-ctm-dcs-webapp-s" -ip $ip
+        Add-RestrictRule -resourceGroupName $resourceGroupName -appName "$serviceName-ctm-disq-webapp-s" -ip $ip
+        Add-RestrictRule -resourceGroupName $fhirResoureGroupName -appName $fhirSecondaryServiceName -ip $ip
     }
 }
 

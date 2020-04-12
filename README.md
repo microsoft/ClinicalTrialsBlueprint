@@ -140,8 +140,9 @@ $dynamicCriteriaSelectionUrlResponse.RawContent
 ```
 
 ```PowerShell
-Add-HbsRestrictIPs -resourceGroupName $rg.ResourceGroupName -serviceName $ctmServiceName `
-                   -fhirResoureGroupName ctm-fhir-blueprint -fhirServiceName $fhirServerName
+Add-CTMRestrictIPs -resourceGroupName $rg.ResourceGroupName -serviceName $ctmServiceName `
+                   -fhirResoureGroupName ctm-fhir-blueprint -fhirServiceName $fhirServerName `
+                   -fhirSecondaryServiceName $fhirSecondaryServerName
 ```
 
 ### Setup the Healthcare Bot Service
