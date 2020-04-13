@@ -30,7 +30,7 @@
     },
     "structuringImageName": {
       "type": "string",
-      "defaultValue": "ctmprod.azurecr.io/clinical-trials-structuring"
+      "defaultValue": "clinical-trials-structuring"
     },
     "structuringImageTag": {
       "type": "string",
@@ -56,31 +56,27 @@
       "type": "string",
       "defaultValue": ""
     },
-    "constituencyParserImageName": {
-      "type": "string",
-      "defaultValue": "ctmprod.azurecr.io/constituency-parser-server"
-    },
     "postgreSqlAdministratorLogin": {
         "type": "string"
     },
     "postgreSqladministratorLoginPassword": {
         "type": "securestring"
     },
-	"restoreCtti": {
+	  "restoreCtti": {
       "type": "string",
       "defaultValue": ""
     },
     "resourceTags": {
-       "type": "object",
-       "defaultValue": {
-           "Environment": "Prod",
-           "Project": "CTM"
-       }
-   },
-   "isSecondary": {
-     "type":"bool",
-     "defaultValue": false
-   }
+      "type": "object",
+      "defaultValue": {
+        "Environment": "Prod",
+        "Project": "CTM"
+      }
+    },
+    "isSecondary": {
+      "type":"bool",
+      "defaultValue": false
+    }
   },
   "variables": {    
     // Duplicated resources
@@ -112,12 +108,13 @@
     "disqualificationResourceId": "[resourceId('Microsoft.Web/sites',variables('disqualificationWebAppName'))]",
     "structuringResourceId":"[resourceId('Microsoft.ContainerInstance/containerGroups',variables('structuringName'))]",
     // Docker Image Names
-    "gatewayDockerImageName":"DOCKER|ctmprod.azurecr.io/clinical-trials-gateway:latest",
-    "ayalonDockerImageName":"DOCKER|ctmprod.azurecr.io/cognitive-services-healthcare:latest",
-    "queryEngineDockerImageName":"DOCKER|ctmprod.azurecr.io/query-engine:latest",
-    "dynamicCriteriaSelectionDockerImageName":"DOCKER|ctmprod.azurecr.io/dynamic-criterion-selection:latest",
-    "disqualificationDockerImageName":"DOCKER|ctmprod.azurecr.io/clinical-trials-disqualification:latest",
-    "structuringImageFullName":"[concat(parameters('structuringImageName'),':', parameters('structuringImageTag'))]",
+    "gatewayDockerImageName": "[concat('DOCKER|',parameters('acrServer'),'/clinical-trials-gateway:latest')]",
+    "ayalonDockerImageName": "[concat('DOCKER|',parameters('acrServer'),'/cognitive-services-healthcare:latest')]",
+    "queryEngineDockerImageName": "[concat('DOCKER|',parameters('acrServer'),'/query-engine:latest')]",
+    "dynamicCriteriaSelectionDockerImageName": "[concat('DOCKER|',parameters('acrServer'),'/dynamic-criterion-selection:latest')]",
+    "disqualificationDockerImageName": "[concat('DOCKER|',parameters('acrServer'),'/clinical-trials-disqualification:latest')]",
+    "structuringImageFullName": "[concat(parameters('acrServer'),'/',parameters('structuringImageName'),':', parameters('structuringImageTag'))]",
+    "constituencyParserImageName": "[concat(parameters('acrServer'),'/constituency-parser-server:latest')]",
     // Gateway services
     "ctti_user_name":"[concat(concat(parameters('postgreSqlAdministratorLogin'),'@'),concat(variables('postgresqlServerFullName'),'.postgres.database.azure.com'))]",
     "services": {
@@ -133,7 +130,8 @@
       "disq":"[concat('https://',variables('disqualificationWebAppBaseName'),'-s.azurewebsites.net')]", 
       "dcs": "[concat('https://',variables('dynamicCriteriaSelectionWebAppBaseName'),'-s.azurewebsites.net')]",      
       "fhir": "[concat('https://',parameters('fhirSecondaryServerName'),'.azurewebsites.net/')]"      
-    }
+    },
+    "allowedPaths": "/status,/,/ready,/swagger/*,/metadata"
   },
   "resources": [
     {
@@ -248,7 +246,7 @@
                 },
                 {
                   "name":"ALLOWED_PATHS",
-                  "value":"/status,/,/ready,/warmup,/swagger/*,/metadata"
+                  "value": "[variables('allowedPaths')]"
                 },
                 {
                   "name":"SLOT",
@@ -413,7 +411,7 @@
                 },
                 {
                   "name":"ALLOWED_PATHS",
-                  "value":"/status,/,/ready,/swagger/*,/metadata"
+                  "value": "[variables('allowedPaths')]"
                 },
                 {
                   "name":"SLOT",
@@ -955,7 +953,7 @@
           {
             "name": "constituency-parser",
             "properties": {
-              "image": "[parameters('constituencyParserImageName')]",
+              "image": "[variables('constituencyParserImageName')]",
               "resources": {
                 "requests": {
                   "cpu": 2,
