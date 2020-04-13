@@ -2,25 +2,133 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+        "accountId":{
+            "type":"string"
+        },
         "serviceName": {
+            "type": "String"
+        },
+        "isLiveId": {
+            "type": "bool",
+            "defaultValue": false
+        },
+        "connections_arm_externalid": {
+            "defaultValue": "[concat(subscription().id,'/resourceGroups/',resourceGroup().name,'/providers/Microsoft.Web/connections/arm')]",
+            "type": "String"
+        },
+        "connections_office365_externalid": {
+            "defaultValue": "[concat(subscription().id,'/resourceGroups/',resourceGroup().name,'/providers/Microsoft.Web/connections/office365')]",
             "type": "String"
         }
     },
     "variables": {
-        "finisherLogicAppName":"[concat(parameters('serviceName'),'-finisher-logic-app')]"
+        "structuringName": "[concat(parameters('serviceName'),'-ctm-struct-aci')]",
+        "gatewayWebAppName": "[concat(parameters('serviceName'),'-gateway-webapp')]",
+        "disqualificationWebAppName":"[concat(parameters('serviceName'),'-ctm-disq-webapp')]",
+        "finisherLogicAppName":"[concat(parameters('serviceName'),'-finisher-logic-app')]",
+        "sechedulerLogicApp":"[concat(parameters('serviceName'),'-secheduler-logic-app')]",
+        "structurerLogicAppName":"[concat(parameters('serviceName'),'-structurer-logic-app')]",
+        // Reference to workflow
+        "workflows_structurer_logic_app":"[concat(subscription().id,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Logic/workflows/', variables('structurerLogicAppName'))]",
+        "userName":"[if(parameters('isLiveId'), concat('live.com#', parameters('accountId')), parameters('accountId'))]"
+
     },
     "resources": [
         {
+            "type": "Microsoft.Web/connections",
+            "apiVersion": "2016-06-01",
+            "name": "arm",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "displayName": "[variables('userName')]",
+                "customParameterValues": {},
+                "api": {
+                    "id": "[concat(subscription().id,'/providers/Microsoft.Web/locations/',resourceGroup().location,'/managedApis/arm')]"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Web/connections",
+            "apiVersion": "2016-06-01",
+            "name": "office365",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "displayName": "[variables('userName')]",
+                "customParameterValues": {},
+                "api": {
+                    "id": "[concat(subscription().id,'/providers/Microsoft.Web/locations/',resourceGroup().location,'/managedApis/office365')]"
+                }
+            }
+        },
+        {
             "type": "Microsoft.Logic/workflows",
             "apiVersion": "2017-07-01",
-            "name": "[variables('finisherLogicAppName')]",
+            "name": "[variables('sechedulerLogicApp')]",
             "location": "[resourceGroup().location]",
+            "dependsOn":[
+                "[resourceId('Microsoft.Logic/workflows', variables('structurerLogicAppName'))]"
+            ],
             "properties": {
                 "state": "Enabled",
                 "definition": {
                     "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
                     "contentVersion": "1.0.0.0",
                     "parameters": {},
+                    "triggers": {
+                        "Recurrence": {
+                            "recurrence": {
+                                "frequency": "Day",
+                                "interval": 1,
+                                "schedule": {
+                                    "hours": [
+                                        "12"
+                                    ]
+                                }
+                            },
+                            "type": "Recurrence"
+                        }
+                    },
+                    "actions": {
+                        "[variables('structurerLogicAppName')]": {
+                            "runAfter": {},
+                            "type": "Workflow",
+                            "inputs": {
+                                "headers": {
+                                    "content-type": "application/json"
+                                },
+                                "host": {
+                                    "triggerName": "manual",
+                                    "workflow": {
+                                        "id": "[variables('workflows_structurer_logic_app')]"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "outputs": {}
+                },
+                "parameters": {}
+            }
+        },        
+        {
+            "type": "Microsoft.Logic/workflows",
+            "apiVersion": "2017-07-01",
+            "name": "[variables('structurerLogicAppName')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn":[
+                "[resourceId('Microsoft.Web/connections','arm')]"
+            ],
+            "properties": {
+                "state": "Enabled",
+                "definition": {
+                    "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+                    "contentVersion": "1.0.0.0",
+                    "parameters": {
+                        "$connections": {
+                            "defaultValue": {},
+                            "type": "Object"
+                        }
+                    },
                     "triggers": {
                         "manual": {
                             "type": "Request",
@@ -30,12 +138,437 @@
                             }
                         }
                     },
-                    "actions": {},
+                    "actions": {
+                        "Get_Staging_slot": {
+                            "runAfter": {
+                                "Initialize_structuring_aci_service_variable": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "Http",
+                            "inputs": {
+                                "method": "GET",
+                                "uri": "[concat('https://',variables('gatewayWebAppName'),'.azurewebsites.net/slot')]"
+                            }
+                        },
+                        "Initialize_Structuring_Secondary_Service_variable": {
+                            "runAfter": {
+                                "Initialize_aciPostfix": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "InitializeVariable",
+                            "inputs": {
+                                "variables": [
+                                    {
+                                        "name": "structuringAciSecondaryService",
+                                        "type": "string",
+                                        "value": "@{concat(variables('structuringAciService'),variables('aciPostfix'))}"
+                                    }
+                                ]
+                            }
+                        },
+                        "Initialize_aciPostfix": {
+                            "runAfter": {
+                                "Parse_Slot_Response": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "InitializeVariable",
+                            "inputs": {
+                                "variables": [
+                                    {
+                                        "name": "aciPostfix",
+                                        "type": "string",
+                                        "value": "@{if(equals(body('Parse_Slot_Response')?['slot'], 'primary'), '-s', '')}"
+                                    }
+                                ]
+                            }
+                        },
+                        "Initialize_structuring_aci_service_variable": {
+                            "runAfter": {},
+                            "type": "InitializeVariable",
+                            "inputs": {
+                                "variables": [
+                                    {
+                                        "name": "structuringAciService",
+                                        "type": "string",
+                                        "value": "[variables('structuringName')]"
+                                    }
+                                ]
+                            }
+                        },
+                        "Parse_Slot_Response": {
+                            "runAfter": {
+                                "Get_Staging_slot": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "ParseJson",
+                            "inputs": {
+                                "content": "@body('Get_Staging_slot')",
+                                "schema": {
+                                    "properties": {
+                                        "slot": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        },
+                        "Restart_structuring_service": {
+                            "runAfter": {
+                                "Initialize_Structuring_Secondary_Service_variable": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "ApiConnection",
+                            "inputs": {
+                                "host": {
+                                    "connection": {
+                                        "name": "@parameters('$connections')['arm']['connectionId']"
+                                    }
+                                },
+                                "method": "post",
+                                "path": "[concat('/subscriptions/@{encodeURIComponent(''',subscription().subscriptionId,''')}/resourcegroups/@{encodeURIComponent(''',resourceGroup().name,''')}/providers/@{encodeURIComponent(''Microsoft.ContainerInstance'')}/@{encodeURIComponent(concat(''containerGroups/'', variables(''structuringAciSecondaryService'')))}/@{encodeURIComponent(''restart'')}')]",
+                                "queries": {
+                                    "x-ms-api-version": "2018-10-01"
+                                }
+                            }
+                        }
+                    },
                     "outputs": {}
                 },
-                "parameters": {}
+                "parameters": {
+                    "$connections": {
+                        "value": {
+                            "arm": {
+                                "connectionId": "[parameters('connections_arm_externalid')]",
+                                "connectionName": "arm",
+                                "id": "[concat(subscription().id,'/providers/Microsoft.Web/locations/', resourceGroup().location,'/managedApis/arm')]"
+                            }
+                        }
+                    }
+                }
             }
-        }
+        },
+        {
+            "type": "Microsoft.Logic/workflows",
+            "apiVersion": "2017-07-01",
+            "name": "[variables('finisherLogicAppName')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn":[
+                "[resourceId('Microsoft.Web/connections','arm')]",
+                "[resourceId('Microsoft.Web/connections','office365')]"
+            ],
+            "properties": {
+                "state": "Enabled",
+                "definition": {
+                    "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+                    "contentVersion": "1.0.0.0",
+                    "parameters": {
+                        "$connections": {
+                            "defaultValue": {},
+                            "type": "Object"
+                        }
+                    },
+                    "triggers": {
+                        "manual": {
+                            "type": "Request",
+                            "kind": "Http",
+                            "inputs": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "actions": {
+                        "Get_Staging_slot": {
+                            "runAfter": {
+                                "Initialize_disqualifier_service_variable": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "Http",
+                            "inputs": {
+                                "method": "GET",
+                                "uri": "[concat('https://', variables('gatewayWebAppName'),'.azurewebsites.net/slot')]"
+                            }
+                        },
+                        "Initialize_Disqualifier_Secondary_Service_variable": {
+                            "runAfter": {
+                                "Initialize_disqPostfix": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "InitializeVariable",
+                            "inputs": {
+                                "variables": [
+                                    {
+                                        "name": "disqualifierSecondaryService",
+                                        "type": "string",
+                                        "value": "@{concat(variables('disqualifierService'), variables('disqPostfix'))}"
+                                    }
+                                ]
+                            }
+                        },
+                        "Initialize_disqPostfix": {
+                            "runAfter": {
+                                "Parse_Slot_Response": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "InitializeVariable",
+                            "inputs": {
+                                "variables": [
+                                    {
+                                        "name": "disqPostfix",
+                                        "type": "string",
+                                        "value": "@{if(equals(body('Parse_Slot_Response')?['slot'], 'primary'), '-s', '')}"
+                                    }
+                                ]
+                            }
+                        },
+                        "Initialize_disqualifier_service_variable": {
+                            "runAfter": {},
+                            "type": "InitializeVariable",
+                            "inputs": {
+                                "variables": [
+                                    {
+                                        "name": "disqualifierService",
+                                        "type": "string",
+                                        "value": "[variables('disqualificationWebAppName')]"
+                                    }
+                                ]
+                            }
+                        },
+                        "Initialize_readiness_variable": {
+                            "runAfter": {
+                                "Restart_disqualifier_service": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "InitializeVariable",
+                            "inputs": {
+                                "variables": [
+                                    {
+                                        "name": "readiness",
+                                        "type": "string",
+                                        "value": "''"
+                                    }
+                                ]
+                            }
+                        },
+                        "Initialize_slotSwapBody_variable": {
+                            "runAfter": {
+                                "Until_disqualifier_is_ready": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "InitializeVariable",
+                            "inputs": {
+                                "variables": [
+                                    {
+                                        "name": "slotSwapBody",
+                                        "type": "object",
+                                        "value": {
+                                            "preserveVnet": true,
+                                            "targetSlot": "secondary"
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        "Is_Service_Ready": {
+                            "actions": {
+                                "Send_a_success_email": {
+                                    "runAfter": {
+                                        "Swap_gateway_slot": [
+                                            "Succeeded"
+                                        ]
+                                    },
+                                    "type": "ApiConnection",
+                                    "inputs": {
+                                        "body": {
+                                            "Body": "<p><br></p>",
+                                            "Subject": "Structuring Update process finished successfully",
+                                            "To": "[parameters('accountId')]"
+                                        },
+                                        "host": {
+                                            "connection": {
+                                                "name": "@parameters('$connections')['office365']['connectionId']"
+                                            }
+                                        },
+                                        "method": "post",
+                                        "path": "/v2/Mail"
+                                    }
+                                },
+                                "Swap_gateway_slot": {
+                                    "runAfter": {},
+                                    "type": "ApiConnection",
+                                    "inputs": {
+                                        "body": "@variables('slotSwapBody')",
+                                        "host": {
+                                            "connection": {
+                                                "name": "@parameters('$connections')['arm']['connectionId']"
+                                            }
+                                        },
+                                        "method": "post",
+                                        "path": "[concat('/subscriptions/@{encodeURIComponent(''',subscription().subscriptionId,''')}/resourcegroups/@{encodeURIComponent(''',resourceGroup().name,''')}/providers/@{encodeURIComponent(''Microsoft.Web'')}/@{encodeURIComponent(''sites/',variables('gatewayWebAppName'),''')}/@{encodeURIComponent(''slotsswap'')}')]",
+                                        "queries": {
+                                            "x-ms-api-version": "2019-08-01"
+                                        }
+                                    }
+                                }
+                            },
+                            "runAfter": {
+                                "Initialize_slotSwapBody_variable": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "else": {
+                                "actions": {
+                                    "Send_a_email_of_failure": {
+                                        "runAfter": {},
+                                        "type": "ApiConnection",
+                                        "inputs": {
+                                            "body": {
+                                                "Body": "<p><br></p>",
+                                                "Subject": "Structuring Update process failed to complete",
+                                                "To": "[parameters('accountId')]"
+                                            },
+                                            "host": {
+                                                "connection": {
+                                                    "name": "@parameters('$connections')['office365']['connectionId']"
+                                                }
+                                            },
+                                            "method": "post",
+                                            "path": "/v2/Mail"
+                                        }
+                                    }
+                                }
+                            },
+                            "expression": {
+                                "and": [
+                                    {
+                                        "startsWith": [
+                                            "@variables('readiness')",
+                                            "Ready"
+                                        ]
+                                    }
+                                ]
+                            },
+                            "type": "If"
+                        },
+                        "Parse_Slot_Response": {
+                            "runAfter": {
+                                "Get_Staging_slot": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "ParseJson",
+                            "inputs": {
+                                "content": "@body('Get_Staging_slot')",
+                                "schema": {
+                                    "properties": {
+                                        "slot": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        },
+                        "Restart_disqualifier_service": {
+                            "runAfter": {
+                                "Initialize_Disqualifier_Secondary_Service_variable": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "ApiConnection",
+                            "inputs": {
+                                "host": {
+                                    "connection": {
+                                        "name": "@parameters('$connections')['arm']['connectionId']"
+                                    }
+                                },
+                                "method": "post",
+                                "path": "[concat('/subscriptions/@{encodeURIComponent(''',subscription().subscriptionId,''')}/resourcegroups/@{encodeURIComponent(''',resourceGroup().name,''')}/providers/@{encodeURIComponent(''Microsoft.Web'')}/@{encodeURIComponent(concat(''sites/'', variables(''disqualifierSecondaryService'')))}/@{encodeURIComponent(''restart'')}')]",
+                                "queries": {
+                                    "x-ms-api-version": "2019-08-01"
+                                }
+                            }
+                        },
+                        "Until_disqualifier_is_ready": {
+                            "actions": {
+                                "Delay_readiness_polling": {
+                                    "runAfter": {
+                                        "Set_readiness_variable": [
+                                            "Succeeded"
+                                        ]
+                                    },
+                                    "type": "Wait",
+                                    "inputs": {
+                                        "interval": {
+                                            "count": 5,
+                                            "unit": "Second"
+                                        }
+                                    }
+                                },
+                                "Get_disqualifier_readiness": {
+                                    "runAfter": {},
+                                    "type": "Http",
+                                    "inputs": {
+                                        "method": "GET",
+                                        "uri": "@{concat('https://', variables('disqualifierSecondaryService'), '.azurewebsites.net/ready')}"
+                                    }
+                                },
+                                "Set_readiness_variable": {
+                                    "runAfter": {
+                                        "Get_disqualifier_readiness": [
+                                            "Succeeded"
+                                        ]
+                                    },
+                                    "type": "SetVariable",
+                                    "inputs": {
+                                        "name": "readiness",
+                                        "value": "@{body('Get_disqualifier_readiness')}"
+                                    }
+                                }
+                            },
+                            "runAfter": {
+                                "Initialize_readiness_variable": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "expression": "@startsWith(variables('readiness'), 'Ready')",
+                            "limit": {
+                                "count": 60,
+                                "timeout": "PT1H"
+                            },
+                            "type": "Until"
+                        }
+                    },
+                    "outputs": {}
+                },
+                "parameters": {
+                    "$connections": {
+                        "value": {
+                            "arm": {
+                                "connectionId": "[parameters('connections_arm_externalid')]",
+                                "connectionName": "arm",
+                                "id": "[concat(subscription().id,'/providers/Microsoft.Web/locations/', resourceGroup().location,'/managedApis/arm')]"
+                            },
+                            "office365": {
+                                "connectionId": "[parameters('connections_office365_externalid')]",
+                                "connectionName": "office365",
+                                "id": "[concat(subscription().id,'/providers/Microsoft.Web/locations/', resourceGroup().location,'/managedApis/office365')]"
+                            }
+                        }
+                    }
+                }
+            }
+        }        
     ],
     "outputs":{
         "finisherCallbackUrl":{
