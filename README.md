@@ -98,7 +98,7 @@ Create Primary Clinical Trials Matching service Azure resources
 $matchingOutput = New-AzResourceGroupDeployment -TemplateFile .\arm-templates\azuredeploy-ctm.json `
                 -ResourceGroupName $rg.ResourceGroupName -serviceName $ctmServiceName `
                 -fhirServerName $fhirServerName -fhirSecondaryServerName $fhirSecondaryServerName `
-                -acrPassword $acrPassword
+                -acrPassword $acrPassword -finishedNotifyAddress $logicAppsOutput.Outputs.finisherCallbackUrl.Value
 ```
 
 Create Secondary Clinical Trials Matching service that will be used as the primary service is being serviced. You need only to pass isSecondary parameter as true
@@ -106,7 +106,8 @@ Create Secondary Clinical Trials Matching service that will be used as the prima
 ```Powershell
 $matchingSecondaryOutput = New-AzResourceGroupDeployment -TemplateFile .\arm-templates\azuredeploy-ctm.json `
                 -ResourceGroupName $rg.ResourceGroupName -serviceName $ctmServiceName `
-                -acrPassword $acrPassword -isSecondary $true
+                -acrPassword $acrPassword -finishedNotifyAddress $logicAppsOutput.Outputs.finisherCallbackUrl.Value `
+                -isSecondary $true
 ```
 
 Check that the TextAnalytics for Healthcare service is running and ready

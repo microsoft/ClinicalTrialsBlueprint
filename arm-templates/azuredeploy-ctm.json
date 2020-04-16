@@ -73,6 +73,10 @@
         "Project": "CTM"
       }
     },
+    "finishedNotifyAddress": {
+      "type":"string",
+      "default":""
+    },
     "isSecondary": {
       "type":"bool",
       "defaultValue": false
@@ -940,6 +944,10 @@
                 {
                   "name":"redis__address",
                   "value":"[concat(variables('redisCacheName'),'.redis.cache.windows.net')]"
+                },
+                {
+                  "name":"structuring__finished_notifier_address",
+                  "value":"[parameters('finishedNotifyAddress')]"
                 }
               ],
               "resources": {
