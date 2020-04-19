@@ -75,7 +75,7 @@
     },
     "finishedNotifyAddress": {
       "type":"string",
-      "default":""
+      "defaultValue": ""
     },
     "isSecondary": {
       "type":"bool",
@@ -89,8 +89,6 @@
     "redisCacheName": "[concat(parameters('serviceName'),'-ctm-redis',variables('suffix'))]",    
     "queryEngineWebAppBaseName":"[concat(parameters('serviceName'),'-ctm-qe-webapp')]",
     "queryEngineWebAppName": "[concat(variables('queryEngineWebAppBaseName'),variables('suffix'))]",
-    "dynamicCriteriaSelectionWebAppBaseName":"[concat(parameters('serviceName'),'-ctm-dcs-webapp')]",
-    "dynamicCriteriaSelectionWebAppName": "[concat(variables('dynamicCriteriaSelectionWebAppBaseName'),variables('suffix'))]",
     "disqualificationWebAppBaseName":"[concat(parameters('serviceName'),'-ctm-disq-webapp')]",
     "disqualificationWebAppName": "[concat(variables('disqualificationWebAppBaseName'),variables('suffix'))]",
     "postgresqlServerFullName":"[concat(parameters('serviceName'),'-ctm-postgresql',variables('suffix'))]",
@@ -107,7 +105,6 @@
     // Resource Ids
     "gatewayResourceId": "[resourceId('Microsoft.Web/sites',variables('gatewayWebAppName'))]",
     "queryEngineResourceId": "[resourceId('Microsoft.Web/sites',variables('queryEngineWebAppName'))]",
-    "dynamicCriteriaSelectionResourceId": "[resourceId('Microsoft.Web/sites',variables('dynamicCriteriaSelectionWebAppName'))]",
     "gatewaySecondaryResourceId":"[resourceId('Microsoft.Web/sites/slots',variables('gatewayWebAppName'),'secondary')]",
     "disqualificationResourceId": "[resourceId('Microsoft.Web/sites',variables('disqualificationWebAppName'))]",
     "structuringResourceId":"[resourceId('Microsoft.ContainerInstance/containerGroups',variables('structuringName'))]",
@@ -115,7 +112,6 @@
     "gatewayDockerImageName": "[concat('DOCKER|',parameters('acrServer'),'/clinical-trials-gateway:latest')]",
     "ayalonDockerImageName": "[concat('DOCKER|',parameters('acrServer'),'/cognitive-services-healthcare:latest')]",
     "queryEngineDockerImageName": "[concat('DOCKER|',parameters('acrServer'),'/query-engine:latest')]",
-    "dynamicCriteriaSelectionDockerImageName": "[concat('DOCKER|',parameters('acrServer'),'/dynamic-criterion-selection:latest')]",
     "disqualificationDockerImageName": "[concat('DOCKER|',parameters('acrServer'),'/clinical-trials-disqualification:latest')]",
     "structuringImageFullName": "[concat(parameters('acrServer'),'/',parameters('structuringImageName'),':', parameters('structuringImageTag'))]",
     "constituencyParserImageName": "[concat(parameters('acrServer'),'/constituency-parser-server:latest')]",
@@ -125,14 +121,12 @@
       "ta4h":"[concat('https://',variables('ayalonWebAppName'),'.azurewebsites.net')]",
       "qe":  "[concat('https://',variables('queryEngineWebAppName'),'.azurewebsites.net')]", 
       "disq":"[concat('https://',variables('disqualificationWebAppName'),'.azurewebsites.net')]", 
-      "dcs": "[concat('https://',variables('dynamicCriteriaSelectionWebAppName'),'.azurewebsites.net')]",      
       "fhir": "[concat('https://',parameters('fhirServerName'),'.azurewebsites.net/')]"      
     },
     "servicesSecondary": {
       "ta4h":"[concat('https://',variables('ayalonWebAppName'),'.azurewebsites.net')]",
       "qe":  "[concat('https://',variables('queryEngineWebAppBaseName'),'-s.azurewebsites.net')]", 
       "disq":"[concat('https://',variables('disqualificationWebAppBaseName'),'-s.azurewebsites.net')]", 
-      "dcs": "[concat('https://',variables('dynamicCriteriaSelectionWebAppBaseName'),'-s.azurewebsites.net')]",      
       "fhir": "[concat('https://',parameters('fhirSecondaryServerName'),'.azurewebsites.net/')]"      
     },
     "allowedPaths": "/status,/,/ready,/swagger/*,/metadata"
@@ -715,7 +709,6 @@
         "[variables('gatewayResourceId')]",
         "[variables('gatewaySecondaryResourceId')]",
         "[variables('queryEngineResourceId')]",
-        "[variables('dynamicCriteriaSelectionResourceId')]",
         "[variables('disqualificationResourceId')]",
         "[variables('structuringResourceId')]"
       ],
@@ -748,16 +741,6 @@
           {
               "tenantId": "[reference(variables('queryEngineResourceId'), '2015-08-01', 'Full').Identity.tenantId]",
               "objectId": "[reference(variables('queryEngineResourceId'), '2015-08-01', 'Full').Identity.principalId]",
-              "permissions": {
-                  "secrets": [
-                      "get",
-                      "list"
-                  ]
-              }
-          },
-          {
-              "tenantId": "[reference(variables('dynamicCriteriaSelectionResourceId'), '2015-08-01', 'Full').Identity.tenantId]",
-              "objectId": "[reference(variables('dynamicCriteriaSelectionResourceId'), '2015-08-01', 'Full').Identity.principalId]",
               "permissions": {
                   "secrets": [
                       "get",
@@ -1223,196 +1206,6 @@
       "type": "Microsoft.Web/sites",
       "apiVersion": "2018-11-01",
       "tags": "[parameters('resourceTags')]",
-      "name": "[variables('dynamicCriteriaSelectionWebAppName')]",
-      "location": "[resourceGroup().location]",
-      "kind": "app,linux,container",
-      "dependsOn": [
-        "[resourceId('Microsoft.Web/serverfarms', variables('ctmServicePlan'))]"
-      ],
-      "identity": {
-        "type": "SystemAssigned"
-      },
-      "properties": {
-        "enabled": true,
-        "hostNameSslStates": [
-          {
-            "name": "[concat(variables('dynamicCriteriaSelectionWebAppName'), '.azurewebsites.net')]",
-            "sslState": "Disabled",
-            "hostType": "Standard"
-          },
-          {
-            "name": "[concat(variables('dynamicCriteriaSelectionWebAppName'), '.scm.azurewebsites.net')]",
-            "sslState": "Disabled",
-            "hostType": "Repository"
-          }
-        ],
-        "serverFarmId": "[variables('ctmServicePlan')]",
-        "reserved": true,
-        "isXenon": false,
-        "hyperV": false,
-        "scmSiteAlsoStopped": false,
-        "clientAffinityEnabled": false,
-        "clientCertEnabled": false,
-        "hostNamesDisabled": false,
-        "containerSize": 0,
-        "dailyMemoryTimeQuota": 0,
-        "httpsOnly": false,
-        "redundancyMode": "None",
-        "siteConfig": {
-          "appSettings": [
-            {
-              "name": "DOCKER_REGISTRY_SERVER_URL",
-              "value": "[parameters('acrServer')]"
-            },
-            {
-              "name": "DOCKER_REGISTRY_SERVER_USERNAME",
-              "value": "[parameters('acrUsername')]"
-            },
-            {
-              "name": "DOCKER_REGISTRY_SERVER_PASSWORD",
-              "value": "[parameters('acrPassword')]"
-            },
-            {
-              "name": "ASPNETCORE_ENVIRONMENT",
-              "value": "[parameters('env')]"
-            },
-            {
-              "name": "DOCKER_ENABLE_CI",
-              "value": "true"
-            },
-            {
-              "name": "WEBSITES_ENABLE_APP_SERVICE_STORAGE",
-              "value": "false"
-            },
-            {
-              "name":"key_vault__address",
-              "value":"[concat('https://',variables('keyVaultName'),'.vault.azure.net/')]"
-            },
-            {
-                "name": "ctti__host",
-                "value": "[concat(variables('postgresqlServerFullName'),'.postgres.database.azure.com')]"              
-            },
-            {
-              "name": "ctti__user_name",
-              "value": "[variables('ctti_user_name')]"    
-            },
-            {
-              "name":"ctti__secret_name",
-              "value":"ctti-client-secret"             
-            },
-            {
-              "name":"redis__address",
-              "value":"[concat(variables('redisCacheName'),'.redis.cache.windows.net')]"
-            },
-            {
-              "name":"redis__secret_name",
-              "value":"redis-client-secret"
-            },
-            {
-              "name":"ayalon__address",
-              "value":"[concat('https://',variables('ayalonWebAppName'),'.azurewebsites.net/') ]"
-            },
-            {
-              "name":"application_insight__instrumentation_key",
-              "value":"[reference(variables('insightsName'), '2015-05-01').instrumentationKey]"
-            }
-          ]
-        }
-      }
-    },
-    {
-      "type": "Microsoft.Web/sites/config",
-      "apiVersion": "2018-11-01",
-      "name": "[concat(variables('dynamicCriteriaSelectionWebAppName'), '/web')]",
-      "tags": "[parameters('resourceTags')]",
-      "location": "[resourceGroup().location]",
-      "dependsOn": [
-        "[resourceId('Microsoft.Web/sites', variables('dynamicCriteriaSelectionWebAppName'))]"
-      ],
-      "properties": {
-        "numberOfWorkers": 1,
-        "defaultDocuments": [
-          "Default.htm",
-          "Default.html",
-          "Default.asp",
-          "index.htm",
-          "index.html",
-          "iisstart.htm",
-          "default.aspx",
-          "index.php",
-          "hostingstart.html"
-        ],
-        "netFrameworkVersion": "v4.0",
-        "linuxFxVersion": "[variables('dynamicCriteriaSelectionDockerImageName')]",
-        "requestTracingEnabled": false,
-        "remoteDebuggingEnabled": false,
-        "remoteDebuggingVersion": "VS2019",
-        "httpLoggingEnabled": false,
-        "logsDirectorySizeLimit": 35,
-        "detailedErrorLoggingEnabled": false,
-        "publishingUsername": "$ctm-dynamic-criterion-selection-webapp-eastus-dev",
-        "scmType": "None",
-        "use32BitWorkerProcess": true,
-        "webSocketsEnabled": false,
-        "alwaysOn": true,
-        "managedPipelineMode": "Integrated",
-        "virtualApplications": [
-          {
-            "virtualPath": "/",
-            "physicalPath": "site\\wwwroot",
-            "preloadEnabled": true
-          }
-        ],
-        "loadBalancing": "LeastRequests",
-        "experiments": {
-          "rampUpRules": [
-          ]
-        },
-        "autoHealEnabled": false,
-        "localMySqlEnabled": false,
-        "ipSecurityRestrictions": [
-          {
-            "ipAddress": "Any",
-            "action": "Allow",
-            "priority": 1,
-            "name": "Allow all",
-            "description": "Allow all access"
-          }
-        ],
-        "scmIpSecurityRestrictions": [
-          {
-            "ipAddress": "Any",
-            "action": "Allow",
-            "priority": 1,
-            "name": "Allow all",
-            "description": "Allow all access"
-          }
-        ],
-        "scmIpSecurityRestrictionsUseMain": false,
-        "http20Enabled": false,
-        "minTlsVersion": "1.2",
-        "ftpsState": "AllAllowed",
-        "reservedInstanceCount": 0
-      }
-    },
-    {
-      "type": "Microsoft.Web/sites/hostNameBindings",
-      "apiVersion": "2018-11-01",
-      "tags": "[parameters('resourceTags')]",
-      "name": "[concat(variables('dynamicCriteriaSelectionWebAppName'), '/', variables('dynamicCriteriaSelectionWebAppName'), '.azurewebsites.net')]",
-      "location": "[resourceGroup().location]",
-      "dependsOn": [
-        "[resourceId('Microsoft.Web/sites', variables('dynamicCriteriaSelectionWebAppName'))]"
-      ],
-      "properties": {
-        "siteName": "ctm-dynamic-criterion-selection-webapp-eastus-dev",
-        "hostNameType": "Verified"
-      }
-    },
-    {
-      "type": "Microsoft.Web/sites",
-      "apiVersion": "2018-11-01",
-      "tags": "[parameters('resourceTags')]",
       "name": "[variables('disqualificationWebAppName')]",
       "location": "[resourceGroup().location]",
       "identity":{
@@ -1661,14 +1454,6 @@
     "queryEngineEndpoint": {
       "type":"string",
       "value":"[concat('https://', variables('queryEngineWebAppName'),'.azurewebsites.net')]"
-    },
-    "dynamicCriteriaSelectionName": {
-      "type":"string",
-      "value":"[variables('dynamicCriteriaSelectionWebAppName')]"
-    },
-    "dynamicCriteriaSelectionEndpoint": {
-      "type":"string",
-      "value":"[concat('https://', variables('dynamicCriteriaSelectionWebAppName'),'.azurewebsites.net')]"
     },
     "disqualificationName" : {
       "type":"string",

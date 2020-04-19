@@ -134,14 +134,6 @@ $disqualificationResponse = Invoke-WebRequest -Uri $disqualificationUrl
 $disqualificationResponse.RawContent
 ```
 
-Check that the Dynamic Criteria Selection Service is running and ready
-
-```PowerShell
-$dynamicCriteriaSelectionUrl = $matchingOutput.Outputs.gatewayEndpoint.Value + "/dcs"
-$dynamicCriteriaSelectionUrlResponse = Invoke-WebRequest -Uri $dynamicCriteriaSelectionUrl
-$dynamicCriteriaSelectionUrlResponse.RawContent
-```
-
 ### Restrict Access to service
 
 ```Powershell

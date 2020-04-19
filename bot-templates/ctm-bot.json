@@ -317,8 +317,8 @@
                             "next": "ba24c6c14552-29a155c3df1c4f2f-b738",
                             "errorStepId": "7cf5829caf3b-b595e08171a799bc-2f59"
                         },
-                        "dataConnection": "ctm-criteria-selector-prod",
-                        "urlBase": "'https://ctm-dynamic-criterion-selection-webapp-eastus-prod.azurewebsites.net'",
+                        "dataConnection": "ctm-disqualifier-prod",
+                        "urlBase": "",
                         "urlPath": "criteria",
                         "urlParams": "",
                         "contentType": "raw",
@@ -409,7 +409,7 @@
                             "errorStepId": "7cf5829caf3b-b595e08171a799bc-2f59"
                         },
                         "dataConnection": "ctm-disqualifier-prod",
-                        "urlBase": "https://ctm-clinical-trials-disqualification-webapp-eastus-prod.azurewebsites.net",
+                        "urlBase": "",
                         "urlPath": "disqualify",
                         "urlParams": "",
                         "contentType": "raw",
@@ -764,18 +764,6 @@
             "static_parameters": "[{\"key\":\"x-ctm-api-key\",\"type\":\"header\",\"value\":\"{ctm-api-key}\"}]",
             "type": "custom",
             "Timestamp": "2020-02-28T18:18:52.7370241Z"
-        },
-        {
-            "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.7469569Z'\"",
-            "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-            "RowKey": "1582908375575",
-            "auth_provider": "",
-            "base_url": "{dcs-baseurl}/dcs",
-            "description": "ctm-criteria-selector-prod",
-            "name": "ctm-criteria-selector-prod",
-            "static_parameters": "[{\"key\":\"x-ctm-api-key\",\"type\":\"header\",\"value\":\"{ctm-api-key}\"}]",
-            "type": "custom",
-            "Timestamp": "2020-02-28T18:18:52.7469569Z"
         },
         {
             "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.7363073Z'\"",
