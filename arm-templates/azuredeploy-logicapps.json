@@ -446,8 +446,8 @@
                                     "type": "ApiConnection",
                                     "inputs": {
                                         "body": {
-                                            "Body": "<p><br></p>",
-                                            "Subject": "Structuring Update process finished successfully",
+                                            "Body": "<p>Processed @{variables('structuringSummary')['processed']} trials.<br>\nAdded @{variables('structuringSummary')['added']} trials.<br>\nUpdated @{variables('structuringSummary')['updated']} trials.<br>\nRemoved @{variables('structuringSummary')['removed']} trials.<br>\nFailed @{variables('structuringSummary')['failed']} trials.</p>",
+                                            "Subject": "Trials updating process finished successfully",
                                             "To": "[parameters('accountId')]"
                                         },
                                         "host": {
