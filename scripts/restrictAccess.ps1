@@ -20,7 +20,6 @@ function Add-CTMRestrictIPs {
     Write-Host "Done" -ForegroundColor Green    
     foreach  ($ip in $ips) {
         Add-RestrictRule -resourceGroupName $resourceGroupName -appName "$serviceName-ctm-qe-webapp" -ip $ip
-        Add-RestrictRule -resourceGroupName $resourceGroupName -appName "$serviceName-ctm-dcs-webapp" -ip $ip
         Add-RestrictRule -resourceGroupName $resourceGroupName -appName "$serviceName-ctm-disq-webapp" -ip $ip
         Add-RestrictRule -resourceGroupName $resourceGroupName -appName "$serviceName-ayalon-webapp" -ip $ip
         Add-RestrictRule -resourceGroupName $fhirResoureGroupName -appName $fhirServiceName -ip $ip
@@ -31,7 +30,6 @@ function Add-CTMRestrictIPs {
     Write-Host "Done" -ForegroundColor Green    
     foreach  ($ip in $ips) {
         Add-RestrictRule -resourceGroupName $resourceGroupName -appName "$serviceName-ctm-qe-webapp-s" -ip $ip
-        Add-RestrictRule -resourceGroupName $resourceGroupName -appName "$serviceName-ctm-dcs-webapp-s" -ip $ip
         Add-RestrictRule -resourceGroupName $resourceGroupName -appName "$serviceName-ctm-disq-webapp-s" -ip $ip
         Add-RestrictRule -resourceGroupName $fhirResoureGroupName -appName $fhirSecondaryServiceName -ip $ip
     }
