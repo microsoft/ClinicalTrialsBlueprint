@@ -1148,6 +1148,7 @@
         "use32BitWorkerProcess": true,
         "webSocketsEnabled": false,
         "alwaysOn": true,
+        "healthCheckPath": "/ready/",
         "managedPipelineMode": "Integrated",
         "virtualApplications": [
           {
@@ -1342,6 +1343,7 @@
         "webSocketsEnabled": false,
         "alwaysOn": true,
         "managedPipelineMode": "Integrated",
+        "healthCheckPath": "/ready/",
         "virtualApplications": [
           {
             "virtualPath": "/",
