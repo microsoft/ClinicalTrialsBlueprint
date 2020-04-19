@@ -973,7 +973,7 @@
       "location": "[resourceGroup().location]",
       "sku": {
           "name": "P3v2",
-          "capacity": 1
+          "capacity": 2
       },
       "kind": "linux",
       "properties": {
