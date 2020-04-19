@@ -25,13 +25,12 @@
         "structuringName": "[concat(parameters('serviceName'),'-ctm-struct-aci')]",
         "gatewayWebAppName": "[concat(parameters('serviceName'),'-gateway-webapp')]",
         "disqualificationWebAppName":"[concat(parameters('serviceName'),'-ctm-disq-webapp')]",
-        "finisherLogicAppName":"[concat(parameters('serviceName'),'-finisher-logic-app')]",
         "sechedulerLogicApp":"[concat(parameters('serviceName'),'-secheduler-logic-app')]",
         "structurerLogicAppName":"[concat(parameters('serviceName'),'-structurer-logic-app')]",
+        "finisherLogicAppName":"[concat(parameters('serviceName'),'-finisher-logic-app')]",
         // Reference to workflow
         "workflows_structurer_logic_app":"[concat(subscription().id,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Logic/workflows/', variables('structurerLogicAppName'))]",
         "userName":"[if(parameters('isLiveId'), concat('live.com#', parameters('accountId')), parameters('accountId'))]"
-
     },
     "resources": [
         {
@@ -278,7 +277,41 @@
                             "type": "Request",
                             "kind": "Http",
                             "inputs": {
-                                "schema": {}
+                                "schema": {
+                                    "properties": {
+                                        "addedTrials": {
+                                            "items": {
+                                                    "type": "string"
+                                            },
+                                            "type": "array"
+                                        },
+                                        "failedTrials": {
+                                            "items": {
+                                                    "type": "string"
+                                            },
+                                            "type": "array"
+                                        },
+                                        "processedTrials": {
+                                            "items": {
+                                                    "type": "string"
+                                            },
+                                            "type": "array"
+                                        },
+                                        "removedTrials": {
+                                            "items": {
+                                                    "type": "string"
+                                            },
+                                            "type": "array"
+                                        },
+                                        "updatedTrials": {
+                                            "items": {
+                                                    "type": "string"
+                                            },
+                                            "type": "array"
+                                        }
+                                    },
+                                        "type": "object"
+                                }
                             }
                         }
                     },
@@ -330,7 +363,11 @@
                             }
                         },
                         "Initialize_disqualifier_service_variable": {
-                            "runAfter": {},
+                            "runAfter": {
+                                "Initialize_structuringSummary_variable": [
+                                    "Succeeded"
+                                ]
+                            },
                             "type": "InitializeVariable",
                             "inputs": {
                                 "variables": [
@@ -374,6 +411,25 @@
                                         "value": {
                                             "preserveVnet": true,
                                             "targetSlot": "secondary"
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        "Initialize_structuringSummary_variable": {
+                            "runAfter": {},
+                            "type": "InitializeVariable",
+                            "inputs": {
+                                "variables": [
+                                    {
+                                        "name": "structuringSummary",
+                                        "type": "object",
+                                        "value": {
+                                            "added": "@if(equals(triggerBody(), null), 0, length(triggerBody()?['addedTrials']))",
+                                            "failed": "@if(equals(triggerBody(), null), 0, length(triggerBody()?['failedTrials']))",
+                                            "processed": "@if(equals(triggerBody(), null), 0, length(triggerBody()?['processedTrials']))",
+                                            "removed": "@if(equals(triggerBody(), null), 0, length(triggerBody()?['removedTrials']))",
+                                            "updated": "@if(equals(triggerBody(), null), 0, length(triggerBody()?['updatedTrials']))"
                                         }
                                     }
                                 ]
@@ -434,7 +490,7 @@
                                         "inputs": {
                                             "body": {
                                                 "Body": "<p><br></p>",
-                                                "Subject": "Structuring Update process failed to complete",
+                                                "Subject": "Trials updating process failed to complete",
                                                 "To": "[parameters('accountId')]"
                                             },
                                             "host": {
