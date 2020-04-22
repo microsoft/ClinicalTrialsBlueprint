@@ -2,8 +2,8 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "accountId":{
-            "type":"string"
+        "accountId": {
+            "type": "string"
         },
         "serviceName": {
             "type": "String"
@@ -24,13 +24,13 @@
     "variables": {
         "structuringName": "[concat(parameters('serviceName'),'-ctm-struct-aci')]",
         "gatewayWebAppName": "[concat(parameters('serviceName'),'-gateway-webapp')]",
-        "disqualificationWebAppName":"[concat(parameters('serviceName'),'-ctm-disq-webapp')]",
-        "sechedulerLogicApp":"[concat(parameters('serviceName'),'-secheduler-logic-app')]",
-        "structurerLogicAppName":"[concat(parameters('serviceName'),'-structurer-logic-app')]",
-        "finisherLogicAppName":"[concat(parameters('serviceName'),'-finisher-logic-app')]",
+        "disqualificationWebAppName": "[concat(parameters('serviceName'),'-ctm-disq-webapp')]",
+        "sechedulerLogicAppName": "[concat(parameters('serviceName'),'-secheduler-logic-app')]",
+        "structurerLogicAppName": "[concat(parameters('serviceName'),'-structurer-logic-app')]",
+        "finisherLogicAppName": "[concat(parameters('serviceName'),'-finisher-logic-app')]",
         // Reference to workflow
-        "workflows_structurer_logic_app":"[concat(subscription().id,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Logic/workflows/', variables('structurerLogicAppName'))]",
-        "userName":"[if(parameters('isLiveId'), concat('live.com#', parameters('accountId')), parameters('accountId'))]"
+        "workflows_structurer_logic_app": "[concat(subscription().id,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Logic/workflows/', variables('structurerLogicAppName'))]",
+        "userName": "[if(parameters('isLiveId'), concat('live.com#', parameters('accountId')), parameters('accountId'))]"
     },
     "resources": [
         {
@@ -40,7 +40,8 @@
             "location": "[resourceGroup().location]",
             "properties": {
                 "displayName": "[variables('userName')]",
-                "customParameterValues": {},
+                "customParameterValues": {
+                },
                 "api": {
                     "id": "[concat(subscription().id,'/providers/Microsoft.Web/locations/',resourceGroup().location,'/managedApis/arm')]"
                 }
@@ -53,7 +54,8 @@
             "location": "[resourceGroup().location]",
             "properties": {
                 "displayName": "[variables('userName')]",
-                "customParameterValues": {},
+                "customParameterValues": {
+                },
                 "api": {
                     "id": "[concat(subscription().id,'/providers/Microsoft.Web/locations/',resourceGroup().location,'/managedApis/office365')]"
                 }
@@ -62,9 +64,9 @@
         {
             "type": "Microsoft.Logic/workflows",
             "apiVersion": "2017-07-01",
-            "name": "[variables('sechedulerLogicApp')]",
+            "name": "[variables('sechedulerLogicAppName')]",
             "location": "[resourceGroup().location]",
-            "dependsOn":[
+            "dependsOn": [
                 "[resourceId('Microsoft.Logic/workflows', variables('structurerLogicAppName'))]"
             ],
             "properties": {
@@ -72,7 +74,8 @@
                 "definition": {
                     "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
                     "contentVersion": "1.0.0.0",
-                    "parameters": {},
+                    "parameters": {
+                    },
                     "triggers": {
                         "Recurrence": {
                             "recurrence": {
@@ -89,7 +92,8 @@
                     },
                     "actions": {
                         "[variables('structurerLogicAppName')]": {
-                            "runAfter": {},
+                            "runAfter": {
+                            },
                             "type": "Workflow",
                             "inputs": {
                                 "headers": {
@@ -104,17 +108,19 @@
                             }
                         }
                     },
-                    "outputs": {}
+                    "outputs": {
+                    }
                 },
-                "parameters": {}
+                "parameters": {
+                }
             }
-        },        
+        },
         {
             "type": "Microsoft.Logic/workflows",
             "apiVersion": "2017-07-01",
             "name": "[variables('structurerLogicAppName')]",
             "location": "[resourceGroup().location]",
-            "dependsOn":[
+            "dependsOn": [
                 "[resourceId('Microsoft.Web/connections','arm')]"
             ],
             "properties": {
@@ -124,7 +130,8 @@
                     "contentVersion": "1.0.0.0",
                     "parameters": {
                         "$connections": {
-                            "defaultValue": {},
+                            "defaultValue": {
+                            },
                             "type": "Object"
                         }
                     },
@@ -133,7 +140,8 @@
                             "type": "Request",
                             "kind": "Http",
                             "inputs": {
-                                "schema": {}
+                                "schema": {
+                                }
                             }
                         }
                     },
@@ -185,7 +193,8 @@
                             }
                         },
                         "Initialize_structuring_aci_service_variable": {
-                            "runAfter": {},
+                            "runAfter": {
+                            },
                             "type": "InitializeVariable",
                             "inputs": {
                                 "variables": [
@@ -237,7 +246,8 @@
                             }
                         }
                     },
-                    "outputs": {}
+                    "outputs": {
+                    }
                 },
                 "parameters": {
                     "$connections": {
@@ -257,7 +267,7 @@
             "apiVersion": "2017-07-01",
             "name": "[variables('finisherLogicAppName')]",
             "location": "[resourceGroup().location]",
-            "dependsOn":[
+            "dependsOn": [
                 "[resourceId('Microsoft.Web/connections','arm')]",
                 "[resourceId('Microsoft.Web/connections','office365')]"
             ],
@@ -268,7 +278,8 @@
                     "contentVersion": "1.0.0.0",
                     "parameters": {
                         "$connections": {
-                            "defaultValue": {},
+                            "defaultValue": {
+                            },
                             "type": "Object"
                         }
                     },
@@ -279,96 +290,88 @@
                             "inputs": {
                                 "schema": {
                                     "properties": {
-                                        "addedTrials": {
+                                        "AddedTrials": {
                                             "items": {
-                                                    "type": "string"
+                                                "type": "string"
                                             },
                                             "type": "array"
                                         },
-                                        "failedTrials": {
+                                        "BuildVersion": {
+                                            "type": "string"
+                                        },
+                                        "FailedTrials": {
                                             "items": {
-                                                    "type": "string"
+                                                "type": "string"
                                             },
                                             "type": "array"
                                         },
-                                        "processedTrials": {
+                                        "FailureMessage": {
+                                            "type": "string"
+                                        },
+                                        "ProcessedTrials": {
                                             "items": {
-                                                    "type": "string"
+                                                "type": "string"
                                             },
                                             "type": "array"
                                         },
-                                        "removedTrials": {
+                                        "RemovedTrials": {
                                             "items": {
-                                                    "type": "string"
+                                                "type": "string"
                                             },
                                             "type": "array"
                                         },
-                                        "updatedTrials": {
+                                        "Success": {
+                                            "type": "boolean"
+                                        },
+                                        "TimePassed": {
+                                            "type": "string"
+                                        },
+                                        "UpdatedTrials": {
                                             "items": {
-                                                    "type": "string"
+                                                "type": "string"
                                             },
                                             "type": "array"
                                         }
                                     },
-                                        "type": "object"
+                                    "type": "object"
                                 }
                             }
                         }
                     },
                     "actions": {
-                        "Get_Staging_slot": {
-                            "runAfter": {
-                                "Initialize_disqualifier_service_variable": [
-                                    "Succeeded"
-                                ]
-                            },
-                            "type": "Http",
-                            "inputs": {
-                                "method": "GET",
-                                "uri": "[concat('https://', variables('gatewayWebAppName'),'.azurewebsites.net/slot')]"
-                            }
-                        },
-                        "Initialize_Disqualifier_Secondary_Service_variable": {
-                            "runAfter": {
-                                "Initialize_disqPostfix": [
-                                    "Succeeded"
-                                ]
-                            },
-                            "type": "InitializeVariable",
-                            "inputs": {
-                                "variables": [
-                                    {
-                                        "name": "disqualifierSecondaryService",
-                                        "type": "string",
-                                        "value": "@{concat(variables('disqualifierService'), variables('disqPostfix'))}"
-                                    }
-                                ]
-                            }
-                        },
-                        "Initialize_disqPostfix": {
-                            "runAfter": {
-                                "Parse_Slot_Response": [
-                                    "Succeeded"
-                                ]
-                            },
-                            "type": "InitializeVariable",
+                        "Initialize_disqPostfix_variable": {
                             "inputs": {
                                 "variables": [
                                     {
                                         "name": "disqPostfix",
-                                        "type": "string",
-                                        "value": "@{if(equals(body('Parse_Slot_Response')?['slot'], 'primary'), '-s', '')}"
+                                        "type": "string"
                                     }
                                 ]
-                            }
-                        },
-                        "Initialize_disqualifier_service_variable": {
+                            },
                             "runAfter": {
-                                "Initialize_structuringSummary_variable": [
+                                "Initialize_disqualifierService_variable": [
                                     "Succeeded"
                                 ]
                             },
-                            "type": "InitializeVariable",
+                            "type": "InitializeVariable"
+                        },
+                        "Initialize_disqualifierSecondaryService_variable": {
+                            "inputs": {
+                                "variables": [
+                                    {
+                                        "name": "disqualifierSecondaryService",
+                                        "type": "string"
+                                    }
+                                ]
+                            },
+                            "runAfter": {
+                                "Initialize_disqPostfix_variable": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "InitializeVariable"
+                        },
+                        "Initialize_disqualifierService_variable": {
                             "inputs": {
                                 "variables": [
                                     {
@@ -377,32 +380,31 @@
                                         "value": "[variables('disqualificationWebAppName')]"
                                     }
                                 ]
-                            }
-                        },
-                        "Initialize_readiness_variable": {
+                            },
                             "runAfter": {
-                                "Restart_disqualifier_service": [
+                                "Initialize_structuringSummary_variable": [
                                     "Succeeded"
                                 ]
                             },
-                            "type": "InitializeVariable",
+                            "type": "InitializeVariable"
+                        },
+                        "Initialize_readiness_variable": {
                             "inputs": {
                                 "variables": [
                                     {
                                         "name": "readiness",
-                                        "type": "string",
-                                        "value": "''"
+                                        "type": "string"
                                     }
                                 ]
-                            }
-                        },
-                        "Initialize_slotSwapBody_variable": {
+                            },
                             "runAfter": {
-                                "Until_disqualifier_is_ready": [
+                                "Initialize_disqualifierSecondaryService_variable": [
                                     "Succeeded"
                                 ]
                             },
-                            "type": "InitializeVariable",
+                            "type": "InitializeVariable"
+                        },
+                        "Initialize_slotSwapBody_variable": {
                             "inputs": {
                                 "variables": [
                                     {
@@ -414,82 +416,252 @@
                                         }
                                     }
                                 ]
-                            }
+                            },
+                            "runAfter": {
+                                "Initialize_readiness_variable": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "InitializeVariable"
                         },
                         "Initialize_structuringSummary_variable": {
-                            "runAfter": {},
-                            "type": "InitializeVariable",
                             "inputs": {
                                 "variables": [
                                     {
                                         "name": "structuringSummary",
                                         "type": "object",
                                         "value": {
-                                            "added": "@if(equals(triggerBody(), null), 0, length(triggerBody()?['addedTrials']))",
-                                            "failed": "@if(equals(triggerBody(), null), 0, length(triggerBody()?['failedTrials']))",
-                                            "processed": "@if(equals(triggerBody(), null), 0, length(triggerBody()?['processedTrials']))",
-                                            "removed": "@if(equals(triggerBody(), null), 0, length(triggerBody()?['removedTrials']))",
-                                            "updated": "@if(equals(triggerBody(), null), 0, length(triggerBody()?['updatedTrials']))"
+                                            "added": "@if(equals(triggerBody(), null), 0, length(triggerBody()?['AddedTrials']))",
+                                            "buildVersion": "@triggerBody()?['BuildVersion']",
+                                            "failed": "@if(equals(triggerBody(), null), 0, length(triggerBody()?['FailedTrials']))",
+                                            "failureMessage": "@triggerBody()?['FailureMessage']",
+                                            "processed": "@if(equals(triggerBody(), null), 0, length(triggerBody()?['ProcessedTrials']))",
+                                            "removed": "@if(equals(triggerBody(), null), 0, length(triggerBody()?['RemovedTrials']))",
+                                            "success": "@triggerBody()?['Success']",
+                                            "timePassed": "@triggerBody()?['TimePassed']",
+                                            "updated": "@if(equals(triggerBody(), null), 0, length(triggerBody()?['UpdatedTrials']))"
                                         }
                                     }
                                 ]
-                            }
+                            },
+                            "runAfter": {
+                            },
+                            "type": "InitializeVariable"
                         },
-                        "Is_Service_Ready": {
+                        "Is_structuring_successful": {
                             "actions": {
-                                "Send_a_success_email": {
+                                "Get_Staging_slot": {
+                                    "inputs": {
+                                        "method": "GET",
+                                        "uri": "[concat('https://', variables('gatewayWebAppName'),'.azurewebsites.net/slot')]"
+                                    },
                                     "runAfter": {
-                                        "Swap_gateway_slot": [
+                                    },
+                                    "type": "Http"
+                                },
+                                "Is_Service_Ready": {
+                                    "actions": {
+                                        "Send_a_success_email": {
+                                            "inputs": {
+                                                "body": {
+                                                    "Body": "<p>Processed @{variables('structuringSummary')['processed']} trials.<br>\nAdded @{variables('structuringSummary')['added']} trials.<br>\nUpdated @{variables('structuringSummary')['updated']} trials.<br>\nRemoved @{variables('structuringSummary')['removed']} trials.<br>\nFailed @{variables('structuringSummary')['failed']} trials.<br>\nStructuring process time - @{triggerBody()?['TimePassed']}<br>\nStructuring build version - @{triggerBody()?['BuildVersion']}<br>\n</p>",
+                                                    "Subject": "Trials updating process finished successfully",
+                                                    "To": "[parameters('accountId')]"
+                                                },
+                                                "host": {
+                                                    "connection": {
+                                                        "name": "@parameters('$connections')['office365']['connectionId']"
+                                                    }
+                                                },
+                                                "method": "post",
+                                                "path": "/v2/Mail"
+                                            },
+                                            "runAfter": {
+                                                "Swap_gateway_slot": [
+                                                    "Succeeded"
+                                                ]
+                                            },
+                                            "type": "ApiConnection"
+                                        },
+                                        "Swap_gateway_slot": {
+                                            "inputs": {
+                                                "body": "@variables('slotSwapBody')",
+                                                "host": {
+                                                    "connection": {
+                                                        "name": "@parameters('$connections')['arm']['connectionId']"
+                                                    }
+                                                },
+                                                "method": "post",
+                                                "path": "[concat('/subscriptions/@{encodeURIComponent(''',subscription().subscriptionId,''')}/resourcegroups/@{encodeURIComponent(''',resourceGroup().name,''')}/providers/@{encodeURIComponent(''Microsoft.Web'')}/@{encodeURIComponent(''sites/',variables('gatewayWebAppName'),''')}/@{encodeURIComponent(''slotsswap'')}')]",
+                                                "queries": {
+                                                    "x-ms-api-version": "2019-08-01"
+                                                }
+                                            },
+                                            "runAfter": {
+                                            },
+                                            "type": "ApiConnection"
+                                        }
+                                    },
+                                    "else": {
+                                        "actions": {
+                                            "Send_a_failure_email_": {
+                                                "inputs": {
+                                                    "body": {
+                                                        "Body": "<p>Failure message - Disqualifier service failed to be ready.<br>\nDisqualifier readiness - @{variables('readiness')}<br>\nStructuring process time - @{triggerBody()?['TimePassed']}<br>\nStructuring build version - @{triggerBody()?['BuildVersion']}<br>\n<br>\nGateway slot not swapped.</p>",
+                                                        "Subject": "Trials updating process failed to complete",
+                                                        "To": "[parameters('accountId')]"
+                                                    },
+                                                    "host": {
+                                                        "connection": {
+                                                            "name": "@parameters('$connections')['office365']['connectionId']"
+                                                        }
+                                                    },
+                                                    "method": "post",
+                                                    "path": "/v2/Mail"
+                                                },
+                                                "runAfter": {
+                                                },
+                                                "type": "ApiConnection"
+                                            }
+                                        }
+                                    },
+                                    "expression": {
+                                        "and": [
+                                            {
+                                                "startsWith": [
+                                                    "@variables('readiness')",
+                                                    "Ready"
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    "runAfter": {
+                                        "Until_disqualifier_is_ready": [
                                             "Succeeded"
                                         ]
                                     },
-                                    "type": "ApiConnection",
-                                    "inputs": {
-                                        "body": {
-                                            "Body": "<p>Processed @{variables('structuringSummary')['processed']} trials.<br>\nAdded @{variables('structuringSummary')['added']} trials.<br>\nUpdated @{variables('structuringSummary')['updated']} trials.<br>\nRemoved @{variables('structuringSummary')['removed']} trials.<br>\nFailed @{variables('structuringSummary')['failed']} trials.</p>",
-                                            "Subject": "Trials updating process finished successfully",
-                                            "To": "[parameters('accountId')]"
-                                        },
-                                        "host": {
-                                            "connection": {
-                                                "name": "@parameters('$connections')['office365']['connectionId']"
-                                            }
-                                        },
-                                        "method": "post",
-                                        "path": "/v2/Mail"
-                                    }
+                                    "type": "If"
                                 },
-                                "Swap_gateway_slot": {
-                                    "runAfter": {},
-                                    "type": "ApiConnection",
+                                "Parse_Slot_Response": {
                                     "inputs": {
-                                        "body": "@variables('slotSwapBody')",
+                                        "content": "@body('Get_Staging_slot')",
+                                        "schema": {
+                                            "properties": {
+                                                "slot": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "runAfter": {
+                                        "Get_Staging_slot": [
+                                            "Succeeded"
+                                        ]
+                                    },
+                                    "type": "ParseJson"
+                                },
+                                "Restart_disqualifier_service": {
+                                    "inputs": {
                                         "host": {
                                             "connection": {
                                                 "name": "@parameters('$connections')['arm']['connectionId']"
                                             }
                                         },
                                         "method": "post",
-                                        "path": "[concat('/subscriptions/@{encodeURIComponent(''',subscription().subscriptionId,''')}/resourcegroups/@{encodeURIComponent(''',resourceGroup().name,''')}/providers/@{encodeURIComponent(''Microsoft.Web'')}/@{encodeURIComponent(''sites/',variables('gatewayWebAppName'),''')}/@{encodeURIComponent(''slotsswap'')}')]",
+                                        "path": "[concat('/subscriptions/@{encodeURIComponent(''',subscription().subscriptionId,''')}/resourcegroups/@{encodeURIComponent(''',resourceGroup().name,''')}/providers/@{encodeURIComponent(''Microsoft.Web'')}/@{encodeURIComponent(concat(''sites/'', variables(''disqualifierSecondaryService'')))}/@{encodeURIComponent(''restart'')}')]",
                                         "queries": {
                                             "x-ms-api-version": "2019-08-01"
                                         }
-                                    }
+                                    },
+                                    "runAfter": {
+                                        "Set_disqualifierSecondaryService_variable": [
+                                            "Succeeded"
+                                        ]
+                                    },
+                                    "type": "ApiConnection"
+                                },
+                                "Set_disqPostfix": {
+                                    "inputs": {
+                                        "name": "disqPostfix",
+                                        "value": "@{if(equals(body('Parse_Slot_Response')?['slot'], 'primary'), '-s', '')}"
+                                    },
+                                    "runAfter": {
+                                        "Parse_Slot_Response": [
+                                            "Succeeded"
+                                        ]
+                                    },
+                                    "type": "SetVariable"
+                                },
+                                "Set_disqualifierSecondaryService_variable": {
+                                    "inputs": {
+                                        "name": "disqualifierSecondaryService",
+                                        "value": "@{concat(variables('disqualifierService'), variables('disqPostfix'))}"
+                                    },
+                                    "runAfter": {
+                                        "Set_disqPostfix": [
+                                            "Succeeded"
+                                        ]
+                                    },
+                                    "type": "SetVariable"
+                                },
+                                "Until_disqualifier_is_ready": {
+                                    "actions": {
+                                        "Delay_readiness_polling": {
+                                            "inputs": {
+                                                "interval": {
+                                                    "count": 5,
+                                                    "unit": "Second"
+                                                }
+                                            },
+                                            "runAfter": {
+                                                "Set_readiness_variable": [
+                                                    "Succeeded"
+                                                ]
+                                            },
+                                            "type": "Wait"
+                                        },
+                                        "Get_disqualifier_readiness": {
+                                            "inputs": {
+                                                "method": "GET",
+                                                "uri": "@{concat('https://', variables('disqualifierSecondaryService'), '.azurewebsites.net/ready')}"
+                                            },
+                                            "runAfter": {
+                                            },
+                                            "type": "Http"
+                                        },
+                                        "Set_readiness_variable": {
+                                            "inputs": {
+                                                "name": "readiness",
+                                                "value": "@{body('Get_disqualifier_readiness')}"
+                                            },
+                                            "runAfter": {
+                                                "Get_disqualifier_readiness": [
+                                                    "Succeeded"
+                                                ]
+                                            },
+                                            "type": "SetVariable"
+                                        }
+                                    },
+                                    "expression": "@startsWith(variables('readiness'), 'Ready')",
+                                    "limit": {
+                                        "count": 60,
+                                        "timeout": "PT1H"
+                                    },
+                                    "runAfter": {
+                                        "Restart_disqualifier_service": [
+                                            "Succeeded"
+                                        ]
+                                    },
+                                    "type": "Until"
                                 }
-                            },
-                            "runAfter": {
-                                "Initialize_slotSwapBody_variable": [
-                                    "Succeeded"
-                                ]
                             },
                             "else": {
                                 "actions": {
-                                    "Send_a_email_of_failure": {
-                                        "runAfter": {},
-                                        "type": "ApiConnection",
+                                    "Send_a_failure_email": {
                                         "inputs": {
                                             "body": {
-                                                "Body": "<p><br></p>",
+                                                "Body": "<p>Failure message - @{triggerBody()?['FailureMessage']}<br>\nStructuring process time - @{triggerBody()?['TimePassed']}<br>\nStructuring build version - @{triggerBody()?['BuildVersion']}</p>",
                                                 "Subject": "Trials updating process failed to complete",
                                                 "To": "[parameters('accountId')]"
                                             },
@@ -500,112 +672,33 @@
                                             },
                                             "method": "post",
                                             "path": "/v2/Mail"
-                                        }
+                                        },
+                                        "runAfter": {
+                                        },
+                                        "type": "ApiConnection"
                                     }
                                 }
                             },
                             "expression": {
                                 "and": [
                                     {
-                                        "startsWith": [
-                                            "@variables('readiness')",
-                                            "Ready"
+                                        "equals": [
+                                            "@triggerBody()?['Success']",
+                                            true
                                         ]
                                     }
+                                ]
+                            },
+                            "runAfter": {
+                                "Initialize_slotSwapBody_variable": [
+                                    "Succeeded"
                                 ]
                             },
                             "type": "If"
-                        },
-                        "Parse_Slot_Response": {
-                            "runAfter": {
-                                "Get_Staging_slot": [
-                                    "Succeeded"
-                                ]
-                            },
-                            "type": "ParseJson",
-                            "inputs": {
-                                "content": "@body('Get_Staging_slot')",
-                                "schema": {
-                                    "properties": {
-                                        "slot": {
-                                            "type": "string"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        },
-                        "Restart_disqualifier_service": {
-                            "runAfter": {
-                                "Initialize_Disqualifier_Secondary_Service_variable": [
-                                    "Succeeded"
-                                ]
-                            },
-                            "type": "ApiConnection",
-                            "inputs": {
-                                "host": {
-                                    "connection": {
-                                        "name": "@parameters('$connections')['arm']['connectionId']"
-                                    }
-                                },
-                                "method": "post",
-                                "path": "[concat('/subscriptions/@{encodeURIComponent(''',subscription().subscriptionId,''')}/resourcegroups/@{encodeURIComponent(''',resourceGroup().name,''')}/providers/@{encodeURIComponent(''Microsoft.Web'')}/@{encodeURIComponent(concat(''sites/'', variables(''disqualifierSecondaryService'')))}/@{encodeURIComponent(''restart'')}')]",
-                                "queries": {
-                                    "x-ms-api-version": "2019-08-01"
-                                }
-                            }
-                        },
-                        "Until_disqualifier_is_ready": {
-                            "actions": {
-                                "Delay_readiness_polling": {
-                                    "runAfter": {
-                                        "Set_readiness_variable": [
-                                            "Succeeded"
-                                        ]
-                                    },
-                                    "type": "Wait",
-                                    "inputs": {
-                                        "interval": {
-                                            "count": 5,
-                                            "unit": "Second"
-                                        }
-                                    }
-                                },
-                                "Get_disqualifier_readiness": {
-                                    "runAfter": {},
-                                    "type": "Http",
-                                    "inputs": {
-                                        "method": "GET",
-                                        "uri": "@{concat('https://', variables('disqualifierSecondaryService'), '.azurewebsites.net/ready')}"
-                                    }
-                                },
-                                "Set_readiness_variable": {
-                                    "runAfter": {
-                                        "Get_disqualifier_readiness": [
-                                            "Succeeded"
-                                        ]
-                                    },
-                                    "type": "SetVariable",
-                                    "inputs": {
-                                        "name": "readiness",
-                                        "value": "@{body('Get_disqualifier_readiness')}"
-                                    }
-                                }
-                            },
-                            "runAfter": {
-                                "Initialize_readiness_variable": [
-                                    "Succeeded"
-                                ]
-                            },
-                            "expression": "@startsWith(variables('readiness'), 'Ready')",
-                            "limit": {
-                                "count": 60,
-                                "timeout": "PT1H"
-                            },
-                            "type": "Until"
                         }
                     },
-                    "outputs": {}
+                    "outputs": {
+                    }
                 },
                 "parameters": {
                     "$connections": {
@@ -624,12 +717,12 @@
                     }
                 }
             }
-        }        
+        }
     ],
-    "outputs":{
-        "finisherCallbackUrl":{
-            "type":"string",
-            "value":"[listCallbackURL(concat(resourceId('Microsoft.Logic/workflows/', variables('finisherLogicAppName')), '/triggers/manual'), '2016-06-01').value]"
+    "outputs": {
+        "finisherCallbackUrl": {
+            "type": "string",
+            "value": "[listCallbackURL(concat(resourceId('Microsoft.Logic/workflows/', variables('finisherLogicAppName')), '/triggers/manual'), '2016-06-01').value]"
         }
     }
 }
