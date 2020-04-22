@@ -225,6 +225,18 @@
                                 }
                             }
                         },
+                        "Response_-_200_OK": {
+                            "inputs": {
+                                "statusCode": 200
+                            },
+                            "kind": "http",
+                            "runAfter": {
+                                "Restart_structuring_service": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "Response"
+                        },
                         "Restart_structuring_service": {
                             "runAfter": {
                                 "Initialize_Structuring_Secondary_Service_variable": [
@@ -431,15 +443,15 @@
                                         "name": "structuringSummary",
                                         "type": "object",
                                         "value": {
-                                            "added": "@if(equals(triggerBody(), null), 0, length(triggerBody()?['AddedTrials']))",
+                                            "added": "@if(equals(triggerBody()?['AddedTrials'], null), 0, length(triggerBody()?['AddedTrials']))",
                                             "buildVersion": "@triggerBody()?['BuildVersion']",
-                                            "failed": "@if(equals(triggerBody(), null), 0, length(triggerBody()?['FailedTrials']))",
+                                            "failed": "@if(equals(triggerBody()?['FailedTrials'], null), 0, length(triggerBody()?['FailedTrials']))",
                                             "failureMessage": "@triggerBody()?['FailureMessage']",
-                                            "processed": "@if(equals(triggerBody(), null), 0, length(triggerBody()?['ProcessedTrials']))",
-                                            "removed": "@if(equals(triggerBody(), null), 0, length(triggerBody()?['RemovedTrials']))",
+                                            "processed": "@if(equals(triggerBody()?['ProcessedTrials'], null), 0, length(triggerBody()?['ProcessedTrials']))",
+                                            "removed": "@if(equals(triggerBody()?['RemovedTrials'], null), 0, length(triggerBody()?['RemovedTrials']))",
                                             "success": "@triggerBody()?['Success']",
                                             "timePassed": "@triggerBody()?['TimePassed']",
-                                            "updated": "@if(equals(triggerBody(), null), 0, length(triggerBody()?['UpdatedTrials']))"
+                                            "updated": "@if(equals(triggerBody()?['UpdatedTrials'], null), 0, length(triggerBody()?['UpdatedTrials']))"
                                         }
                                     }
                                 ]
