@@ -142,7 +142,7 @@ $disqualificationResponse.RawContent
 
 ```PowerShell
 Add-CTMRestrictIPs -resourceGroupName $rg.ResourceGroupName -serviceName $ctmServiceName `
-                   -fhirResoureGroupName ctm-fhir-blueprint -fhirServiceName $fhirServerName `
+                   -fhirResoureGroupName $fhirRg.ResourceGroupName -fhirServiceName $fhirServerName `
                    -fhirSecondaryServiceName $fhirSecondaryServerName
 ```
 
