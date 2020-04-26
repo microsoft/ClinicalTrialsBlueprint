@@ -33,8 +33,7 @@
       "defaultValue": "clinical-trials-structuring"
     },
     "structuringImageTag": {
-      "type": "string",
-      "defaultValue": "latest"
+      "type": "string"
     },
     "queryCountry": {
       "type": "string",
@@ -864,7 +863,7 @@
               "command": [
                 "dotnet",
                 "ClinicalTrialsStructuring.dll",
-				        "[parameters('restoreCtti')]"
+                "restoreCttiDb"
               ],
               "environmentVariables": [
                 {
