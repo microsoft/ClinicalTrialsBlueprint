@@ -33,8 +33,7 @@
       "defaultValue": "clinical-trials-structuring"
     },
     "structuringImageTag": {
-      "type": "string",
-      "defaultValue": "latest"
+      "type": "string"
     },
     "queryCountry": {
       "type": "string",
@@ -42,7 +41,7 @@
     },
     "queryPhases": {
       "type": "string",
-      "defaultValue": "phase_1,phase_2,phase_3,phase_4,not_applicable"
+      "defaultValue": "phase_1;phase_2;phase_3;phase_4;not_applicable"
     },
     "queryRecruitment": {
       "type": "string",
@@ -61,10 +60,6 @@
     },
     "postgreSqladministratorLoginPassword": {
         "type": "securestring"
-    },
-	  "restoreCtti": {
-      "type": "string",
-      "defaultValue": ""
     },
     "resourceTags": {
       "type": "object",
@@ -864,7 +859,7 @@
               "command": [
                 "dotnet",
                 "ClinicalTrialsStructuring.dll",
-				        "[parameters('restoreCtti')]"
+				        "restoreCttiDb"
               ],
               "environmentVariables": [
                 {

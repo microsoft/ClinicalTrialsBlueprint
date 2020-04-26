@@ -86,6 +86,44 @@
   "patterns": [],
   "utterances": [
     {
+      "text": "am i covered for insurance?",
+      "intent": "None",
+      "entities": []
+    },
+    {
+      "text": "articles about migraine",
+      "intent": "None",
+      "entities": [
+        {
+          "entity": "disease",
+          "startPos": 15,
+          "endPos": 22
+        }
+      ]
+    },
+    {
+      "text": "can you give me information about migraine",
+      "intent": "None",
+      "entities": [
+        {
+          "entity": "disease",
+          "startPos": 34,
+          "endPos": 41
+        }
+      ]
+    },
+    {
+      "text": "causes of diabetes",
+      "intent": "None",
+      "entities": [
+        {
+          "entity": "disease",
+          "startPos": 10,
+          "endPos": 17
+        }
+      ]
+    },
+    {
       "text": "clinical treatments in the us for non-hodgkin's lymphoma",
       "intent": "Clinical Trials Matching",
       "entities": [
@@ -216,6 +254,71 @@
       "text": "clinical trials in new york",
       "intent": "Clinical Trials Matching",
       "entities": []
+    },
+    {
+      "text": "data about hepatitis",
+      "intent": "None",
+      "entities": [
+        {
+          "entity": "disease",
+          "startPos": 11,
+          "endPos": 19
+        }
+      ]
+    },
+    {
+      "text": "data on hepatitis",
+      "intent": "None",
+      "entities": [
+        {
+          "entity": "disease",
+          "startPos": 8,
+          "endPos": 16
+        }
+      ]
+    },
+    {
+      "text": "data שנםוא hepatitis",
+      "intent": "None",
+      "entities": [
+        {
+          "entity": "disease",
+          "startPos": 11,
+          "endPos": 19
+        }
+      ]
+    },
+    {
+      "text": "diabetes symptoms",
+      "intent": "None",
+      "entities": [
+        {
+          "entity": "disease",
+          "startPos": 0,
+          "endPos": 7
+        }
+      ]
+    },
+    {
+      "text": "do i need to see a doctor now",
+      "intent": "None",
+      "entities": []
+    },
+    {
+      "text": "does my health insurance work with doctor arie schwartzman",
+      "intent": "None",
+      "entities": []
+    },
+    {
+      "text": "does my health plan cover diabetes",
+      "intent": "None",
+      "entities": [
+        {
+          "entity": "disease",
+          "startPos": 26,
+          "endPos": 33
+        }
+      ]
     },
     {
       "text": "find clinical trials for 20 years old male with brain cancer",
@@ -421,6 +524,61 @@
       ]
     },
     {
+      "text": "flu",
+      "intent": "None",
+      "entities": [
+        {
+          "entity": "disease",
+          "startPos": 0,
+          "endPos": 2
+        }
+      ]
+    },
+    {
+      "text": "flu complications",
+      "intent": "None",
+      "entities": [
+        {
+          "entity": "disease",
+          "startPos": 0,
+          "endPos": 2
+        }
+      ]
+    },
+    {
+      "text": "flu is not fun",
+      "intent": "None",
+      "entities": [
+        {
+          "entity": "disease",
+          "startPos": 0,
+          "endPos": 2
+        }
+      ]
+    },
+    {
+      "text": "flu professional",
+      "intent": "None",
+      "entities": [
+        {
+          "entity": "disease",
+          "startPos": 0,
+          "endPos": 2
+        }
+      ]
+    },
+    {
+      "text": "flu signs",
+      "intent": "None",
+      "entities": [
+        {
+          "entity": "disease",
+          "startPos": 0,
+          "endPos": 2
+        }
+      ]
+    },
+    {
       "text": "get clinical trials for 12 years old boy with lymphoma",
       "intent": "Clinical Trials Matching",
       "entities": [
@@ -441,6 +599,11 @@
           "endPos": 57
         }
       ]
+    },
+    {
+      "text": "get money back from my health provider",
+      "intent": "None",
+      "entities": []
     },
     {
       "text": "get stage vi melanoma disease studies",
@@ -480,6 +643,52 @@
           "endPos": 49
         }
       ]
+    },
+    {
+      "text": "good afternoon",
+      "intent": "None",
+      "entities": []
+    },
+    {
+      "text": "good evening",
+      "intent": "None",
+      "entities": []
+    },
+    {
+      "text": "good morning",
+      "intent": "None",
+      "entities": []
+    },
+    {
+      "text": "good night",
+      "intent": "None",
+      "entities": []
+    },
+    {
+      "text": "hello",
+      "intent": "None",
+      "entities": []
+    },
+    {
+      "text": "how can i recognize heart attack?",
+      "intent": "None",
+      "entities": [
+        {
+          "entity": "disease",
+          "startPos": 20,
+          "endPos": 24
+        }
+      ]
+    },
+    {
+      "text": "how do i get a refund from my health insurance",
+      "intent": "None",
+      "entities": []
+    },
+    {
+      "text": "how to get money back from my health provider",
+      "intent": "None",
+      "entities": []
     },
     {
       "text": "i am 8 years old and i have diseasename",
@@ -531,6 +740,17 @@
       "entities": []
     },
     {
+      "text": "i have diabetes",
+      "intent": "None",
+      "entities": [
+        {
+          "entity": "disease",
+          "startPos": 7,
+          "endPos": 14
+        }
+      ]
+    },
+    {
       "text": "i have diseasename",
       "intent": "Clinical Trials Matching",
       "entities": [
@@ -549,6 +769,11 @@
     {
       "text": "i want to participate in a trial",
       "intent": "Clinical Trials Matching",
+      "entities": []
+    },
+    {
+      "text": "i would like a medical insurance reimbursement",
+      "intent": "None",
       "entities": []
     },
     {
@@ -599,6 +824,28 @@
           "role": "female",
           "startPos": 42,
           "endPos": 46
+        }
+      ]
+    },
+    {
+      "text": "info on flu",
+      "intent": "None",
+      "entities": [
+        {
+          "entity": "disease",
+          "startPos": 8,
+          "endPos": 10
+        }
+      ]
+    },
+    {
+      "text": "information about diabetes",
+      "intent": "None",
+      "entities": [
+        {
+          "entity": "disease",
+          "startPos": 18,
+          "endPos": 25
         }
       ]
     },
@@ -805,6 +1052,28 @@
       ]
     },
     {
+      "text": "medical specialists for dementia",
+      "intent": "None",
+      "entities": [
+        {
+          "entity": "disease",
+          "startPos": 24,
+          "endPos": 31
+        }
+      ]
+    },
+    {
+      "text": "migraine info",
+      "intent": "None",
+      "entities": [
+        {
+          "entity": "disease",
+          "startPos": 0,
+          "endPos": 7
+        }
+      ]
+    },
+    {
       "text": "my 48 years old mother is looking for trial to participate in related to hiv",
       "intent": "Clinical Trials Matching",
       "entities": [
@@ -818,6 +1087,17 @@
           "entity": "disease",
           "startPos": 73,
           "endPos": 75
+        }
+      ]
+    },
+    {
+      "text": "paranoia resources",
+      "intent": "None",
+      "entities": [
+        {
+          "entity": "disease",
+          "startPos": 0,
+          "endPos": 7
         }
       ]
     },
@@ -863,6 +1143,39 @@
           "role": "female",
           "startPos": 23,
           "endPos": 27
+        }
+      ]
+    },
+    {
+      "text": "resources for paranoia",
+      "intent": "None",
+      "entities": [
+        {
+          "entity": "disease",
+          "startPos": 14,
+          "endPos": 21
+        }
+      ]
+    },
+    {
+      "text": "risks of flu",
+      "intent": "None",
+      "entities": [
+        {
+          "entity": "disease",
+          "startPos": 9,
+          "endPos": 11
+        }
+      ]
+    },
+    {
+      "text": "salmonella signs",
+      "intent": "None",
+      "entities": [
+        {
+          "entity": "disease",
+          "startPos": 0,
+          "endPos": 9
         }
       ]
     },
@@ -973,6 +1286,22 @@
       ]
     },
     {
+      "text": "signs for broken rib",
+      "intent": "None",
+      "entities": []
+    },
+    {
+      "text": "signs of salmonella",
+      "intent": "None",
+      "entities": [
+        {
+          "entity": "disease",
+          "startPos": 9,
+          "endPos": 18
+        }
+      ]
+    },
+    {
       "text": "studies about non-small cell lung cancer",
       "intent": "Clinical Trials Matching",
       "entities": [
@@ -1002,6 +1331,22 @@
           "entity": "healthy",
           "startPos": 12,
           "endPos": 18
+        }
+      ]
+    },
+    {
+      "text": "sun is shining",
+      "intent": "None",
+      "entities": []
+    },
+    {
+      "text": "symptoms of diabetes",
+      "intent": "None",
+      "entities": [
+        {
+          "entity": "disease",
+          "startPos": 12,
+          "endPos": 19
         }
       ]
     },
@@ -1285,6 +1630,17 @@
       "entities": []
     },
     {
+      "text": "type of doctor for anemia",
+      "intent": "None",
+      "entities": [
+        {
+          "entity": "disease",
+          "startPos": 19,
+          "endPos": 24
+        }
+      ]
+    },
+    {
       "text": "ulcerative",
       "intent": "Clinical Trials Matching",
       "entities": [
@@ -1292,6 +1648,111 @@
           "entity": "disease",
           "startPos": 0,
           "endPos": 9
+        }
+      ]
+    },
+    {
+      "text": "what are the sign for flu?",
+      "intent": "None",
+      "entities": [
+        {
+          "entity": "disease",
+          "startPos": 22,
+          "endPos": 24
+        }
+      ]
+    },
+    {
+      "text": "what are the symptoms of flu?",
+      "intent": "None",
+      "entities": [
+        {
+          "entity": "disease",
+          "startPos": 25,
+          "endPos": 27
+        }
+      ]
+    },
+    {
+      "text": "what doctor should i see for my broken knee?",
+      "intent": "None",
+      "entities": [
+        {
+          "entity": "disease",
+          "startPos": 39,
+          "endPos": 42
+        }
+      ]
+    },
+    {
+      "text": "what is diabetes",
+      "intent": "None",
+      "entities": [
+        {
+          "entity": "disease",
+          "startPos": 8,
+          "endPos": 15
+        }
+      ]
+    },
+    {
+      "text": "what is flu?",
+      "intent": "None",
+      "entities": [
+        {
+          "entity": "disease",
+          "startPos": 8,
+          "endPos": 10
+        }
+      ]
+    },
+    {
+      "text": "what is salmonella?",
+      "intent": "None",
+      "entities": [
+        {
+          "entity": "disease",
+          "startPos": 8,
+          "endPos": 17
+        }
+      ]
+    },
+    {
+      "text": "what kind of doctor should i see about flu?",
+      "intent": "None",
+      "entities": [
+        {
+          "entity": "disease",
+          "startPos": 39,
+          "endPos": 41
+        }
+      ]
+    },
+    {
+      "text": "what symptoms do men get when they got prostate cancer?",
+      "intent": "None",
+      "entities": [
+        {
+          "entity": "gender",
+          "role": "male",
+          "startPos": 17,
+          "endPos": 19
+        },
+        {
+          "entity": "disease",
+          "startPos": 39,
+          "endPos": 53
+        }
+      ]
+    },
+    {
+      "text": "who treats brain cancer?",
+      "intent": "None",
+      "entities": [
+        {
+          "entity": "disease",
+          "startPos": 11,
+          "endPos": 22
         }
       ]
     },
