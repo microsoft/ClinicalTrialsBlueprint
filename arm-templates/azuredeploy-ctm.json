@@ -940,6 +940,11 @@
             "name": "constituency-parser",
             "properties": {
               "image": "[variables('constituencyParserImageName')]",
+			  "environmentVariables": [
+                {
+                  "name": "APP_INSIGHT_KEY",
+                  "value": "[reference(variables('insightsName'), '2015-05-01').instrumentationKey]"
+                }],
               "resources": {
                 "requests": {
                   "cpu": 2,
@@ -1428,7 +1433,54 @@
             "version": "11",
             "sslEnforcement": "Disabled"
         }
+    },
+	{
+    "name": "[concat('plan-auto-scale',variables('suffix'))]",
+    "type": "Microsoft.Insights/autoscaleSettings",
+	 "apiVersion": "2015-04-01",
+    "location": "[resourceGroup().location]",
+    "tags": "[parameters('resourceTags')]",
+    "properties": {
+        "name": "[concat('plan-auto-scale',variables('suffix'))]",
+        "enabled": true,
+        "targetResourceUri": "[resourceId('Microsoft.Web/serverfarms', variables('ctmServicePlan'))]",
+        "profiles": [
+            {
+                "name": "Auto created scale condition",
+                "capacity": {
+                    "minimum": "1",
+                    "maximum": "2",
+                    "default": "1"
+                },
+                "rules": [
+                    {
+                        "scaleAction": {
+                            "direction": "Increase",
+                            "type": "ChangeCount",
+                            "value": "1",
+                            "cooldown": "PT5M"
+                        },
+                        "metricTrigger": {
+                            "metricName": "CpuPercentage",
+                            "metricNamespace": "microsoft.web/serverfarms",
+                            "metricResourceUri": "[resourceId('Microsoft.Web/serverfarms', variables('ctmServicePlan'))]",
+                            "operator": "GreaterThan",
+                            "statistic": "Average",
+                            "threshold": 70,
+                            "timeAggregation": "Average",
+                            "timeGrain": "PT1M",
+                            "timeWindow": "PT5M",
+                            "Dimensions": [],
+                            "dividePerInstance": false
+                        }
+                    }
+                ]
+            }
+        ],
+        "notifications": [],
+        "targetResourceLocation": "[resourceGroup().location]",
     }
+	}
   ],
   "outputs":{
     "proxyApiKey": {
