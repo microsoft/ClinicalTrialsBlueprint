@@ -231,13 +231,33 @@
                             },
                             "kind": "http",
                             "runAfter": {
-                                "Restart_structuring_service": [
+                                "Start_structuring_service": [
                                     "Succeeded"
                                 ]
                             },
                             "type": "Response"
                         },
-                        "Restart_structuring_service": {
+                        "Start_structuring_service": {
+                            "runAfter": {
+                                "Stop_structuring_service": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "ApiConnection",
+                            "inputs": {
+                                "host": {
+                                    "connection": {
+                                        "name": "@parameters('$connections')['arm']['connectionId']"
+                                    }
+                                },
+                                "method": "post",
+                                "path": "[concat('/subscriptions/@{encodeURIComponent(''',subscription().subscriptionId,''')}/resourcegroups/@{encodeURIComponent(''',resourceGroup().name,''')}/providers/@{encodeURIComponent(''Microsoft.ContainerInstance'')}/@{encodeURIComponent(concat(''containerGroups/'', variables(''structuringAciSecondaryService'')))}/@{encodeURIComponent(''start'')}')]",
+                                "queries": {
+                                    "x-ms-api-version": "2018-10-01"
+                                }
+                            }
+                        },
+                        "Stop_structuring_service": {
                             "runAfter": {
                                 "Initialize_Structuring_Secondary_Service_variable": [
                                     "Succeeded"
@@ -251,7 +271,7 @@
                                     }
                                 },
                                 "method": "post",
-                                "path": "[concat('/subscriptions/@{encodeURIComponent(''',subscription().subscriptionId,''')}/resourcegroups/@{encodeURIComponent(''',resourceGroup().name,''')}/providers/@{encodeURIComponent(''Microsoft.ContainerInstance'')}/@{encodeURIComponent(concat(''containerGroups/'', variables(''structuringAciSecondaryService'')))}/@{encodeURIComponent(''restart'')}')]",
+                                "path": "[concat('/subscriptions/@{encodeURIComponent(''',subscription().subscriptionId,''')}/resourcegroups/@{encodeURIComponent(''',resourceGroup().name,''')}/providers/@{encodeURIComponent(''Microsoft.ContainerInstance'')}/@{encodeURIComponent(concat(''containerGroups/'', variables(''structuringAciSecondaryService'')))}/@{encodeURIComponent(''stop'')}')]",
                                 "queries": {
                                     "x-ms-api-version": "2018-10-01"
                                 }

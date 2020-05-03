@@ -1500,6 +1500,10 @@
       "type":"string",
       "value":"[variables('queryEngineWebAppName')]"
     },
+    "structuringName": {
+      "type":"string",
+      "value":"[variables('structuringName')]"
+    },
     "queryEngineEndpoint": {
       "type":"string",
       "value":"[concat('https://', variables('queryEngineWebAppName'),'.azurewebsites.net')]"
