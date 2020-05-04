@@ -86,6 +86,11 @@ $logicAppsOutput = New-AzResourceGroupDeployment -ResourceGroupName $rg.Resource
                   -serviceName $ctmServiceName -accountId (Get-AzContext).Account.Id
 ```
 
+Open resource group in azure portal and authorize 2 API connections (arm and office365)
+
+![arm azure](./images/arm-azure.JPG)
+![arm authorize](./images/arm-authorize.JPG )
+
 Assign the password of the Docker Container Registry
 
 ```Powershell
@@ -99,6 +104,16 @@ $matchingOutput = New-AzResourceGroupDeployment -TemplateFile .\arm-templates\az
                 -ResourceGroupName $rg.ResourceGroupName -serviceName $ctmServiceName `
                 -fhirServerName $fhirServerName -fhirSecondaryServerName $fhirSecondaryServerName `
                 -acrPassword $acrPassword -finishedNotifyAddress $logicAppsOutput.Outputs.finisherCallbackUrl.Value
+```
+
+Stopping primary structuring instance 
+
+```Powershell
+. .\scripts\structuring.ps1
+```
+
+```Powershell
+Stop-CtmStructuring -resourceGroupName $rg.ResourceGroupName -containerGroupName $matchingOutput.structuringName 
 ```
 
 Create Secondary Clinical Trials Matching service that will be used as the primary service is being serviced. You need only to pass isSecondary parameter as true
@@ -193,12 +208,6 @@ You can now deploy a secondary Healthcare bot by running this command
 ### Restructuring Clinical Trials
 
 When you want to update the CMT databases with latest clinical trials from clinicaltrials.gov, you can run the following script
-
-Load the script
-
-```Powershell
-. .\script\structuring.ps1
-```
 
 Restart the structuring
 
