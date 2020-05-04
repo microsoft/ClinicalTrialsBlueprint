@@ -497,7 +497,7 @@
                                             "inputs": {
                                                 "body": {
                                                     "Body": "<p>Processed @{variables('structuringSummary')['processed']} trials.<br>\nFailed @{variables('structuringSummary')['failed']} trials.<br>\nStructuring process time - @{triggerBody()?['TimePassed']}<br>\nStructuring build version - @{triggerBody()?['BuildVersion']}<br>\n</p>",
-                                                    "Subject": "[concat('[', parameters('serviceName'), '] ', ' Trials updating process finished successfully')]",
+                                                    "Subject": "[concat('[', parameters('serviceName'), '] ', 'Trials updating process finished successfully')]",
                                                     "To": "[parameters('accountId')]"
                                                 },
                                                 "host": {
