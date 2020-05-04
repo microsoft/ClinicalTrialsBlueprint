@@ -496,8 +496,8 @@
                                         "Send_a_success_email": {
                                             "inputs": {
                                                 "body": {
-                                                    "Body": "<p>Processed @{variables('structuringSummary')['processed']} trials.<br>\nAdded @{variables('structuringSummary')['added']} trials.<br>\nUpdated @{variables('structuringSummary')['updated']} trials.<br>\nRemoved @{variables('structuringSummary')['removed']} trials.<br>\nFailed @{variables('structuringSummary')['failed']} trials.<br>\nStructuring process time - @{triggerBody()?['TimePassed']}<br>\nStructuring build version - @{triggerBody()?['BuildVersion']}<br>\n</p>",
-                                                    "Subject": "Trials updating process finished successfully",
+                                                    "Body": "<p>Processed @{variables('structuringSummary')['processed']} trials.<br>\nFailed @{variables('structuringSummary')['failed']} trials.<br>\nStructuring process time - @{triggerBody()?['TimePassed']}<br>\nStructuring build version - @{triggerBody()?['BuildVersion']}<br>\n</p>",
+                                                    "Subject": "[concat('[', parameters('serviceName'), '] ', ' Trials updating process finished successfully')]",
                                                     "To": "[parameters('accountId')]"
                                                 },
                                                 "host": {
@@ -540,7 +540,7 @@
                                                 "inputs": {
                                                     "body": {
                                                         "Body": "<p>Failure message - Disqualifier service failed to be ready.<br>\nDisqualifier readiness - @{variables('readiness')}<br>\nStructuring process time - @{triggerBody()?['TimePassed']}<br>\nStructuring build version - @{triggerBody()?['BuildVersion']}<br>\n<br>\nGateway slot not swapped.</p>",
-                                                        "Subject": "Trials updating process failed to complete",
+                                                        "Subject": "[concat('[', parameters('serviceName'), '] ', 'Trials updating process failed to complete')]",
                                                         "To": "[parameters('accountId')]"
                                                     },
                                                     "host": {
@@ -694,7 +694,7 @@
                                         "inputs": {
                                             "body": {
                                                 "Body": "<p>Failure message - @{triggerBody()?['FailureMessage']}<br>\nStructuring process time - @{triggerBody()?['TimePassed']}<br>\nStructuring build version - @{triggerBody()?['BuildVersion']}</p>",
-                                                "Subject": "Trials updating process failed to complete",
+                                                "Subject": "[concat('[', parameters('serviceName'), '] ', 'Trials updating process failed to complete')]",
                                                 "To": "[parameters('accountId')]"
                                             },
                                             "host": {
