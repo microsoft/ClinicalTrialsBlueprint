@@ -858,8 +858,7 @@
               "image": "[variables('structuringImageFullName')]",
               "command": [
                 "dotnet",
-                "ClinicalTrialsStructuring.dll",
-				        "restoreCttiDb"
+                "ClinicalTrialsStructuring.dll"
               ],
               "environmentVariables": [
                 {
