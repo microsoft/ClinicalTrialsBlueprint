@@ -113,7 +113,7 @@ Stopping primary structuring instance
 ```
 
 ```Powershell
-Stop-CtmStructuring -resourceGroupName $rg.ResourceGroupName -containerGroupName $matchingOutput.structuringName 
+Stop-CtmStructuring -resourceGroupName $rg.ResourceGroupName -containerGroupName $matchingOutput.Outputs.structuringName.Value
 ```
 
 Create Secondary Clinical Trials Matching service that will be used as the primary service is being serviced. You need only to pass isSecondary parameter as true
