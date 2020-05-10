@@ -28,12 +28,29 @@
     "acrPassword": {
       "type": "securestring"
     },
-    "structuringImageName": {
-      "type": "string",
-      "defaultValue": "clinical-trials-structuring"
-    },
     "structuringImageTag": {
-      "type": "string"
+      "type": "string",
+      "defaultValue": "2020.0510.1"
+    },
+    "queryEngineImageTag": {
+      "type": "string",
+      "defaultValue": "2020.0510.1"
+    },
+    "disqualifierImageTag": {
+      "type": "string",
+      "defaultValue": "2020.0510.1"
+    },
+    "conParserImageTag": {
+      "type": "string",
+      "defaultValue": "16897"
+    },
+    "ta4hImageTag": {
+      "type": "string",
+      "defaultValue": "2020.0510.1"
+    },
+    "gatewayImageTag": {
+      "type": "string",
+      "defaultValue": "2020.0510.1"
     },
     "queryCountry": {
       "type": "string",
@@ -69,8 +86,7 @@
       }
     },
     "finishedNotifyAddress": {
-      "type":"string",
-      "defaultValue": ""
+      "type":"string"
     },
     "isSecondary": {
       "type":"bool",
@@ -104,14 +120,14 @@
     "disqualificationResourceId": "[resourceId('Microsoft.Web/sites',variables('disqualificationWebAppName'))]",
     "structuringResourceId":"[resourceId('Microsoft.ContainerInstance/containerGroups',variables('structuringName'))]",
     // Docker Image Names
-    "gatewayDockerImageName": "[concat('DOCKER|',parameters('acrServer'),'/clinical-trials-gateway:latest')]",
-    "ayalonDockerImageName": "[concat('DOCKER|',parameters('acrServer'),'/cognitive-services-healthcare:latest')]",
-    "queryEngineDockerImageName": "[concat('DOCKER|',parameters('acrServer'),'/query-engine:latest')]",
-    "disqualificationDockerImageName": "[concat('DOCKER|',parameters('acrServer'),'/clinical-trials-disqualification:latest')]",
-    "structuringImageFullName": "[concat(parameters('acrServer'),'/',parameters('structuringImageName'),':', parameters('structuringImageTag'))]",
-    "constituencyParserImageName": "[concat(parameters('acrServer'),'/constituency-parser-server:latest')]",
+    "gatewayDockerImageName": "[concat('DOCKER|',parameters('acrServer'),'/clinical-trials-gateway:',parameters('gatewayImageTag'))]",
+    "ayalonDockerImageName": "[concat('DOCKER|',parameters('acrServer'),'/cognitive-services-healthcare:',parameters('ta4hImageTag'))]",
+    "queryEngineDockerImageName": "[concat('DOCKER|',parameters('acrServer'),'/query-engine:',parameters('queryEngineImageTag'))]",
+    "disqualificationDockerImageName": "[concat('DOCKER|',parameters('acrServer'),'/clinical-trials-disqualification:',parameters('disqualifierImageTag'))]",
+    "structuringImageName": "[concat(parameters('acrServer'),'/clinical-trials-structuring:',parameters('structuringImageTag'))]",
+    "constituencyParserImageName": "[concat(parameters('acrServer'),'/constituency-parser-server:',parameters('conParserImageTag'))]",
     // Gateway services
-    "ctti_user_name":"[concat(concat(parameters('postgreSqlAdministratorLogin'),'@'),concat(variables('postgresqlServerFullName'),'.postgres.database.azure.com'))]",
+    "ctti_user_name":"[concat(parameters('postgreSqlAdministratorLogin'),'@',variables('postgresqlServerFullName'),'.postgres.database.azure.com')]",
     "services": {
       "ta4h":"[concat('https://',variables('ayalonWebAppName'),'.azurewebsites.net')]",
       "qe":  "[concat('https://',variables('queryEngineWebAppName'),'.azurewebsites.net')]", 
@@ -855,7 +871,7 @@
           {
             "name": "structuring",
             "properties": {
-              "image": "[variables('structuringImageFullName')]",
+              "image": "[variables('structuringImageName')]",
               "command": [
                 "dotnet",
                 "ClinicalTrialsStructuring.dll"
