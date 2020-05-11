@@ -11,6 +11,7 @@ param(
     $ResourceGroup,
     [Parameter(Mandatory=$true)]
     $matchingParameters,
+    [Parameter(Mandatory=$false)]
     $resourceTags
 )
 
@@ -30,8 +31,8 @@ Try {
     $output = New-AzResourceGroupDeployment -serviceName $serviceName `
                                             -ResourceGroupName $ResourceGroup  `
                                             -saasSubscriptionId $saasSubscriptionId `
-                                            -TemplateFile "./arm-templates/azuredeploy-healthcarebot.json"                                             
-                                            -resourceTags $resourceTags
+                                            -resourceTags $resourceTags `
+                                            -TemplateFile "./arm-templates/azuredeploy-healthcarebot.json" 
 
     $output
     $luisAuthLocation = $output.Parameters.luisAuthLocation.Value
