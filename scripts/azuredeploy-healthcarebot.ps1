@@ -10,7 +10,8 @@ param(
     [Parameter(Mandatory=$true)]
     $ResourceGroup,
     [Parameter(Mandatory=$true)]
-    $matchingParameters
+    $matchingParameters,
+    $resourceTags
 )
 
 . ./scripts/profile.ps1
@@ -30,6 +31,7 @@ Try {
                                             -ResourceGroupName $ResourceGroup  `
                                             -saasSubscriptionId $saasSubscriptionId `
                                             -TemplateFile "./arm-templates/azuredeploy-healthcarebot.json"                                             
+                                            -resourceTags $resourceTags
 
     $output
     $luisAuthLocation = $output.Parameters.luisAuthLocation.Value
