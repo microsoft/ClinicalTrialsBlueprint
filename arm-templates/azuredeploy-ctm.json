@@ -1449,12 +1449,15 @@
             "sslEnforcement": "Disabled"
         }
     },
-	{
+	  {
     "name": "[concat('plan-auto-scale',variables('suffix'))]",
     "type": "Microsoft.Insights/autoscaleSettings",
-	 "apiVersion": "2015-04-01",
+	  "apiVersion": "2015-04-01",
     "location": "[resourceGroup().location]",
     "tags": "[parameters('resourceTags')]",
+    "dependsOn": [
+      "[resourceId('Microsoft.Web/serverfarms', variables('ctmServicePlan'))]"
+    ],
     "properties": {
         "name": "[concat('plan-auto-scale',variables('suffix'))]",
         "enabled": true,
