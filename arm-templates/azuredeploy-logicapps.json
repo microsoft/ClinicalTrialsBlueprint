@@ -6,7 +6,10 @@
             "type": "string"
         },
         "serviceName": {
-            "type": "String"
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 17
+
         },
         "isLiveId": {
             "type": "bool",
@@ -14,18 +17,18 @@
         },
         "connections_arm_externalid": {
             "defaultValue": "[concat(subscription().id,'/resourceGroups/',resourceGroup().name,'/providers/Microsoft.Web/connections/arm')]",
-            "type": "String"
+            "type": "string"
         },
         "connections_office365_externalid": {
             "defaultValue": "[concat(subscription().id,'/resourceGroups/',resourceGroup().name,'/providers/Microsoft.Web/connections/office365')]",
-            "type": "String"
+            "type": "string"
         },
         "resourceTags": {
             "type": "object",
             "defaultValue": {
                 "Environment": "Prod",
                 "Project": "FHIR Server"
-                }
+            }
         }
     
     },

@@ -3,7 +3,9 @@
     "contentVersion": "1.0.0.0",    
     "parameters": {
         "serviceName": {
-            "type": "string"
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 17
         },
         "location": {
             "type": "string",
