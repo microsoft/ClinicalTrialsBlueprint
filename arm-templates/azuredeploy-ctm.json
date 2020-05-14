@@ -56,7 +56,7 @@
     },
     "queryCountry": {
       "type": "string",
-      "defaultValue": ""
+      "defaultValue": "us"
     },
     "queryPhases": {
       "type": "string",
@@ -1498,7 +1498,7 @@
             }
         ],
         "notifications": [],
-        "targetResourceLocation": "[resourceGroup().location]",
+        "targetResourceLocation": "[resourceGroup().location]"
     }
 	}
   ],
