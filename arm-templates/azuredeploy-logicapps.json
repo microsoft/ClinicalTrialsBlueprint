@@ -9,7 +9,6 @@
             "type": "string",
             "minLength": 3,
             "maxLength": 17
-
         },
         "isLiveId": {
             "type": "bool",
@@ -221,6 +220,30 @@
                                 ]
                             }
                         },
+                        "Parse_ACI_status_JSON": {
+							"inputs": {
+                                "content": "@body('Read_current_ACI_resource_status')?['properties']",
+                                "schema": {
+                                    "properties": {
+                                        "instanceView": {
+                                            "properties": {
+                                                "state": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+							},
+							"runAfter": {
+                                "Read_current_ACI_resource_status": [
+                                    "Succeeded"
+                                ]
+							},
+							"type": "ParseJson"
+					    },
                         "Parse_Slot_Response": {
                             "runAfter": {
                                 "Get_Staging_slot": [
@@ -240,58 +263,116 @@
                                 }
                             }
                         },
+                        "Read_current_ACI_resource_status": {
+							"inputs": {
+                                "host": {
+                                    "connection": {
+                                        "name": "@parameters('$connections')['arm']['connectionId']"
+                                    }
+                                },
+                                "method": "get",
+                                "path": "[concat('/subscriptions/@{encodeURIComponent(''',subscription().subscriptionId,''')}/resourcegroups/@{encodeURIComponent(''',resourceGroup().name,''')}/providers/@{encodeURIComponent(''Microsoft.ContainerInstance'')}/@{encodeURIComponent(concat(''containerGroups/'', variables(''structuringAciSecondaryService'')))}')]",
+                                "queries": {
+                                    "x-ms-api-version": "2018-10-01"
+                                }
+							},
+							"runAfter": {
+                                "Initialize_Structuring_Secondary_Service_variable": [
+                                    "Succeeded"
+                                ]
+							},
+							"type": "ApiConnection"
+					    },
                         "Response_-_200_OK": {
                             "inputs": {
                                 "statusCode": 200
                             },
                             "kind": "http",
                             "runAfter": {
-                                "Start_structuring_service": [
+                                "Verify_ACI_is_Stopped": [
                                     "Succeeded"
                                 ]
                             },
                             "type": "Response"
                         },
-                        "Start_structuring_service": {
-                            "runAfter": {
-                                "Stop_structuring_service": [
-                                    "Succeeded"
-                                ]
-                            },
-                            "type": "ApiConnection",
-                            "inputs": {
-                                "host": {
-                                    "connection": {
-                                        "name": "@parameters('$connections')['arm']['connectionId']"
+                        "Verify_ACI_is_Stopped": {
+							"actions": {
+                                "Start_structuring_service": {
+                                    "runAfter": {
+                                        "Stop_structuring_service": [
+                                            "Succeeded"
+                                        ]
+                                    },
+                                    "type": "ApiConnection",
+                                    "inputs": {
+                                        "host": {
+                                            "connection": {
+                                                "name": "@parameters('$connections')['arm']['connectionId']"
+                                            }
+                                        },
+                                        "method": "post",
+                                        "path": "[concat('/subscriptions/@{encodeURIComponent(''',subscription().subscriptionId,''')}/resourcegroups/@{encodeURIComponent(''',resourceGroup().name,''')}/providers/@{encodeURIComponent(''Microsoft.ContainerInstance'')}/@{encodeURIComponent(concat(''containerGroups/'', variables(''structuringAciSecondaryService'')))}/@{encodeURIComponent(''start'')}')]",
+                                        "queries": {
+                                            "x-ms-api-version": "2018-10-01"
+                                        }
                                     }
                                 },
-                                "method": "post",
-                                "path": "[concat('/subscriptions/@{encodeURIComponent(''',subscription().subscriptionId,''')}/resourcegroups/@{encodeURIComponent(''',resourceGroup().name,''')}/providers/@{encodeURIComponent(''Microsoft.ContainerInstance'')}/@{encodeURIComponent(concat(''containerGroups/'', variables(''structuringAciSecondaryService'')))}/@{encodeURIComponent(''start'')}')]",
-                                "queries": {
-                                    "x-ms-api-version": "2018-10-01"
+                                "Stop_structuring_service": {
+                                    "runAfter": {},
+                                    "type": "ApiConnection",
+                                    "inputs": {
+                                        "host": {
+                                            "connection": {
+                                                "name": "@parameters('$connections')['arm']['connectionId']"
+                                            }
+                                        },
+                                        "method": "post",
+                                        "path": "[concat('/subscriptions/@{encodeURIComponent(''',subscription().subscriptionId,''')}/resourcegroups/@{encodeURIComponent(''',resourceGroup().name,''')}/providers/@{encodeURIComponent(''Microsoft.ContainerInstance'')}/@{encodeURIComponent(concat(''containerGroups/'', variables(''structuringAciSecondaryService'')))}/@{encodeURIComponent(''stop'')}')]",
+                                        "queries": {
+                                            "x-ms-api-version": "2018-10-01"
+                                        }
+                                    }
                                 }
-                            }
-                        },
-                        "Stop_structuring_service": {
-                            "runAfter": {
-                                "Initialize_Structuring_Secondary_Service_variable": [
+							},
+							"else": {
+                                "actions": {
+                                    "Send_a_failure_email": {
+                                        "inputs": {
+                                            "body": {
+                                                "Body": "<p>Structuring process is already running.</p>",
+                                                "Subject": "[concat('[', parameters('serviceName'), '] ', 'Trials structuring process aborted')]",
+                                                "To": "[parameters('accountId')]"
+                                            },
+                                            "host": {
+                                                "connection": {
+                                                    "name": "@parameters('$connections')['office365']['connectionId']"
+                                                }
+                                            },
+                                            "method": "post",
+                                            "path": "/v2/Mail"
+                                        },
+                                        "runAfter": {},
+                                        "type": "ApiConnection"
+                                    }
+                                }
+							},
+							"expression": {
+                                "and": [
+                                    {
+                                        "equals": [
+                                            "@body('Parse_ACI_status_JSON')?['instanceView']?['state']",
+                                            "Stopped"
+                                        ]
+                                    }
+                                ]
+							},
+							"runAfter": {
+                                "Parse_ACI_status_JSON": [
                                     "Succeeded"
                                 ]
-                            },
-                            "type": "ApiConnection",
-                            "inputs": {
-                                "host": {
-                                    "connection": {
-                                        "name": "@parameters('$connections')['arm']['connectionId']"
-                                    }
-                                },
-                                "method": "post",
-                                "path": "[concat('/subscriptions/@{encodeURIComponent(''',subscription().subscriptionId,''')}/resourcegroups/@{encodeURIComponent(''',resourceGroup().name,''')}/providers/@{encodeURIComponent(''Microsoft.ContainerInstance'')}/@{encodeURIComponent(concat(''containerGroups/'', variables(''structuringAciSecondaryService'')))}/@{encodeURIComponent(''stop'')}')]",
-                                "queries": {
-                                    "x-ms-api-version": "2018-10-01"
-                                }
-                            }
-                        }
+							},
+							"type": "If"
+					    }
                     },
                     "outputs": {
                     }
@@ -303,6 +384,11 @@
                                 "connectionId": "[parameters('connections_arm_externalid')]",
                                 "connectionName": "arm",
                                 "id": "[concat(subscription().id,'/providers/Microsoft.Web/locations/', resourceGroup().location,'/managedApis/arm')]"
+                            },
+                            "office365": {
+                                "connectionId": "[parameters('connections_office365_externalid')]",
+                                "connectionName": "office365",
+                                "id": "[concat(subscription().id,'/providers/Microsoft.Web/locations/', resourceGroup().location,'/managedApis/office365')]"
                             }
                         }
                     }
