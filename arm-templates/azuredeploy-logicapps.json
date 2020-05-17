@@ -14,14 +14,6 @@
             "type": "bool",
             "defaultValue": false
         },
-        "connections_arm_externalid": {
-            "defaultValue": "[concat(subscription().id,'/resourceGroups/',resourceGroup().name,'/providers/Microsoft.Web/connections/arm')]",
-            "type": "string"
-        },
-        "connections_office365_externalid": {
-            "defaultValue": "[concat(subscription().id,'/resourceGroups/',resourceGroup().name,'/providers/Microsoft.Web/connections/office365')]",
-            "type": "string"
-        },
         "resourceTags": {
             "type": "object",
             "defaultValue": {
@@ -40,7 +32,9 @@
         "finisherLogicAppName": "[concat(parameters('serviceName'),'-finisher-logic-app')]",
         // Reference to workflow
         "workflows_structurer_logic_app": "[concat(subscription().id,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Logic/workflows/', variables('structurerLogicAppName'))]",
-        "userName": "[if(parameters('isLiveId'), concat('live.com#', parameters('accountId')), parameters('accountId'))]"
+        "userName": "[if(parameters('isLiveId'), concat('live.com#', parameters('accountId')), parameters('accountId'))]",
+        "connections_arm_externalid": "[concat(subscription().id,'/resourceGroups/',resourceGroup().name,'/providers/Microsoft.Web/connections/arm')]",
+        "connections_office365_externalid": "[concat(subscription().id,'/resourceGroups/',resourceGroup().name,'/providers/Microsoft.Web/connections/office365')]",
     },
     "resources": [
         {
@@ -381,12 +375,12 @@
                     "$connections": {
                         "value": {
                             "arm": {
-                                "connectionId": "[parameters('connections_arm_externalid')]",
+                                "connectionId": "[variables('connections_arm_externalid')]",
                                 "connectionName": "arm",
                                 "id": "[concat(subscription().id,'/providers/Microsoft.Web/locations/', resourceGroup().location,'/managedApis/arm')]"
                             },
                             "office365": {
-                                "connectionId": "[parameters('connections_office365_externalid')]",
+                                "connectionId": "[variables('connections_office365_externalid')]",
                                 "connectionName": "office365",
                                 "id": "[concat(subscription().id,'/providers/Microsoft.Web/locations/', resourceGroup().location,'/managedApis/office365')]"
                             }
@@ -900,12 +894,12 @@
                     "$connections": {
                         "value": {
                             "arm": {
-                                "connectionId": "[parameters('connections_arm_externalid')]",
+                                "connectionId": "[variables('connections_arm_externalid')]",
                                 "connectionName": "arm",
                                 "id": "[concat(subscription().id,'/providers/Microsoft.Web/locations/', resourceGroup().location,'/managedApis/arm')]"
                             },
                             "office365": {
-                                "connectionId": "[parameters('connections_office365_externalid')]",
+                                "connectionId": "[variables('connections_office365_externalid')]",
                                 "connectionName": "office365",
                                 "id": "[concat(subscription().id,'/providers/Microsoft.Web/locations/', resourceGroup().location,'/managedApis/office365')]"
                             }

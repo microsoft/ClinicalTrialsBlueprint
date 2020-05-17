@@ -5,11 +5,7 @@
         "serviceName": {
             "type": "string",
             "minLength": 3,
-            "maxLength": 17
-        },
-        "location": {
-            "type": "string",
-            "defaultValue": "[resourceGroup().location]"
+            "maxLength": 19
         },
         "saasSubscriptionId": {
             "type": "string"
@@ -32,10 +28,6 @@
             "type": "string",
             "defaultValue": "westus"
         },
-        "luisPredictionLocation":{
-            "type":"string",
-            "defaultValue":"[resourceGroup().location]"
-        },
         "resourceTags": {
         "type": "object",
         "defaultValue": {
@@ -55,7 +47,7 @@
             "apiVersion": "2015-05-01",
             "tags": "[parameters('resourceTags')]",
             "name": "[variables('insightsName')]",
-            "location": "[parameters('location')]",
+            "location": "[resourceGroup().location]",
             "kind": "web",
             "properties": {
                 "Application_Type": "web"
@@ -66,7 +58,7 @@
             "apiVersion": "2017-04-18",
             "tags": "[parameters('resourceTags')]",
             "name": "[variables('luisPredictionName')]",
-            "location": "[parameters('luisPredictionLocation')]",
+            "location": "[resourceGroup().location]",
             "sku": {
                 "name": "[parameters('luisSku')]"
             },

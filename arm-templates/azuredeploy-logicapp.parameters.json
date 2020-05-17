@@ -1,0 +1,21 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "accountId": {
+            "value": "## TO BE DEFINED ##"
+        },
+        "serviceName": {
+            "value": "## TO BE DEFINED ##"
+        },
+        "isLiveId": {
+            "value": false
+        },
+        "resourceTags": {
+            "value": {
+                "Environment": "Prod",
+                "Project": "FHIR Server"
+            }
+        }
+    }
+}

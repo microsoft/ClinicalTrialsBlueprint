@@ -1,0 +1,78 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "serviceName": {
+            "value": "##TO BE DEFINED##"          
+          },
+          "env": {
+            "value": "prod_us"
+          },
+          "fhirServerName": {
+            "value":""
+          },
+          "fhirSecondaryServerName": {
+            "value":""
+          },
+          "acrServer": {
+            "value": "ctmprod.azurecr.io"
+          },
+          "acrUsername": {
+            "value": "ctmprod"
+          },
+          "acrPassword": {
+            "value": "securestring"
+          },
+          "structuringImageTag": {
+            "value": "2020.0510.1"
+          },
+          "queryEngineImageTag": {
+            "value": "2020.0510.1"
+          },
+          "disqualifierImageTag": {
+            "value": "2020.0510.1"
+          },
+          "conParserImageTag": {
+            "value": "16897"
+          },
+          "ta4hImageTag": {
+            "value": "2020.0510.1"
+          },
+          "gatewayImageTag": {
+            "value": "2020.0510.1"
+          },
+          "queryCountry": {
+            "value": "us"
+          },
+          "queryPhases": {
+            "value": "phase_1;phase_2;phase_3;phase_4;not_applicable"
+          },
+          "queryRecruitment": {
+            "value": "recruiting"
+          },
+          "querySponsors": {
+            "value": ""
+          },
+          "queryConditions": {
+            "value": ""
+          },
+          "postgreSqlAdministratorLogin": {
+              "value": "## TO BE DEFINED ##"
+          },
+          "postgreSqladministratorLoginPassword": {
+              "value": "## TO BE DEFINED ##"
+          },
+          "resourceTags": {
+            "value": {
+              "Environment": "Prod",
+              "Project": "CTM"
+            }
+          },
+          "finishedNotifyAddress": {
+            "value":"## TO BE DEFINED ##"
+          },
+          "isSecondary": {
+            "value":false
+          }
+    }
+}

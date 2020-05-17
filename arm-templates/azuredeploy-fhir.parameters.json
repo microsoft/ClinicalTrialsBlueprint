@@ -1,0 +1,57 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "serviceName": {
+            "value": "## TO BE DEFINED ##"
+        },
+        "appServicePlanResourceGroup": {
+            "value": ""
+        },
+        "appServicePlanName": {
+            "value": ""
+        },
+        "appServicePlanSku": {
+            "value": "P2"
+        },
+        "securityAuthenticationAuthority": {
+            "value": ""
+        },
+        "securityAuthenticationAudience": {
+            "value": ""
+        },
+        "enableAadSmartOnFhirProxy": {
+            "value": false
+        },
+        "msdeployPackageUrl": {
+            "value": ""
+        },
+        "deployApplicationInsights": {
+            "value": true
+        },
+        "applicationInsightsLocation": {
+            "value": "eastus"
+        },
+        "additionalFhirServerConfigProperties": {
+            "value": {}
+        },
+        "solutionType": {
+            "value": "FhirServerSqlServer"
+        },
+        "sqlAdminPassword": {
+            "value": "## TO BE DEFINED ##"
+        },
+        "fhirVersion": {
+            "value": "R4"
+        },
+        "enableExport": {
+            "value": false
+        },
+        "resourceTags": {
+            "value": {
+                "Environment": "Prod",
+                "Project": "FHIR Server"
+            }
+        }
+    }
+}
