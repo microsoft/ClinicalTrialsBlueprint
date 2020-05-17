@@ -688,7 +688,7 @@
       "location": "global",
       "tags": "[parameters('resourceTags')]",
       "sku": {
-        "name": "S0"
+        "name": "S1"
       }
     },
     {
