@@ -56,23 +56,18 @@
     },
     "queryCountry": {
       "type": "string",
-      "defaultValue": "us"
     },
     "queryPhases": {
       "type": "string",
-      "defaultValue": "phase_1;phase_2;phase_3;phase_4;not_applicable"
     },
     "queryRecruitment": {
       "type": "string",
-      "defaultValue": "recruiting"
     },
     "querySponsors": {
       "type": "string",
-      "defaultValue": ""
     },
     "queryConditions": {
       "type": "string",
-      "defaultValue": ""
     },
     "postgreSqlAdministratorLogin": {
         "type": "string"
