@@ -55,19 +55,19 @@
       "defaultValue": "2020.0510.1"
     },
     "queryCountry": {
-      "type": "string",
+      "type": "string"
     },
     "queryPhases": {
-      "type": "string",
+      "type": "string"
     },
     "queryRecruitment": {
-      "type": "string",
+      "type": "string"
     },
     "querySponsors": {
-      "type": "string",
+      "type": "string"
     },
     "queryConditions": {
-      "type": "string",
+      "type": "string"
     },
     "postgreSqlAdministratorLogin": {
         "type": "string"
