@@ -3,76 +3,67 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "serviceName": {
-            "value": "##TO BE DEFINED##"          
-          },
-          "env": {
+            "value": "##TO BE DEFINED##"
+        },
+        "postgreSqlAdministratorLogin": {
+            "value": "## TO BE DEFINED ##"
+        },
+        "postgreSqladministratorLoginPassword": {
+            "value": "## TO BE DEFINED ##"
+        },
+        "acrPassword": {
+            "value": "## TO BE DEFINED ##"
+        },
+        "env": {
             "value": "prod_us"
-          },
-          "fhirServerName": {
-            "value":""
-          },
-          "fhirSecondaryServerName": {
-            "value":""
-          },
-          "acrServer": {
+        },
+        "acrServer": {
             "value": "ctmprod.azurecr.io"
-          },
-          "acrUsername": {
+        },
+        "acrUsername": {
             "value": "ctmprod"
-          },
-          "acrPassword": {
-            "value": "securestring"
-          },
-          "structuringImageTag": {
+        },
+        "structuringImageTag": {
             "value": "2020.0510.1"
-          },
-          "queryEngineImageTag": {
+        },
+        "queryEngineImageTag": {
             "value": "2020.0510.1"
-          },
-          "disqualifierImageTag": {
+        },
+        "disqualifierImageTag": {
             "value": "2020.0510.1"
-          },
-          "conParserImageTag": {
+        },
+        "conParserImageTag": {
             "value": "16897"
-          },
-          "ta4hImageTag": {
+        },
+        "ta4hImageTag": {
             "value": "2020.0510.1"
-          },
-          "gatewayImageTag": {
+        },
+        "gatewayImageTag": {
             "value": "2020.0510.1"
-          },
-          "queryCountry": {
+        },
+        "queryCountry": {
             "value": "us"
-          },
-          "queryPhases": {
+        },
+        "queryPhases": {
             "value": "phase_1;phase_2;phase_3;phase_4;not_applicable"
-          },
-          "queryRecruitment": {
+        },
+        "queryRecruitment": {
             "value": "recruiting"
-          },
-          "querySponsors": {
+        },
+        "querySponsors": {
             "value": ""
-          },
-          "queryConditions": {
+        },
+        "queryConditions": {
             "value": ""
-          },
-          "postgreSqlAdministratorLogin": {
-              "value": "## TO BE DEFINED ##"
-          },
-          "postgreSqladministratorLoginPassword": {
-              "value": "## TO BE DEFINED ##"
-          },
-          "resourceTags": {
+        },
+        "resourceTags": {
             "value": {
-              "Environment": "Prod",
-              "Project": "CTM"
+                "Environment": "Prod",
+                "Project": "CTM"
             }
-          },
-          "finishedNotifyAddress": {
-            "value":"## TO BE DEFINED ##"
-          },
-          "isSecondary": {
-            "value":false
-          }
+        },
+        "isSecondary": {
+            "value": false
+        }
     }
 }

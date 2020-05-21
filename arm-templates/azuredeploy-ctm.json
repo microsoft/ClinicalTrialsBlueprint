@@ -11,14 +11,6 @@
       "type": "string",
       "defaultValue": "prod_us"
     },
-    "fhirServerName": {
-      "type": "string",
-      "defaultValue":""
-    },
-    "fhirSecondaryServerName": {
-      "type": "string",
-      "defaultValue":""
-    },
     "acrServer": {
       "type": "string",
       "defaultValue": "ctmprod.azurecr.io"
@@ -82,9 +74,6 @@
         "Project": "CTM"
       }
     },
-    "finishedNotifyAddress": {
-      "type":"string"
-    },
     "isSecondary": {
       "type":"bool",
       "defaultValue": false
@@ -95,47 +84,51 @@
     "suffix":"[if(parameters('isSecondary'), '-s','')]",
     "structuringName": "[concat(parameters('serviceName'),'-ctm-struct-aci',variables('suffix'))]",    
     "redisCacheName": "[concat(parameters('serviceName'),'-ctm-redis',variables('suffix'))]",    
-    "queryEngineWebAppBaseName":"[concat(parameters('serviceName'),'-ctm-qe-webapp')]",
-    "queryEngineWebAppName": "[concat(variables('queryEngineWebAppBaseName'),variables('suffix'))]",
-    "disqualificationWebAppBaseName":"[concat(parameters('serviceName'),'-ctm-disq-webapp')]",
-    "disqualificationWebAppName": "[concat(variables('disqualificationWebAppBaseName'),variables('suffix'))]",
+    "queryEngineWebAppName": "[concat(parameters('serviceName'),'-ctm-qe-webapp',variables('suffix'))]",
+    "disqualificationWebAppName": "[concat(parameters('serviceName'),'-ctm-disq-webapp',variables('suffix'))]",
     "postgresqlServerFullName":"[concat(parameters('serviceName'),'-ctm-postgresql',variables('suffix'))]",
     "keyVaultName": "[concat(parameters('serviceName'),'-ctm-kv',variables('suffix'))]",
     // Unique resources
     "insightsName": "[concat(parameters('serviceName'),'-ctm-insights')]",
-    "proxyApiKey":"[uniqueString(subscription().id)]",
+    "proxyApiKey": "[uniqueString(subscription().id)]",
     "mapsServiceName": "[concat(parameters('serviceName'),'-ctm-map')]",
     "ctmServicePlan": "[concat(parameters('serviceName'),'-ctm-plan')]",
     "ayalonServicePlan": "[concat(parameters('serviceName'),'-ayalon-plan')]",
     "gatewayWebAppName": "[concat(parameters('serviceName'),'-gateway-webapp')]",
     "ayalonWebAppName": "[concat(parameters('serviceName'),'-ayalon-webapp')]",
     "textAnalyticsName": "[concat(parameters('serviceName'),'-ctm-ta')]",
+    // Addresses
+    "redisAddress": "[concat(variables('redisCacheName'),'.redis.cache.windows.net')]",
+    "keyVaultAddress": "[concat('https://',variables('keyVaultName'),'.vault.azure.net/')]",
+    "fhirAddress": "[concat('https://',variables('gatewayWebAppName'), if(parameters('isSecondary'), '-secondary',''),'.azurewebsites.net/fhir/')]",
+    "finishedNotifyAddress": "[listCallbackURL(concat(resourceId('Microsoft.Logic/workflows/', concat(parameters('serviceName'),'-finisher-logic-app')),'/triggers/manual'), '2016-06-01').value]",
     // Resource Ids
     "gatewayResourceId": "[resourceId('Microsoft.Web/sites',variables('gatewayWebAppName'))]",
     "queryEngineResourceId": "[resourceId('Microsoft.Web/sites',variables('queryEngineWebAppName'))]",
-    "gatewaySecondaryResourceId":"[resourceId('Microsoft.Web/sites/slots',variables('gatewayWebAppName'),'secondary')]",
+    "gatewaySecondaryResourceId": "[resourceId('Microsoft.Web/sites/slots',variables('gatewayWebAppName'),'secondary')]",
     "disqualificationResourceId": "[resourceId('Microsoft.Web/sites',variables('disqualificationWebAppName'))]",
-    "structuringResourceId":"[resourceId('Microsoft.ContainerInstance/containerGroups',variables('structuringName'))]",
+    "structuringResourceId": "[resourceId('Microsoft.ContainerInstance/containerGroups',variables('structuringName'))]",
     // Docker Image Names
-    "gatewayDockerImageName": "[concat('DOCKER|',parameters('acrServer'),'/clinical-trials-gateway:',parameters('gatewayImageTag'))]",
-    "ayalonDockerImageName": "[concat('DOCKER|',parameters('acrServer'),'/cognitive-services-healthcare:',parameters('ta4hImageTag'))]",
-    "queryEngineDockerImageName": "[concat('DOCKER|',parameters('acrServer'),'/query-engine:',parameters('queryEngineImageTag'))]",
-    "disqualificationDockerImageName": "[concat('DOCKER|',parameters('acrServer'),'/clinical-trials-disqualification:',parameters('disqualifierImageTag'))]",
-    "structuringImageName": "[concat(parameters('acrServer'),'/clinical-trials-structuring:',parameters('structuringImageTag'))]",
-    "constituencyParserImageName": "[concat(parameters('acrServer'),'/constituency-parser-server:',parameters('conParserImageTag'))]",
+    "gatewayDockerImageName":           "[concat('DOCKER|',parameters('acrServer'),'/clinical-trials-gateway:',parameters('gatewayImageTag'))]",
+    "ayalonDockerImageName":            "[concat('DOCKER|',parameters('acrServer'),'/cognitive-services-healthcare:',parameters('ta4hImageTag'))]",
+    "queryEngineDockerImageName":       "[concat('DOCKER|',parameters('acrServer'),'/query-engine:',parameters('queryEngineImageTag'))]",
+    "disqualificationDockerImageName":  "[concat('DOCKER|',parameters('acrServer'),'/clinical-trials-disqualification:',parameters('disqualifierImageTag'))]",
+    "structuringImageName":             "[concat(parameters('acrServer'),'/clinical-trials-structuring:',parameters('structuringImageTag'))]",
+    "constituencyParserImageName":      "[concat(parameters('acrServer'),'/constituency-parser-server:',parameters('conParserImageTag'))]",
     // Gateway services
-    "ctti_user_name":"[concat(parameters('postgreSqlAdministratorLogin'),'@',variables('postgresqlServerFullName'),'.postgres.database.azure.com')]",
+    "cttiHost": "[concat(variables('postgresqlServerFullName'),'.postgres.database.azure.com')]",
+    "cttiUserName":"[concat(parameters('postgreSqlAdministratorLogin'),'@',variables('cttiHost'))]",
     "services": {
       "ta4h":"[concat('https://',variables('ayalonWebAppName'),'.azurewebsites.net')]",
       "qe":  "[concat('https://',variables('queryEngineWebAppName'),'.azurewebsites.net')]", 
       "disq":"[concat('https://',variables('disqualificationWebAppName'),'.azurewebsites.net')]", 
-      "fhir": "[concat('https://',parameters('fhirServerName'),'.azurewebsites.net/')]"      
+      "fhir": "[concat('https://',parameters('serviceName'),'-fhir.azurewebsites.net/')]"      
     },
     "servicesSecondary": {
       "ta4h":"[concat('https://',variables('ayalonWebAppName'),'.azurewebsites.net')]",
-      "qe":  "[concat('https://',variables('queryEngineWebAppBaseName'),'-s.azurewebsites.net')]", 
-      "disq":"[concat('https://',variables('disqualificationWebAppBaseName'),'-s.azurewebsites.net')]", 
-      "fhir": "[concat('https://',parameters('fhirSecondaryServerName'),'.azurewebsites.net/')]"      
+      "qe":  "[concat('https://',variables('queryEngineWebAppName'),'-s.azurewebsites.net')]", 
+      "disq":"[concat('https://',variables('disqualificationWebAppName'),'-s.azurewebsites.net')]", 
+      "fhir": "[concat('https://',parameters('serviceName'),'-fhir-s.azurewebsites.net/')]"      
     },
     "allowedPaths": "/status,/,/ready,/swagger/*,/metadata"
   },
@@ -244,7 +237,7 @@
                 },
                 {
                   "name":"KEYVAULT_URL",
-                  "value":"[concat('https://',variables('keyVaultName'),'.vault.azure.net/')]"
+                  "value":"[variables('keyVaultAddress')]"
                 },
                 {
                   "name":"SERVICES",
@@ -409,11 +402,11 @@
                 },
                 {
                   "name":"KEYVAULT_URL",
-                  "value":"[concat('https://',variables('keyVaultName'),'.vault.azure.net/')]"
+                  "value": "[variables('keyVaultAddress')]"
                 },
                 {
                   "name":"SERVICES",
-                  "value":"[string(variables('servicesSecondary'))]"
+                  "value": "[string(variables('servicesSecondary'))]"
                 },
                 {
                   "name":"ALLOWED_PATHS",
@@ -900,7 +893,7 @@
                 },
                 {
                   "name": "key_vault__address",
-                  "value": "[concat('https://', variables('keyVaultName'), '.vault.azure.net/')]"
+                  "value": "[variables('keyVaultAddress')]"
                 },
                 {
                   "name": "azure_maps__api_key",
@@ -908,8 +901,7 @@
                 },
                 {
                   "name": "fhir__address",
-                  "value": "[if(parameters('isSecondary'), concat('https://',concat(variables('gatewayWebAppName'),'-secondary'),'.azurewebsites.net/fhir/'),
-                                concat('https://',concat(variables('gatewayWebAppName')),'.azurewebsites.net/fhir/'))]"
+                  "value": "[variables('fhirAddress')]"
                 },
                 {
                   "name": "ayalon__address",
@@ -917,11 +909,11 @@
                 },
                 {
                   "name": "ctti__host",
-                  "value": "[concat(variables('postgresqlServerFullName'),'.postgres.database.azure.com')]"              
+                  "value": "[variables('cttiHost')]"              
                 },
                 {
                   "name": "ctti__user_name",
-                  "value": "[variables('ctti_user_name')]"
+                  "value": "[variables('cttiUserName')]"
                 },
           			{
                   "name": "ctti__secret_name",
@@ -933,11 +925,11 @@
                 },
                 {
                   "name":"redis__address",
-                  "value":"[concat(variables('redisCacheName'),'.redis.cache.windows.net')]"
+                  "value":"[variables('redisAddress')]"
                 },
                 {
                   "name":"structuring__finished_notifier_address",
-                  "value":"[parameters('finishedNotifyAddress')]"
+                  "value":"[variables('finishedNotifyAddress')]"
                 }
               ],
               "resources": {
@@ -952,11 +944,12 @@
             "name": "constituency-parser",
             "properties": {
               "image": "[variables('constituencyParserImageName')]",
-			  "environmentVariables": [
+			        "environmentVariables": [
                 {
                   "name": "APP_INSIGHT_KEY",
                   "value": "[reference(variables('insightsName'), '2015-05-01').instrumentationKey]"
-                }],
+                }
+              ],
               "resources": {
                 "requests": {
                   "cpu": 2,
@@ -1067,15 +1060,15 @@
             },
             {
               "name":"key_vault__address",
-              "value":"[concat('https://',variables('keyVaultName'),'.vault.azure.net/')]"
+              "value": "[variables('keyVaultAddress')]"
             },
             {
                 "name": "ctti__host",
-                "value": "[concat(variables('postgresqlServerFullName'),'.postgres.database.azure.com')]"
+                "value": "[variables('cttiHost')]"
             },
             {
               "name": "ctti__user_name",
-              "value": "[variables('ctti_user_name')]"         
+              "value": "[variables('cttiUserName')]"         
             },
             {
               "name":"ctti__secret_name",
@@ -1087,7 +1080,7 @@
             },
             {
               "name":"redis__address",
-              "value":"[concat(variables('redisCacheName'),'.redis.cache.windows.net')]"
+              "value":"[variables('redisAddress')]"
             },
             {
               "name":"redis__secret_name",
@@ -1282,15 +1275,15 @@
             },
             {
               "name":"key_vault__address",
-              "value":"[concat('https://',variables('keyVaultName'),'.vault.azure.net/')]"
+              "value": "[variables('keyVaultAddress')]"
             },
             {
               "name": "ctti__host",
-              "value": "[concat(variables('postgresqlServerFullName'),'.postgres.database.azure.com')]"              
+              "value": "[variables('cttiHost')]"
             },
             {
               "name": "ctti__user_name",
-              "value": "[variables('ctti_user_name')]"         
+              "value": "[variables('cttiUserName')]"         
             },
             {
               "name":"ctti__secret_name",
@@ -1298,7 +1291,7 @@
             },
             {
               "name":"redis__address",
-              "value":"[concat(variables('redisCacheName'),'.redis.cache.windows.net')]"
+              "value":"[variables('redisAddress')]"
             },
             {
               "name":"redis__secret_name",
@@ -1447,94 +1440,69 @@
         }
     },
 	  {
-    "name": "[concat('plan-auto-scale',variables('suffix'))]",
-    "type": "Microsoft.Insights/autoscaleSettings",
-	  "apiVersion": "2015-04-01",
-    "location": "[resourceGroup().location]",
-    "tags": "[parameters('resourceTags')]",
-    "dependsOn": [
-      "[resourceId('Microsoft.Web/serverfarms', variables('ctmServicePlan'))]"
-    ],
-    "properties": {
-        "name": "[concat('plan-auto-scale',variables('suffix'))]",
-        "enabled": true,
-        "targetResourceUri": "[resourceId('Microsoft.Web/serverfarms', variables('ctmServicePlan'))]",
-        "profiles": [
-            {
-                "name": "Auto created scale condition",
-                "capacity": {
-                    "minimum": "1",
-                    "maximum": "2",
-                    "default": "1"
-                },
-                "rules": [
-                    {
-                        "scaleAction": {
-                            "direction": "Increase",
-                            "type": "ChangeCount",
-                            "value": "1",
-                            "cooldown": "PT5M"
-                        },
-                        "metricTrigger": {
-                            "metricName": "CpuPercentage",
-                            "metricNamespace": "microsoft.web/serverfarms",
-                            "metricResourceUri": "[resourceId('Microsoft.Web/serverfarms', variables('ctmServicePlan'))]",
-                            "operator": "GreaterThan",
-                            "statistic": "Average",
-                            "threshold": 70,
-                            "timeAggregation": "Average",
-                            "timeGrain": "PT1M",
-                            "timeWindow": "PT5M",
-                            "Dimensions": [],
-                            "dividePerInstance": false
-                        }
-                    }
-                ]
-            }
-        ],
-        "notifications": [],
-        "targetResourceLocation": "[resourceGroup().location]"
-    }
+      "name": "[concat('plan-auto-scale',variables('suffix'))]",
+      "type": "Microsoft.Insights/autoscaleSettings",
+      "apiVersion": "2015-04-01",
+      "location": "[resourceGroup().location]",
+      "tags": "[parameters('resourceTags')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/serverfarms', variables('ctmServicePlan'))]"
+      ],
+      "properties": {
+          "name": "[concat('plan-auto-scale',variables('suffix'))]",
+          "enabled": true,
+          "targetResourceUri": "[resourceId('Microsoft.Web/serverfarms', variables('ctmServicePlan'))]",
+          "profiles": [
+              {
+                  "name": "Auto created scale condition",
+                  "capacity": {
+                      "minimum": "1",
+                      "maximum": "2",
+                      "default": "1"
+                  },
+                  "rules": [
+                      {
+                          "scaleAction": {
+                              "direction": "Increase",
+                              "type": "ChangeCount",
+                              "value": "1",
+                              "cooldown": "PT5M"
+                          },
+                          "metricTrigger": {
+                              "metricName": "CpuPercentage",
+                              "metricNamespace": "microsoft.web/serverfarms",
+                              "metricResourceUri": "[resourceId('Microsoft.Web/serverfarms', variables('ctmServicePlan'))]",
+                              "operator": "GreaterThan",
+                              "statistic": "Average",
+                              "threshold": 70,
+                              "timeAggregation": "Average",
+                              "timeGrain": "PT1M",
+                              "timeWindow": "PT5M",
+                              "Dimensions": [],
+                              "dividePerInstance": false
+                          }
+                      }
+                  ]
+              }
+          ],
+          "notifications": [],
+          "targetResourceLocation": "[resourceGroup().location]"
+      }
 	}
   ],
-  "outputs":{
-    "proxyApiKey": {
-      "type":"string",
-      "value":"[variables('proxyApiKey')]"
-    },
-    "gatewayName": {
-      "type":"string",
-      "value": "[variables('gatewayWebAppName')]"
-    },
+  "outputs": {
     "gatewayEndpoint": {
       "type":"string",
       "value":"[if(parameters('isSecondary'), concat('https://', variables('gatewayWebAppName'),'-secondary.azurewebsites.net'),
                                               concat('https://', variables('gatewayWebAppName'),'.azurewebsites.net')) ]"
     },
-    "queryEngineName": {
+    "proxyApiKey": {
       "type":"string",
-      "value":"[variables('queryEngineWebAppName')]"
+      "value":"[variables('proxyApiKey')]"
     },
     "structuringName": {
       "type":"string",
       "value":"[variables('structuringName')]"
-    },
-    "queryEngineEndpoint": {
-      "type":"string",
-      "value":"[concat('https://', variables('queryEngineWebAppName'),'.azurewebsites.net')]"
-    },
-    "disqualificationName" : {
-      "type":"string",
-      "value":"[variables('disqualificationWebAppName')]"
-    },
-    "disqualificationEndpoint": {
-      "type":"string",
-      "value":"[concat('https://', variables('disqualificationWebAppName'),'.azurewebsites.net')]"
-    },
-    "postgresqlConnectionString":{
-        "type":"string",
-        "value":"[concat('psql \"host=',variables('postgresqlServerFullName'),'.postgres.database.azure.com port=5432 dbname=ctdb user=',
-                  parameters('postgreSqlAdministratorLogin'),'@',variables('postgresqlServerFullName'), ' password=<password> sslmode=require\"')]"
     }  
   }
 }

@@ -3,7 +3,13 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "serviceName": {
+            "value": "## DEFINE ##"
+        },
+        "sqlAdminPassword": {
             "value": "## TO BE DEFINED ##"
+        },
+        "isSecondary": {
+            "value": false
         },
         "appServicePlanResourceGroup": {
             "value": ""
@@ -37,9 +43,6 @@
         },
         "solutionType": {
             "value": "FhirServerSqlServer"
-        },
-        "sqlAdminPassword": {
-            "value": "## TO BE DEFINED ##"
         },
         "fhirVersion": {
             "value": "R4"

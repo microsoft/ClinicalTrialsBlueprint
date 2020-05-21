@@ -17,7 +17,17 @@ cd ClinicalTrialsBlueprint
 Login-AzAccount
 $account = Set-AzContext -Subscription <Your Subscription Name>
 ```
-
+## Fill Parameters
+Assign a name for the matching service
+```Powershell
+$ctmServiceName = "<ctm matching service>"
+```
+also fill the parameter files with missing parameters and chosen service same as $ctmServiceName
+```Powershell
+.\arm-templates\azuredeploy-fhir.parameters.json
+.\arm-templates\azuredeploy-logicapps.parameters.json
+.\arm-templates\azuredeploy-ctm.parameters.json
+```
 ## Setup the FHIR Server
 
 Create a Resource group for the FHIR server. It must be in a separate resource group from other resources in the blueprint becuase we are creating a Windows service plan
@@ -26,24 +36,13 @@ Create a Resource group for the FHIR server. It must be in a separate resource g
 $fhirRg = New-AzResourceGroup -Name <fhir server group name> -Location eastus
 ```
 
-Assign primary FHIR server Name
-
-```PowerShell
-$fhirServerName = "<fhir server name>"
-```
-
-Assign secondary FHIR server name
-
-```PowerShell
-$fhirSecondaryServerName = "<fhir secondary server name>"
-```
-
 Create the FHIR server deployment. You will to provide a admin password for the SQL server
 
 ```PowerShell
 New-AzResourceGroupDeployment -ResourceGroupName $fhirRg.ResourceGroupName `
                               -TemplateFile .\arm-templates\azuredeploy-fhir.json `
-                              -serviceName $fhirServerName
+                              -TemplateParameterFile .\arm-templates\azuredeploy-fhir.parameters.json 
+                              
 ```
 
 Create secondary FHIR server
@@ -51,13 +50,14 @@ Create secondary FHIR server
 ```PowerShell
 New-AzResourceGroupDeployment -ResourceGroupName $fhirRg.ResourceGroupName `
                               -TemplateFile .\arm-templates\azuredeploy-fhir.json `
-                              -serviceName $fhirSecondaryServerName
+                              -TemplateParameterFile .\arm-templates\azuredeploy-fhir.parameters.json `
+                              -isSecondary $true
 ```
 
 Verify that the FHIR Server is running
 
 ```PowerShell
-$metadataUrl = "https://$fhirServerName.azurewebsites.net/metadata" 
+$metadataUrl = "https://$ctmServiceName-fhir.azurewebsites.net/metadata" 
 $metadata = Invoke-WebRequest -Uri $metadataUrl
 $metadata.RawContent
 ```
@@ -69,21 +69,16 @@ It will take a minute or so for the server to respond the first time.
 Create Resource Group that will contain all the resources required for the blueprint resources
 
 ```PowerShell
-$rg = New-AzResourceGroup -Name <service Name> -Location eastus
-```
-
-Assign a name for the matching service
-
-```Powershell
-$ctmServiceName = "<ctm matching service>"
+$ctmRg = New-AzResourceGroup -Name <service Name> -Location eastus
 ```
 
 Create Logic Applications to manage automatic restructuring (preview)
 
 ```Powershell
-$logicAppsOutput = New-AzResourceGroupDeployment -ResourceGroupName $rg.ResourceGroupName `
+$logicAppsOutput = New-AzResourceGroupDeployment -ResourceGroupName $ctmRg.ResourceGroupName `
                   -TemplateFile .\arm-templates\azuredeploy-logicapps.json `
-                  -serviceName $ctmServiceName -accountId (Get-AzContext).Account.Id
+                  -TemplateParameterFile .\arm-templates\azuredeploy-logicapps.parameters.json `
+                  -accountId (Get-AzContext).Account.Id
 ```
 
 Open resource group in azure portal and authorize 2 API connections (arm and office365)
@@ -91,19 +86,12 @@ Open resource group in azure portal and authorize 2 API connections (arm and off
 ![arm azure](./images/arm-azure.JPG)
 ![arm authorize](./images/arm-authorize.JPG )
 
-Assign the password of the Docker Container Registry
-
-```Powershell
-$acrPassword = ConvertTo-SecureString  -AsPlainText <acr password> -Force
-```
-
 Create Primary Clinical Trials Matching service Azure resources
 
 ```Powershell
-$matchingOutput = New-AzResourceGroupDeployment -TemplateFile .\arm-templates\azuredeploy-ctm.json `
-                -ResourceGroupName $rg.ResourceGroupName -serviceName $ctmServiceName `
-                -fhirServerName $fhirServerName -fhirSecondaryServerName $fhirSecondaryServerName `
-                -acrPassword $acrPassword -finishedNotifyAddress $logicAppsOutput.Outputs.finisherCallbackUrl.Value
+$matchingOutput = New-AzResourceGroupDeployment -ResourceGroupName $ctmRg.ResourceGroupName `
+                  -TemplateFile .\arm-templates\azuredeploy-ctm.json `
+                  -TemplateParameterFile .\arm-templates\azuredeploy-ctm.parameters.json 
 ```
 
 Stopping primary structuring instance 
@@ -113,16 +101,17 @@ Stopping primary structuring instance
 ```
 
 ```Powershell
-Stop-CtmStructuring -resourceGroupName $rg.ResourceGroupName -containerGroupName $matchingOutput.Outputs.structuringName.Value
+Stop-CtmStructuring -resourceGroupName $ctmRg.ResourceGroupName -containerGroupName $matchingOutput.Outputs.structuringName.Value
 ```
 
 Create Secondary Clinical Trials Matching service that will be used as the primary service is being serviced. You need only to pass isSecondary parameter as true
 
 ```Powershell
-$matchingSecondaryOutput = New-AzResourceGroupDeployment -TemplateFile .\arm-templates\azuredeploy-ctm.json `
-                -ResourceGroupName $rg.ResourceGroupName -serviceName $ctmServiceName `
-                -acrPassword $acrPassword -finishedNotifyAddress $logicAppsOutput.Outputs.finisherCallbackUrl.Value `
-                -isSecondary $true
+$matchingSecondaryOutput = New-AzResourceGroupDeployment -ResourceGroupName $ctmRg.ResourceGroupName `
+                          -TemplateFile .\arm-templates\azuredeploy-ctm.json `
+                          -TemplateParameterFile .\arm-templates\azuredeploy-ctm.parameters.json `
+                          -isSecondary $true 
+                
 ```
 
 Check that the TextAnalytics for Healthcare service is running and ready
@@ -156,9 +145,8 @@ $disqualificationResponse.RawContent
 ```
 
 ```PowerShell
-Add-CTMRestrictIPs -resourceGroupName $rg.ResourceGroupName -serviceName $ctmServiceName `
-                   -fhirResoureGroupName $fhirRg.ResourceGroupName -fhirServiceName $fhirServerName `
-                   -fhirSecondaryServiceName $fhirSecondaryServerName
+Add-CTMRestrictIPs -resourceGroupName $ctmRg.ResourceGroupName -serviceName $ctmServiceName `
+                   -fhirResoureGroupName $fhirRg.ResourceGroupName 
 ```
 
 ### Setup the Healthcare Bot Service
@@ -192,7 +180,7 @@ Get-HbsSaaSApplication
 Deploy a primary Healthcare Bot resources for the Marketplace SaaS application you just created or already had before.
 
 ```PowerShell
-.\scripts\azuredeploy-healthcarebot.ps1 -ResourceGroup $rg.ResourceGroupName `
+.\scripts\azuredeploy-healthcarebot.ps1 -ResourceGroup $ctmRg.ResourceGroupName `
                 -saasSubscriptionId $saasSubscriptionId  -serviceName $botServiceName `
                 -botLocation US -matchingParameters $matchingOutput.Outputs 
 ```
@@ -200,25 +188,24 @@ Deploy a primary Healthcare Bot resources for the Marketplace SaaS application y
 You can now deploy a secondary Healthcare bot by running this command
 
 ```PowerShell
-.\scripts\azuredeploy-healthcarebot.ps1 -ResourceGroup $rg.ResourceGroupName `
-                -saasSubscriptionId $secondarySaaSSubscriptionId  -serviceName $secondaryBotServiceName `
+.\scripts\azuredeploy-healthcarebot.ps1 -ResourceGroup $ctmRg.ResourceGroupName `
+                -saasSubscriptionId $secondarySaaSSubscriptionId  `
+                -serviceName $secondaryBotServiceName `
                 -botLocation US -matchingParameters $matchingSecondaryOutput.Outputs
 ```
 
-### Restructuring Clinical Trials
+### Configuration Change
 
-When you want to update the CMT databases with latest clinical trials from clinicaltrials.gov, you can run the following script
-
-Restart the structuring
+When it's necessary to change the configuration of the matching services,
+Update the parameters file
+```Powershell
+.\arm-templates\azuredeploy-ctm.parameters.json
+```
+With the wanted configuration and run the following
 
 ```Powershell
-Restart-CtmStructuring -resourceGroupName <resource group name> -containerGroupName <structuring container group name>
+. .\scripts\config-change.ps1
+ChangeConfig -resourceGroupName <resource group name> -serviceName <service name>
 ```
 
-Swap primary and secondary environments
-
-```PowerShell
-Switch-AzWebAppSlot -SourceSlotName secondary -DestinationSlotName production `
-                    -ResourceGroupName $rg.ResourceGroupName `
-                    -Name $matchingOutput.Outputs.gatewayName.Value
- ```
+Notice that, a configuration change will not be permited if a Structuring process is running.
