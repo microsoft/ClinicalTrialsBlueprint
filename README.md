@@ -72,7 +72,7 @@ Create Resource Group that will contain all the resources required for the bluep
 $ctmRg = New-AzResourceGroup -Name <service Name> -Location eastus
 ```
 
-Create Logic Applications to manage automatic restructuring (preview)
+Create Logic Applications to manage automatic restructuring
 
 ```Powershell
 $logicAppsOutput = New-AzResourceGroupDeployment -ResourceGroupName $ctmRg.ResourceGroupName `
