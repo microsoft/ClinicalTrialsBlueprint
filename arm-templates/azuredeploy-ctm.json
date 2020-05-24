@@ -1442,6 +1442,7 @@
 	  {
       "name": "[concat('plan-auto-scale',variables('suffix'))]",
       "type": "Microsoft.Insights/autoscaleSettings",
+      "condition":"[not(parameters('isSecondary'))]",
       "apiVersion": "2015-04-01",
       "location": "[resourceGroup().location]",
       "tags": "[parameters('resourceTags')]",
@@ -1488,7 +1489,7 @@
           "notifications": [],
           "targetResourceLocation": "[resourceGroup().location]"
       }
-	}
+    }
   ],
   "outputs": {
     "gatewayEndpoint": {
