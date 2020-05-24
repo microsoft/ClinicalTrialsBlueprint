@@ -1,14 +1,17 @@
 {
-    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
         "serviceName": {
             "type": "string",
             "minLength": 3,
-            "maxLength": 24,
+            "maxLength": 15,
             "metadata": {
                 "description": "Name of the FHIR service Web App."
             }
+        },
+        "isSecondary": {
+            "type":"bool"
         },
         "appServicePlanResourceGroup": {
             "type": "string",
@@ -140,7 +143,7 @@
     "variables": {
         "defaultMsdeployPackageUrl": "[concat('https://fhirserverforazure.blob.core.windows.net/builds/ci/Microsoft.Health.Fhir.', parameters('fhirVersion'),'.Web.zip')]",
         "isMAG": "[or(contains(resourceGroup().location,'usgov'),contains(resourceGroup().location,'usdod'))]",
-        "serviceName": "[toLower(parameters('serviceName'))]",
+        "serviceName": "[concat(toLower(parameters('serviceName')), '-fhir' ,if(parameters('isSecondary'),'-s',''))]",
         "keyvaultEndpoint": "[if(variables('isMAG'), concat('https://', variables('serviceName'), '.vault.usgovcloudapi.net/'), concat('https://', variables('serviceName'), '.vault.azure.net/'))]",
         "appServicePlanResourceGroup": "[if(empty(parameters('appServicePlanResourceGroup')), resourceGroup().name, parameters('appServicePlanResourceGroup'))]",
         "appServicePlanName": "[if(empty(parameters('appServicePlanName')),concat(variables('serviceName'),'-asp'),parameters('appServicePlanName'))]",

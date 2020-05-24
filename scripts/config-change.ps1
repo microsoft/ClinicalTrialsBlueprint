@@ -22,10 +22,11 @@ function ChangeConfig(
 	Write-Host "$primaryAci is stopped, continuing..." -ForegroundColor Green 
 	
 	$stopped = IsAciStopped -resourceGroupName $resourceGroupName -aciName $primaryAci
-	if(-Not $stopped) {
+	if (-Not $stopped) {
 		Write-Host "Cannot change config when a container group is running $secondaryAci" -ForegroundColor Red 
 		return
 	}
+
 	Write-Host "$secondaryAci is stopped, continuing..." -ForegroundColor Green
 
 	$isPrimary = IsCurrentSlotPrimary -gatewayWebApp $gatewayWebApp
@@ -35,7 +36,7 @@ function ChangeConfig(
 	# deploy the primary resources
 	$matchingOutput = New-AzResourceGroupDeployment -ResourceGroupName $resourceGroupName -serviceName $serviceName `
 		-TemplateFile ".\arm-templates\azuredeploy-ctm.json" -TemplateParameterFile ".\arm-templates\azuredeploy-ctm.parameters.json" 
-
+	
 	# stopping the primary slot's aci
 	if ($isPrimary) {
 		StopAci -resourceGroupName $resourceGroupName -aciName $primaryAci
