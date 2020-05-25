@@ -101,7 +101,6 @@
     "redisAddress": "[concat(variables('redisCacheName'),'.redis.cache.windows.net')]",
     "keyVaultAddress": "[concat('https://',variables('keyVaultName'),'.vault.azure.net/')]",
     "fhirAddress": "[concat('https://',variables('gatewayWebAppName'), if(parameters('isSecondary'), '-secondary',''),'.azurewebsites.net/fhir/')]",
-    "finishedNotifyAddress": "[listCallbackURL(concat(resourceId('Microsoft.Logic/workflows/', concat(parameters('serviceName'),'-finisher-logic-app')),'/triggers/manual'), '2016-06-01').value]",
     // Resource Ids
     "gatewayResourceId": "[resourceId('Microsoft.Web/sites',variables('gatewayWebAppName'))]",
     "queryEngineResourceId": "[resourceId('Microsoft.Web/sites',variables('queryEngineWebAppName'))]",
@@ -929,7 +928,7 @@
                 },
                 {
                   "name":"structuring__finished_notifier_address",
-                  "value":"[variables('finishedNotifyAddress')]"
+                  "value":"[listCallbackURL(concat(resourceId('Microsoft.Logic/workflows/', concat(parameters('serviceName'),'-finisher-logic-app')),'/triggers/manual'), '2016-06-01').value]"
                 }
               ],
               "resources": {
