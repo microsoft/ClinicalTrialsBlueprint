@@ -172,7 +172,8 @@
         },
         "combinedFhirServerConfigProperties": "[union(variables('staticFhirServerConfigProperties'), parameters('additionalFhirServerConfigProperties'))]",
         "computedSqlServerReference": "[concat('Microsoft.Sql/servers/', variables('serviceName'))]",
-        "storageAccountName": "[concat(substring(replace(variables('serviceName'), '-', ''), 0, min(11, length(variables('serviceName')))), uniquestring(resourceGroup().id, variables('serviceName')))]"
+        "noHyphenServiceName":"[replace(variables('serviceName'), '-', '')]",
+        "storageAccountName": "[concat(substring(variables('noHyphenServiceName'), 0, min(11, length(variables('noHyphenServiceName')))), uniquestring(resourceGroup().id, variables('serviceName')))]"
     },
     "resources": [
         {
