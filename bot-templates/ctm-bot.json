@@ -112,7 +112,7 @@
                             "yLocation": 31,
                             "next": "95f6b5f256da-ed1cea46c0187621-f7b9"
                         },
-                        "onInit": "// initialize profile\nvar profile = {};\nprofile.gender = scenario.gender;\nprofile.age = scenario.age;\nprofile.location = scenario.location;\nprofile.searchLocationCity = scenario.searchLocationCity;\nprofile.searchLocationState = scenario.searchLocationState;\nprofile.distance = scenario.distance;\nprofile.condition = scenario.condition;\nprofile.askedCodes = [];\nscenario.profile = profile;\n\n// initialize qeRequest\nvar qeRequest = {};\nqeRequest.id = new Date().getTime().toString();\nqeRequest.profile = scenario.profile;\nscenario.qeRequest = qeRequest;\n\nconsole.log(scenario.profile);"
+                           "onInit": "// initialize profile\nvar profile = {};\nprofile.gender = scenario.gender;\nprofile.age = scenario.age;\nprofile.location = scenario.location;\nprofile.searchLocationCity = scenario.searchLocationCity;\nprofile.searchLocationState = scenario.searchLocationState;\nprofile.distance = scenario.distance;\nprofile.condition = scenario.condition;\nprofile.askedCodes = [];\nscenario.profile = profile;\n\n// initialize qeRequest\nvar qeRequest = {};\nqeRequest.id = new Date().getTime().toString();\nqeRequest.profile = scenario.profile;\nscenario.qeRequest = qeRequest;\nscenario.expandCondition = true;\n\nconsole.log(scenario.profile);"
                     },
                     {
                         "id": "95f6b5f256da-ed1cea46c0187621-f7b9",

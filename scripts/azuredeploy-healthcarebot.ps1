@@ -26,13 +26,21 @@ $subscriptionId = $context.subscription.id
 $luisPath = "./lu"
 $restorePath = "./bot-templates"
 
+
+$parms = @{'serviceName'=$serviceName;
+		   'ResourceGroupName'=$ResourceGroup;
+           'saasSubscriptionId'=$saasSubscriptionId;
+           'TemplateFile'='./arm-templates/azuredeploy-healthcarebot.json'
+          }
+		  
+if ($null -ne $resourceTags){
+	$parms.resourceTags = $resourceTags`
+}
+
+
 Try {
     Write-Host "Running Template Deployment..."
-    $output = New-AzResourceGroupDeployment -serviceName $serviceName `
-                                            -ResourceGroupName $ResourceGroup  `
-                                            -saasSubscriptionId $saasSubscriptionId `
-                                            -resourceTags $resourceTags `
-                                            -TemplateFile "./arm-templates/azuredeploy-healthcarebot.json" 
+    $output = New-AzResourceGroupDeployment @parms
 
     $output
     $luisAuthLocation = $output.Parameters.luisAuthLocation.Value
@@ -135,5 +143,5 @@ Try {
 Catch {
     Write-Host
     Write-Error -Exception $_.Exception 
-    Write-Error -Exception $_.ErrorDetails.Message   
+	Write-Error -Exception $_.ScriptStackTrace 
 }    
