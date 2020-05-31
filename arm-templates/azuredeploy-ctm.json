@@ -952,7 +952,7 @@
               "resources": {
                 "requests": {
                   "cpu": 2,
-                  "memoryInGB": 4
+                  "memoryInGB": 6
                 }
               }
             }
