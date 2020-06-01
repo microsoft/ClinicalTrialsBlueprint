@@ -4,7 +4,9 @@ function ChangeConfig(
 	[Parameter(Mandatory=$true)]
 	$resourceGroupName,
 	[Parameter(Mandatory=$true)]
-	$serviceName
+	$serviceName,
+	[Parameter(Mandatory=$false)]
+	$paramsFile = ".\arm-templates\azuredeploy-ctm.parameters.json" 
 )
 {
 	Write-Host "Changing Config $serviceName..."
@@ -35,7 +37,7 @@ function ChangeConfig(
 
 	# deploy the primary resources
 	$matchingOutput = New-AzResourceGroupDeployment -ResourceGroupName $resourceGroupName -serviceName $serviceName `
-		-TemplateFile ".\arm-templates\azuredeploy-ctm.json" -TemplateParameterFile ".\arm-templates\azuredeploy-ctm.parameters.json" 
+		-TemplateFile ".\arm-templates\azuredeploy-ctm.json" -TemplateParameterFile $paramsFile
 	
 	# stopping the primary slot's aci
 	if ($isPrimary) {
@@ -46,7 +48,7 @@ function ChangeConfig(
 
 	# deploy the secondary resources
 	$matchingOutput = New-AzResourceGroupDeployment -ResourceGroupName $resourceGroupName -serviceName $serviceName `
-		-TemplateFile ".\arm-templates\azuredeploy-ctm.json" -TemplateParameterFile ".\arm-templates\azuredeploy-ctm.parameters.json" `
+		-TemplateFile ".\arm-templates\azuredeploy-ctm.json" -TemplateParameterFile $paramsFile `
 		-isSecondary $true 
 
 	# stopping the primary slot's aci
