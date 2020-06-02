@@ -578,206 +578,606 @@
                 "version": 3,
                 "steps": [
                     {
-                        "id": "bfaae5ea8406-efe280376b1da428-7c18",
+                        "id": "7a107a8597cc-b1b4a5eef7e89f91-a47f",
                         "type": "action",
-                        "label": "Init",
+                        "label": "Init Variables",
                         "designer": {
-                            "xLocation": 527,
-                            "yLocation": 13,
-                            "next": "5a7612a135ea-f722c6246f11df1a-3c52"
+                            "xLocation": 112,
+                            "yLocation": 28,
+                            "next": "26f08a4aca2e-734b7ed483cc7215-a262"
                         },
-                        "onInit": "scenario.question = scenario.scenarioArgs.question;"
+                        "onInit": "scenario.totalQuestionsAsked = 0;\nscenario.TRIALS_THRESHOLD = 5;\nscenario.QUESTIONS_THRESHOLD = 10; \nscenario.messageText = session.message.text;\nscenario.luis = {};\nvar locationCity = null;\nvar locationCountry = null;\nvar locationState = null;\nvar ageResolution = null;\nscenario.notMapped = [];\nif(scenario.scenarioArgs.entities != null) {\n    // iterate all LUIS entities and set their values to scenario\n    scenario.scenarioArgs.entities.forEach(ent => {\n        switch(ent.type) {\n                case \"gender\":\n                    scenario.luis.gender = ent.role;\n                    break;\n                case \"builtin.age\":\n                    ageResolution = ent.resolution;\n                    break;\n                case \"disease\":\n                    scenario.luis.condition = scenario.messageText.substring(ent.startIndex, ent.endIndex + 1);\n                    break;\n                case \"builtin.geographyV2.countryRegion\":\n                    locationCountry = ent.entity;\n                    break;\n                case \"builtin.geographyV2.state\":\n                    locationState = ent.entity;\n                    break;\n                case \"builtin.geographyV2.city\":\n                    locationCity = ent.entity;\n                    break;\n                default:\n                    scenario.notMapped.push(ent.entity);\n            }\n    });\n}\n// age convertion\nif (ageResolution != null) {\n    switch (ageResolution.unit) {\n        case \"Year\":\n            scenario.luis.age = ageResolution.value;\n            break;\n        case \"Month\":\n            scenario.luis.age = (+ageResolution.value / 12) + \"\";\n            break;\n        case \"Week\":\n            scenario.luis.age = (+ageResolution.value / 52) + \"\";\n            break;\n        case \"Day\":\n            scenario.luis.age = (+ageResolution.value / 365) + \"\";\n            break;\n        default:\n            scenario.luis.age = null;        \n    }\n}\n// one of location types was initialized\nif(locationCountry != null || locationState != null || locationCity != null) {\n    scenario.luis.location = {};\n    if(locationCountry != null) {\n        scenario.luis.location.country = locationCountry;\n    }\n    if(locationState != null) {\n        scenario.luis.location.state = locationState;\n    }\n    if(locationCity != null) {\n        scenario.luis.location.city = locationCity;\n    }\n};"
                     },
                     {
-                        "id": "5a7612a135ea-f722c6246f11df1a-3c52",
-                        "type": "datasource",
-                        "designer": {
-                            "xLocation": 520,
-                            "yLocation": 100,
-                            "next": "e9c76debc7c0-422ad5fe6313019d-7436"
-                        },
-                        "dataConnection": "",
-                        "urlBase": "conversation.resourcesUrl",
-                        "urlPath": "\"UmlsConceptsMapping.json\"",
-                        "urlParams": "",
-                        "method": "get",
-                        "headers": "",
-                        "opJson": true,
-                        "opResolveWithFullResponse": false,
-                        "response": "languageJson",
-                        "error": "error",
-                        "label": "Read Language"
-                    },
-                    {
-                        "id": "3710c6e2876e-55c99f0c2563d4f5-647e",
-                        "type": "switch",
-                        "designer": {
-                            "xLocation": 500,
-                            "yLocation": 249
-                        },
-                        "cases": [
-                            {
-                                "value": "Numeric",
-                                "targetStepId": "3ea76a3a5e9c-4532826d6e64fc15-ffc7"
-                            },
-                            {
-                                "value": "Boolean",
-                                "targetStepId": "2cee13d07505-d11c62fe3c91ca09-5485"
-                            },
-                            {
-                                "value": "Choice",
-                                "targetStepId": "f3afc3fc6aec-13259a9ba88e3d44-3f8b"
-                            }
-                        ],
-                        "condition": "scenario.question.answerType",
-                        "label": "Question Type"
-                    },
-                    {
-                        "id": "3ea76a3a5e9c-4532826d6e64fc15-ffc7",
+                        "id": "38d94695a028-665828e3737523ec-bd42",
                         "type": "prompt",
-                        "dataType": "string",
+                        "dataType": "[\"Female\", \"Male\", \"Prefer not to say\"]",
                         "designer": {
-                            "xLocation": 380,
-                            "yLocation": 413,
-                            "next": "866538462ffa-d8fd8b6a3b13d383-9195"
+                            "xLocation": 108,
+                            "yLocation": 180,
+                            "listStyle": 3,
+                            "next": "88eb37226f1d-d7b87141b90e761b-519e"
                         },
-                        "text": "scenario.questionText",
-                        "variable": "responseNum",
-                        "stringId": "stringId_a7f871b773048268",
-                        "label": "Numeric",
-                        "suggestions": ""
+                        "text": "scenario.questions.genderQuestion",
+                        "variable": "genderValue",
+                        "stringId": "stringId_42fe2799587299a9",
+                        "visible": "scenario.luis.gender == null",
+                        "choiceType": "choice",
+                        "label": "Gender Question"
                     },
                     {
-                        "id": "2cee13d07505-d11c62fe3c91ca09-5485",
+                        "id": "88eb37226f1d-d7b87141b90e761b-519e",
                         "type": "prompt",
-                        "dataType": "[\"Yes\", \"No\", \"Don't know / Don't want to answer\"]",
+                        "dataType": "number",
                         "designer": {
-                            "xLocation": 526,
-                            "yLocation": 412,
-                            "next": "218a732dc7f7-b3ded10c1434bb26-8d69",
+                            "xLocation": 106,
+                            "yLocation": 232,
+                            "next": "8c88d783cc4e-0e754492b0ec4336-9e6f"
+                        },
+                        "text": "scenario.questions.ageQuestion",
+                        "variable": "ageValue",
+                        "stringId": "stringId_ecd82ef4f4fa4061",
+                        "visible": "scenario.luis.age == null",
+                        "label": "Age Question"
+                    },
+                    {
+                        "id": "2e32f9cb24af-0917e334df80b409-7140",
+                        "type": "prompt",
+                        "dataType": "['Specific city', 'Specific state', 'Entire US']",
+                        "designer": {
+                            "xLocation": 108,
+                            "yLocation": 340,
+                            "next": "a5666316fe16-e2e41e2529a50af9-1d56",
                             "listStyle": 3
                         },
-                        "text": "scenario.questionText",
-                        "variable": "response",
-                        "stringId": "stringId_ae418de099b3a8e9",
-                        "label": "Boolean",
+                        "text": "scenario.questions.locationQuestion",
+                        "variable": "locationValue",
+                        "stringId": "stringId_f7f5e89e7164bf5a",
+                        "visible": "scenario.luis.location == null",
+                        "label": "Location Question",
                         "choiceType": "choice"
                     },
                     {
-                        "id": "60e09c9bdc82-fd2741a80f33e4f4-d9e4",
+                        "id": "8c88d783cc4e-0e754492b0ec4336-9e6f",
                         "type": "prompt",
-                        "dataType": "scenario.choicesArray",
+                        "dataType": "string",
                         "designer": {
-                            "xLocation": 652,
-                            "yLocation": 410,
-                            "listStyle": 3,
-                            "next": "c71c7e89b0b2-ad9de91f4ba898fc-fc9e"
+                            "xLocation": 107,
+                            "yLocation": 287,
+                            "next": "2e32f9cb24af-0917e334df80b409-7140"
                         },
-                        "text": "scenario.questionText",
-                        "variable": "response",
-                        "stringId": "stringId_02e974a5da66a1f8",
-                        "choiceType": "choice",
-                        "label": "Choice"
+                        "text": "scenario.questions.conditionQuestion",
+                        "variable": "conditionValue",
+                        "visible": "scenario.luis.condition == null",
+                        "stringId": "stringId_c71e799de878687c",
+                        "label": "Condition Question"
                     },
                     {
-                        "id": "e9c76debc7c0-422ad5fe6313019d-7436",
+                        "id": "102cf72eca14-b299a2caf0e80fe6-bf31",
                         "type": "action",
-                        "label": "Generate Question",
+                        "label": "Normalize values",
                         "designer": {
-                            "xLocation": 527,
-                            "yLocation": 169,
-                            "next": "3710c6e2876e-55c99f0c2563d4f5-647e"
+                            "xLocation": 113,
+                            "yLocation": 500,
+                            "next": "162067c1f357-741c663bd45a2170-d303"
                         },
-                        "onInit": "// if has question by entity type\nif (scenario.languageJson.entityTypes[scenario.question.ayalonEntityType] != null) {\n    scenario.questionText = scenario.languageJson.entityTypes[scenario.question.ayalonEntityType].question;\n} else if(scenario.languageJson.allowedConcepts[scenario.question.umlsConceptId] != null) {\n    // has question or points to concepet with question\n    if (scenario.languageJson.allowedConcepts[scenario.question.umlsConceptId].question != null) {\n        scenario.questionText = scenario.languageJson.allowedConcepts[scenario.question.umlsConceptId].question;\n    } else {\n        var concept = scenario.languageJson.allowedConcepts[scenario.question.umlsConceptId];\n        scenario.questionText = scenario.languageJson.allowedConcepts[concept.mappedTo].question;\n    }\n} else {\n    // got concept id without a valid question mapped to it\n    scenario.questionText = \"?\"\n}\n\nscenario.questionText = scenario.questionText.replace(\"%p1%\", scenario.question.ayalonEntityText);"
+                        "onInit": "// gender \nif (scenario.luis.gender != null) {\n    scenario.gender = scenario.luis.gender;\n} else {\n    if (scenario.genderValue.entity !== \"Prefer not to say\") {\n        scenario.gender = scenario.genderValue.entity.toLowerCase();\n    }\n}\n// age\nif (scenario.luis.age != null) {\n    scenario.age = scenario.luis.age;\n} else {\n    scenario.age = scenario.ageValue + \"\";\n}\n// condition\nif (scenario.luis.condition != null) {\n    scenario.condition = scenario.luis.condition;\n} else {\n    scenario.condition = scenario.conditionValue;\n}\n// location\nif (scenario.luis.location != null) {\n    scenario.searchLocationCountry = scenario.luis.location.country;\n    scenario.searchLocationState = scenario.luis.location.state;\n    scenario.searchLocationCity = scenario.luis.location.city;\n} else {\n    scenario.searchLocationCountry = scenario.countryValue != null ? scenario.countryValue : null;\n    scenario.searchLocationState = scenario.stateValue != null ? scenario.stateValue : null;\n    scenario.searchLocationCity = scenario.cityValue != null ? scenario.cityValue : null;\n}"
                     },
                     {
-                        "id": "d2c813d56c6d-e873f367b262b7e6-030c",
-                        "type": "endwithresult",
-                        "designer": {
-                            "xLocation": 520,
-                            "yLocation": 720
-                        },
-                        "endScope": "scenario",
-                        "returnValue": "{\r\n    \"code\": scenario.question.umlsConceptId,\r\n    \"answer\": scenario.response,\r\n    \"answerType\": scenario.question.answerType,\r\n    \"ayalonEntityText\": scenario.question.ayalonEntityText\r\n}",
-                        "label": "Scenario Result"
-                    },
-                    {
-                        "id": "f3afc3fc6aec-13259a9ba88e3d44-3f8b",
+                        "id": "fb7403c86d6a-1e24272165de9c1b-92f7",
                         "type": "action",
-                        "label": "Prepare Choices",
+                        "label": "Create QeRequest",
                         "designer": {
-                            "xLocation": 660,
-                            "yLocation": 309,
-                            "next": "60e09c9bdc82-fd2741a80f33e4f4-d9e4"
+                            "xLocation": 351,
+                            "yLocation": 31,
+                            "next": "7d13692c028c-c62feba5d349bb6e-7959"
                         },
-                        "onInit": "scenario.choicesArray = scenario.question.choices.map(choice => choice.toString());\nscenario.choicesArray.push(\"Don't know / Don't want to answer\");"
+                        "onInit": "// initialize profile\nvar profile = {};\nprofile.gender = scenario.gender;\nprofile.age = scenario.age;\nprofile.location = scenario.location;\nprofile.searchLocationCity = scenario.searchLocationCity;\nprofile.searchLocationState = scenario.searchLocationState;\nprofile.distance = scenario.distance;\nprofile.condition = scenario.condition;\nprofile.askedCodes = [];\nscenario.profile = profile;\n\n// initialize qeRequest\nvar qeRequest = {};\nqeRequest.id = new Date().getTime().toString();\nqeRequest.profile = scenario.profile;\nscenario.qeRequest = qeRequest;\nscenario.expandCondition = true\nconsole.log(scenario.profile);"
                     },
                     {
-                        "id": "218a732dc7f7-b3ded10c1434bb26-8d69",
+                        "id": "95f6b5f256da-ed1cea46c0187621-f7b9",
+                        "type": "datasource",
+                        "designer": {
+                            "xLocation": 349,
+                            "yLocation": 110,
+                            "errorStepId": "7cf5829caf3b-b595e08171a799bc-2f59",
+                            "next": "c2cb2cc32790-39376ffe807a6893-5e86"
+                        },
+                        "dataConnection": "ctm-query-engine-prod",
+                        "urlBase": "https://prod-eastus-ctm-qe-webapp.azurewebsites.net",
+                        "urlPath": "match",
+                        "urlParams": "",
+                        "contentType": "raw",
+                        "method": "post",
+                        "headers": "",
+                        "payload": "scenario.qeRequest",
+                        "opJson": true,
+                        "opResolveWithFullResponse": false,
+                        "response": "qeResponse",
+                        "error": "qeError",
+                        "label": "Query Engine endpoint"
+                    },
+                    {
+                        "id": "7cf5829caf3b-b595e08171a799bc-2f59",
+                        "type": "statement",
+                        "designer": {
+                            "xLocation": 590,
+                            "yLocation": 580
+                        },
+                        "text": "Sorry, there seems to be a problem with the matching service. \r\nPlease try again later.",
+                        "stringId": "stringId_a38152ce3e7f6b5f"
+                    },
+                    {
+                        "id": "c2cb2cc32790-39376ffe807a6893-5e86",
                         "type": "action",
-                        "label": "Boolean Response",
+                        "label": "Process QeResponse",
                         "designer": {
-                            "xLocation": 533,
-                            "yLocation": 469,
-                            "next": "2274bf2a7d60-31187438797a7524-cb1e"
+                            "xLocation": 354,
+                            "yLocation": 180,
+                            "next": "2d52c58f3c9f-311c95e0e7a51ce9-5ed7"
                         },
-                        "onInit": "if (scenario.response.entity === \"Yes\") {\n    scenario.response = \"true\";\n} else if (scenario.response.entity === \"No\") {\n    scenario.response = \"false\";\n} else {\n    scenario.response = null;\n}"
+                        "onInit": "scenario.trials = scenario.qeResponse.trials;\nscenario.trialsCountPrev = scenario.trials.length;"
                     },
                     {
-                        "id": "c71c7e89b0b2-ad9de91f4ba898fc-fc9e",
-                        "type": "action",
-                        "label": "Choice Response",
-                        "designer": {
-                            "xLocation": 660,
-                            "yLocation": 470,
-                            "next": "2274bf2a7d60-31187438797a7524-cb1e"
-                        },
-                        "onInit": "scenario.response = scenario.response.entity;"
-                    },
-                    {
-                        "id": "2274bf2a7d60-31187438797a7524-cb1e",
-                        "type": "action",
-                        "label": "Don't know handling",
-                        "designer": {
-                            "xLocation": 526,
-                            "yLocation": 626,
-                            "next": "d2c813d56c6d-e873f367b262b7e6-030c"
-                        },
-                        "onInit": "if (scenario.response && scenario.response.match(/[D,d]on[']?t [K,k]now|[N,n]ot [S,s]ure/)) {\n    scenario.response = null;\n}"
-                    },
-                    {
-                        "id": "866538462ffa-d8fd8b6a3b13d383-9195",
-                        "type": "action",
-                        "label": "Numeric Response",
-                        "designer": {
-                            "xLocation": 386,
-                            "yLocation": 470,
-                            "next": "867f3d768ac6-b2cd67ca62309894-52a6"
-                        },
-                        "onInit": "if (scenario.responseNum.match(/[D,d]on[']?t [K,k]now|[N,n]ot [S,s]ure/)) {\r\n    scenario.num = null;\r\n} else {\r\n    scenario.num = parseFloat(scenario.responseNum);\r\n}"
-                    },
-                    {
-                        "id": "867f3d768ac6-b2cd67ca62309894-52a6",
+                        "id": "8eb78c0e15f8-3aa0bdbacd6795d8-0ac6",
                         "type": "branch",
-                        "condition": "Number.isNaN(scenario.num)",
+                        "condition": "scenario.trials.length > 0",
                         "designer": {
-                            "xLocation": 450,
-                            "yLocation": 528,
-                            "next": "71b4f50f833a-b15090e77a91a966-0ee0"
+                            "xLocation": 360,
+                            "yLocation": 273,
+                            "next": "e8e69e5b6b47-4c7e389965d6aef4-6dd1"
                         },
-                        "label": "Is NaN",
-                        "targetStepId": "3ea76a3a5e9c-4532826d6e64fc15-ffc7"
+                        "targetStepId": "c38230cbc10d-7c8058bc6dc833c6-6a00",
+                        "label": "Trials > 0"
                     },
                     {
-                        "id": "71b4f50f833a-b15090e77a91a966-0ee0",
-                        "type": "action",
-                        "label": "Set Response",
+                        "id": "e8e69e5b6b47-4c7e389965d6aef4-6dd1",
+                        "type": "statement",
                         "designer": {
-                            "xLocation": 380,
-                            "yLocation": 574,
-                            "next": "2274bf2a7d60-31187438797a7524-cb1e"
+                            "xLocation": 260,
+                            "yLocation": 380
                         },
-                        "onInit": "if (scenario.num) {\n    scenario.response = scenario.num.toString();\n} else {\n    scenario.response = null;\n}"
+                        "text": "Sorry, no relevant trials were found",
+                        "stringId": "stringId_537880f504287022"
+                    },
+                    {
+                        "id": "6c395b7ffcbf-9a3ac0cb171f8c36-4154",
+                        "type": "statement",
+                        "designer": {
+                            "xLocation": 352,
+                            "yLocation": 489,
+                            "next": "2093a915c20d-8fc2e7481038d764-affd"
+                        },
+                        "text": "\"Found \" + scenario.trials.length.toString() + \" relevant trial\" + (scenario.trials.length === 1 ? \"\" : \"s\") + \".\"",
+                        "stringId": "stringId_00902617ba8079bf",
+                        "label": "Relevant trials number"
+                    },
+                    {
+                        "id": "138c2cc32f4e-265ec16959d65e96-6083",
+                        "type": "action",
+                        "label": "Create Card",
+                        "designer": {
+                            "xLocation": 340,
+                            "yLocation": 831,
+                            "next": "b880d5732a03-3c5ec70d6ab91ed6-6218"
+                        },
+                        "onInit": "scenario.cardBody = scenario.trials.map(trial => {\n    // using trial from map, it has facilities\n    var mappedTrial = scenario.trialsMap[trial.nctId];\n    return [{\n            \"type\": \"TextBlock\",\n            \"text\": \"RECRUITING\",\n            \"separator\": true,\n            \"color\": \"dark\"\n        },{\n            \"type\": \"TextBlock\",\n            \"color\": \"accent\",\n            \"text\": \"[\" + mappedTrial.title + \"](https://clinicaltrials.gov/ct2/show/\" + mappedTrial.nctId + \")\",\n            \"spacing\": \"none\",\n            \"wrap\": true,\n            \"color\": \"blue\"\n        },{\n            \"type\": \"TextBlock\",\n            \"text\": \"Clinical trial ID: \" + mappedTrial.nctId,\n            \"isSubtle\": true,\n            \"weight\": \"lighter\"\n        }];\n});\n  \nfunction flat(arr){\n    return arr.reduce((acc, items) => {acc.push(...items); return acc;}, [])\n}\n\nscenario.card = {\n  \"$schema\": \"http://adaptivecards.io/schemas/adaptive-card.json\",\n  \"type\": \"AdaptiveCard\",\n  \"version\": \"1.0\",\n  \"body\": flat(scenario.cardBody)\n};"
+                    },
+                    {
+                        "id": "b880d5732a03-3c5ec70d6ab91ed6-6218",
+                        "type": "statement",
+                        "designer": {
+                            "xLocation": 334,
+                            "yLocation": 910
+                        },
+                        "layout": "vertical",
+                        "attachment": [
+                            {
+                                "type": "AdaptiveCard",
+                                "cardCode": "scenario.card"
+                            }
+                        ],
+                        "label": "Show card"
+                    },
+                    {
+                        "id": "c38230cbc10d-7c8058bc6dc833c6-6a00",
+                        "type": "branch",
+                        "condition": "scenario.trials.length > scenario.TRIALS_THRESHOLD\r\n",
+                        "designer": {
+                            "xLocation": 360,
+                            "yLocation": 380,
+                            "next": "6c395b7ffcbf-9a3ac0cb171f8c36-4154",
+                            "reverse": true
+                        },
+                        "targetStepId": "c0b338e361df-f9260a30a63543e5-2d46",
+                        "label": "Trials > Threshold"
+                    },
+                    {
+                        "id": "26f08a4aca2e-734b7ed483cc7215-a262",
+                        "type": "action",
+                        "label": "Init questions",
+                        "designer": {
+                            "xLocation": 114,
+                            "yLocation": 100,
+                            "next": "38d94695a028-665828e3737523ec-bd42"
+                        },
+                        "onInit": "var messageText = scenario.messageText.toLowerCase();\n\nscenario.questions = {};\nscenario.questions.genderQuestion = \"Please specify the patient's sex:\";\nscenario.questions.ageQuestion = \"How old is the patient (in years)?\";\nscenario.questions.conditionQuestion = \"What is the patient's condition?\";\nscenario.questions.locationQuestion = \"Where would the patient like to search for trials?\";\nscenario.questions.stateQuestion = \"Please enter state:\";\nscenario.questions.cityQuestion = \"Please enter city:\";\n"
+                    },
+                    {
+                        "id": "162067c1f357-741c663bd45a2170-d303",
+                        "type": "statement",
+                        "designer": {
+                            "xLocation": 106,
+                            "yLocation": 580,
+                            "next": "fb7403c86d6a-1e24272165de9c1b-92f7"
+                        },
+                        "text": "Matching clinical trials...This might take a few moments.",
+                        "stringId": "stringId_a46894ffc1bf4ca9"
+                    },
+                    {
+                        "id": "a5666316fe16-e2e41e2529a50af9-1d56",
+                        "type": "prompt",
+                        "dataType": "string",
+                        "designer": {
+                            "xLocation": 109,
+                            "yLocation": 394,
+                            "next": "00de89f7fffe-ffa4760c9fba5d58-3902"
+                        },
+                        "text": "scenario.questions.stateQuestion",
+                        "variable": "stateValue",
+                        "visible": "scenario.locationValue != null && scenario.locationValue.entity === \"Specific state\"",
+                        "stringId": "stringId_75e3d09cf5a74d66",
+                        "label": "State Question"
+                    },
+                    {
+                        "id": "00de89f7fffe-ffa4760c9fba5d58-3902",
+                        "type": "prompt",
+                        "dataType": "string",
+                        "designer": {
+                            "xLocation": 109,
+                            "yLocation": 448,
+                            "next": "102cf72eca14-b299a2caf0e80fe6-bf31"
+                        },
+                        "text": "scenario.questions.cityQuestion",
+                        "variable": "cityValue",
+                        "visible": "scenario.locationValue != null && scenario.locationValue.entity === \"Specific city\"",
+                        "stringId": "stringId_75e3d09cf5a74d66",
+                        "label": "City Question"
+                    },
+                    {
+                        "id": "c0b338e361df-f9260a30a63543e5-2d46",
+                        "type": "action",
+                        "label": "Create Disqualify Request",
+                        "designer": {
+                            "xLocation": 900,
+                            "yLocation": 220,
+                            "next": "d5398bdc9019-e4c6eb78e63ffdc5-416a"
+                        },
+                        "onInit": "var trialIds = scenario.trials.map(trial => trial.nctId);\n\nscenario.disqualifyRequest = {\n    trialIds,\n    profile: scenario.profile\n};"
+                    },
+                    {
+                        "id": "22130a4fa790-7398bd4e67a60462-949a",
+                        "type": "action",
+                        "label": "Create Question",
+                        "designer": {
+                            "xLocation": 1200,
+                            "yLocation": 600,
+                            "next": "8cc8d6de3179-a14e044b3f7d5fd5-2360"
+                        },
+                        "onInit": "// keeping track for total questions\r\nscenario.totalQuestionsAsked++;\r\n\r\nvar criterion = scenario.disqualifyResponse.criteria[scenario.questionIndex];\r\nscenario.questionArgs = {};\r\nscenario.questionArgs.question = criterion;"
+                    },
+                    {
+                        "id": "8cc8d6de3179-a14e044b3f7d5fd5-2360",
+                        "type": "beginScenario",
+                        "designer": {
+                            "xLocation": 1040,
+                            "yLocation": 547,
+                            "next": "ac3e4757a04f-95c5731ff4cd2f2f-c783"
+                        },
+                        "scenario": "question_generation",
+                        "variable": "questionAnswer",
+                        "args": "scenario.questionArgs",
+                        "label": "Question Generation"
+                    },
+                    {
+                        "id": "bd61cf721cfb-286941d86a9f1950-d264",
+                        "type": "branch",
+                        "condition": "scenario.questionAnswer.answer == null",
+                        "designer": {
+                            "xLocation": 874,
+                            "yLocation": 340,
+                            "next": "c0b338e361df-f9260a30a63543e5-2d46"
+                        },
+                        "targetStepId": "c7320a2517ea-1c8780d20d47cb35-e956",
+                        "label": "Is Don't Know"
+                    },
+                    {
+                        "id": "c7320a2517ea-1c8780d20d47cb35-e956",
+                        "type": "action",
+                        "label": "Next Question Index",
+                        "designer": {
+                            "xLocation": 1480,
+                            "yLocation": 532,
+                            "next": "275cf280677e-52bf72c7f8f55bad-ae74"
+                        },
+                        "onInit": "scenario.questionIndex++;"
+                    },
+                    {
+                        "id": "ac3e4757a04f-95c5731ff4cd2f2f-c783",
+                        "type": "action",
+                        "label": "Save answer to profile",
+                        "designer": {
+                            "xLocation": 927,
+                            "yLocation": 540,
+                            "next": "c7f40688bbe6-46591d81f769a6a1-9d1f"
+                        },
+                        "onInit": "scenario.profile.askedCodes.push(scenario.questionAnswer);"
+                    },
+                    {
+                        "id": "d5398bdc9019-e4c6eb78e63ffdc5-416a",
+                        "type": "datasource",
+                        "designer": {
+                            "xLocation": 946,
+                            "yLocation": 126,
+                            "next": "57b8d246f882-fccf0daa5e3e5f5e-a939",
+                            "errorStepId": "7cf5829caf3b-b595e08171a799bc-2f59"
+                        },
+                        "dataConnection": "ctm-disqualifier-prod",
+                        "urlBase": "https://prod-eastus-ctm-disq-webapp.azurewebsites.net",
+                        "urlPath": "disqualify",
+                        "urlParams": "",
+                        "contentType": "raw",
+                        "method": "post",
+                        "headers": "",
+                        "payload": "scenario.disqualifyRequest",
+                        "opJson": true,
+                        "opResolveWithFullResponse": false,
+                        "response": "disqualifyResponse",
+                        "label": "Disqualify Enpoint"
+                    },
+                    {
+                        "id": "57b8d246f882-fccf0daa5e3e5f5e-a939",
+                        "type": "action",
+                        "label": "Process disqualify response",
+                        "designer": {
+                            "xLocation": 1048,
+                            "yLocation": 54,
+                            "next": "42b4b5fab0ed-0ff1c03b236e69bd-63c4"
+                        },
+                        "onInit": "scenario.trialsCountPrev = scenario.trials.length;\r\nscenario.trials = scenario.disqualifyResponse.trials;"
+                    },
+                    {
+                        "id": "d46040c72921-e874ae9773008129-3f14",
+                        "type": "action",
+                        "label": "Init Question Index",
+                        "designer": {
+                            "xLocation": 1534,
+                            "yLocation": 460,
+                            "next": "275cf280677e-52bf72c7f8f55bad-ae74"
+                        },
+                        "onInit": "scenario.questionIndex = 0;"
+                    },
+                    {
+                        "id": "275cf280677e-52bf72c7f8f55bad-ae74",
+                        "type": "branch",
+                        "condition": "scenario.questionIndex < scenario.disqualifyResponse.criteria.length",
+                        "designer": {
+                            "xLocation": 1352,
+                            "yLocation": 586,
+                            "next": "c0b338e361df-f9260a30a63543e5-2d46"
+                        },
+                        "targetStepId": "22130a4fa790-7398bd4e67a60462-949a",
+                        "label": "Still have questions"
+                    },
+                    {
+                        "id": "c0b5312656d6-cb6b198a64649879-f53d",
+                        "type": "prompt",
+                        "dataType": "[\"Answer additional questions\", \"Get results\"]",
+                        "designer": {
+                            "xLocation": 1540,
+                            "yLocation": 200,
+                            "listStyle": 3,
+                            "next": "f3aa06e2bb65-6697b1be21430325-586f"
+                        },
+                        "text": "What would you like to do?",
+                        "variable": "continueAsking",
+                        "stringId": "stringId_b73a4cc0c608505e",
+                        "choiceType": "choice"
+                    },
+                    {
+                        "id": "42bc07ec8bf1-57c03e2a91e4689e-f6cc",
+                        "type": "branch",
+                        "condition": "scenario.totalQuestionsAsked > 0 && \r\n(scenario.trialsCountPrev === scenario.trials.length || \r\n scenario.totalQuestionsAsked >= scenario.QUESTIONS_THRESHOLD)\r\n",
+                        "designer": {
+                            "xLocation": 1500,
+                            "yLocation": 109,
+                            "next": "ba24c6c14552-29a155c3df1c4f2f-b738"
+                        },
+                        "label": "Should ask user to continue",
+                        "targetStepId": "c0b5312656d6-cb6b198a64649879-f53d"
+                    },
+                    {
+                        "id": "04bde4fbe4fd-cde1c2bb3509913a-e268",
+                        "type": "branch",
+                        "condition": "scenario.continueAsking.entity === \"Answer additional questions\"",
+                        "designer": {
+                            "xLocation": 1566,
+                            "yLocation": 268,
+                            "next": "2093a915c20d-8fc2e7481038d764-affd"
+                        },
+                        "label": "Additional questions",
+                        "targetStepId": "ba24c6c14552-29a155c3df1c4f2f-b738"
+                    },
+                    {
+                        "id": "2093a915c20d-8fc2e7481038d764-affd",
+                        "type": "statement",
+                        "designer": {
+                            "xLocation": 352,
+                            "yLocation": 551,
+                            "next": "46c223b11a89-3ac967716fd0b465-98b6"
+                        },
+                        "text": "Here are the clinical trials the patient may qualify for:",
+                        "stringId": "stringId_00902617ba8079bf",
+                        "label": "Here are the trials"
+                    },
+                    {
+                        "id": "ba24c6c14552-29a155c3df1c4f2f-b738",
+                        "type": "branch",
+                        "condition": "(scenario.disqualifyResponse.criteria == null || \r\n scenario.disqualifyResponse.criteria.length === 0)",
+                        "designer": {
+                            "xLocation": 1568,
+                            "yLocation": 380,
+                            "next": "d46040c72921-e874ae9773008129-3f14"
+                        },
+                        "label": "Is criteria empty",
+                        "targetStepId": "2093a915c20d-8fc2e7481038d764-affd"
+                    },
+                    {
+                        "id": "b1119c0d3562-c592b7cced67f2b2-e89c",
+                        "type": "statement",
+                        "designer": {
+                            "xLocation": 1180,
+                            "yLocation": 20,
+                            "next": "6b3fdcb8915e-ec4dc8cd89a2ebbd-a086"
+                        },
+                        "text": "\"Found \" + scenario.trials.length.toString() + \" relevant trial\" + (scenario.trials.length === 1 ? \"\" : \"s\") + \".\"",
+                        "stringId": "stringId_00902617ba8079bf",
+                        "label": "Relevant trials number"
+                    },
+                    {
+                        "id": "6b3fdcb8915e-ec4dc8cd89a2ebbd-a086",
+                        "type": "branch",
+                        "condition": "scenario.trials.length > 0",
+                        "designer": {
+                            "xLocation": 1320,
+                            "yLocation": 20,
+                            "next": "e8e69e5b6b47-4c7e389965d6aef4-6dd1"
+                        },
+                        "targetStepId": "efdb922881fd-730358f2fa29dc39-73b0",
+                        "label": "Trials > 0"
+                    },
+                    {
+                        "id": "efdb922881fd-730358f2fa29dc39-73b0",
+                        "type": "branch",
+                        "condition": "scenario.trials.length > scenario.TRIALS_THRESHOLD",
+                        "designer": {
+                            "xLocation": 1429,
+                            "yLocation": 53,
+                            "next": "2093a915c20d-8fc2e7481038d764-affd"
+                        },
+                        "targetStepId": "42bc07ec8bf1-57c03e2a91e4689e-f6cc",
+                        "label": "Trials > Threshold"
+                    },
+                    {
+                        "id": "46c223b11a89-3ac967716fd0b465-98b6",
+                        "type": "action",
+                        "label": "Add trials ids to QeRequest",
+                        "designer": {
+                            "xLocation": 349,
+                            "yLocation": 620,
+                            "next": "c6b04222f48b-efa91a748ac26834-1f22"
+                        },
+                        "onInit": "// add trialsIds to details request\nscenario.qeRequest.trialIds = scenario.trials.map(trial => trial.nctId);"
+                    },
+                    {
+                        "id": "c6b04222f48b-efa91a748ac26834-1f22",
+                        "type": "datasource",
+                        "designer": {
+                            "xLocation": 340,
+                            "yLocation": 694,
+                            "errorStepId": "7cf5829caf3b-b595e08171a799bc-2f59",
+                            "next": "2333bc1d943a-dbd4cf50e0a91eee-125b"
+                        },
+                        "dataConnection": "ctm-query-engine-prod",
+                        "urlBase": "https://prod-gateway-webapp.azurewebsites.net/qe",
+                        "urlPath": "trials-details",
+                        "urlParams": "",
+                        "contentType": "raw",
+                        "method": "post",
+                        "headers": "",
+                        "payload": "scenario.qeRequest",
+                        "opJson": true,
+                        "opResolveWithFullResponse": false,
+                        "response": "qeResponse",
+                        "error": "qeError",
+                        "label": "QE trials-details endpoint"
+                    },
+                    {
+                        "id": "2333bc1d943a-dbd4cf50e0a91eee-125b",
+                        "type": "action",
+                        "label": "Process trials-details",
+                        "designer": {
+                            "xLocation": 340,
+                            "yLocation": 752,
+                            "next": "e588f774bae0-892987238b37e51d-68d3"
+                        },
+                        "onInit": "scenario.trials = scenario.qeResponse.trials;\n// initialize trials map\nscenario.trialsMap = {};\nscenario.trials.forEach(trial => scenario.trialsMap[trial.nctId] = trial);"
+                    },
+                    {
+                        "id": "7d13692c028c-c62feba5d349bb6e-7959",
+                        "type": "action",
+                        "label": "Log Profile",
+                        "designer": {
+                            "xLocation": 492,
+                            "yLocation": 48,
+                            "next": "95f6b5f256da-ed1cea46c0187621-f7b9"
+                        },
+                        "onInit": "session.logCustomEvent('USER_PROFILE', scenario.profile);"
+                    },
+                    {
+                        "id": "2d52c58f3c9f-311c95e0e7a51ce9-5ed7",
+                        "type": "action",
+                        "label": "Log QE response",
+                        "designer": {
+                            "xLocation": 480,
+                            "yLocation": 208,
+                            "next": "8eb78c0e15f8-3aa0bdbacd6795d8-0ac6"
+                        },
+                        "onInit": "var qeResponseExtended = {};\nqeResponseExtended.trials = scenario.trials;\nqeResponseExtended.totalQeTrialsNum = scenario.trials.length;\nsession.logCustomEvent('QE_RESPONSE', qeResponseExtended);"
+                    },
+                    {
+                        "id": "e588f774bae0-892987238b37e51d-68d3",
+                        "type": "action",
+                        "label": "Log Trials Results",
+                        "designer": {
+                            "xLocation": 466,
+                            "yLocation": 780,
+                            "next": "138c2cc32f4e-265ec16959d65e96-6083"
+                        },
+                        "onInit": "var trialResults = {};\ntrialResults.totalQuestions = scenario.totalQuestionsAsked;\ntrialResults.resultTrialsNum = scenario.trials.length;\ntrialResults.totalQeTrialsNum = scenario.totalQeTrials;\ntrialResults.resultTrials = scenario.trials.map(trial => {\n    return {\n        \"nctId\": trial.nctId,\n        \"sponsor\": scenario.trialsMap[trial.nctId].leadSponsor\n    };\n});\ntrialResults.secondsSpent = (new Date().getTime() - scenario.timeStarted) / 1000;\nsession.logCustomEvent('TRIALS_RESULTS', trialResults);"
+                    },
+                    {
+                        "id": "f3aa06e2bb65-6697b1be21430325-586f",
+                        "type": "action",
+                        "label": "Log Continue Asking Response",
+                        "designer": {
+                            "xLocation": 1665,
+                            "yLocation": 235,
+                            "next": "04bde4fbe4fd-cde1c2bb3509913a-e268"
+                        },
+                        "onInit": "session.logCustomEvent('USER_CONTINUE_ASKING_RESPONSE', scenario.continueAsking.entity);"
+                    },
+                    {
+                        "id": "c7f40688bbe6-46591d81f769a6a1-9d1f",
+                        "type": "action",
+                        "label": "Log User Answer",
+                        "designer": {
+                            "xLocation": 860,
+                            "yLocation": 440,
+                            "next": "bd61cf721cfb-286941d86a9f1950-d264"
+                        },
+                        "onInit": "var qualificationQuestionInfo = {};\nqualificationQuestionInfo.totalAskedQuestionsBefore = scenario.totalQuestionsAsked - 1;\nqualificationQuestionInfo.code = scenario.questionAnswer.code;\nqualificationQuestionInfo.userAnswer = scenario.questionAnswer.answer; \nqualificationQuestionInfo.answerType = scenario.questionAnswer.answerType;\nqualificationQuestionInfo.ayalonEntityText = scenario.questionAnswer.ayalonEntityText;\nsession.logCustomEvent('QUALIFICATION_QUESTION_INFO', qualificationQuestionInfo);"
+                    },
+                    {
+                        "id": "42b4b5fab0ed-0ff1c03b236e69bd-63c4",
+                        "type": "action",
+                        "label": "Log Disqualify Response",
+                        "designer": {
+                            "xLocation": 1146,
+                            "yLocation": 114,
+                            "next": "b1119c0d3562-c592b7cced67f2b2-e89c"
+                        },
+                        "onInit": "var disqualifyResponseExtended = {};\ndisqualifyResponseExtended.response = scenario.disqualifyResponse;//trials after answering the question\ndisqualifyResponseExtended.disqualifiedTrials = scenario.disqualifiedTrials;//trials were ignored after answering question\nsession.logCustomEvent('DISQUALIFY_RESPONSE', disqualifyResponseExtended);"
                     }
                 ],
                 "interrupting": false,
@@ -857,7 +1257,7 @@
     "files": [
         {
             "name": "UmlsConceptsMapping.json",
-                "content": "ew0KCSJzb3VyY2UiOiAiQ1RNIFBSRDogaHR0cHM6Ly9taWNyb3NvZnQuc2hhcmVwb2ludC5jb20vOnc6L3QvTVNIZWFsdGhJTC9FZXhsTUJ3WkFrZExzNk9SRndPTEJTQUJycDFQOXBBRHdlU2stMHNZM3NTdmhRP2U9NXlvNHllIiwNCgkiZmlsdGVyZWRDb25jZXB0cyI6IHsNCgkJIkMwMDEyNjM0Ijogew0KCQkJImNvZGUiOiAiQzAwMTI2MzQiLA0KCQkJIm5hbWUiOiAiZGlzZWFzZSINCgkJfSwNCgkJIkMwNTQzNDY3Ijogew0KCQkJImNvZGUiOiAiQzA1NDM0NjciLA0KCQkJIm5hbWUiOiAic3VyZ2VyeSINCgkJfSwNCgkJIkMwMDg3MTExIjogew0KCQkJImNvZGUiOiAiQzAwODcxMTEiLA0KCQkJIm5hbWUiOiAidHJlYXRtZW50Ig0KCQl9LA0KCQkiQzE1MTQ0NjMiOiB7DQoJCQkiY29kZSI6ICJDMTUxNDQ2MyIsDQoJCQkibmFtZSI6ICJ0cmVhdG1lbnQiDQoJCX0sDQoJCSJDMTQ1Nzg4NyI6IHsNCgkJCSJjb2RlIjogIkMxNDU3ODg3IiwNCgkJCSJuYW1lIjogInN5bXB0b21zIg0KCQl9LA0KCQkiQzAwMTMyMjciOiB7DQoJCQkiY29kZSI6ICJDMDAxMzIyNyIsDQoJCQkibmFtZSI6ICJtZWRpY2F0aW9uIg0KCQl9LA0KCQkiQzAwMjI4ODUiOiB7DQoJCQkiY29kZSI6ICJDMDAyMjg4NSIsDQoJCQkibmFtZSI6ICJsYWJvcmF0b3J5IHRlc3RzIg0KCQl9LA0KCQkiQzAxODQ2NjEiOiB7DQoJCQkiY29kZSI6ICJDMDE4NDY2MSIsDQoJCQkibmFtZSI6ICJwcm9jZWR1cmVzIg0KCQl9LA0KCQkiQzE1MzM2ODUiOiB7DQoJCQkiY29kZSI6ICJDMTUzMzY4NSIsDQoJCQkibmFtZSI6ICJpbmplY3Rpb24iDQoJCX0sDQoJCSJDMzcxNDUxNCI6IHsNCgkJCSJjb2RlIjogIkMzNzE0NTE0IiwNCgkJCSJuYW1lIjogImluZmVjdGlvbiINCgkJfSwNCgkJIkMzODMxMTE4Ijogew0KCQkJImNvZGUiOiAiQzM4MzExMTgiLA0KCQkJIm5hbWUiOiAiY2hpbGRiZWFyaW5nIHBvdGVudGlhbCINCgkJfSwNCgkJIkMwMjA1NDYyIjogew0KCQkJImNvZGUiOiAiQzAyMDU0NjIiLA0KCQkJIm5hbWUiOiAiaGlzdG9sb2dpYyINCgkJfSwNCgkJIkMwMDI0NDg1Ijogew0KCQkJImNvZGUiOiAiQzAwMjQ0ODUiLA0KCQkJIm5hbWUiOiAibXJpIg0KCQl9LA0KCQkiQzAyMjE0MjMiOiB7DQoJCQkiY29kZSI6ICJDMDIyMTQyMyIsDQoJCQkibmFtZSI6ICJJbGxuZXNzIg0KCQl9LA0KCQkiQzAwMzI5NzYiOiB7DQoJCQkiY29kZSI6ICJDMDAzMjk3NiIsDQoJCQkibmFtZSI6ICJwcmVnbmFuY3kgdGVzdHMiDQoJCX0sDQoJCSJDMDAyMzY3MSI6IHsNCgkJCSJjb2RlIjogIkMwMDIzNjcxIiwNCgkJCSJuYW1lIjogImxpZmUgZXhwZWN0YW5jaWVzIg0KCQl9LA0KCQkiQzAwMTMyMzAiOiB7DQoJCQkiY29kZSI6ICJDMDAxMzIzMCIsDQoJCQkibmFtZSI6ICJpbnZlc3RpZ2F0aW9uYWwgZHJ1ZyINCgkJfSwNCgkJIkMwMDIwNTE3Ijogew0KCQkJImNvZGUiOiAiQzAwMjA1MTciLA0KCQkJIm5hbWUiOiAiYWxsZXJneSINCgkJfSwNCgkJIkMwMDI3NjUxIjogew0KCQkJImNvZGUiOiAiQzAwMjc2NTEiLA0KCQkJIm5hbWUiOiAiTmVvcGxhc21zIg0KCQl9LA0KCQkiQzE1NDY3NzQiOiB7DQoJCQkiY29kZSI6ICJDMTU0Njc3NCIsDQoJCQkibmFtZSI6ICJzZXJ1bSINCgkJfSwNCgkJIkMxNzEwMDMyIjogew0KCQkJImNvZGUiOiAiQzE3MTAwMzIiLA0KCQkJIm5hbWUiOiAic2NyZWVuaW5nIg0KCQl9LA0KCQkiQzAwMDk1NTUiOiB7DQoJCQkiY29kZSI6ICJDMDAwOTU1NSIsDQoJCQkibmFtZSI6ICJjb21wbGV0ZSBibG9vZCBjb3VudCINCgkJfSwNCgkJIkMwMDExOTIzIjogew0KCQkJImNvZGUiOiAiQzAwMTE5MjMiLA0KCQkJIm5hbWUiOiAiaW1hZ2luZyINCgkJfSwNCgkJIkMwMDMxODA5Ijogew0KCQkJImNvZGUiOiAiQzAwMzE4MDkiLA0KCQkJIm5hbWUiOiAicGh5c2ljYWwgZXhhbWluYXRpb24iDQoJCX0sDQoJCSJDMTcwOTkyNiI6IHsNCgkJCSJjb2RlIjogIkMxNzA5OTI2IiwNCgkJCSJuYW1lIjogIlJFQ0lTVCINCgkJfSwNCgkJIkMwMjIwODI1Ijogew0KCQkJImNvZGUiOiAiQzAyMjA4MjUiLA0KCQkJIm5hbWUiOiAiZXZhbHVhdGlvbiINCgkJfSwNCgkJIkMwMzAxNzA0Ijogew0KCQkJImNvZGUiOiAiQzAzMDE3MDQiLA0KCQkJIm5hbWUiOiAiUFMgKFBlcmZvcm1hbmNlIFN0YXR1cyBidWcpIg0KCQl9LA0KCQkiQzE1MTg5NjUiOiB7DQoJCQkiY29kZSI6ICJDMTUxODk2NSIsDQoJCQkibmFtZSI6ICJQZXJmb3JtYW5jZSBTdGF0dXMiDQoJCX0sDQoJCSJDMDM5MjM2NiI6IHsNCgkJCSJjb2RlIjogIkMwMzkyMzY2IiwNCgkJCSJuYW1lIjogInRlc3RpbmciDQoJCX0sDQoJCSJDMDIwNjc1MCI6IHsNCgkJCSJjb2RlIjogIkMwMjA2NzUwIiwNCgkJCSJuYW1lIjogIkNPVklELTE5Ig0KCQl9LA0KCQkiY292aWQtMTkiOiB7ICJuYW1lIjogIkNPVklELTE5IiB9LA0KCQkic2FycyBjb3YgMiI6IHsgIm5hbWUiOiAiQ09WSUQtMTkiIH0sDQoJCSJjb3ZpZDE5IjogeyAibmFtZSI6ICJDT1ZJRC0xOSIgfSwNCgkJImNvdmlkIDE5IjogeyAibmFtZSI6ICJDT1ZJRC0xOSIgfSwNCgkJImNvcm9uYSB2aXJ1cyI6IHsgIm5hbWUiOiAiQ09WSUQtMTkiIH0sDQoJCSJjb3JvbmF2aXJ1cyI6IHsgIm5hbWUiOiAiQ09WSUQtMTkiIH0sDQoJCSIxOS1uY292IjogeyAibmFtZSI6ICJDT1ZJRC0xOSIgfSwNCgkJInNhcnMtY292LTIiOiB7ICJuYW1lIjogIkNPVklELTE5IiB9LA0KCQkic2Fycy1jb3YyIjogeyAibmFtZSI6ICJDT1ZJRC0xOSIgfSwNCgkJInRoZSBzdHVkeSI6IHsgIm5hbWUiOiAidGhlIHN0dWR5IiB9LA0KCQkidGhpcyBzdHVkeSI6IHsgIm5hbWUiOiAidGhpcyBzdHVkeSIgfSwNCgkJInN0dWR5IHJlcXVpcmVtZW50cyI6IHsgIm5hbWUiOiAic3R1ZHkgcmVxdWlyZW1lbnRzIiB9LA0KCQkidGhlIHN0dWR5IHByb3RvY29sIjogeyAibmFtZSI6ICJ0aGUgc3R1ZHkgcHJvdG9jb2wiIH0sDQoJCSJzdHVkeSI6IHsgIm5hbWUiOiAic3R1ZHkiIH0sDQoJCSJhIHN0dWR5IjogeyAibmFtZSI6ICJhIHN0dWR5IiB9LA0KCQkicGF0aG9sb2dpY2FsbHkiOiB7ICJuYW1lIjogInBhdGhvbG9naWNhbGx5IiB9DQoJfSwNCgkiYWxsb3dlZENvbmNlcHRzIjogew0KCQkiQzAwMzIxODEiOiB7DQoJCQkiY29kZSI6ICJDMDAzMjE4MSIsDQoJCQkibmFtZSI6ICJQbGF0ZWxldCBjb3VudCIsDQoJCQkicXVlc3Rpb24iOiAiV2hhdCBpcyB0aGUgcGF0aWVudCdzICVwMSU/IFxuKFlvdSBjYW4gYWxzbyB0eXBlICdEb24ndCBrbm93JyBvciAnRG9uJ3Qgd2FudCB0byBhbnN3ZXInIHRvIHNraXAgdGhpcyBxdWVzdGlvbikiLA0KCQkJImFuc3dlclR5cGUiOiAiTnVtZXJpYyINCgkJfSwNCgkJIkMwOTQ4NzYyIjogew0KCQkJImNvZGUiOiAiQzA5NDg3NjIiLA0KCQkJIm5hbWUiOiAiQWJzb2x1dGUgbmV1dHJvcGhpbCBjb3VudCIsDQoJCQkicXVlc3Rpb24iOiAiV2hhdCBpcyB0aGUgcGF0aWVudCdzICVwMSU/IFxuKFlvdSBjYW4gYWxzbyB0eXBlICdEb24ndCBrbm93JyBvciAnRG9uJ3Qgd2FudCB0byBhbnN3ZXInIHRvIHNraXAgdGhpcyBxdWVzdGlvbikiLA0KCQkJImFuc3dlclR5cGUiOiAiTnVtZXJpYyINCgkJfSwNCgkJIkMwMDE5MDQ2Ijogew0KCQkJImNvZGUiOiAiQzAwMTkwNDYiLA0KCQkJIm5hbWUiOiAiSGVtb2dsb2JpbiBsZXZlbCIsDQoJCQkicXVlc3Rpb24iOiAiV2hhdCBpcyB0aGUgcGF0aWVudCdzICVwMSU/IFxuKFlvdSBjYW4gYWxzbyB0eXBlICdEb24ndCBrbm93JyBvciAnRG9uJ3Qgd2FudCB0byBhbnN3ZXInIHRvIHNraXAgdGhpcyBxdWVzdGlvbikiLA0KCQkJImFuc3dlclR5cGUiOiAiTnVtZXJpYyINCgkJfSwNCgkJIkMwMjAxOTEzIjogew0KCQkJImNvZGUiOiAiQzAyMDE5MTMiLA0KCQkJIm5hbWUiOiAiVG90YWwgQmlsaXJ1YmluIiwNCgkJCSJxdWVzdGlvbiI6ICJXaGF0IGlzIHRoZSBwYXRpZW50J3MgJXAxJT8gXG4oWW91IGNhbiBhbHNvIHR5cGUgJ0Rvbid0IGtub3cnIG9yICdEb24ndCB3YW50IHRvIGFuc3dlcicgdG8gc2tpcCB0aGlzIHF1ZXN0aW9uKSIsDQoJCQkiYW5zd2VyVHlwZSI6ICJOdW1lcmljIg0KCQl9LA0KCQkiQzE1MjI0NDkiOiB7DQoJCQkiY29kZSI6ICJDMTUyMjQ0OSIsDQoJCQkibmFtZSI6ICJSYWRpb3RoZXJhcHkiLA0KCQkJInF1ZXN0aW9uIjogIkRpZCB0aGUgcGF0aWVudCBnbyB0aHJvdWdoICVwMSU/IiwNCgkJCSJhbnN3ZXJUeXBlIjogIkJvb2xlYW4iDQoJCX0sDQoJCSJDMzY2NTQ3MiI6IHsNCgkJCSJjb2RlIjogIkMzNjY1NDcyIiwNCgkJCSJuYW1lIjogIkNoZW1vdGhlcmFweSIsDQoJCQkicXVlc3Rpb24iOiAiRGlkIHRoZSBwYXRpZW50IGdvIHRocm91Z2ggJXAxJT8iLA0KCQkJImFuc3dlclR5cGUiOiAiQm9vbGVhbiINCgkJfSwNCgkJIkMxODgzMjU2Ijogew0KCQkJImNvZGUiOiAiQzE4ODMyNTYiLA0KCQkJIm5hbWUiOiAiU3lzdGVtYXRpYyBDaGVtb3RoZXJhcHkiLA0KCQkJIm1hcHBlZFRvIjogIkMzNjY1NDcyIg0KCQl9LA0KCQkiQ0hFTU9USEVSQVBZIEFHRU5UIjogew0KCQkJIm5hbWUiOiAiQ2hlbW90aGVyYXB5IEFnZW50IiwNCgkJCSJtYXBwZWRUbyI6ICJDMzY2NTQ3MiINCgkJfSwNCgkJIkMwMDE5MTYzIjogew0KCQkJImNvZGUiOiAiQzAwMTkxNjMiLA0KCQkJIm5hbWUiOiAiSGVwYXRpdGlzIEIiLA0KCQkJInF1ZXN0aW9uIjogIldhcyB0aGUgcGF0aWVudCBkaWFnbm9zZWQgd2l0aCAlcDElPyIsDQoJCQkiYW5zd2VyVHlwZSI6ICJCb29sZWFuIg0KCQl9LA0KCQkiQzAwMTk2OTMiOiB7DQoJCQkiY29kZSI6ICJDMDAxOTY5MyIsDQoJCQkibmFtZSI6ICJISVYiLA0KCQkJInF1ZXN0aW9uIjogIldhcyB0aGUgcGF0aWVudCBkaWFnbm9zZWQgd2l0aCAlcDElPyIsDQoJCQkiYW5zd2VyVHlwZSI6ICJCb29sZWFuIg0KCQl9LA0KCQkiQzM4NTQyMjIiOiB7DQoJCQkiY29kZSI6ICJDMzg1NDIyMiIsDQoJCQkibmFtZSI6ICJISVYiLA0KCQkJIm1hcHBlZFRvIjogIkMwMDE5NjkzIg0KCQl9LA0KCQkiQzAwMjA1MzgiOiB7DQoJCQkiY29kZSI6ICJDMDAyMDUzOCIsDQoJCQkibmFtZSI6ICJIeXBlcnRlbnNpb24iLA0KCQkJInF1ZXN0aW9uIjogIldhcyB0aGUgcGF0aWVudCBkaWFnbm9zZWQgd2l0aCAlcDElPyIsDQoJCQkiYW5zd2VyVHlwZSI6ICJCb29sZWFuIg0KCQl9LA0KCQkiQzAwMTg4MDIiOiB7DQoJCQkiY29kZSI6ICJDMDAxODgwMiIsDQoJCQkibmFtZSI6ICJDb25nZXN0aXZlIGhlYXJ0IGZhaWx1cmUiLA0KCQkJInF1ZXN0aW9uIjogIldhcyB0aGUgcGF0aWVudCBkaWFnbm9zZWQgd2l0aCAlcDElPyIsDQoJCQkiYW5zd2VyVHlwZSI6ICJCb29sZWFuIg0KCQl9LA0KCQkiQzAwMTE4NDciOiB7DQoJCQkiY29kZSI6ICJDMDAxMTg0NyIsDQoJCQkibmFtZSI6ICJEaWFiZXRlcyIsDQoJCQkicXVlc3Rpb24iOiAiV2FzIHRoZSBwYXRpZW50IGRpYWdub3NlZCB3aXRoICVwMSU/IiwNCgkJCSJhbnN3ZXJUeXBlIjogIkJvb2xlYW4iDQoJCX0sDQoJCSJDMDAwMzgxMSI6IHsNCgkJCSJjb2RlIjogIkMwMDAzODExIiwNCgkJCSJuYW1lIjogIkNhcmRpYWMgYXJyaHl0aG1pYSIsDQoJCQkicXVlc3Rpb24iOiAiV2FzIHRoZSBwYXRpZW50IGRpYWdub3NlZCB3aXRoICVwMSU/IiwNCgkJCSJhbnN3ZXJUeXBlIjogIkJvb2xlYW4iDQoJCX0sDQoJCSJDMDAxOTE5NiI6IHsNCgkJCSJjb2RlIjogIkMwMDE5MTk2IiwNCgkJCSJuYW1lIjogIkhlcGF0aXRpcyBDIiwNCgkJCSJxdWVzdGlvbiI6ICJXYXMgdGhlIHBhdGllbnQgZGlhZ25vc2VkIHdpdGggJXAxJT8iLA0KCQkJImFuc3dlclR5cGUiOiAiQm9vbGVhbiINCgkJfSwNCgkJIkMwMDA0MzY0Ijogew0KCQkJImNvZGUiOiAiQzAwMDQzNjQiLA0KCQkJIm5hbWUiOiAiQXV0b2ltbXVuZSBEaXNlYXNlcyIsDQoJCQkicXVlc3Rpb24iOiAiV2FzIHRoZSBwYXRpZW50IGRpYWdub3NlZCB3aXRoICVwMSU/IiwNCgkJCSJhbnN3ZXJUeXBlIjogIkJvb2xlYW4iDQoJCX0sDQoJCSJDMTMwNTg1NSI6IHsNCgkJCSJjb2RlIjogIkMxMzA1ODU1IiwNCgkJCSJuYW1lIjogIkJvZHkgTWFzcyBJbmRleCIsDQoJCQkicXVlc3Rpb24iOiAiV2hhdCBpcyB0aGUgcGF0aWVudCdzICVwMSU/IFxuKFlvdSBjYW4gYWxzbyB0eXBlICdEb24ndCBrbm93JyBvciAnRG9uJ3Qgd2FudCB0byBhbnN3ZXInIHRvIHNraXAgdGhpcyBxdWVzdGlvbikiLA0KCQkJImFuc3dlclR5cGUiOiAiTnVtZXJpYyINCgkJfSwNCgkJIkMxNTEyMTYyIjogew0KCQkJImNvZGUiOiAiQzE1MTIxNjIiLA0KCQkJIm5hbWUiOiAiRUNPRyIsDQoJCQkiY2hvaWNlcyI6IFsgIjAiLCAiMSIsICIyIiwgIjMiLCAiNCIgXSwNCgkJCSJxdWVzdGlvbiI6ICJXaGF0IGlzIHRoZSBwYXRpZW50J3MgRUNPRyBzY29yZT8iLA0KCQkJImFuc3dlclR5cGUiOiAiQ2hvaWNlIg0KCQl9LA0KCQkiQzE1MjAyMjQiOiB7DQoJCQkiY29kZSI6ICJDMTUyMDIyNCIsDQoJCQkibmFtZSI6ICJFYXN0ZXJuIENvb3BlcmF0aXZlIE9uY29sb2d5IEdyb3VwIHBlcmZvcm1hbmNlIHN0YXR1cyIsDQoJCQkibWFwcGVkVG8iOiAiQzE1MTIxNjIiDQoJCX0sDQoJCSJDMDAwNDkzNiI6IHsNCgkJCSJjb2RlIjogIkMwMDA0OTM2IiwNCgkJCSJuYW1lIjogIm1lbnRhbCBoZWFsdGggZHlzZnVuY3Rpb24iLA0KCQkJInF1ZXN0aW9uIjogIldhcyB0aGUgcGF0aWVudCBkaWFnbm9zZWQgd2l0aCBtZW50YWwgaGVhbHRoIG9yIGJlaGF2aW9yYWwgZHlzZnVuY3Rpb24/IiwNCgkJCSJhbnN3ZXJUeXBlIjogIkJvb2xlYW4iDQoJCX0sDQoJCSJDMDAzODQ1NCI6IHsNCgkJCSJjb2RlIjogIkMwMDM4NDU0IiwNCgkJCSJuYW1lIjogInN0cm9rZSIsDQoJCQkicXVlc3Rpb24iOiAiRGlkIHRoZSBwYXRpZW50IGV4cGVyaWVuY2Ugc3Ryb2tlIG9yIGNlcmVicm92YXNjdWxhciBhY2NpZGVudD8iLA0KCQkJImFuc3dlclR5cGUiOiAiQm9vbGVhbiINCgkJfSwNCgkJIkMwMDAyOTY1Ijogew0KCQkJImNvZGUiOiAiQzAwMDI5NjUiLA0KCQkJIm5hbWUiOiAidW5zdGFibGUgYW5naW5hIiwNCgkJCSJxdWVzdGlvbiI6ICJXYXMgdGhlIHBhdGllbnQgZGlhZ25vc2VkIHdpdGggdW5zdGFibGUgYW5naW5hPyIsDQoJCQkiYW5zd2VyVHlwZSI6ICJCb29sZWFuIg0KCQl9LA0KCQkiQzAwMjcwNTEiOiB7DQoJCQkiY29kZSI6ICJDMDAyNzA1MSIsDQoJCQkibmFtZSI6ICJoZWFydCBhdHRhY2siLA0KCQkJInF1ZXN0aW9uIjogIkRpZCB0aGUgcGF0aWVudCBleHBlcmllbmNlIGEgaGVhcnQgYXR0YWNrPyIsDQoJCQkiYW5zd2VyVHlwZSI6ICJCb29sZWFuIg0KCQl9LA0KCQkiQzAwMzI5NjEiOiB7DQoJCQkiY29kZSI6ICJDMDAzMjk2MSIsDQoJCQkibmFtZSI6ICJQcmVnbmFuY2llcyIsDQoJCQkicXVlc3Rpb24iOiAiSXMgdGhlIHBhdGllbnQgcHJlZ25hbnQgb3IgYnJlYXN0ZmVlZGluZz8iLA0KCQkJImFuc3dlclR5cGUiOiAiQm9vbGVhbiINCgkJfSwNCgkJIkMwNTQ5MjA2Ijogew0KCQkJImNvZGUiOiAiQzA1NDkyMDYiLA0KCQkJIm5hbWUiOiAicHJlZ25hbnQiLA0KCQkJIm1hcHBlZFRvIjogIkMwMDMyOTYxIg0KCQl9LA0KCQkiQzE2MjMwNDAiOiB7DQoJCQkiY29kZSI6ICJDMTYyMzA0MCIsDQoJCQkibmFtZSI6ICJCcmVhc3QgZmVlZGluZyIsDQoJCQkibWFwcGVkVG8iOiAiQzAwMzI5NjEiDQoJCX0sDQoJCSJDMzY2ODgzMSI6IHsNCgkJCSJjb2RlIjogIkMzNjY4ODMxIiwNCgkJCSJuYW1lIjogIkxhY3RhdGlvbiIsDQoJCQkibWFwcGVkVG8iOiAiQzAwMzI5NjEiDQoJCX0sDQoJCSJDMDcwMDU4OSI6IHsNCgkJCSJjb2RlIjogIkMwNzAwNTg5IiwNCgkJCSJuYW1lIjogImNvbnRyYWNlcHRpb24iLA0KCQkJInF1ZXN0aW9uIjogIklzIHRoZSBwYXRpZW50IHVzaW5nIGNvbnRyYWNlcHRpb24/IiwNCgkJCSJhbnN3ZXJUeXBlIjogIkJvb2xlYW4iDQoJCX0sDQoJCSJDMDAwMTYxNyI6IHsNCgkJCSJjb2RlIjogIkMwMDAxNjE3IiwNCgkJCSJuYW1lIjogIkFkcmVuYWwgQ29ydGV4IEhvcm1vbmVzIiwNCgkJCSJxdWVzdGlvbiI6ICJJcyB0aGUgcGF0aWVudCB1c2luZyAlcDElPyIsDQoJCQkiYW5zd2VyVHlwZSI6ICJCb29sZWFuIg0KCQl9LA0KCQkiQzAwMjM4OTUiOiB7DQoJCQkiY29kZSI6ICJDMDAyMzg5NSIsDQoJCQkibmFtZSI6ICJMaXZlciBEaXNlYXNlIiwNCgkJCSJxdWVzdGlvbiI6ICJXYXMgdGhlIHBhdGllbnQgZGlhZ25vc2VkIHdpdGggbGl2ZXIgZGlzZWFzZT8iLA0KCQkJImFuc3dlclR5cGUiOiAiQm9vbGVhbiINCgkJfSwNCgkJIkMwMDA2ODI2Ijogew0KCQkJImNvZGUiOiAiQzAwMDY4MjYiLA0KCQkJIm5hbWUiOiAiTWFsaWduYW50IFR1bW9ycyIsDQoJCQkicXVlc3Rpb24iOiAiV2FzIHRoZSBwYXRpZW50IGRpYWdub3NlZCB3aXRoIHNvbGlkIHR1bW9yIGNhbmNlcj8iLA0KCQkJImFuc3dlclR5cGUiOiAiQm9vbGVhbiINCgkJfSwNCgkJIkMwMDEwMjAwIjogew0KCQkJImNvZGUiOiAiQzAwMTAyMDAiLA0KCQkJIm5hbWUiOiAiQ291Z2giLA0KCQkJInF1ZXN0aW9uIjogIklzIHRoZSBwYXRpZW50IGV4cGVyaWVuY2luZyBjb3VnaD8iLA0KCQkJImFuc3dlclR5cGUiOiAiQm9vbGVhbiINCgkJfSwNCgkJIkMwMDE1OTY3Ijogew0KCQkJImNvZGUiOiAiQzAwMTU5NjciLA0KCQkJIm5hbWUiOiAiRmV2ZXIiLA0KCQkJInF1ZXN0aW9uIjogIklzIHRoZSBwYXRpZW50IGV4cGVyaWVuY2luZyBmZXZlcj8iLA0KCQkJImFuc3dlclR5cGUiOiAiQm9vbGVhbiINCgkJfSwNCgkJIkMwMDEzNDA0Ijogew0KCQkJImNvZGUiOiAiQzAwMTM0MDQiLA0KCQkJIm5hbWUiOiAiU2hvcnRuZXNzIG9mIGJyZWF0aCIsDQoJCQkicXVlc3Rpb24iOiAiSXMgdGhlIHBhdGllbnQgZXhwZXJpZW5jaW5nIHNob3J0bmVzcyBvZiBicmVhdGg/IiwNCgkJCSJhbnN3ZXJUeXBlIjogIkJvb2xlYW4iDQoJCX0sDQoJCSJDMDU5OTE2MSI6IHsNCgkJCSJjb2RlIjogIkMwNTk5MTYxIiwNCgkJCSJuYW1lIjogIlBDUiIsDQoJCQkicXVlc3Rpb24iOiAiV2FzIHRoZSBDT1ZJRC0xOSBkaWFnbm9zaXMgY29uZmlybWVkIGJ5IFBDUj8iLA0KCQkJImFuc3dlclR5cGUiOiAiQm9vbGVhbiINCgkJfSwNCgkJIkMwMDMyNTIwIjogew0KCQkJImNvZGUiOiAiQzAwMzI1MjAiLA0KCQkJIm5hbWUiOiAiUENSIiwNCgkJCSJtYXBwZWRUbyI6ICJDMDU5OTE2MSINCgkJfSwNCgkJIkM0MDUwMjQyIjogew0KCQkJImNvZGUiOiAiQzQwNTAyNDIiLA0KCQkJIm5hbWUiOiAiUENSIiwNCgkJCSJtYXBwZWRUbyI6ICJDMDU5OTE2MSINCgkJfSwNCgkJIkMzODUzNjQzIjogew0KCQkJImNvZGUiOiAiQzM4NTM2NDMiLA0KCQkJIm5hbWUiOiAiUENSIiwNCgkJCSJtYXBwZWRUbyI6ICJDMDU5OTE2MSINCgkJfSwNCgkJIkMxNjU4NjA0Ijogew0KCQkJImNvZGUiOiAiQzE2NTg2MDQiLA0KCQkJIm5hbWUiOiAicG9seW1lcmFzZSBjaGFpbiByZWFjdGlvbiB0ZXN0IiwNCgkJCSJtYXBwZWRUbyI6ICJDMDU5OTE2MSINCgkJfSwNCgkJIkMxNzA5ODQ2Ijogew0KCQkJImNvZGUiOiAiQzE3MDk4NDYiLA0KCQkJIm5hbWUiOiAicmVhbC10aW1lIFBDUiIsDQoJCQkibWFwcGVkVG8iOiAiQzA1OTkxNjEiDQoJCX0sDQoJCSJSRVZFUlNFLVRSQU5TQ1JJUFRJT04gUE9MWU1FUkFTRSBDSEFJTiBSRUFDVElPTiI6IHsNCgkJCSJjb2RlIjogInJldmVyc2UtdHJhbnNjcmlwdGlvbiBwb2x5bWVyYXNlIGNoYWluIHJlYWN0aW9uIiwNCgkJCSJuYW1lIjogIlBDUiIsDQoJCQkibWFwcGVkVG8iOiAiQzA1OTkxNjEiDQoJCX0sDQoJCSJOQVNPUEhBUllOR0VBTCBTV0FCIFBPTFlNRVJBU0UgQ0hBSU4gUkVBQ1RJT04iOiB7DQoJCQkiY29kZSI6ICJuYXNvcGhhcnluZ2VhbCBzd2FiIFBvbHltZXJhc2UgQ2hhaW4gUmVhY3Rpb24iLA0KCQkJIm5hbWUiOiAiUENSIiwNCgkJCSJtYXBwZWRUbyI6ICJDMDU5OTE2MSINCgkJfSwNCgkJIlJULVBDUiBURVNUIjogew0KCQkJImNvZGUiOiAicnQtUENSIHRlc3QiLA0KCQkJIm5hbWUiOiAiUENSIiwNCgkJCSJtYXBwZWRUbyI6ICJDMDU5OTE2MSINCgkJfSwNCgkJIlBDUiBURVNUSU5HIjogew0KCQkJImNvZGUiOiAiUENSIHRlc3RpbmciLA0KCQkJIm5hbWUiOiAiUENSIiwNCgkJCSJtYXBwZWRUbyI6ICJDMDU5OTE2MSINCgkJfQ0KCX0sDQoJImVudGl0eVR5cGVzIjogew0KCQkiTUVESUNBVElPTl9OQU1FIjogew0KCQkJInF1ZXN0aW9uIjogIklzIHRoZSBwYXRpZW50IHVzaW5nICVwMSUgKE1lZGljYXRpb24pPyIsDQoJCQkibmFtZSI6ICJNRURJQ0FUSU9OX05BTUUiLA0KCQkJImFuc3dlclR5cGUiOiAiQm9vbGVhbiINCgkJfSwNCgkJIk1FRElDQVRJT05fQ0xBU1MiOiB7DQoJCQkicXVlc3Rpb24iOiAiSXMgdGhlIHBhdGllbnQgdXNpbmcgJXAxJSAoTWVkaWNhdGlvbiBjbGFzcyk/IiAsDQoJCQkibmFtZSI6ICJNRURJQ0FUSU9OX0NMQVNTIiwNCgkJCSJhbnN3ZXJUeXBlIjogIkJvb2xlYW4iDQoJCX0NCgl9LA0KCSJjb25jZXB0c1N5bm9ueW1zIjogew0KCQkiY29yb25hIHZpcnVzIjogWyAiY29yb25hIiwgImNvcm9uYXZpcnVzIiwgImNvcm9uYSB2aXJ1cyIsICJjb3ZpZDE5IiwgImNvdmlkLTE5IiwgImNvdmlkIDE5IiwgInNhcnMtY292LTIiLCAiMjAxOS1uY292IiwgImNvcm9uYSB2aXJ1cyBpbmZlY3Rpb24iIF0NCgl9DQp9"
+            "content": "ew0KCSJzb3VyY2UiOiAiQ1RNIFBSRDogaHR0cHM6Ly9taWNyb3NvZnQuc2hhcmVwb2ludC5jb20vOnc6L3QvTVNIZWFsdGhJTC9FZXhsTUJ3WkFrZExzNk9SRndPTEJTQUJycDFQOXBBRHdlU2stMHNZM3NTdmhRP2U9NXlvNHllIiwNCgkiZmlsdGVyZWRDb25jZXB0cyI6IHsNCgkJIkMwMDEyNjM0Ijogew0KCQkJImNvZGUiOiAiQzAwMTI2MzQiLA0KCQkJIm5hbWUiOiAiZGlzZWFzZSINCgkJfSwNCgkJIkMwNTQzNDY3Ijogew0KCQkJImNvZGUiOiAiQzA1NDM0NjciLA0KCQkJIm5hbWUiOiAic3VyZ2VyeSINCgkJfSwNCgkJIkMwMDg3MTExIjogew0KCQkJImNvZGUiOiAiQzAwODcxMTEiLA0KCQkJIm5hbWUiOiAidHJlYXRtZW50Ig0KCQl9LA0KCQkiQzE1MTQ0NjMiOiB7DQoJCQkiY29kZSI6ICJDMTUxNDQ2MyIsDQoJCQkibmFtZSI6ICJ0cmVhdG1lbnQiDQoJCX0sDQoJCSJDMTQ1Nzg4NyI6IHsNCgkJCSJjb2RlIjogIkMxNDU3ODg3IiwNCgkJCSJuYW1lIjogInN5bXB0b21zIg0KCQl9LA0KCQkiQzAwMTMyMjciOiB7DQoJCQkiY29kZSI6ICJDMDAxMzIyNyIsDQoJCQkibmFtZSI6ICJtZWRpY2F0aW9uIg0KCQl9LA0KCQkiQzAwMjI4ODUiOiB7DQoJCQkiY29kZSI6ICJDMDAyMjg4NSIsDQoJCQkibmFtZSI6ICJsYWJvcmF0b3J5IHRlc3RzIg0KCQl9LA0KCQkiQzAxODQ2NjEiOiB7DQoJCQkiY29kZSI6ICJDMDE4NDY2MSIsDQoJCQkibmFtZSI6ICJwcm9jZWR1cmVzIg0KCQl9LA0KCQkiQzE1MzM2ODUiOiB7DQoJCQkiY29kZSI6ICJDMTUzMzY4NSIsDQoJCQkibmFtZSI6ICJpbmplY3Rpb24iDQoJCX0sDQoJCSJDMzcxNDUxNCI6IHsNCgkJCSJjb2RlIjogIkMzNzE0NTE0IiwNCgkJCSJuYW1lIjogImluZmVjdGlvbiINCgkJfSwNCgkJIkMzODMxMTE4Ijogew0KCQkJImNvZGUiOiAiQzM4MzExMTgiLA0KCQkJIm5hbWUiOiAiY2hpbGRiZWFyaW5nIHBvdGVudGlhbCINCgkJfSwNCgkJIkMwMjA1NDYyIjogew0KCQkJImNvZGUiOiAiQzAyMDU0NjIiLA0KCQkJIm5hbWUiOiAiaGlzdG9sb2dpYyINCgkJfSwNCgkJIkMwMDI0NDg1Ijogew0KCQkJImNvZGUiOiAiQzAwMjQ0ODUiLA0KCQkJIm5hbWUiOiAibXJpIg0KCQl9LA0KCQkiQzAyMjE0MjMiOiB7DQoJCQkiY29kZSI6ICJDMDIyMTQyMyIsDQoJCQkibmFtZSI6ICJJbGxuZXNzIg0KCQl9LA0KCQkiQzAwMzI5NzYiOiB7DQoJCQkiY29kZSI6ICJDMDAzMjk3NiIsDQoJCQkibmFtZSI6ICJwcmVnbmFuY3kgdGVzdHMiDQoJCX0sDQoJCSJDMDAyMzY3MSI6IHsNCgkJCSJjb2RlIjogIkMwMDIzNjcxIiwNCgkJCSJuYW1lIjogImxpZmUgZXhwZWN0YW5jaWVzIg0KCQl9LA0KCQkiQzAwMTMyMzAiOiB7DQoJCQkiY29kZSI6ICJDMDAxMzIzMCIsDQoJCQkibmFtZSI6ICJpbnZlc3RpZ2F0aW9uYWwgZHJ1ZyINCgkJfSwNCgkJIkMwMDIwNTE3Ijogew0KCQkJImNvZGUiOiAiQzAwMjA1MTciLA0KCQkJIm5hbWUiOiAiYWxsZXJneSINCgkJfSwNCgkJIkMwMDI3NjUxIjogew0KCQkJImNvZGUiOiAiQzAwMjc2NTEiLA0KCQkJIm5hbWUiOiAiTmVvcGxhc21zIg0KCQl9LA0KCQkiQzE1NDY3NzQiOiB7DQoJCQkiY29kZSI6ICJDMTU0Njc3NCIsDQoJCQkibmFtZSI6ICJzZXJ1bSINCgkJfSwNCgkJIkMxNzEwMDMyIjogew0KCQkJImNvZGUiOiAiQzE3MTAwMzIiLA0KCQkJIm5hbWUiOiAic2NyZWVuaW5nIg0KCQl9LA0KCQkiQzAwMDk1NTUiOiB7DQoJCQkiY29kZSI6ICJDMDAwOTU1NSIsDQoJCQkibmFtZSI6ICJjb21wbGV0ZSBibG9vZCBjb3VudCINCgkJfSwNCgkJIkMwMDExOTIzIjogew0KCQkJImNvZGUiOiAiQzAwMTE5MjMiLA0KCQkJIm5hbWUiOiAiaW1hZ2luZyINCgkJfSwNCgkJIkMwMDMxODA5Ijogew0KCQkJImNvZGUiOiAiQzAwMzE4MDkiLA0KCQkJIm5hbWUiOiAicGh5c2ljYWwgZXhhbWluYXRpb24iDQoJCX0sDQoJCSJDMTcwOTkyNiI6IHsNCgkJCSJjb2RlIjogIkMxNzA5OTI2IiwNCgkJCSJuYW1lIjogIlJFQ0lTVCINCgkJfSwNCgkJIkMwMjIwODI1Ijogew0KCQkJImNvZGUiOiAiQzAyMjA4MjUiLA0KCQkJIm5hbWUiOiAiZXZhbHVhdGlvbiINCgkJfSwNCgkJIkMwMzAxNzA0Ijogew0KCQkJImNvZGUiOiAiQzAzMDE3MDQiLA0KCQkJIm5hbWUiOiAiUFMgKFBlcmZvcm1hbmNlIFN0YXR1cyBidWcpIg0KCQl9LA0KCQkiQzE1MTg5NjUiOiB7DQoJCQkiY29kZSI6ICJDMTUxODk2NSIsDQoJCQkibmFtZSI6ICJQZXJmb3JtYW5jZSBTdGF0dXMiDQoJCX0sDQoJCSJDMDM5MjM2NiI6IHsNCgkJCSJjb2RlIjogIkMwMzkyMzY2IiwNCgkJCSJuYW1lIjogInRlc3RpbmciDQoJCX0sDQoJCSJDMDIwNjc1MCI6IHsNCgkJCSJjb2RlIjogIkMwMjA2NzUwIiwNCgkJCSJuYW1lIjogIkNPVklELTE5Ig0KCQl9LA0KCQkiY292aWQtMTkiOiB7ICJuYW1lIjogIkNPVklELTE5IiB9LA0KCQkic2FycyBjb3YgMiI6IHsgIm5hbWUiOiAiQ09WSUQtMTkiIH0sDQoJCSJjb3ZpZDE5IjogeyAibmFtZSI6ICJDT1ZJRC0xOSIgfSwNCgkJImNvdmlkIDE5IjogeyAibmFtZSI6ICJDT1ZJRC0xOSIgfSwNCgkJImNvcm9uYSB2aXJ1cyI6IHsgIm5hbWUiOiAiQ09WSUQtMTkiIH0sDQoJCSJjb3JvbmF2aXJ1cyI6IHsgIm5hbWUiOiAiQ09WSUQtMTkiIH0sDQoJCSIxOS1uY292IjogeyAibmFtZSI6ICJDT1ZJRC0xOSIgfSwNCgkJInNhcnMtY292LTIiOiB7ICJuYW1lIjogIkNPVklELTE5IiB9LA0KCQkic2Fycy1jb3YyIjogeyAibmFtZSI6ICJDT1ZJRC0xOSIgfSwNCgkJInRoZSBzdHVkeSI6IHsgIm5hbWUiOiAidGhlIHN0dWR5IiB9LA0KCQkidGhpcyBzdHVkeSI6IHsgIm5hbWUiOiAidGhpcyBzdHVkeSIgfSwNCgkJInN0dWR5IHJlcXVpcmVtZW50cyI6IHsgIm5hbWUiOiAic3R1ZHkgcmVxdWlyZW1lbnRzIiB9LA0KCQkidGhlIHN0dWR5IHByb3RvY29sIjogeyAibmFtZSI6ICJ0aGUgc3R1ZHkgcHJvdG9jb2wiIH0sDQoJCSJzdHVkeSI6IHsgIm5hbWUiOiAic3R1ZHkiIH0sDQoJCSJhIHN0dWR5IjogeyAibmFtZSI6ICJhIHN0dWR5IiB9LA0KCQkicGF0aG9sb2dpY2FsbHkiOiB7ICJuYW1lIjogInBhdGhvbG9naWNhbGx5IiB9DQoJfSwNCgkiYWxsb3dlZENvbmNlcHRzIjogew0KCQkiQzAwMzIxODEiOiB7DQoJCQkiY29kZSI6ICJDMDAzMjE4MSIsDQoJCQkibmFtZSI6ICJQbGF0ZWxldCBjb3VudCIsDQoJCQkicXVlc3Rpb24iOiAiV2hhdCBpcyB0aGUgcGF0aWVudCdzICVwMSU/IFxuKFlvdSBjYW4gYWxzbyB0eXBlICdEb24ndCBrbm93JyBvciAnRG9uJ3Qgd2FudCB0byBhbnN3ZXInIHRvIHNraXAgdGhpcyBxdWVzdGlvbikiLA0KCQkJImFuc3dlclR5cGUiOiAiTnVtZXJpYyINCgkJfSwNCgkJIkMwOTQ4NzYyIjogew0KCQkJImNvZGUiOiAiQzA5NDg3NjIiLA0KCQkJIm5hbWUiOiAiQWJzb2x1dGUgbmV1dHJvcGhpbCBjb3VudCIsDQoJCQkicXVlc3Rpb24iOiAiV2hhdCBpcyB0aGUgcGF0aWVudCdzICVwMSU/IFxuKFlvdSBjYW4gYWxzbyB0eXBlICdEb24ndCBrbm93JyBvciAnRG9uJ3Qgd2FudCB0byBhbnN3ZXInIHRvIHNraXAgdGhpcyBxdWVzdGlvbikiLA0KCQkJImFuc3dlclR5cGUiOiAiTnVtZXJpYyINCgkJfSwNCgkJIkMwMDE5MDQ2Ijogew0KCQkJImNvZGUiOiAiQzAwMTkwNDYiLA0KCQkJIm5hbWUiOiAiSGVtb2dsb2JpbiBsZXZlbCIsDQoJCQkicXVlc3Rpb24iOiAiV2hhdCBpcyB0aGUgcGF0aWVudCdzICVwMSU/IFxuKFlvdSBjYW4gYWxzbyB0eXBlICdEb24ndCBrbm93JyBvciAnRG9uJ3Qgd2FudCB0byBhbnN3ZXInIHRvIHNraXAgdGhpcyBxdWVzdGlvbikiLA0KCQkJImFuc3dlclR5cGUiOiAiTnVtZXJpYyINCgkJfSwNCgkJIkMwMjAxOTEzIjogew0KCQkJImNvZGUiOiAiQzAyMDE5MTMiLA0KCQkJIm5hbWUiOiAiVG90YWwgQmlsaXJ1YmluIiwNCgkJCSJxdWVzdGlvbiI6ICJXaGF0IGlzIHRoZSBwYXRpZW50J3MgJXAxJT8gXG4oWW91IGNhbiBhbHNvIHR5cGUgJ0Rvbid0IGtub3cnIG9yICdEb24ndCB3YW50IHRvIGFuc3dlcicgdG8gc2tpcCB0aGlzIHF1ZXN0aW9uKSIsDQoJCQkiYW5zd2VyVHlwZSI6ICJOdW1lcmljIg0KCQl9LA0KCQkiQzE1MjI0NDkiOiB7DQoJCQkiY29kZSI6ICJDMTUyMjQ0OSIsDQoJCQkibmFtZSI6ICJSYWRpb3RoZXJhcHkiLA0KCQkJInF1ZXN0aW9uIjogIkRpZCB0aGUgcGF0aWVudCBnbyB0aHJvdWdoICVwMSU/IiwNCgkJCSJhbnN3ZXJUeXBlIjogIkJvb2xlYW4iDQoJCX0sDQoJCSJDMzY2NTQ3MiI6IHsNCgkJCSJjb2RlIjogIkMzNjY1NDcyIiwNCgkJCSJuYW1lIjogIkNoZW1vdGhlcmFweSIsDQoJCQkicXVlc3Rpb24iOiAiRGlkIHRoZSBwYXRpZW50IGdvIHRocm91Z2ggJXAxJT8iLA0KCQkJImFuc3dlclR5cGUiOiAiQm9vbGVhbiINCgkJfSwNCgkJIkMxODgzMjU2Ijogew0KCQkJImNvZGUiOiAiQzE4ODMyNTYiLA0KCQkJIm5hbWUiOiAiU3lzdGVtYXRpYyBDaGVtb3RoZXJhcHkiLA0KCQkJIm1hcHBlZFRvIjogIkMzNjY1NDcyIg0KCQl9LA0KCQkiQ0hFTU9USEVSQVBZIEFHRU5UIjogew0KCQkJIm5hbWUiOiAiQ2hlbW90aGVyYXB5IEFnZW50IiwNCgkJCSJtYXBwZWRUbyI6ICJDMzY2NTQ3MiINCgkJfSwNCgkJIkMwMDE5MTYzIjogew0KCQkJImNvZGUiOiAiQzAwMTkxNjMiLA0KCQkJIm5hbWUiOiAiSGVwYXRpdGlzIEIiLA0KCQkJInF1ZXN0aW9uIjogIldhcyB0aGUgcGF0aWVudCBkaWFnbm9zZWQgd2l0aCAlcDElPyIsDQoJCQkiYW5zd2VyVHlwZSI6ICJCb29sZWFuIg0KCQl9LA0KCQkiQzAwMTk2OTMiOiB7DQoJCQkiY29kZSI6ICJDMDAxOTY5MyIsDQoJCQkibmFtZSI6ICJISVYiLA0KCQkJInF1ZXN0aW9uIjogIldhcyB0aGUgcGF0aWVudCBkaWFnbm9zZWQgd2l0aCAlcDElPyIsDQoJCQkiYW5zd2VyVHlwZSI6ICJCb29sZWFuIg0KCQl9LA0KCQkiQzM4NTQyMjIiOiB7DQoJCQkiY29kZSI6ICJDMzg1NDIyMiIsDQoJCQkibmFtZSI6ICJISVYiLA0KCQkJIm1hcHBlZFRvIjogIkMwMDE5NjkzIg0KCQl9LA0KCQkiQzAwMjA1MzgiOiB7DQoJCQkiY29kZSI6ICJDMDAyMDUzOCIsDQoJCQkibmFtZSI6ICJIeXBlcnRlbnNpb24iLA0KCQkJInF1ZXN0aW9uIjogIldhcyB0aGUgcGF0aWVudCBkaWFnbm9zZWQgd2l0aCAlcDElPyIsDQoJCQkiYW5zd2VyVHlwZSI6ICJCb29sZWFuIg0KCQl9LA0KCQkiQzAwMTg4MDIiOiB7DQoJCQkiY29kZSI6ICJDMDAxODgwMiIsDQoJCQkibmFtZSI6ICJDb25nZXN0aXZlIGhlYXJ0IGZhaWx1cmUiLA0KCQkJInF1ZXN0aW9uIjogIldhcyB0aGUgcGF0aWVudCBkaWFnbm9zZWQgd2l0aCAlcDElPyIsDQoJCQkiYW5zd2VyVHlwZSI6ICJCb29sZWFuIg0KCQl9LA0KCQkiQzAwMTE4NDciOiB7DQoJCQkiY29kZSI6ICJDMDAxMTg0NyIsDQoJCQkibmFtZSI6ICJEaWFiZXRlcyIsDQoJCQkicXVlc3Rpb24iOiAiV2FzIHRoZSBwYXRpZW50IGRpYWdub3NlZCB3aXRoICVwMSU/IiwNCgkJCSJhbnN3ZXJUeXBlIjogIkJvb2xlYW4iDQoJCX0sDQoJCSJDMDAwMzgxMSI6IHsNCgkJCSJjb2RlIjogIkMwMDAzODExIiwNCgkJCSJuYW1lIjogIkNhcmRpYWMgYXJyaHl0aG1pYSIsDQoJCQkicXVlc3Rpb24iOiAiV2FzIHRoZSBwYXRpZW50IGRpYWdub3NlZCB3aXRoICVwMSU/IiwNCgkJCSJhbnN3ZXJUeXBlIjogIkJvb2xlYW4iDQoJCX0sDQoJCSJDMDAxOTE5NiI6IHsNCgkJCSJjb2RlIjogIkMwMDE5MTk2IiwNCgkJCSJuYW1lIjogIkhlcGF0aXRpcyBDIiwNCgkJCSJxdWVzdGlvbiI6ICJXYXMgdGhlIHBhdGllbnQgZGlhZ25vc2VkIHdpdGggJXAxJT8iLA0KCQkJImFuc3dlclR5cGUiOiAiQm9vbGVhbiINCgkJfSwNCgkJIkMwMDA0MzY0Ijogew0KCQkJImNvZGUiOiAiQzAwMDQzNjQiLA0KCQkJIm5hbWUiOiAiQXV0b2ltbXVuZSBEaXNlYXNlcyIsDQoJCQkicXVlc3Rpb24iOiAiV2FzIHRoZSBwYXRpZW50IGRpYWdub3NlZCB3aXRoICVwMSU/IiwNCgkJCSJhbnN3ZXJUeXBlIjogIkJvb2xlYW4iDQoJCX0sDQoJCSJDMTMwNTg1NSI6IHsNCgkJCSJjb2RlIjogIkMxMzA1ODU1IiwNCgkJCSJuYW1lIjogIkJvZHkgTWFzcyBJbmRleCIsDQoJCQkicXVlc3Rpb24iOiAiV2hhdCBpcyB0aGUgcGF0aWVudCdzICVwMSU/IFxuKFlvdSBjYW4gYWxzbyB0eXBlICdEb24ndCBrbm93JyBvciAnRG9uJ3Qgd2FudCB0byBhbnN3ZXInIHRvIHNraXAgdGhpcyBxdWVzdGlvbikiLA0KCQkJImFuc3dlclR5cGUiOiAiTnVtZXJpYyINCgkJfSwNCgkJIkMxNTEyMTYyIjogew0KCQkJImNvZGUiOiAiQzE1MTIxNjIiLA0KCQkJIm5hbWUiOiAiRUNPRyIsDQoJCQkiY2hvaWNlcyI6IFsgIjAiLCAiMSIsICIyIiwgIjMiLCAiNCIgXSwNCgkJCSJxdWVzdGlvbiI6ICJXaGF0IGlzIHRoZSBwYXRpZW50J3MgRUNPRyBzY29yZT8iLA0KCQkJImFuc3dlclR5cGUiOiAiQ2hvaWNlIg0KCQl9LA0KCQkiQzE1MjAyMjQiOiB7DQoJCQkiY29kZSI6ICJDMTUyMDIyNCIsDQoJCQkibmFtZSI6ICJFYXN0ZXJuIENvb3BlcmF0aXZlIE9uY29sb2d5IEdyb3VwIHBlcmZvcm1hbmNlIHN0YXR1cyIsDQoJCQkibWFwcGVkVG8iOiAiQzE1MTIxNjIiDQoJCX0sDQoJCSJDMDAwNDkzNiI6IHsNCgkJCSJjb2RlIjogIkMwMDA0OTM2IiwNCgkJCSJuYW1lIjogIm1lbnRhbCBoZWFsdGggZHlzZnVuY3Rpb24iLA0KCQkJInF1ZXN0aW9uIjogIldhcyB0aGUgcGF0aWVudCBkaWFnbm9zZWQgd2l0aCBtZW50YWwgaGVhbHRoIG9yIGJlaGF2aW9yYWwgZHlzZnVuY3Rpb24/IiwNCgkJCSJhbnN3ZXJUeXBlIjogIkJvb2xlYW4iDQoJCX0sDQoJCSJDMDAzODQ1NCI6IHsNCgkJCSJjb2RlIjogIkMwMDM4NDU0IiwNCgkJCSJuYW1lIjogInN0cm9rZSIsDQoJCQkicXVlc3Rpb24iOiAiRGlkIHRoZSBwYXRpZW50IGV4cGVyaWVuY2Ugc3Ryb2tlIG9yIGNlcmVicm92YXNjdWxhciBhY2NpZGVudD8iLA0KCQkJImFuc3dlclR5cGUiOiAiQm9vbGVhbiINCgkJfSwNCgkJIkMwMDAyOTY1Ijogew0KCQkJImNvZGUiOiAiQzAwMDI5NjUiLA0KCQkJIm5hbWUiOiAidW5zdGFibGUgYW5naW5hIiwNCgkJCSJxdWVzdGlvbiI6ICJXYXMgdGhlIHBhdGllbnQgZGlhZ25vc2VkIHdpdGggdW5zdGFibGUgYW5naW5hPyIsDQoJCQkiYW5zd2VyVHlwZSI6ICJCb29sZWFuIg0KCQl9LA0KCQkiQzAwMjcwNTEiOiB7DQoJCQkiY29kZSI6ICJDMDAyNzA1MSIsDQoJCQkibmFtZSI6ICJoZWFydCBhdHRhY2siLA0KCQkJInF1ZXN0aW9uIjogIkRpZCB0aGUgcGF0aWVudCBleHBlcmllbmNlIGEgaGVhcnQgYXR0YWNrPyIsDQoJCQkiYW5zd2VyVHlwZSI6ICJCb29sZWFuIg0KCQl9LA0KCQkiQzAwMzI5NjEiOiB7DQoJCQkiY29kZSI6ICJDMDAzMjk2MSIsDQoJCQkibmFtZSI6ICJQcmVnbmFuY2llcyIsDQoJCQkicXVlc3Rpb24iOiAiSXMgdGhlIHBhdGllbnQgcHJlZ25hbnQgb3IgYnJlYXN0ZmVlZGluZz8iLA0KCQkJImFuc3dlclR5cGUiOiAiQm9vbGVhbiINCgkJfSwNCgkJIkMwNTQ5MjA2Ijogew0KCQkJImNvZGUiOiAiQzA1NDkyMDYiLA0KCQkJIm5hbWUiOiAicHJlZ25hbnQiLA0KCQkJIm1hcHBlZFRvIjogIkMwMDMyOTYxIg0KCQl9LA0KCQkiQzE2MjMwNDAiOiB7DQoJCQkiY29kZSI6ICJDMTYyMzA0MCIsDQoJCQkibmFtZSI6ICJCcmVhc3QgZmVlZGluZyIsDQoJCQkibWFwcGVkVG8iOiAiQzAwMzI5NjEiDQoJCX0sDQoJCSJDMzY2ODgzMSI6IHsNCgkJCSJjb2RlIjogIkMzNjY4ODMxIiwNCgkJCSJuYW1lIjogIkxhY3RhdGlvbiIsDQoJCQkibWFwcGVkVG8iOiAiQzAwMzI5NjEiDQoJCX0sDQoJCSJDMDcwMDU4OSI6IHsNCgkJCSJjb2RlIjogIkMwNzAwNTg5IiwNCgkJCSJuYW1lIjogImNvbnRyYWNlcHRpb24iLA0KCQkJInF1ZXN0aW9uIjogIklzIHRoZSBwYXRpZW50IHVzaW5nIGNvbnRyYWNlcHRpb24/IiwNCgkJCSJhbnN3ZXJUeXBlIjogIkJvb2xlYW4iDQoJCX0sDQoJCSJDMDAwMTYxNyI6IHsNCgkJCSJjb2RlIjogIkMwMDAxNjE3IiwNCgkJCSJuYW1lIjogIkFkcmVuYWwgQ29ydGV4IEhvcm1vbmVzIiwNCgkJCSJxdWVzdGlvbiI6ICJJcyB0aGUgcGF0aWVudCB1c2luZyAlcDElPyIsDQoJCQkiYW5zd2VyVHlwZSI6ICJCb29sZWFuIg0KCQl9LA0KCQkiQzAwMjM4OTUiOiB7DQoJCQkiY29kZSI6ICJDMDAyMzg5NSIsDQoJCQkibmFtZSI6ICJMaXZlciBEaXNlYXNlIiwNCgkJCSJxdWVzdGlvbiI6ICJXYXMgdGhlIHBhdGllbnQgZGlhZ25vc2VkIHdpdGggbGl2ZXIgZGlzZWFzZT8iLA0KCQkJImFuc3dlclR5cGUiOiAiQm9vbGVhbiINCgkJfSwNCgkJIkMwMDA2ODI2Ijogew0KCQkJImNvZGUiOiAiQzAwMDY4MjYiLA0KCQkJIm5hbWUiOiAiTWFsaWduYW50IFR1bW9ycyIsDQoJCQkicXVlc3Rpb24iOiAiV2FzIHRoZSBwYXRpZW50IGRpYWdub3NlZCB3aXRoIHNvbGlkIHR1bW9yIGNhbmNlcj8iLA0KCQkJImFuc3dlclR5cGUiOiAiQm9vbGVhbiINCgkJfSwNCgkJIkMwMDEwMjAwIjogew0KCQkJImNvZGUiOiAiQzAwMTAyMDAiLA0KCQkJIm5hbWUiOiAiQ291Z2giLA0KCQkJInF1ZXN0aW9uIjogIklzIHRoZSBwYXRpZW50IGV4cGVyaWVuY2luZyBjb3VnaD8iLA0KCQkJImFuc3dlclR5cGUiOiAiQm9vbGVhbiINCgkJfSwNCgkJIkMwMDE1OTY3Ijogew0KCQkJImNvZGUiOiAiQzAwMTU5NjciLA0KCQkJIm5hbWUiOiAiRmV2ZXIiLA0KCQkJInF1ZXN0aW9uIjogIklzIHRoZSBwYXRpZW50IGV4cGVyaWVuY2luZyBmZXZlcj8iLA0KCQkJImFuc3dlclR5cGUiOiAiQm9vbGVhbiINCgkJfSwNCgkJIkMwMDEzNDA0Ijogew0KCQkJImNvZGUiOiAiQzAwMTM0MDQiLA0KCQkJIm5hbWUiOiAiU2hvcnRuZXNzIG9mIGJyZWF0aCIsDQoJCQkicXVlc3Rpb24iOiAiSXMgdGhlIHBhdGllbnQgZXhwZXJpZW5jaW5nIHNob3J0bmVzcyBvZiBicmVhdGg/IiwNCgkJCSJhbnN3ZXJUeXBlIjogIkJvb2xlYW4iDQoJCX0sDQoJCSJDMDU5OTE2MSI6IHsNCgkJCSJjb2RlIjogIkMwNTk5MTYxIiwNCgkJCSJuYW1lIjogIlBDUiIsDQoJCQkicXVlc3Rpb24iOiAiV2FzIHRoZSBDT1ZJRC0xOSBkaWFnbm9zaXMgY29uZmlybWVkIGJ5IFBDUj8iLA0KCQkJImFuc3dlclR5cGUiOiAiQm9vbGVhbiINCgkJfSwNCgkJIkMwMDMyNTIwIjogew0KCQkJImNvZGUiOiAiQzAwMzI1MjAiLA0KCQkJIm5hbWUiOiAiUENSIiwNCgkJCSJtYXBwZWRUbyI6ICJDMDU5OTE2MSINCgkJfSwNCgkJIkM0MDUwMjQyIjogew0KCQkJImNvZGUiOiAiQzQwNTAyNDIiLA0KCQkJIm5hbWUiOiAiUENSIiwNCgkJCSJtYXBwZWRUbyI6ICJDMDU5OTE2MSINCgkJfSwNCgkJIkMzODUzNjQzIjogew0KCQkJImNvZGUiOiAiQzM4NTM2NDMiLA0KCQkJIm5hbWUiOiAiUENSIiwNCgkJCSJtYXBwZWRUbyI6ICJDMDU5OTE2MSINCgkJfSwNCgkJIkMxNjU4NjA0Ijogew0KCQkJImNvZGUiOiAiQzE2NTg2MDQiLA0KCQkJIm5hbWUiOiAicG9seW1lcmFzZSBjaGFpbiByZWFjdGlvbiB0ZXN0IiwNCgkJCSJtYXBwZWRUbyI6ICJDMDU5OTE2MSINCgkJfSwNCgkJIkMxNzA5ODQ2Ijogew0KCQkJImNvZGUiOiAiQzE3MDk4NDYiLA0KCQkJIm5hbWUiOiAicmVhbC10aW1lIFBDUiIsDQoJCQkibWFwcGVkVG8iOiAiQzA1OTkxNjEiDQoJCX0sDQoJCSJSRVZFUlNFLVRSQU5TQ1JJUFRJT04gUE9MWU1FUkFTRSBDSEFJTiBSRUFDVElPTiI6IHsNCgkJCSJjb2RlIjogInJldmVyc2UtdHJhbnNjcmlwdGlvbiBwb2x5bWVyYXNlIGNoYWluIHJlYWN0aW9uIiwNCgkJCSJuYW1lIjogIlBDUiIsDQoJCQkibWFwcGVkVG8iOiAiQzA1OTkxNjEiDQoJCX0sDQoJCSJOQVNPUEhBUllOR0VBTCBTV0FCIFBPTFlNRVJBU0UgQ0hBSU4gUkVBQ1RJT04iOiB7DQoJCQkiY29kZSI6ICJuYXNvcGhhcnluZ2VhbCBzd2FiIFBvbHltZXJhc2UgQ2hhaW4gUmVhY3Rpb24iLA0KCQkJIm5hbWUiOiAiUENSIiwNCgkJCSJtYXBwZWRUbyI6ICJDMDU5OTE2MSINCgkJfSwNCgkJIlJULVBDUiBURVNUIjogew0KCQkJImNvZGUiOiAicnQtUENSIHRlc3QiLA0KCQkJIm5hbWUiOiAiUENSIiwNCgkJCSJtYXBwZWRUbyI6ICJDMDU5OTE2MSINCgkJfSwNCgkJIlBDUiBURVNUSU5HIjogew0KCQkJImNvZGUiOiAiUENSIHRlc3RpbmciLA0KCQkJIm5hbWUiOiAiUENSIiwNCgkJCSJtYXBwZWRUbyI6ICJDMDU5OTE2MSINCgkJfQ0KCX0sDQoJImVudGl0eVR5cGVzIjogew0KCQkiTUVESUNBVElPTl9OQU1FIjogew0KCQkJInF1ZXN0aW9uIjogIklzIHRoZSBwYXRpZW50IHVzaW5nICVwMSUgKE1lZGljYXRpb24pPyIsDQoJCQkibmFtZSI6ICJNRURJQ0FUSU9OX05BTUUiLA0KCQkJImFuc3dlclR5cGUiOiAiQm9vbGVhbiINCgkJfSwNCgkJIk1FRElDQVRJT05fQ0xBU1MiOiB7DQoJCQkicXVlc3Rpb24iOiAiSXMgdGhlIHBhdGllbnQgdXNpbmcgJXAxJSAoTWVkaWNhdGlvbiBjbGFzcyk/IiAsDQoJCQkibmFtZSI6ICJNRURJQ0FUSU9OX0NMQVNTIiwNCgkJCSJhbnN3ZXJUeXBlIjogIkJvb2xlYW4iDQoJCX0NCgl9LA0KCSJjb25jZXB0c1N5bm9ueW1zIjogew0KCQkiY29yb25hIHZpcnVzIjogWyAiY29yb25hIiwgImNvcm9uYXZpcnVzIiwgImNvcm9uYSB2aXJ1cyIsICJjb3ZpZDE5IiwgImNvdmlkLTE5IiwgImNvdmlkIDE5IiwgInNhcnMtY292LTIiLCAiMjAxOS1uY292IiwgImNvcm9uYSB2aXJ1cyBpbmZlY3Rpb24iIF0NCgl9DQp9"
         }
     ],
     "localization": {
