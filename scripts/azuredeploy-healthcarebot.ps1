@@ -106,6 +106,8 @@ Try {
         Write-Host "Published " -ForegroundColor Green        
     }
 
+    $luisPredictionLocation = (Get-AzResourceGroup -Name $ResourceGroup).Location
+
     # Restore all the hbs templates
     Get-ChildItem -Path $restorePath | ForEach-Object {
         Write-Host "Importing template from " $_.BaseName "..." -NoNewline
@@ -119,7 +121,7 @@ Try {
         $restoreJSON = $restoreJSON.Replace('{disq-baseurl}', $matchingParameters.gatewayEndpoint.Value)
         $restoreJSON = $restoreJSON.Replace('{luisApplicationId}', $luisApplications["metadata_clinical_trials"])
         $restoreJSON = $restoreJSON.Replace('{luisPredictionKey}', $output.Outputs["luisPredictionKey"].Value)
-        $restoreJSON = $restoreJSON.Replace('{luisLocation}', $output.Parameters.luisPredictionLocation.Value)
+        $restoreJSON = $restoreJSON.Replace('{luisLocation}', $luisPredictionLocation)
 
         $saasTenant = Restore-HbsTenant -location $botLocation -tenant $saasTenant `
                                         -data $restoreJSON -saasSubscriptionId $saasSubscriptionId
