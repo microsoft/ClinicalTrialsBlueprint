@@ -1608,6 +1608,17 @@
         }
       ]
     },
+	{
+      "text": "find asthma clinical trials",
+      "intent": "Clinical Trials Matching",
+      "entities": [
+        {
+          "entity": "disease",
+          "startPos": 5,
+          "endPos": 11
+        }
+      ]
+    },
     {
       "text": "trials for people without disease",
       "intent": "Clinical Trials Matching",

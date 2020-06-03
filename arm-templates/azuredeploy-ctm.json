@@ -853,7 +853,7 @@
       },
       "dependsOn": [
         "[resourceId('Microsoft.Maps/accounts', variables('mapsServiceName'))]",
-        "[resourceId('Microsoft.Insights/components/', variables('insightsName'))]"      
+        "[resourceId('Microsoft.Insights/components/', variables('insightsName'))]"		
       ],
       "properties": {
         "containers": [
@@ -1456,9 +1456,9 @@
               {
                   "name": "Auto created scale condition",
                   "capacity": {
-                      "minimum": "1",
-                      "maximum": "2",
-                      "default": "1"
+                      "minimum": "2",
+                      "maximum": "8",
+                      "default": "2"
                   },
                   "rules": [
                       {
