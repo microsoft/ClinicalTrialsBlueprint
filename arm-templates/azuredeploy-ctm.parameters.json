@@ -24,16 +24,16 @@
             "value": "ctmprod"
         },
         "structuringImageTag": {
-            "value": "2020.0510.1"
+            "value": "2020.0528.1"
         },
         "queryEngineImageTag": {
-            "value": "2020.0510.1"
+            "value": "2020.0528.1"
         },
         "disqualifierImageTag": {
-            "value": "2020.0510.1"
+            "value": "2020.0528.1"
         },
         "conParserImageTag": {
-            "value": "16897"
+            "value": "2020.0531.5"
         },
         "ta4hImageTag": {
             "value": "2020.0510.1"
