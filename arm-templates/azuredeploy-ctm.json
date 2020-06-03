@@ -853,7 +853,7 @@
       },
       "dependsOn": [
         "[resourceId('Microsoft.Maps/accounts', variables('mapsServiceName'))]",
-        "[resourceId('Microsoft.Insights/components/', variables('insightsName'))]"      
+        "[resourceId('Microsoft.Insights/components/', variables('insightsName'))]"		
       ],
       "properties": {
         "containers": [
