@@ -110,9 +110,9 @@
                         "designer": {
                             "xLocation": 351,
                             "yLocation": 31,
-                            "next": "95f6b5f256da-ed1cea46c0187621-f7b9"
+                            "next": "7d13692c028c-c62feba5d349bb6e-7959"
                         },
-                           "onInit": "// initialize profile\nvar profile = {};\nprofile.gender = scenario.gender;\nprofile.age = scenario.age;\nprofile.location = scenario.location;\nprofile.searchLocationCity = scenario.searchLocationCity;\nprofile.searchLocationState = scenario.searchLocationState;\nprofile.distance = scenario.distance;\nprofile.condition = scenario.condition;\nprofile.askedCodes = [];\nscenario.profile = profile;\n\n// initialize qeRequest\nvar qeRequest = {};\nqeRequest.id = new Date().getTime().toString();\nqeRequest.profile = scenario.profile;\nscenario.qeRequest = qeRequest;\nscenario.expandCondition = true;\n\nconsole.log(scenario.profile);"
+                        "onInit": "// initialize profile\nvar profile = {};\nprofile.gender = scenario.gender;\nprofile.age = scenario.age;\nprofile.location = scenario.location;\nprofile.searchLocationCity = scenario.searchLocationCity;\nprofile.searchLocationState = scenario.searchLocationState;\nprofile.distance = scenario.distance;\nprofile.condition = scenario.condition;\nprofile.askedCodes = [];\nscenario.profile = profile;\n\n// initialize qeRequest\nvar qeRequest = {};\nqeRequest.id = new Date().getTime().toString();\nqeRequest.profile = scenario.profile;\nscenario.qeRequest = qeRequest;\nscenario.expandCondition = true\nconsole.log(scenario.profile);"
                     },
                     {
                         "id": "95f6b5f256da-ed1cea46c0187621-f7b9",
@@ -142,8 +142,7 @@
                         "type": "statement",
                         "designer": {
                             "xLocation": 590,
-                            "yLocation": 580,
-                            "next": "58a41aa41b1d-1dd382bf9e601ed8-60a6"
+                            "yLocation": 580
                         },
                         "text": "Sorry, there seems to be a problem with the matching service. \r\nPlease try again later.",
                         "stringId": "stringId_a38152ce3e7f6b5f"
@@ -153,19 +152,19 @@
                         "type": "action",
                         "label": "Process QeResponse",
                         "designer": {
-                            "xLocation": 469,
+                            "xLocation": 354,
                             "yLocation": 180,
-                            "next": "8eb78c0e15f8-3aa0bdbacd6795d8-0ac6"
+                            "next": "2d52c58f3c9f-311c95e0e7a51ce9-5ed7"
                         },
-                        "onInit": "scenario.trials = scenario.qeResponse.trials;\nscenario.trialsCountPrev = scenario.trials.length;"
+                        "onInit": "scenario.trials = scenario.qeResponse.trials;\nscenario.trialsCountPrev = scenario.trials.length;\nscenario.qeTrials = scenario.trials;"
                     },
                     {
                         "id": "8eb78c0e15f8-3aa0bdbacd6795d8-0ac6",
                         "type": "branch",
                         "condition": "scenario.trials.length > 0",
                         "designer": {
-                            "xLocation": 480,
-                            "yLocation": 272,
+                            "xLocation": 360,
+                            "yLocation": 273,
                             "next": "e8e69e5b6b47-4c7e389965d6aef4-6dd1"
                         },
                         "targetStepId": "c38230cbc10d-7c8058bc6dc833c6-6a00",
@@ -175,8 +174,8 @@
                         "id": "e8e69e5b6b47-4c7e389965d6aef4-6dd1",
                         "type": "statement",
                         "designer": {
-                            "xLocation": 367,
-                            "yLocation": 540
+                            "xLocation": 260,
+                            "yLocation": 380
                         },
                         "text": "Sorry, no relevant trials were found",
                         "stringId": "stringId_537880f504287022"
@@ -185,8 +184,8 @@
                         "id": "6c395b7ffcbf-9a3ac0cb171f8c36-4154",
                         "type": "statement",
                         "designer": {
-                            "xLocation": 467,
-                            "yLocation": 488,
+                            "xLocation": 352,
+                            "yLocation": 489,
                             "next": "2093a915c20d-8fc2e7481038d764-affd"
                         },
                         "text": "\"Found \" + scenario.trials.length.toString() + \" relevant trial\" + (scenario.trials.length === 1 ? \"\" : \"s\") + \".\"",
@@ -198,18 +197,18 @@
                         "type": "action",
                         "label": "Create Card",
                         "designer": {
-                            "xLocation": 480,
-                            "yLocation": 880,
+                            "xLocation": 340,
+                            "yLocation": 831,
                             "next": "b880d5732a03-3c5ec70d6ab91ed6-6218"
                         },
-                        "onInit": "scenario.cardBody = scenario.trials.map(trial => {\n    // using trial from map, it has facilities\n    var mappedTrial = scenario.trialsMap[trial.nctId];\n    return [{\n            \"type\": \"TextBlock\",\n            \"text\": \"RECRUITING\",\n            \"separator\": true,\n            \"color\": \"dark\"\n        },{\n            \"type\": \"TextBlock\",\n            \"color\": \"accent\",\n            \"text\": \"[\" + mappedTrial.title + \"](https://clinicaltrials.gov/ct2/show/\" + mappedTrial.nctId + \")\",\n            \"spacing\": \"none\",\n            \"wrap\": true,\n            \"color\": \"blue\"\n        },{\n            \"type\": \"TextBlock\",\n            \"text\": \"Clinical trial ID: \" + mappedTrial.nctId,\n            \"isSubtle\": true,\n            \"weight\": \"lighter\"\n        }];\n});\n  \nfunction flat(arr){\n    return arr.reduce((acc, items) => {acc.push(...items); return acc;}, [])\n}\n\nscenario.card = {\n  \"$schema\": \"http://adaptivecards.io/schemas/adaptive-card.json\",\n  \"type\": \"AdaptiveCard\",\n  \"version\": \"1.0\",\n  \"body\": flat(scenario.cardBody)\n};"
+                        "onInit": "var cardBody = scenario.trials.map(trial => {\n    // using trial from map, it has facilities\n    var mappedTrial = scenario.trialsMap[trial.nctId];\n    return {\n\t\t\"type\": \"Container\",\n\t\t\"separator\": true,\n\t\t\"spacing\": \"Large\",\n\t\t\"items\": [\n            {\n                \"type\": \"TextBlock\",\n                \"text\": \"RECRUITING\",\n                \"separator\": true,\n                \"color\": \"dark\"\n            },{\n                \"type\": \"TextBlock\",\n                \"color\": \"accent\",\n                \"text\": \"[\" + mappedTrial.title + \"](https://clinicaltrials.gov/ct2/show/\" + mappedTrial.nctId + \")\",\n                \"spacing\": \"none\",\n                \"wrap\": true,\n                \"color\": \"blue\"\n            },{\n                \"type\": \"TextBlock\",\n                \"text\": \"Clinical trial ID: \" + mappedTrial.nctId,\n                \"isSubtle\": true,\n                \"weight\": \"lighter\"\n            }\n        ]\n    }\n});\n\nscenario.card = {\n  \"$schema\": \"http://adaptivecards.io/schemas/adaptive-card.json\",\n  \"type\": \"AdaptiveCard\",\n  \"version\": \"1.0\",\n  \"body\": cardBody\n};"
                     },
                     {
                         "id": "b880d5732a03-3c5ec70d6ab91ed6-6218",
                         "type": "statement",
                         "designer": {
-                            "xLocation": 480,
-                            "yLocation": 980
+                            "xLocation": 334,
+                            "yLocation": 910
                         },
                         "layout": "vertical",
                         "attachment": [
@@ -225,7 +224,7 @@
                         "type": "branch",
                         "condition": "scenario.trials.length > scenario.TRIALS_THRESHOLD\r\n",
                         "designer": {
-                            "xLocation": 480,
+                            "xLocation": 360,
                             "yLocation": 380,
                             "next": "6c395b7ffcbf-9a3ac0cb171f8c36-4154",
                             "reverse": true
@@ -290,8 +289,8 @@
                         "type": "action",
                         "label": "Create Disqualify Request",
                         "designer": {
-                            "xLocation": 1531,
-                            "yLocation": 640,
+                            "xLocation": 900,
+                            "yLocation": 220,
                             "next": "d5398bdc9019-e4c6eb78e63ffdc5-416a"
                         },
                         "onInit": "var trialIds = scenario.trials.map(trial => trial.nctId);\n\nscenario.disqualifyRequest = {\n    trialIds,\n    profile: scenario.profile\n};"
@@ -299,20 +298,20 @@
                     {
                         "id": "22130a4fa790-7398bd4e67a60462-949a",
                         "type": "action",
-                        "label": "Create Question",
+                        "label": "Create Question Args",
                         "designer": {
-                            "xLocation": 1540,
-                            "yLocation": 120,
+                            "xLocation": 1200,
+                            "yLocation": 600,
                             "next": "8cc8d6de3179-a14e044b3f7d5fd5-2360"
                         },
-                        "onInit": "// keeping track for total questions\r\nscenario.totalQuestionsAsked++;\r\n\r\nvar criterion = scenario.disqualifyResponse.criteria[scenario.questionIndex];\r\nscenario.questionArgs = {};\r\nscenario.questionArgs.question = criterion;"
+                        "onInit": "// keeping track for total questions\r\nscenario.totalQuestionsAsked++;\r\n\r\nvar criterion = scenario.disqualifyResponse.criteria[scenario.questionIndex];\r\nscenario.questionArgs = {};\r\nscenario.questionArgs.question = criterion;\r\nscenario.questionArgs.profile = scenario.profile;\r\nscenario.questionArgs.questionsNum = scenario.totalQuestionsAsked;"
                     },
                     {
                         "id": "8cc8d6de3179-a14e044b3f7d5fd5-2360",
                         "type": "beginScenario",
                         "designer": {
-                            "xLocation": 1620,
-                            "yLocation": 233,
+                            "xLocation": 1040,
+                            "yLocation": 547,
                             "next": "ac3e4757a04f-95c5731ff4cd2f2f-c783"
                         },
                         "scenario": "question_generation",
@@ -325,8 +324,8 @@
                         "type": "branch",
                         "condition": "scenario.questionAnswer.answer == null",
                         "designer": {
-                            "xLocation": 1626,
-                            "yLocation": 520,
+                            "xLocation": 874,
+                            "yLocation": 340,
                             "next": "c0b338e361df-f9260a30a63543e5-2d46"
                         },
                         "targetStepId": "c7320a2517ea-1c8780d20d47cb35-e956",
@@ -337,8 +336,8 @@
                         "type": "action",
                         "label": "Next Question Index",
                         "designer": {
-                            "xLocation": 1386,
-                            "yLocation": 34,
+                            "xLocation": 1480,
+                            "yLocation": 532,
                             "next": "275cf280677e-52bf72c7f8f55bad-ae74"
                         },
                         "onInit": "scenario.questionIndex++;"
@@ -348,9 +347,9 @@
                         "type": "action",
                         "label": "Save answer to profile",
                         "designer": {
-                            "xLocation": 1660,
-                            "yLocation": 360,
-                            "next": "bd61cf721cfb-286941d86a9f1950-d264"
+                            "xLocation": 913,
+                            "yLocation": 488,
+                            "next": "c7f40688bbe6-46591d81f769a6a1-9d1f"
                         },
                         "onInit": "scenario.profile.askedCodes.push(scenario.questionAnswer);"
                     },
@@ -358,8 +357,8 @@
                         "id": "d5398bdc9019-e4c6eb78e63ffdc5-416a",
                         "type": "datasource",
                         "designer": {
-                            "xLocation": 1388,
-                            "yLocation": 726,
+                            "xLocation": 946,
+                            "yLocation": 126,
                             "next": "57b8d246f882-fccf0daa5e3e5f5e-a939",
                             "errorStepId": "7cf5829caf3b-b595e08171a799bc-2f59"
                         },
@@ -381,19 +380,19 @@
                         "type": "action",
                         "label": "Process disqualify response",
                         "designer": {
-                            "xLocation": 1214,
-                            "yLocation": 740,
-                            "next": "b1119c0d3562-c592b7cced67f2b2-e89c"
+                            "xLocation": 1048,
+                            "yLocation": 54,
+                            "next": "42b4b5fab0ed-0ff1c03b236e69bd-63c4"
                         },
-                        "onInit": "scenario.trialsCountPrev = scenario.trials.length;\r\nscenario.trials = scenario.disqualifyResponse.trials;"
+                        "onInit": "// disqualifiedTrials from response\r\nscenario.disqualifiedTrials = scenario.trials.filter(trial => !scenario.disqualifyResponse.trials.find(filteredTrial => filteredTrial.nctId === trial.nctId));\r\n\r\n// update scenario.trialsCountPrev and scenario.trials\r\nscenario.trialsCountPrev = scenario.trials.length;\r\nscenario.trials = scenario.disqualifyResponse.trials;"
                     },
                     {
                         "id": "d46040c72921-e874ae9773008129-3f14",
                         "type": "action",
                         "label": "Init Question Index",
                         "designer": {
-                            "xLocation": 1073,
-                            "yLocation": 32,
+                            "xLocation": 1534,
+                            "yLocation": 460,
                             "next": "275cf280677e-52bf72c7f8f55bad-ae74"
                         },
                         "onInit": "scenario.questionIndex = 0;"
@@ -403,8 +402,8 @@
                         "type": "branch",
                         "condition": "scenario.questionIndex < scenario.disqualifyResponse.criteria.length",
                         "designer": {
-                            "xLocation": 1240,
-                            "yLocation": 12,
+                            "xLocation": 1352,
+                            "yLocation": 586,
                             "next": "c0b338e361df-f9260a30a63543e5-2d46"
                         },
                         "targetStepId": "22130a4fa790-7398bd4e67a60462-949a",
@@ -415,10 +414,10 @@
                         "type": "prompt",
                         "dataType": "[\"Answer additional questions\", \"Get results\"]",
                         "designer": {
-                            "xLocation": 811,
-                            "yLocation": 366,
+                            "xLocation": 1540,
+                            "yLocation": 200,
                             "listStyle": 3,
-                            "next": "04bde4fbe4fd-cde1c2bb3509913a-e268"
+                            "next": "f3aa06e2bb65-6697b1be21430325-586f"
                         },
                         "text": "What would you like to do?",
                         "variable": "continueAsking",
@@ -430,8 +429,8 @@
                         "type": "branch",
                         "condition": "scenario.totalQuestionsAsked > 0 && \r\n(scenario.trialsCountPrev === scenario.trials.length || \r\n scenario.totalQuestionsAsked >= scenario.QUESTIONS_THRESHOLD)\r\n",
                         "designer": {
-                            "xLocation": 831,
-                            "yLocation": 473,
+                            "xLocation": 1500,
+                            "yLocation": 109,
                             "next": "ba24c6c14552-29a155c3df1c4f2f-b738"
                         },
                         "label": "Should ask user to continue",
@@ -442,8 +441,8 @@
                         "type": "branch",
                         "condition": "scenario.continueAsking.entity === \"Answer additional questions\"",
                         "designer": {
-                            "xLocation": 851,
-                            "yLocation": 240,
+                            "xLocation": 1566,
+                            "yLocation": 268,
                             "next": "2093a915c20d-8fc2e7481038d764-affd"
                         },
                         "label": "Additional questions",
@@ -453,9 +452,9 @@
                         "id": "2093a915c20d-8fc2e7481038d764-affd",
                         "type": "statement",
                         "designer": {
-                            "xLocation": 467,
-                            "yLocation": 550,
-                            "next": "31bd7c54fd61-95401ca694baab58-8326"
+                            "xLocation": 352,
+                            "yLocation": 551,
+                            "next": "46c223b11a89-3ac967716fd0b465-98b6"
                         },
                         "text": "Here are the clinical trials the patient may qualify for:",
                         "stringId": "stringId_00902617ba8079bf",
@@ -466,8 +465,8 @@
                         "type": "branch",
                         "condition": "(scenario.disqualifyResponse.criteria == null || \r\n scenario.disqualifyResponse.criteria.length === 0)",
                         "designer": {
-                            "xLocation": 933,
-                            "yLocation": 110,
+                            "xLocation": 1568,
+                            "yLocation": 380,
                             "next": "d46040c72921-e874ae9773008129-3f14"
                         },
                         "label": "Is criteria empty",
@@ -477,8 +476,8 @@
                         "id": "b1119c0d3562-c592b7cced67f2b2-e89c",
                         "type": "statement",
                         "designer": {
-                            "xLocation": 1093,
-                            "yLocation": 740,
+                            "xLocation": 1180,
+                            "yLocation": 20,
                             "next": "6b3fdcb8915e-ec4dc8cd89a2ebbd-a086"
                         },
                         "text": "\"Found \" + scenario.trials.length.toString() + \" relevant trial\" + (scenario.trials.length === 1 ? \"\" : \"s\") + \".\"",
@@ -490,8 +489,8 @@
                         "type": "branch",
                         "condition": "scenario.trials.length > 0",
                         "designer": {
-                            "xLocation": 972,
-                            "yLocation": 700,
+                            "xLocation": 1320,
+                            "yLocation": 20,
                             "next": "e8e69e5b6b47-4c7e389965d6aef4-6dd1"
                         },
                         "targetStepId": "efdb922881fd-730358f2fa29dc39-73b0",
@@ -502,24 +501,35 @@
                         "type": "branch",
                         "condition": "scenario.trials.length > scenario.TRIALS_THRESHOLD",
                         "designer": {
-                            "xLocation": 854,
-                            "yLocation": 600,
+                            "xLocation": 1429,
+                            "yLocation": 53,
                             "next": "2093a915c20d-8fc2e7481038d764-affd"
                         },
                         "targetStepId": "42bc07ec8bf1-57c03e2a91e4689e-f6cc",
                         "label": "Trials > Threshold"
                     },
                     {
-                        "id": "97c7c60a5bbb-626cd064bf35e152-d079",
+                        "id": "46c223b11a89-3ac967716fd0b465-98b6",
+                        "type": "action",
+                        "label": "Add trials ids to QeRequest",
+                        "designer": {
+                            "xLocation": 349,
+                            "yLocation": 620,
+                            "next": "c6b04222f48b-efa91a748ac26834-1f22"
+                        },
+                        "onInit": "// add trialsIds to details request\nscenario.qeRequest.trialIds = scenario.trials.map(trial => trial.nctId);"
+                    },
+                    {
+                        "id": "c6b04222f48b-efa91a748ac26834-1f22",
                         "type": "datasource",
                         "designer": {
-                            "xLocation": 480,
-                            "yLocation": 740,
+                            "xLocation": 340,
+                            "yLocation": 694,
                             "errorStepId": "7cf5829caf3b-b595e08171a799bc-2f59",
-                            "next": "2a088fff6cae-0145547c647bb791-1e81"
+                            "next": "2333bc1d943a-dbd4cf50e0a91eee-125b"
                         },
                         "dataConnection": "ctm-query-engine-prod",
-                        "urlBase": "https://prod-eastus-ctm-qe-webapp.azurewebsites.net/qe",
+                        "urlBase": "https://prod-gateway-webapp.azurewebsites.net/qe",
                         "urlPath": "trials-details",
                         "urlParams": "",
                         "contentType": "raw",
@@ -528,31 +538,86 @@
                         "payload": "scenario.qeRequest",
                         "opJson": true,
                         "opResolveWithFullResponse": false,
-                        "response": "qeDetailsResponse",
-                        "error": "qeDetailsError",
-                        "label": "Query Engine details endpoint"
+                        "response": "qeResponse",
+                        "error": "qeError",
+                        "label": "QE trials-details endpoint"
                     },
                     {
-                        "id": "31bd7c54fd61-95401ca694baab58-8326",
+                        "id": "2333bc1d943a-dbd4cf50e0a91eee-125b",
                         "type": "action",
-                        "label": "Create QeRequest",
+                        "label": "Process trials-details",
                         "designer": {
-                            "xLocation": 480,
-                            "yLocation": 620,
-                            "next": "97c7c60a5bbb-626cd064bf35e152-d079"
+                            "xLocation": 340,
+                            "yLocation": 752,
+                            "next": "e588f774bae0-892987238b37e51d-68d3"
                         },
-                        "onInit": "// add trialsIds to details request\nscenario.qeRequest.trialIds = scenario.trials.map(trial => trial.nctId);"
+                        "onInit": "scenario.trials = scenario.qeResponse.trials;\n// initialize trials map\nscenario.trialsMap = {};\nscenario.trials.forEach(trial => scenario.trialsMap[trial.nctId] = trial);"
                     },
                     {
-                        "id": "2a088fff6cae-0145547c647bb791-1e81",
+                        "id": "7d13692c028c-c62feba5d349bb6e-7959",
                         "type": "action",
-                        "label": "Process QeResponse",
+                        "label": "Log Profile",
+                        "designer": {
+                            "xLocation": 492,
+                            "yLocation": 48,
+                            "next": "95f6b5f256da-ed1cea46c0187621-f7b9"
+                        },
+                        "onInit": "session.logCustomEvent('USER_PROFILE', scenario.profile);"
+                    },
+                    {
+                        "id": "2d52c58f3c9f-311c95e0e7a51ce9-5ed7",
+                        "type": "action",
+                        "label": "Log QE response",
                         "designer": {
                             "xLocation": 480,
-                            "yLocation": 800,
+                            "yLocation": 208,
+                            "next": "8eb78c0e15f8-3aa0bdbacd6795d8-0ac6"
+                        },
+                        "onInit": "var qeResponse = {};\nqeResponse.trials = scenario.trials;\nqeResponse.qeTrialsNum = scenario.trials.length;\nsession.logCustomEvent('QE_RESPONSE', qeResponse);"
+                    },
+                    {
+                        "id": "e588f774bae0-892987238b37e51d-68d3",
+                        "type": "action",
+                        "label": "Log Trials Results",
+                        "designer": {
+                            "xLocation": 466,
+                            "yLocation": 780,
                             "next": "138c2cc32f4e-265ec16959d65e96-6083"
                         },
-                        "onInit": "scenario.trials = scenario.qeDetailsResponse.trials;\n// initialize trials map\nscenario.trialsMap = {};\nscenario.trials.forEach(trial => scenario.trialsMap[trial.nctId] = trial);"
+                        "onInit": "var trialResults = {};\ntrialResults.totalQuestions = scenario.totalQuestionsAsked;\ntrialResults.resultTrialsNum = scenario.trials.length;\ntrialResults.qeTrialsNum = scenario.qeTrials.length;\ntrialResults.resultTrials = scenario.trials.map(trial => {\n    return {\n        \"nctId\": trial.nctId,\n        \"sponsor\": scenario.trialsMap[trial.nctId].leadSponsor\n    };\n});\ntrialResults.secondsSpent = (new Date().getTime() - scenario.timeStarted) / 1000;\nsession.logCustomEvent('TRIALS_RESULTS', trialResults);"
+                    },
+                    {
+                        "id": "f3aa06e2bb65-6697b1be21430325-586f",
+                        "type": "action",
+                        "label": "Log Continue Asking Response",
+                        "designer": {
+                            "xLocation": 1665,
+                            "yLocation": 235,
+                            "next": "04bde4fbe4fd-cde1c2bb3509913a-e268"
+                        },
+                        "onInit": "session.logCustomEvent('USER_CONTINUE_ASKING_RESPONSE', scenario.continueAsking.entity);"
+                    },
+                    {
+                        "id": "c7f40688bbe6-46591d81f769a6a1-9d1f",
+                        "type": "action",
+                        "label": "Log User Answer",
+                        "designer": {
+                            "xLocation": 780,
+                            "yLocation": 380,
+                            "next": "bd61cf721cfb-286941d86a9f1950-d264"
+                        },
+                        "onInit": "var userAnswer = {};\nuserAnswer.questionsNum = scenario.totalQuestionsAsked;\nuserAnswer.answer = scenario.questionAnswer;\nsession.logCustomEvent('USER_ANSWER', userAnswer);"
+                    },
+                    {
+                        "id": "42b4b5fab0ed-0ff1c03b236e69bd-63c4",
+                        "type": "action",
+                        "label": "Log Disqualify Response",
+                        "designer": {
+                            "xLocation": 1146,
+                            "yLocation": 114,
+                            "next": "b1119c0d3562-c592b7cced67f2b2-e89c"
+                        },
+                        "onInit": "var disqualifyResponseExtended = {};\ndisqualifyResponseExtended.response = scenario.disqualifyResponse;//trials after answering the question\ndisqualifyResponseExtended.disqualifiedTrials = scenario.disqualifiedTrials;//trials were ignored after answering question\nsession.logCustomEvent('DISQUALIFY_RESPONSE', disqualifyResponseExtended);"
                     }
                 ],
                 "returningMessage": "",
@@ -578,229 +643,229 @@
                 "version": 3,
                 "steps": [
                     {
-                      "id": "bfaae5ea8406-efe280376b1da428-7c18",
-                      "type": "action",
-                      "label": "Init",
-                      "designer": {
-                        "xLocation": 527,
-                        "yLocation": 13,
-                        "next": "5a7612a135ea-f722c6246f11df1a-3c52"
-                      },
-                      "onInit": "scenario.question = scenario.scenarioArgs.question;"
-                    },
-                    {
-                      "id": "5a7612a135ea-f722c6246f11df1a-3c52",
-                      "type": "datasource",
-                      "designer": {
-                        "xLocation": 520,
-                        "yLocation": 100,
-                        "next": "a3c94443f8bf-cb9a8364eac92c34-ca3c"
-                      },
-                      "dataConnection": "",
-                      "urlBase": "conversation.resourcesUrl",
-                      "urlPath": "\"UmlsConceptsMapping.json\"",
-                      "urlParams": "",
-                      "method": "get",
-                      "headers": "",
-                      "opJson": true,
-                      "opResolveWithFullResponse": false,
-                      "response": "languageJson",
-                      "error": "error",
-                      "label": "Read Language"
-                    },
-                    {
-                      "id": "3710c6e2876e-55c99f0c2563d4f5-647e",
-                      "type": "switch",
-                      "designer": {
-                        "xLocation": 500,
-                        "yLocation": 250
-                      },
-                      "cases": [
-                        {
-                          "value": "Numeric",
-                          "targetStepId": "3ea76a3a5e9c-4532826d6e64fc15-ffc7"
+                        "id": "bfaae5ea8406-efe280376b1da428-7c18",
+                        "type": "action",
+                        "label": "Init",
+                        "designer": {
+                            "xLocation": 527,
+                            "yLocation": 13,
+                            "next": "5a7612a135ea-f722c6246f11df1a-3c52"
                         },
-                        {
-                          "value": "Boolean",
-                          "targetStepId": "2cee13d07505-d11c62fe3c91ca09-5485"
+                        "onInit": "scenario.question = scenario.scenarioArgs.question;\r\nscenario.profile = scenario.scenarioArgs.profile;\r\nscenario.questionsNum = scenario.scenarioArgs.questionsNum;"
+                    },
+                    {
+                        "id": "5a7612a135ea-f722c6246f11df1a-3c52",
+                        "type": "datasource",
+                        "designer": {
+                            "xLocation": 520,
+                            "yLocation": 100,
+                            "next": "a3c94443f8bf-cb9a8364eac92c34-ca3c"
                         },
-                        {
-                          "value": "Choice",
-                          "targetStepId": "f3afc3fc6aec-13259a9ba88e3d44-3f8b"
-                        }
-                      ],
-                      "condition": "scenario.question.answerType",
-                      "label": "Question Type"
+                        "dataConnection": "",
+                        "urlBase": "conversation.resourcesUrl",
+                        "urlPath": "\"UmlsConceptsMapping.json\"",
+                        "urlParams": "",
+                        "method": "get",
+                        "headers": "",
+                        "opJson": true,
+                        "opResolveWithFullResponse": false,
+                        "response": "languageJson",
+                        "error": "error",
+                        "label": "Read Language"
                     },
                     {
-                      "id": "3ea76a3a5e9c-4532826d6e64fc15-ffc7",
-                      "type": "prompt",
-                      "dataType": "string",
-                      "designer": {
-                        "xLocation": 380,
-                        "yLocation": 413,
-                        "next": "866538462ffa-d8fd8b6a3b13d383-9195"
-                      },
-                      "text": "scenario.questionText",
-                      "variable": "responseNum",
-                      "stringId": "stringId_a7f871b773048268",
-                      "label": "Numeric",
-                      "suggestions": ""
+                        "id": "3710c6e2876e-55c99f0c2563d4f5-647e",
+                        "type": "switch",
+                        "designer": {
+                            "xLocation": 500,
+                            "yLocation": 250
+                        },
+                        "cases": [
+                            {
+                                "value": "Numeric",
+                                "targetStepId": "3ea76a3a5e9c-4532826d6e64fc15-ffc7"
+                            },
+                            {
+                                "value": "Boolean",
+                                "targetStepId": "2cee13d07505-d11c62fe3c91ca09-5485"
+                            },
+                            {
+                                "value": "Choice",
+                                "targetStepId": "f3afc3fc6aec-13259a9ba88e3d44-3f8b"
+                            }
+                        ],
+                        "condition": "scenario.question.answerType",
+                        "label": "Question Type"
                     },
                     {
-                      "id": "2cee13d07505-d11c62fe3c91ca09-5485",
-                      "type": "prompt",
-                      "dataType": "[\"Yes\", \"No\", \"Don't know / Don't want to answer\"]",
-                      "designer": {
-                        "xLocation": 526,
-                        "yLocation": 412,
-                        "next": "218a732dc7f7-b3ded10c1434bb26-8d69",
-                        "listStyle": 3
-                      },
-                      "text": "scenario.questionText",
-                      "variable": "response",
-                      "stringId": "stringId_ae418de099b3a8e9",
-                      "label": "Boolean",
-                      "choiceType": "choice"
+                        "id": "3ea76a3a5e9c-4532826d6e64fc15-ffc7",
+                        "type": "prompt",
+                        "dataType": "string",
+                        "designer": {
+                            "xLocation": 380,
+                            "yLocation": 413,
+                            "next": "866538462ffa-d8fd8b6a3b13d383-9195"
+                        },
+                        "text": "scenario.questionText",
+                        "variable": "responseNum",
+                        "stringId": "stringId_a7f871b773048268",
+                        "label": "Numeric",
+                        "suggestions": ""
                     },
                     {
-                      "id": "60e09c9bdc82-fd2741a80f33e4f4-d9e4",
-                      "type": "prompt",
-                      "dataType": "scenario.choicesArray",
-                      "designer": {
-                        "xLocation": 652,
-                        "yLocation": 410,
-                        "listStyle": 3,
-                        "next": "c71c7e89b0b2-ad9de91f4ba898fc-fc9e"
-                      },
-                      "text": "scenario.questionText",
-                      "variable": "response",
-                      "stringId": "stringId_02e974a5da66a1f8",
-                      "choiceType": "choice",
-                      "label": "Choice"
+                        "id": "2cee13d07505-d11c62fe3c91ca09-5485",
+                        "type": "prompt",
+                        "dataType": "[\"Yes\", \"No\", \"Don't know / Don't want to answer\"]",
+                        "designer": {
+                            "xLocation": 526,
+                            "yLocation": 412,
+                            "next": "218a732dc7f7-b3ded10c1434bb26-8d69",
+                            "listStyle": 3
+                        },
+                        "text": "scenario.questionText",
+                        "variable": "response",
+                        "stringId": "stringId_ae418de099b3a8e9",
+                        "label": "Boolean",
+                        "choiceType": "choice"
                     },
                     {
-                      "id": "d2c813d56c6d-e873f367b262b7e6-030c",
-                      "type": "endwithresult",
-                      "designer": {
-                        "xLocation": 520,
-                        "yLocation": 720
-                      },
-                      "endScope": "scenario",
-                      "returnValue": "{\r\n    \"code\": scenario.question.umlsConceptId,\r\n    \"answer\": scenario.response,\r\n    \"answerType\": scenario.question.answerType,\r\n    \"ayalonEntityText\": scenario.question.ayalonEntityText\r\n}",
-                      "label": "Scenario Result"
+                        "id": "60e09c9bdc82-fd2741a80f33e4f4-d9e4",
+                        "type": "prompt",
+                        "dataType": "scenario.choicesArray",
+                        "designer": {
+                            "xLocation": 652,
+                            "yLocation": 410,
+                            "listStyle": 3,
+                            "next": "c71c7e89b0b2-ad9de91f4ba898fc-fc9e"
+                        },
+                        "text": "scenario.questionText",
+                        "variable": "response",
+                        "stringId": "stringId_02e974a5da66a1f8",
+                        "choiceType": "choice",
+                        "label": "Choice"
                     },
                     {
-                      "id": "f3afc3fc6aec-13259a9ba88e3d44-3f8b",
-                      "type": "action",
-                      "label": "Prepare Choices",
-                      "designer": {
-                        "xLocation": 660,
-                        "yLocation": 309,
-                        "next": "60e09c9bdc82-fd2741a80f33e4f4-d9e4"
-                      },
-                      "onInit": "scenario.choicesArray = scenario.question.choices.map(choice => choice.toString());\nscenario.choicesArray.push(\"Don't know / Don't want to answer\");"
+                        "id": "d2c813d56c6d-e873f367b262b7e6-030c",
+                        "type": "endwithresult",
+                        "designer": {
+                            "xLocation": 520,
+                            "yLocation": 720
+                        },
+                        "endScope": "scenario",
+                        "returnValue": "{\r\n    \"code\": scenario.question.umlsConceptId,\r\n    \"answer\": scenario.response,\r\n    \"answerType\": scenario.question.answerType,\r\n    \"ayalonEntityText\": scenario.question.ayalonEntityText\r\n}",
+                        "label": "Scenario Result"
                     },
                     {
-                      "id": "218a732dc7f7-b3ded10c1434bb26-8d69",
-                      "type": "action",
-                      "label": "Boolean Response",
-                      "designer": {
-                        "xLocation": 533,
-                        "yLocation": 469,
-                        "next": "2274bf2a7d60-31187438797a7524-cb1e"
-                      },
-                      "onInit": "if (scenario.response.entity === \"Yes\") {\n    scenario.response = \"true\";\n} else if (scenario.response.entity === \"No\") {\n    scenario.response = \"false\";\n} else {\n    scenario.response = null;\n}"
+                        "id": "f3afc3fc6aec-13259a9ba88e3d44-3f8b",
+                        "type": "action",
+                        "label": "Prepare Choices",
+                        "designer": {
+                            "xLocation": 660,
+                            "yLocation": 309,
+                            "next": "60e09c9bdc82-fd2741a80f33e4f4-d9e4"
+                        },
+                        "onInit": "scenario.choicesArray = scenario.question.choices.map(choice => choice.toString());\nscenario.choicesArray.push(\"Don't know / Don't want to answer\");"
                     },
                     {
-                      "id": "c71c7e89b0b2-ad9de91f4ba898fc-fc9e",
-                      "type": "action",
-                      "label": "Choice Response",
-                      "designer": {
-                        "xLocation": 660,
-                        "yLocation": 470,
-                        "next": "2274bf2a7d60-31187438797a7524-cb1e"
-                      },
-                      "onInit": "scenario.response = scenario.response.entity;"
+                        "id": "218a732dc7f7-b3ded10c1434bb26-8d69",
+                        "type": "action",
+                        "label": "Boolean Response",
+                        "designer": {
+                            "xLocation": 533,
+                            "yLocation": 469,
+                            "next": "2274bf2a7d60-31187438797a7524-cb1e"
+                        },
+                        "onInit": "if (scenario.response.entity === \"Yes\") {\n    scenario.response = \"true\";\n} else if (scenario.response.entity === \"No\") {\n    scenario.response = \"false\";\n} else {\n    scenario.response = null;\n}"
                     },
                     {
-                      "id": "2274bf2a7d60-31187438797a7524-cb1e",
-                      "type": "action",
-                      "label": "Don't know handling",
-                      "designer": {
-                        "xLocation": 526,
-                        "yLocation": 626,
-                        "next": "d2c813d56c6d-e873f367b262b7e6-030c"
-                      },
-                      "onInit": "if (scenario.response && scenario.response.match(/[D,d]on[',’]?t [K,k]now|[N,n]ot [S,s]ure|[D,d]on[',’]?t [W,w]ant [T,t]o [A,a]nswer/)) {\n    scenario.response = null;\n}"
+                        "id": "c71c7e89b0b2-ad9de91f4ba898fc-fc9e",
+                        "type": "action",
+                        "label": "Choice Response",
+                        "designer": {
+                            "xLocation": 660,
+                            "yLocation": 470,
+                            "next": "2274bf2a7d60-31187438797a7524-cb1e"
+                        },
+                        "onInit": "scenario.response = scenario.response.entity;"
                     },
                     {
-                      "id": "866538462ffa-d8fd8b6a3b13d383-9195",
-                      "type": "action",
-                      "label": "Numeric Response",
-                      "designer": {
-                        "xLocation": 386,
-                        "yLocation": 470,
-                        "next": "867f3d768ac6-b2cd67ca62309894-52a6"
-                      },
-                      "onInit": "if (scenario.responseNum.match(/[D,d]on[',’]?t [K,k]now|[N,n]ot [S,s]ure|[D,d]on[',’]?t [W,w]ant [T,t]o [A,a]nswer/)) {\r\n    scenario.num = null;\r\n} else {\r\n    scenario.num = parseFloat(scenario.responseNum);\r\n}"
+                        "id": "2274bf2a7d60-31187438797a7524-cb1e",
+                        "type": "action",
+                        "label": "Don't know handling",
+                        "designer": {
+                            "xLocation": 526,
+                            "yLocation": 626,
+                            "next": "d2c813d56c6d-e873f367b262b7e6-030c"
+                        },
+                        "onInit": "if (scenario.response && scenario.response.match(/[D,d]on[',’]?t [K,k]now|[N,n]ot [S,s]ure|[D,d]on[',’]?t [W,w]ant [T,t]o [A,a]nswer/)) {\n    scenario.response = null;\n}"
                     },
                     {
-                      "id": "867f3d768ac6-b2cd67ca62309894-52a6",
-                      "type": "branch",
-                      "condition": "Number.isNaN(scenario.num)",
-                      "designer": {
-                        "xLocation": 320,
-                        "yLocation": 533,
-                        "next": "71b4f50f833a-b15090e77a91a966-0ee0",
-                        "reverse": true
-                      },
-                      "label": "Is NaN",
-                      "targetStepId": "a87f34be753f-59cc272dc1a85b29-5eaa"
+                        "id": "866538462ffa-d8fd8b6a3b13d383-9195",
+                        "type": "action",
+                        "label": "Numeric Response",
+                        "designer": {
+                            "xLocation": 386,
+                            "yLocation": 470,
+                            "next": "867f3d768ac6-b2cd67ca62309894-52a6"
+                        },
+                        "onInit": "if (scenario.responseNum.match(/[D,d]on[',’]?t [K,k]now|[N,n]ot [S,s]ure|[D,d]on[',’]?t [W,w]ant [T,t]o [A,a]nswer/)) {\r\n    scenario.num = null;\r\n} else {\r\n    scenario.num = parseFloat(scenario.responseNum);\r\n}"
                     },
                     {
-                      "id": "71b4f50f833a-b15090e77a91a966-0ee0",
-                      "type": "action",
-                      "label": "Set Response",
-                      "designer": {
-                        "xLocation": 380,
-                        "yLocation": 613,
-                        "next": "2274bf2a7d60-31187438797a7524-cb1e"
-                      },
-                      "onInit": "if (scenario.num) {\n    scenario.response = scenario.num.toString();\n} else {\n    scenario.response = null;\n}"
+                        "id": "867f3d768ac6-b2cd67ca62309894-52a6",
+                        "type": "branch",
+                        "condition": "Number.isNaN(scenario.num)",
+                        "designer": {
+                            "xLocation": 320,
+                            "yLocation": 533,
+                            "next": "71b4f50f833a-b15090e77a91a966-0ee0",
+                            "reverse": true
+                        },
+                        "label": "Is NaN",
+                        "targetStepId": "a87f34be753f-59cc272dc1a85b29-5eaa"
                     },
                     {
-                      "id": "a87f34be753f-59cc272dc1a85b29-5eaa",
-                      "type": "statement",
-                      "designer": {
-                        "xLocation": 207,
-                        "yLocation": 580,
-                        "next": "3ea76a3a5e9c-4532826d6e64fc15-ffc7"
-                      },
-                      "text": "I didn't understand. Please enter a number.",
-                      "stringId": "stringId_58d05e50bd880b8a"
+                        "id": "71b4f50f833a-b15090e77a91a966-0ee0",
+                        "type": "action",
+                        "label": "Set Response",
+                        "designer": {
+                            "xLocation": 380,
+                            "yLocation": 613,
+                            "next": "2274bf2a7d60-31187438797a7524-cb1e"
+                        },
+                        "onInit": "if (scenario.num) {\n    scenario.response = scenario.num.toString();\n} else {\n    scenario.response = null;\n}"
                     },
                     {
-                      "id": "a3c94443f8bf-cb9a8364eac92c34-ca3c",
-                      "type": "action",
-                      "label": "Generate Question",
-                      "designer": {
-                        "xLocation": 527,
-                        "yLocation": 160,
-                        "next": "4b1932a7c977-8d1720745c3e8cdb-4079"
-                      },
-                      "onInit": "// if has question by entity type\nif (scenario.languageJson.entityTypes[scenario.question.ayalonEntityType] != null) {\n    scenario.questionText = scenario.languageJson.entityTypes[scenario.question.ayalonEntityType].question;\n} else if(scenario.languageJson.allowedConcepts[scenario.question.umlsConceptId] != null) {\n    // has question or points to concepet with question\n    if (scenario.languageJson.allowedConcepts[scenario.question.umlsConceptId].question != null) {\n        scenario.questionText = scenario.languageJson.allowedConcepts[scenario.question.umlsConceptId].question;\n    } else {\n        var concept = scenario.languageJson.allowedConcepts[scenario.question.umlsConceptId];\n        scenario.questionText = scenario.languageJson.allowedConcepts[concept.mappedTo].question;\n    }\n} else {\n    // got concept id without a valid question mapped to it\n    scenario.questionText = \"?\"\n}\n\nscenario.questionText = scenario.questionText.replace(\"%p1%\", scenario.question.ayalonEntityText);"
+                        "id": "a87f34be753f-59cc272dc1a85b29-5eaa",
+                        "type": "statement",
+                        "designer": {
+                            "xLocation": 207,
+                            "yLocation": 580,
+                            "next": "3ea76a3a5e9c-4532826d6e64fc15-ffc7"
+                        },
+                        "text": "I didn't understand. Please enter a number.",
+                        "stringId": "stringId_58d05e50bd880b8a"
                     },
                     {
-                      "id": "4b1932a7c977-8d1720745c3e8cdb-4079",
-                      "type": "action",
-                      "label": "Log question",
-                      "designer": {
-                        "xLocation": 640,
-                        "yLocation": 200,
-                        "next": "3710c6e2876e-55c99f0c2563d4f5-647e"
-                      },
-                      "onInit": "var loggedQuestion = {};\r\nloggedQuestion.question = scenario.question;\r\nloggedQuestion.questionText = scenario.questionText;\r\nsession.logCustomEvent('USER_QUESTION', loggedQuestion);"
+                        "id": "a3c94443f8bf-cb9a8364eac92c34-ca3c",
+                        "type": "action",
+                        "label": "Generate Question",
+                        "designer": {
+                            "xLocation": 527,
+                            "yLocation": 160,
+                            "next": "4b1932a7c977-8d1720745c3e8cdb-4079"
+                        },
+                        "onInit": "// if has question by entity type\nif (scenario.languageJson.entityTypes[scenario.question.ayalonEntityType] != null) {\n    scenario.questionText = scenario.languageJson.entityTypes[scenario.question.ayalonEntityType].question;\n} else if(scenario.languageJson.allowedConcepts[scenario.question.umlsConceptId] != null) {\n    // has question or points to concepet with question\n    if (scenario.languageJson.allowedConcepts[scenario.question.umlsConceptId].question != null) {\n        scenario.questionText = scenario.languageJson.allowedConcepts[scenario.question.umlsConceptId].question;\n    } else {\n        var concept = scenario.languageJson.allowedConcepts[scenario.question.umlsConceptId];\n        scenario.questionText = scenario.languageJson.allowedConcepts[concept.mappedTo].question;\n    }\n} else {\n    // got concept id without a valid question mapped to it\n    scenario.questionText = \"?\"\n}\n\nscenario.questionText = scenario.questionText.replace(\"%p1%\", scenario.question.ayalonEntityText);"
+                    },
+                    {
+                        "id": "4b1932a7c977-8d1720745c3e8cdb-4079",
+                        "type": "action",
+                        "label": "Log question",
+                        "designer": {
+                            "xLocation": 640,
+                            "yLocation": 200,
+                            "next": "3710c6e2876e-55c99f0c2563d4f5-647e"
+                        },
+                        "onInit": "var userQuestion = {};\r\nuserQuestion.question = scenario.question;\r\nuserQuestion.questionText = scenario.questionText;\r\nuserQuestion.profile = scenario.profile;\r\nuserQuestion.questionsNum = scenario.questionsNum;\r\nsession.logCustomEvent('USER_QUESTION', userQuestion);"
                     }
                 ],
                 "interrupting": false,
