@@ -21,7 +21,7 @@
             "value": "ctmprod.azurecr.io"
         },
         "acrUsername": {
-            "value": "ctmprod"
+            "value": "ctmprodreader"
         },
         "structuringImageTag": {
             "value": "2020.0528.1"
