@@ -17,7 +17,7 @@
     },
     "acrUsername": {
       "type": "string",
-      "defaultValue": "ctmprod"
+      "defaultValue": "ctmprodreader"
     },
     "acrPassword": {
       "type": "securestring"
