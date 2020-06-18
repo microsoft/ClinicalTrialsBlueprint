@@ -1,0 +1,519 @@
+{
+    "definition": {
+        "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+        "actions": {
+            "Get_Staging_slot": {
+                "inputs": {
+                    "method": "GET",
+                    "uri": "https://test-gateway-webapp.azurewebsites.net/slot"
+                },
+                "runAfter": {
+                    "Initialize_slotSwapBody_variable": [
+                        "Succeeded"
+                    ]
+                },
+                "type": "Http"
+            },
+            "Initialize_disqualifierSecondaryService_variable": {
+                "inputs": {
+                    "variables": [
+                        {
+                            "name": "disqualifierSecondaryService",
+                            "type": "string"
+                        }
+                    ]
+                },
+                "runAfter": {
+                    "Initialize_disqualifierService_variable": [
+                        "Succeeded"
+                    ]
+                },
+                "type": "InitializeVariable"
+            },
+            "Initialize_disqualifierService_variable": {
+                "inputs": {
+                    "variables": [
+                        {
+                            "name": "disqualifierService",
+                            "type": "string",
+                            "value": "test-ctm-disq-webapp"
+                        }
+                    ]
+                },
+                "runAfter": {
+                    "Initialize_structuringSecondaryAci_variable": [
+                        "Succeeded"
+                    ]
+                },
+                "type": "InitializeVariable"
+            },
+            "Initialize_readiness_variable": {
+                "inputs": {
+                    "variables": [
+                        {
+                            "name": "readiness",
+                            "type": "string"
+                        }
+                    ]
+                },
+                "runAfter": {
+                    "Initialize_disqualifierSecondaryService_variable": [
+                        "Succeeded"
+                    ]
+                },
+                "type": "InitializeVariable"
+            },
+            "Initialize_servicePostfix_variable": {
+                "inputs": {
+                    "variables": [
+                        {
+                            "name": "servicePostfix",
+                            "type": "string"
+                        }
+                    ]
+                },
+                "runAfter": {
+                    "Initialize_structuringSummary_variable": [
+                        "Succeeded"
+                    ]
+                },
+                "type": "InitializeVariable"
+            },
+            "Initialize_slotSwapBody_variable": {
+                "inputs": {
+                    "variables": [
+                        {
+                            "name": "slotSwapBody",
+                            "type": "object",
+                            "value": {
+                                "preserveVnet": true,
+                                "targetSlot": "secondary"
+                            }
+                        }
+                    ]
+                },
+                "runAfter": {
+                    "Initialize_readiness_variable": [
+                        "Succeeded"
+                    ]
+                },
+                "type": "InitializeVariable"
+            },
+            "Initialize_structuringAci_variable": {
+                "inputs": {
+                    "variables": [
+                        {
+                            "name": "structuringAci",
+                            "type": "string",
+                            "value": "test-ctm-struct-aci"
+                        }
+                    ]
+                },
+                "runAfter": {
+                    "Initialize_servicePostfix_variable": [
+                        "Succeeded"
+                    ]
+                },
+                "type": "InitializeVariable"
+            },
+            "Initialize_structuringSecondaryAci_variable": {
+                "inputs": {
+                    "variables": [
+                        {
+                            "name": "structuringSecondaryAci",
+                            "type": "string"
+                        }
+                    ]
+                },
+                "runAfter": {
+                    "Initialize_structuringAci_variable": [
+                        "Succeeded"
+                    ]
+                },
+                "type": "InitializeVariable"
+            },
+            "Initialize_structuringSummary_variable": {
+                "inputs": {
+                    "variables": [
+                        {
+                            "name": "structuringSummary",
+                            "type": "object",
+                            "value": {
+                                "added": "@if(equals(triggerBody()?['AddedTrials'], null), 0, length(triggerBody()?['AddedTrials']))",
+                                "buildVersion": "@triggerBody()?['BuildVersion']",
+                                "failed": "@if(equals(triggerBody()?['FailedTrials'], null), 0, length(triggerBody()?['FailedTrials']))",
+                                "failureMessage": "@triggerBody()?['FailureMessage']",
+                                "processed": "@if(equals(triggerBody()?['ProcessedTrials'], null), 0, length(triggerBody()?['ProcessedTrials']))",
+                                "removed": "@if(equals(triggerBody()?['RemovedTrials'], null), 0, length(triggerBody()?['RemovedTrials']))",
+                                "success": "@triggerBody()?['Success']",
+                                "timePassed": "@triggerBody()?['TimePassed']",
+                                "updated": "@if(equals(triggerBody()?['UpdatedTrials'], null), 0, length(triggerBody()?['UpdatedTrials']))"
+                            }
+                        }
+                    ]
+                },
+                "runAfter": {},
+                "type": "InitializeVariable"
+            },
+            "Is_structuring_successful": {
+                "actions": {
+                    "Is_Service_Ready": {
+                        "actions": {
+                            "Send_a_success_email": {
+                                "inputs": {
+                                    "body": {
+                                        "Body": "<p>Processed @{variables('structuringSummary')['processed']} trials.<br>\nFailed @{variables('structuringSummary')['failed']} trials.<br>\nStructuring process time - @{triggerBody()?['TimePassed']}<br>\nStructuring build version - @{triggerBody()?['BuildVersion']}<br>\n</p>",
+                                        "Subject": "[test] Trials updating process finished successfully",
+                                        "To": "yolehman@microsoft.com"
+                                    },
+                                    "host": {
+                                        "connection": {
+                                            "name": "@parameters('$connections')['office365']['connectionId']"
+                                        }
+                                    },
+                                    "method": "post",
+                                    "path": "/v2/Mail"
+                                },
+                                "runAfter": {
+                                    "Swap_gateway_slot": [
+                                        "Succeeded"
+                                    ]
+                                },
+                                "type": "ApiConnection"
+                            },
+                            "Swap_gateway_slot": {
+                                "inputs": {
+                                    "body": "@variables('slotSwapBody')",
+                                    "host": {
+                                        "connection": {
+                                            "name": "@parameters('$connections')['arm']['connectionId']"
+                                        }
+                                    },
+                                    "method": "post",
+                                    "path": "/subscriptions/@{encodeURIComponent('cd586746-c5ca-4c58-bf27-7ecd1230a6f8')}/resourcegroups/@{encodeURIComponent('ctm-rg-eastus-test')}/providers/@{encodeURIComponent('Microsoft.Web')}/@{encodeURIComponent('sites/test-gateway-webapp')}/@{encodeURIComponent('slotsswap')}",
+                                    "queries": {
+                                        "x-ms-api-version": "2019-08-01"
+                                    }
+                                },
+                                "runAfter": {},
+                                "type": "ApiConnection"
+                            }
+                        },
+                        "else": {
+                            "actions": {
+                                "Send_a_failure_email_": {
+                                    "inputs": {
+                                        "body": {
+                                            "Body": "<p>Failure message - Disqualifier service failed to be ready.<br>\nDisqualifier readiness - @{variables('readiness')}<br>\nStructuring process time - @{triggerBody()?['TimePassed']}<br>\nStructuring build version - @{triggerBody()?['BuildVersion']}<br>\n<br>\nGateway slot not swapped.</p>",
+                                            "Subject": "[test] Trials updating process failed to complete",
+                                            "To": "yolehman@microsoft.com"
+                                        },
+                                        "host": {
+                                            "connection": {
+                                                "name": "@parameters('$connections')['office365']['connectionId']"
+                                            }
+                                        },
+                                        "method": "post",
+                                        "path": "/v2/Mail"
+                                    },
+                                    "runAfter": {},
+                                    "type": "ApiConnection"
+                                }
+                            }
+                        },
+                        "expression": {
+                            "and": [
+                                {
+                                    "startsWith": [
+                                        "@variables('readiness')",
+                                        "Ready"
+                                    ]
+                                }
+                            ]
+                        },
+                        "runAfter": {
+                            "Until_disqualifier_is_ready": [
+                                "Succeeded"
+                            ]
+                        },
+                        "type": "If"
+                    },
+                    "Restart_disqualifier_service": {
+                        "inputs": {
+                            "host": {
+                                "connection": {
+                                    "name": "@parameters('$connections')['arm']['connectionId']"
+                                }
+                            },
+                            "method": "post",
+                            "path": "/subscriptions/@{encodeURIComponent('cd586746-c5ca-4c58-bf27-7ecd1230a6f8')}/resourcegroups/@{encodeURIComponent('ctm-rg-eastus-test')}/providers/@{encodeURIComponent('Microsoft.Web')}/@{encodeURIComponent(concat('sites/', variables('disqualifierSecondaryService')))}/@{encodeURIComponent('restart')}",
+                            "queries": {
+                                "x-ms-api-version": "2019-08-01"
+                            }
+                        },
+                        "runAfter": {
+                            "Set_disqualifierSecondaryService_variable": [
+                                "Succeeded"
+                            ]
+                        },
+                        "type": "ApiConnection"
+                    },
+                    "Set_disqualifierSecondaryService_variable": {
+                        "inputs": {
+                            "name": "disqualifierSecondaryService",
+                            "value": "@{concat(variables('disqualifierService'), variables('servicePostfix'))}"
+                        },
+                        "runAfter": {},
+                        "type": "SetVariable"
+                    },
+                    "Until_disqualifier_is_ready": {
+                        "actions": {
+                            "Delay_readiness_polling": {
+                                "inputs": {
+                                    "interval": {
+                                        "count": 5,
+                                        "unit": "Second"
+                                    }
+                                },
+                                "runAfter": {
+                                    "Set_readiness_variable": [
+                                        "Succeeded"
+                                    ]
+                                },
+                                "type": "Wait"
+                            },
+                            "Get_disqualifier_readiness": {
+                                "inputs": {
+                                    "method": "GET",
+                                    "uri": "@{concat('https://', 'test-gateway-webapp', variables('serviceSecondaryGatewayPostfix'), '.azurewebsites.net/disq/ready')}"
+                                },
+                                "runAfter": {},
+                                "type": "Http"
+                            },
+                            "Set_readiness_variable": {
+                                "inputs": {
+                                    "name": "readiness",
+                                    "value": "@{body('Get_disqualifier_readiness')}"
+                                },
+                                "runAfter": {
+                                    "Get_disqualifier_readiness": [
+                                        "Succeeded"
+                                    ]
+                                },
+                                "type": "SetVariable"
+                            }
+                        },
+                        "expression": "@startsWith(variables('readiness'), 'Ready')",
+                        "limit": {
+                            "count": 60,
+                            "timeout": "PT1H"
+                        },
+                        "runAfter": {
+                            "Restart_disqualifier_service": [
+                                "Succeeded"
+                            ]
+                        },
+                        "type": "Until"
+                    }
+                },
+                "else": {
+                    "actions": {
+                        "Send_a_failure_email": {
+                            "inputs": {
+                                "body": {
+                                    "Body": "<p>Failure message - @{triggerBody()?['FailureMessage']}<br>\nStructuring process time - @{triggerBody()?['TimePassed']}<br>\nStructuring build version - @{triggerBody()?['BuildVersion']}</p>",
+                                    "Subject": "[test] Trials updating process failed to complete",
+                                    "To": "yolehman@microsoft.com"
+                                },
+                                "host": {
+                                    "connection": {
+                                        "name": "@parameters('$connections')['office365']['connectionId']"
+                                    }
+                                },
+                                "method": "post",
+                                "path": "/v2/Mail"
+                            },
+                            "runAfter": {},
+                            "type": "ApiConnection"
+                        }
+                    }
+                },
+                "expression": {
+                    "and": [
+                        {
+                            "equals": [
+                                "@triggerBody()?['Success']",
+                                true
+                            ]
+                        }
+                    ]
+                },
+                "runAfter": {
+                    "Stop_structuringSecondaryAci": [
+                        "Succeeded"
+                    ]
+                },
+                "type": "If"
+            },
+            "Parse_Slot_Response": {
+                "inputs": {
+                    "content": "@body('Get_Staging_slot')",
+                    "schema": {
+                        "properties": {
+                            "slot": {
+                                "type": "string"
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "runAfter": {
+                    "Get_Staging_slot": [
+                        "Succeeded"
+                    ]
+                },
+                "type": "ParseJson"
+            },
+            "Set_servicePostfix": {
+                "inputs": {
+                    "name": "servicePostfix",
+                    "value": "@{if(equals(body('Parse_Slot_Response')?['slot'], 'primary'), '-s', '')}"
+                },
+                "runAfter": {
+                    "Parse_Slot_Response": [
+                        "Succeeded"
+                    ]
+                },
+                "type": "SetVariable"
+            },
+            "Set_serviceSecondaryGatewayPostfix": {
+                "inputs": {
+                    "variables": [
+                        {
+                            "name": "serviceSecondaryGatewayPostfix",
+                            "type": "string",
+                            "value": "@{if(equals(body('Parse_Slot_Response')?['slot'], 'primary'), '-secondary', '')}"
+                        }
+                    ]
+                },
+                "runAfter": {
+                    "Set_servicePostfix": [
+                        "Succeeded"
+                    ]
+                },
+                "type": "InitializeVariable"
+            },
+            "Set_structuringSecondaryAci_variable": {
+                "inputs": {
+                    "name": "structuringSecondaryAci",
+                    "value": "@{concat(variables('structuringAci'), variables('servicePostfix'))}"
+                },
+                "runAfter": {
+                    "Set_serviceSecondaryGatewayPostfix": [
+                        "Succeeded"
+                    ]
+                },
+                "type": "SetVariable"
+            },
+            "Stop_structuringSecondaryAci": {
+                "inputs": {
+                    "host": {
+                        "connection": {
+                            "name": "@parameters('$connections')['arm']['connectionId']"
+                        }
+                    },
+                    "method": "post",
+                    "path": "/subscriptions/@{encodeURIComponent('cd586746-c5ca-4c58-bf27-7ecd1230a6f8')}/resourcegroups/@{encodeURIComponent('ctm-rg-eastus-test')}/providers/@{encodeURIComponent('Microsoft.ContainerInstance')}/@{encodeURIComponent(concat('containerGroups/', variables('structuringSecondaryAci')))}/@{encodeURIComponent('stop')}",
+                    "queries": {
+                        "x-ms-api-version": "2018-10-01"
+                    }
+                },
+                "runAfter": {
+                    "Set_structuringSecondaryAci_variable": [
+                        "Succeeded"
+                    ]
+                },
+                "type": "ApiConnection"
+            }
+        },
+        "contentVersion": "1.0.0.0",
+        "outputs": {},
+        "parameters": {
+            "$connections": {
+                "defaultValue": {},
+                "type": "Object"
+            }
+        },
+        "triggers": {
+            "manual": {
+                "inputs": {
+                    "schema": {
+                        "properties": {
+                            "AddedTrials": {
+                                "items": {
+                                    "type": "string"
+                                },
+                                "type": "array"
+                            },
+                            "BuildVersion": {
+                                "type": "string"
+                            },
+                            "FailedTrials": {
+                                "items": {
+                                    "type": "string"
+                                },
+                                "type": "array"
+                            },
+                            "FailureMessage": {
+                                "type": "string"
+                            },
+                            "ProcessedTrials": {
+                                "items": {
+                                    "type": "string"
+                                },
+                                "type": "array"
+                            },
+                            "RemovedTrials": {
+                                "items": {
+                                    "type": "string"
+                                },
+                                "type": "array"
+                            },
+                            "Success": {
+                                "type": "boolean"
+                            },
+                            "TimePassed": {
+                                "type": "string"
+                            },
+                            "UpdatedTrials": {
+                                "items": {
+                                    "type": "string"
+                                },
+                                "type": "array"
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "kind": "Http",
+                "type": "Request"
+            }
+        }
+    },
+    "parameters": {
+        "$connections": {
+            "value": {
+                "arm": {
+                    "connectionId": "/subscriptions/cd586746-c5ca-4c58-bf27-7ecd1230a6f8/resourceGroups/ctm-rg-eastus-test/providers/Microsoft.Web/connections/arm",
+                    "connectionName": "arm",
+                    "id": "/subscriptions/cd586746-c5ca-4c58-bf27-7ecd1230a6f8/providers/Microsoft.Web/locations/eastus/managedApis/arm"
+                },
+                "office365": {
+                    "connectionId": "/subscriptions/cd586746-c5ca-4c58-bf27-7ecd1230a6f8/resourceGroups/ctm-rg-eastus-test/providers/Microsoft.Web/connections/office365",
+                    "connectionName": "office365",
+                    "id": "/subscriptions/cd586746-c5ca-4c58-bf27-7ecd1230a6f8/providers/Microsoft.Web/locations/eastus/managedApis/office365"
+                }
+            }
+        }
+    }
+}

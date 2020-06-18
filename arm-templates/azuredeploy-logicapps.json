@@ -755,7 +755,8 @@
                     "Get_disqualifier_readiness": {
                       "inputs": {
                         "method": "GET",
-                        "uri": "@{concat('https://', variables('disqualifierSecondaryService'), '.azurewebsites.net/ready')}"
+                        "uri": "[concat('@{concat(''https:''', variables('gatewayWebAppName'),'variables(''serviceSecondaryGatewayPostfix''), ''.azurewebsites.net/disq/ready'')'
+                        )]"
                       },
                       "runAfter": {
                       },
@@ -858,13 +859,30 @@
               },
               "type": "SetVariable"
             },
+            "Set_serviceSecondaryGatewayPostfix": {
+                "inputs": {
+                    "variables": [
+                        {
+                            "name": "serviceSecondaryGatewayPostfix",
+                            "type": "string",
+                            "value": "@{if(equals(body('Parse_Slot_Response')?['slot'], 'primary'), '-secondary', '')}"
+                        }
+                    ]
+                },
+                "runAfter": {
+                    "Set_servicePostfix": [
+                        "Succeeded"
+                    ]
+                },
+                "type": "InitializeVariable"
+            },
             "Set_structuringSecondaryAci_variable": {
               "inputs": {
                 "name": "structuringSecondaryAci",
                 "value": "@{concat(variables('structuringAci'), variables('servicePostfix'))}"
               },
               "runAfter": {
-                "Set_servicePostfix": [
+                "Set_serviceSecondaryGatewayPostfix": [
                   "Succeeded"
                 ]
               },
