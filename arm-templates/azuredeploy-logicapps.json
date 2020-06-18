@@ -755,8 +755,7 @@
                     "Get_disqualifier_readiness": {
                       "inputs": {
                         "method": "GET",
-                        "uri": "[concat('@{concat(''https:''', variables('gatewayWebAppName'),'variables(''serviceSecondaryGatewayPostfix''), ''.azurewebsites.net/disq/ready'')'
-                        )]"
+                        "uri": "[concat('@{concat(''https://'',''', variables('gatewayWebAppName'), ''', variables(''serviceSecondaryGatewayPostfix''), ''.azurewebsites.net/disq/ready'')}')]"
                       },
                       "runAfter": {
                       },
