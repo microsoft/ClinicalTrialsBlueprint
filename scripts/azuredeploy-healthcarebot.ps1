@@ -10,10 +10,15 @@ param(
     [Parameter(Mandatory=$true)]
     $ResourceGroup,
     [Parameter(Mandatory=$true)]
-    $matchingParameters,
+    $matchingOutput,
     [Parameter(Mandatory=$false)]
     $resourceTags
 )
+
+
+
+$matchingParameters = matchingOutput.Parameters
+$matchingOutputs = matchingOutput.Outputs
 
 . ./scripts/profile.ps1
 . ./scripts/luis.ps1
@@ -115,10 +120,10 @@ Try {
 
         # Here you need to replace the place holders with real data
 
-        $restoreJSON = $restoreJSON.Replace('{ctm-api-key}', $matchingParameters.proxyApiKey.Value)
-        $restoreJSON = $restoreJSON.Replace('{qe-baseurl}', $matchingParameters.gatewayEndpoint.Value)
-        $restoreJSON = $restoreJSON.Replace('{dcs-baseurl}', $matchingParameters.gatewayEndpoint.Value)
-        $restoreJSON = $restoreJSON.Replace('{disq-baseurl}', $matchingParameters.gatewayEndpoint.Value)
+        $restoreJSON = $restoreJSON.Replace('{ctm-api-key}', $matchingOutputs.proxyApiKey.Value)
+        $restoreJSON = $restoreJSON.Replace('{qe-baseurl}', $matchingOutputs.gatewayEndpoint.Value)
+        $restoreJSON = $restoreJSON.Replace('{dcs-baseurl}', $matchingOutputs.gatewayEndpoint.Value)
+        $restoreJSON = $restoreJSON.Replace('{disq-baseurl}', $matchingOutputs.gatewayEndpoint.Value)
         $restoreJSON = $restoreJSON.Replace('{luisApplicationId}', $luisApplications["metadata_clinical_trials"])
         $restoreJSON = $restoreJSON.Replace('{luisPredictionKey}', $output.Outputs["luisPredictionKey"].Value)
         $restoreJSON = $restoreJSON.Replace('{luisLocation}', $luisPredictionLocation)
@@ -137,9 +142,32 @@ Try {
         $portalEndpoint = "https://eu.healthbot.microsoft.com/account"
     }
 
+
+	
     Select-Object @{n = "portal"; e = {"$portalEndpoint/$tenantId"}},
                   @{n = "SaaSApplication"; e = {"https://ms.portal.azure.com/#@/resource/providers/Microsoft.SaaS/saasresources/$saasSubscriptionId/overview"}},
                   @{n = "WebChat"; e ={"https://hatenantstorageprod.blob.core.windows.net/public-websites/webchat/index.html?s=$webchatSecret"}} -InputObject ""
+	
+		# update functional-tests app with bot name and secret
+		Write-Host "updating bot function test app with bot tenant id: $tenantId"
+		$funcTestApp = Get-AzWebApp -ResourceGroupName $ResourceGroup -Name $matchingOutputs.funcTestsServiceName.Value
+		$settings =  $funcTestApp.SiteConfig.AppSettings
+		$hashTable = @{}
+		$settings | ForEach-Object {
+			$hashTable[$_.Name] = $_.Value
+		}
+
+		$hashTable
+		
+		if($matchingParameters.isSecondary.Value){	
+			$hashTable["DefaultBot"] = $tenantId
+		}
+		
+		$secrets = ConvertFrom-Json $hashTable["SECRETS"] -AsHashtable
+		$secrets[$tenantId] = $webchatSecret
+		$hashTable["SECRETS"] = ConvertTo-Json $secrets
+		
+		Set-AzWebApp -ResourceGroupName $ResourceGroup -Name $matchingOutputs.funcTestsServiceName.Value -AppSettings $hashTable
     
 }    
 Catch {
