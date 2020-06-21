@@ -119,7 +119,8 @@
     "disqualificationDockerImageName":  "[concat('DOCKER|',parameters('acrServer'),'/clinical-trials-disqualification:',parameters('disqualifierImageTag'))]",
     "structuringImageName":             "[concat(parameters('acrServer'),'/clinical-trials-structuring:',parameters('structuringImageTag'))]",
     "constituencyParserImageName":      "[concat(parameters('acrServer'),'/constituency-parser-server:',parameters('conParserImageTag'))]",
-	"functionalTestsImageName":      "[concat(parameters('acrServer'),'/ctm-bot-functional-testing:',parameters('funcTestsImageTag'))]",
+	"functionalTestsImageName":
+    "[concat('DOCKER|',parameters('acrServer'),'/ctm-bot-functional-testing:',parameters('funcTestsImageTag'))]",
     // Gateway services
     "cttiHost": "[concat(variables('postgresqlServerFullName'),'.postgres.database.azure.com')]",
     "cttiUserName":"[concat(parameters('postgreSqlAdministratorLogin'),'@',variables('cttiHost'))]",

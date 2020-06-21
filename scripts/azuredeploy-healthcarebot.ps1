@@ -17,8 +17,8 @@ param(
 
 
 
-$matchingParameters = matchingOutput.Parameters
-$matchingOutputs = matchingOutput.Outputs
+$matchingParameters = $matchingOutput.Parameters
+$matchingOutputs = $matchingOutput.Outputs
 
 . ./scripts/profile.ps1
 . ./scripts/luis.ps1
@@ -166,7 +166,7 @@ Try {
 		$secrets = ConvertFrom-Json $hashTable["SECRETS"] -AsHashtable
 		$secrets[$tenantId] = $webchatSecret
 		$hashTable["SECRETS"] = ConvertTo-Json $secrets
-		
+		$hashTable["SECRETS"] = $hashTable["SECRETS"].ToString()
 		Set-AzWebApp -ResourceGroupName $ResourceGroup -Name $matchingOutputs.funcTestsServiceName.Value -AppSettings $hashTable
     
 }    
