@@ -1200,6 +1200,20 @@
       }
     },
 	{
+      "type": "Microsoft.Web/sites/hostNameBindings",
+      "apiVersion": "2018-11-01",
+      "name": "[concat(variables('queryEngineWebAppName'), '/', variables('queryEngineWebAppName'), '.azurewebsites.net')]",
+      "tags": "[parameters('resourceTags')]",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/sites', variables('queryEngineWebAppName'))]"
+      ],
+      "properties": {
+        "siteName": "[variables('queryEngineWebAppName')]",
+        "hostNameType": "Verified"
+      }
+    },
+	{
       "type": "Microsoft.Web/sites",
       "apiVersion": "2018-11-01",
       "name": "[variables('functionalTestsServiceName')]",
@@ -1278,7 +1292,7 @@
         "apiVersion": "2018-11-01",
         "name": "[concat(variables('functionalTestsServiceName'), '/web')]",
         "tags": "[parameters('resourceTags')]",
-        "location": "East US",
+        "location": "[resourceGroup().location]",
         "dependsOn": [
             "[resourceId('Microsoft.Web/sites', variables('functionalTestsServiceName'))]"
         ],
@@ -1322,7 +1336,6 @@
             },
             "autoHealEnabled": false,
             "localMySqlEnabled": false,
-            "managedServiceIdentityId": 1713,
             "ipSecurityRestrictions": [
                 {
                     "ipAddress": "Any",
@@ -1351,14 +1364,14 @@
     {
       "type": "Microsoft.Web/sites/hostNameBindings",
       "apiVersion": "2018-11-01",
-      "name": "[concat(variables('queryEngineWebAppName'), '/', variables('queryEngineWebAppName'), '.azurewebsites.net')]",
+      "name": "[concat(variables('functionalTestsServiceName'), '/', variables('functionalTestsServiceName'), '.azurewebsites.net')]",
       "tags": "[parameters('resourceTags')]",
       "location": "[resourceGroup().location]",
       "dependsOn": [
-        "[resourceId('Microsoft.Web/sites', variables('queryEngineWebAppName'))]"
+        "[resourceId('Microsoft.Web/sites', variables('functionalTestsServiceName'))]"
       ],
       "properties": {
-        "siteName": "[variables('queryEngineWebAppName')]",
+        "siteName": "[variables('functionalTestsServiceName')]",
         "hostNameType": "Verified"
       }
     },
