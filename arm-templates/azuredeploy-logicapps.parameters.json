@@ -11,6 +11,9 @@
         "isLiveId": {
             "value": false
         },
+		"functionalTestsFileUrl": {
+            "value": "https://raw.githubusercontent.com/microsoft/ClinicalTrialsBlueprint/master/functional-tests/dynmic_ctm_test.json"
+        },
         "resourceTags": {
             "value": {
                 "Environment": "Prod",
