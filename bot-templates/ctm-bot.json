@@ -184,8 +184,8 @@
                         "id": "6c395b7ffcbf-9a3ac0cb171f8c36-4154",
                         "type": "statement",
                         "designer": {
-                            "xLocation": 352,
-                            "yLocation": 489,
+                            "xLocation": 340,
+                            "yLocation": 492,
                             "next": "2093a915c20d-8fc2e7481038d764-affd"
                         },
                         "text": "\"Found \" + scenario.trials.length.toString() + \" relevant trial\" + (scenario.trials.length === 1 ? \"\" : \"s\") + \".\"",
@@ -195,20 +195,20 @@
                     {
                         "id": "138c2cc32f4e-265ec16959d65e96-6083",
                         "type": "action",
-                        "label": "Create Card",
+                        "label": "Create Results Card",
                         "designer": {
-                            "xLocation": 340,
-                            "yLocation": 831,
+                            "xLocation": 346,
+                            "yLocation": 830,
                             "next": "b880d5732a03-3c5ec70d6ab91ed6-6218"
                         },
-                        "onInit": "var cardBody = scenario.trials.map(trial => {\n    // using trial from map, it has facilities\n    var mappedTrial = scenario.trialsMap[trial.nctId];\n    return {\n\t\t\"type\": \"Container\",\n\t\t\"separator\": true,\n\t\t\"spacing\": \"Large\",\n\t\t\"items\": [\n            {\n                \"type\": \"TextBlock\",\n                \"text\": \"RECRUITING\",\n                \"separator\": true,\n                \"color\": \"dark\"\n            },{\n                \"type\": \"TextBlock\",\n                \"color\": \"accent\",\n                \"text\": \"[\" + mappedTrial.title + \"](https://clinicaltrials.gov/ct2/show/\" + mappedTrial.nctId + \")\",\n                \"spacing\": \"none\",\n                \"wrap\": true,\n                \"color\": \"blue\"\n            },{\n                \"type\": \"TextBlock\",\n                \"text\": \"Clinical trial ID: \" + mappedTrial.nctId,\n                \"isSubtle\": true,\n                \"weight\": \"lighter\"\n            }\n        ]\n    }\n});\n\nscenario.card = {\n  \"$schema\": \"http://adaptivecards.io/schemas/adaptive-card.json\",\n  \"type\": \"AdaptiveCard\",\n  \"version\": \"1.0\",\n  \"body\": cardBody\n};"
+                        "onInit": "var cardBody = scenario.trials.map(trial => {\n    return {\n\t\t\"type\": \"Container\",\n\t\t\"separator\": true,\n\t\t\"spacing\": \"Large\",\n\t\t\"items\": [\n            {\n                \"type\": \"TextBlock\",\n                \"text\": \"RECRUITING\",\n                \"separator\": true,\n                \"color\": \"dark\"\n            },{\n                \"type\": \"TextBlock\",\n                \"color\": \"accent\",\n                \"text\": \"[\" + trial.briefTitle + \"](https://clinicaltrials.gov/ct2/show/\" + trial.nctId + \")\",\n                \"spacing\": \"none\",\n                \"wrap\": true,\n                \"color\": \"blue\"\n            },{\n                \"type\": \"TextBlock\",\n                \"text\": \"Clinical trial ID: \" + trial.nctId,\n                \"isSubtle\": true,\n                \"weight\": \"lighter\"\n            }\n        ]\n    }\n});\n\nscenario.card = {\n  \"$schema\": \"http://adaptivecards.io/schemas/adaptive-card.json\",\n  \"type\": \"AdaptiveCard\",\n  \"version\": \"1.0\",\n  \"body\": cardBody\n};"
                     },
                     {
                         "id": "b880d5732a03-3c5ec70d6ab91ed6-6218",
                         "type": "statement",
                         "designer": {
-                            "xLocation": 334,
-                            "yLocation": 910
+                            "xLocation": 340,
+                            "yLocation": 911
                         },
                         "layout": "vertical",
                         "attachment": [
@@ -217,7 +217,7 @@
                                 "cardCode": "scenario.card"
                             }
                         ],
-                        "label": "Show card"
+                        "label": "Show Results"
                     },
                     {
                         "id": "c38230cbc10d-7c8058bc6dc833c6-6a00",
@@ -452,8 +452,8 @@
                         "id": "2093a915c20d-8fc2e7481038d764-affd",
                         "type": "statement",
                         "designer": {
-                            "xLocation": 352,
-                            "yLocation": 551,
+                            "xLocation": 340,
+                            "yLocation": 560,
                             "next": "46c223b11a89-3ac967716fd0b465-98b6"
                         },
                         "text": "Here are the clinical trials the patient may qualify for:",
@@ -476,9 +476,9 @@
                         "id": "b1119c0d3562-c592b7cced67f2b2-e89c",
                         "type": "statement",
                         "designer": {
-                            "xLocation": 1180,
-                            "yLocation": 20,
-                            "next": "6b3fdcb8915e-ec4dc8cd89a2ebbd-a086"
+                            "xLocation": 1320,
+                            "yLocation": 26,
+                            "next": "efdb922881fd-730358f2fa29dc39-73b0"
                         },
                         "text": "\"Found \" + scenario.trials.length.toString() + \" relevant trial\" + (scenario.trials.length === 1 ? \"\" : \"s\") + \".\"",
                         "stringId": "stringId_00902617ba8079bf",
@@ -489,11 +489,11 @@
                         "type": "branch",
                         "condition": "scenario.trials.length > 0",
                         "designer": {
-                            "xLocation": 1320,
-                            "yLocation": 20,
+                            "xLocation": 1220,
+                            "yLocation": 8,
                             "next": "e8e69e5b6b47-4c7e389965d6aef4-6dd1"
                         },
-                        "targetStepId": "efdb922881fd-730358f2fa29dc39-73b0",
+                        "targetStepId": "b1119c0d3562-c592b7cced67f2b2-e89c",
                         "label": "Trials > 0"
                     },
                     {
@@ -513,7 +513,7 @@
                         "type": "action",
                         "label": "Add trials ids to QeRequest",
                         "designer": {
-                            "xLocation": 349,
+                            "xLocation": 346,
                             "yLocation": 620,
                             "next": "c6b04222f48b-efa91a748ac26834-1f22"
                         },
@@ -547,11 +547,11 @@
                         "type": "action",
                         "label": "Process trials-details",
                         "designer": {
-                            "xLocation": 340,
-                            "yLocation": 752,
+                            "xLocation": 346,
+                            "yLocation": 753,
                             "next": "e588f774bae0-892987238b37e51d-68d3"
                         },
-                        "onInit": "scenario.trials = scenario.qeResponse.trials;\n// initialize trials map\nscenario.trialsMap = {};\nscenario.trials.forEach(trial => scenario.trialsMap[trial.nctId] = trial);"
+                        "onInit": "scenario.trials = scenario.qeResponse.trials;"
                     },
                     {
                         "id": "7d13692c028c-c62feba5d349bb6e-7959",
@@ -584,7 +584,7 @@
                             "yLocation": 780,
                             "next": "138c2cc32f4e-265ec16959d65e96-6083"
                         },
-                        "onInit": "var trialResults = {};\ntrialResults.totalQuestions = scenario.totalQuestionsAsked;\ntrialResults.resultTrialsNum = scenario.trials.length;\ntrialResults.qeTrialsNum = scenario.qeTrials.length;\ntrialResults.resultTrials = scenario.trials.map(trial => {\n    return {\n        \"nctId\": trial.nctId,\n        \"sponsor\": scenario.trialsMap[trial.nctId].leadSponsor\n    };\n});\ntrialResults.secondsSpent = (new Date().getTime() - scenario.timeStarted) / 1000;\ntrialResults.profile = scenario.profile;\nsession.logCustomEvent('TRIALS_RESULTS', trialResults);"
+                        "onInit": "var trialResults = {};\ntrialResults.totalQuestions = scenario.totalQuestionsAsked;\ntrialResults.resultTrialsNum = scenario.trials.length;\ntrialResults.qeTrialsNum = scenario.qeTrials.length;\ntrialResults.resultTrials = scenario.trials.map(trial => {\n    return {\n        \"nctId\": trial.nctId,\n        \"sponsor\": trial.leadSponsor\n    };\n});\ntrialResults.secondsSpent = (new Date().getTime() - scenario.timeStarted) / 1000;\ntrialResults.profile = scenario.profile;\nsession.logCustomEvent('TRIALS_RESULTS', trialResults);"
                     },
                     {
                         "id": "f3aa06e2bb65-6697b1be21430325-586f",
@@ -613,9 +613,9 @@
                         "type": "action",
                         "label": "Log Disqualify Response",
                         "designer": {
-                            "xLocation": 1146,
-                            "yLocation": 114,
-                            "next": "b1119c0d3562-c592b7cced67f2b2-e89c"
+                            "xLocation": 1160,
+                            "yLocation": 88,
+                            "next": "6b3fdcb8915e-ec4dc8cd89a2ebbd-a086"
                         },
                         "onInit": "var disqualifyResponseExtended = {};\ndisqualifyResponseExtended.userAnswer = scenario.questionAnswer;\ndisqualifyResponseExtended.disqualifiedTrialsNum = scenario.trialsCountPrev - scenario.trials.length;\ndisqualifyResponseExtended.questionsNum = scenario.totalQuestionsAsked;\nsession.logCustomEvent('DISQUALIFY_RESPONSE', disqualifyResponseExtended);"
                     }
@@ -631,7 +631,7 @@
             "RowKey": "84145a79-71ad-4d96-8d2f-bf251c0737a2",
             "name": "question_generation",
             "scenario_trigger": "question_generation",
-            "description": "",
+            "description": "question_generation",
             "userDisplayName": "Ronny Roktel",
             "active": true,
             "version": 1,
@@ -832,7 +832,7 @@
                             "yLocation": 613,
                             "next": "2274bf2a7d60-31187438797a7524-cb1e"
                         },
-                        "onInit": "if (scenario.num) {\n    scenario.response = scenario.num.toString();\n} else {\n    scenario.response = null;\n}"
+                        "onInit": "if (scenario.num != null) {\n    scenario.response = scenario.num.toString();\n} else {\n    scenario.response = null;\n}"
                     },
                     {
                         "id": "a87f34be753f-59cc272dc1a85b29-5eaa",
