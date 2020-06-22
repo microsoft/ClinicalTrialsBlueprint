@@ -61,6 +61,10 @@
 				{
 					"regex":"What would you like to do/i",
 					"response":{"type":"Message","value":"2"}
+				},
+				{
+					"regex":"Clinical Trials Matching Bot",
+					"response":{"type":"Pull","value":"1"}
 				}
 			]
 		}
