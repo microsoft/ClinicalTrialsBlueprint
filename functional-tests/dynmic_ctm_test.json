@@ -16,7 +16,7 @@
 					"test":{"target":"Text","type":"LowerThen","value":"$LAST","error":"Trials count didn't decrease"}
 				},
 				{
-					"regex":"^\s*$/i",
+					"regex":"^\\s*$/i",
 					"test":{"target":"Text","type":"Match","error":"empty message"}
 				},
 				{
