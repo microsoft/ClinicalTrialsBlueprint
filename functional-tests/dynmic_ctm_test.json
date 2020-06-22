@@ -17,15 +17,11 @@
 				},
 				{
 					"regex":"^.*$/i",
-					"test":{"target":"Text","type":"Match","value":"0","error":"empty message"}
+					"test":{"target":"Text","type":"Match","error":"empty message"}
 				},
 				{
 					"regex":"(found 0|no) relevant trials/i",
-					"response":{"type":"Match","value":"No matching trials"}
-				},
-				{
-					"regex":"(found 0|no) relevant trials/i",
-					"response":{"type":"Match","value":"No matching trials"}
+					"test":{"target":"Text","type":"Match","error":"No matching trials"}
 				}
 			
 			],
