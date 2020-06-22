@@ -12,8 +12,8 @@
 					"test":{"target":"Text","type":"GreaterThan","save":"$LAST","value":"0","error":"trials count is ZERO"}
 				},
 				{
-					"regex":"(Thank you for using this service)|(clinical trials the patient may qualify)/i",
-					"test":{"target":"Text","type":"LowerThen","value":"$LAST","error":"Trials count didn't decrease"}
+					"regex":"Found (\\d+) relevant trials/i",
+					"test":{"target":"Text","type":"GreaterThan","save":"$LAST","value":"$LAST","default":"999999","error":"Trials count didn't decrease"}
 				},
 				{
 					"regex":"^\\s*$/i",
