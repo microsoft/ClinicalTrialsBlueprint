@@ -8,7 +8,7 @@
 			"conversationEndRegex":"(Thank you for using this service)|(clinical trials the patient may qualify)/i",
 			"tests":[
 				{
-					"regex":"Found \\d+ relevant trials/i",
+					"regex":"Found (\\d+) relevant trials/i",
 					"test":{"target":"Text","type":"GreaterThan","save":"$LAST","value":"0","error":"trials count is ZERO"}
 				},
 				{
