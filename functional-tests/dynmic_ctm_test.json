@@ -8,24 +8,20 @@
 			"conversationEndRegex":"(Thank you for using this service)|(clinical trials the patient may qualify)/i",
 			"tests":[
 				{
-					"regex":"Found \\d+ relevant trials/i",
+					"regex":"Found (\\d+) relevant trials/i",
 					"test":{"target":"Text","type":"GreaterThan","save":"$LAST","value":"0","error":"trials count is ZERO"}
 				},
 				{
-					"regex":"(Thank you for using this service)|(clinical trials the patient may qualify)/i",
-					"test":{"target":"Text","type":"LowerThen","value":"$LAST","error":"Trials count didn't decrease"}
+					"regex":"Found (\\d+) relevant trials/i",
+					"test":{"target":"Text","type":"GreaterThan","save":"$LAST","value":"$LAST","default":"999999","error":"Trials count didn't decrease"}
 				},
 				{
-					"regex":"^.*$/i",
-					"test":{"target":"Text","type":"Match","value":"0","error":"empty message"}
-				},
-				{
-					"regex":"(found 0|no) relevant trials/i",
-					"response":{"type":"Match","value":"No matching trials"}
+					"regex":"^\\s*$/i",
+					"test":{"target":"Text","type":"Match","error":"empty message"}
 				},
 				{
 					"regex":"(found 0|no) relevant trials/i",
-					"response":{"type":"Match","value":"No matching trials"}
+					"test":{"target":"Text","type":"Match","error":"No matching trials"}
 				}
 			
 			],
@@ -65,6 +61,10 @@
 				{
 					"regex":"What would you like to do/i",
 					"response":{"type":"Message","value":"2"}
+				},
+				{
+					"regex":"Clinical Trials Matching Bot",
+					"response":{"type":"Pull","value":"1"}
 				}
 			]
 		}
