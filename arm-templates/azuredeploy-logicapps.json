@@ -741,24 +741,24 @@
                   "type": "ApiConnection"
                 },
                  "Run_Functional_Tests": {
-                                    "runAfter": {
-                                        "Until_disqualifier_is_ready": [
-                                            "Succeeded"
-                                        ]
-                                    },
-                                    "type": "Http",
-                                    "inputs": {
-                                        "headers": {
-                                            "Content-Type": "application/json"
-                                        },
-                                        "method": "GET",
-                                        "queries": {
-                                            "name": "finisher-logic-app",
-                                            "timeout": "50000",
-                                            "url": "[parameters('functionalTestsFileUrl')]"
-                                        },
-                                        "uri": "[concat('https://', variables('funcTestsAppName'),'.azurewebsites.net/suite')]"
-                                    }
+                    "runAfter": {
+                        "Until_disqualifier_is_ready": [
+                            "Succeeded"
+                        ]
+                    },
+                    "type": "Http",
+                    "inputs": {
+                        "headers": {
+                            "Content-Type": "application/json"
+                        },
+                        "method": "GET",
+                        "queries": {
+                            "name": "finisher-logic-app",
+                            "timeout": "50000",
+                            "url": "[parameters('functionalTestsFileUrl')]"
+                        },
+                        "uri": "[concat('https://', variables('funcTestsAppName'),'.azurewebsites.net/suite')]"
+                    }
                 },
                 "Set_disqualifierSecondaryService_variable": {
                   "inputs": {
