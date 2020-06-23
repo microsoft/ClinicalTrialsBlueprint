@@ -10,7 +10,7 @@
     "accountId": {
       "type": "string"
     },
-    "isLiveId": {
+    "isLiveId": { 
       "type": "bool",
       "defaultValue": false
     },
