@@ -676,7 +676,7 @@
                       "Send_a_failure_email_": {
                         "inputs": {
                           "body": {
-                            "Body": "<p>Failure message - Service Validation Failed.<br>\nDisqualifier readiness - @{variables('readiness')}<br>\nStructuring process time - @{triggerBody()?['TimePassed']}<br>\nStructuring build version - @{triggerBody()?['BuildVersion']}<br>\n<br>\n@{if(equals(body('Run_Functional_Tests'),null),null,concat('Functional Tests Run Result:<br>\n',body('Run_Functional_Tests')))}<br>\n<br>\nGateway slot not swapped.</p>",
+                            "Body": "<p>Failure message - Service Validation Failed.<br>\nStructuring process time - @{triggerBody()?['TimePassed']}<br>\nStructuring build version - @{triggerBody()?['BuildVersion']}<br>\n<br>\nDisqualifier readiness - @{if(startsWith(variables('readiness'),'Ready'),'Success','Failed')}: @{variables('readiness')}<br>\nFunctional Tests Run Result - @{if(equals(outputs('Run_Functional_Tests')['statusCode'],200),'Success','Failed')}:<br>\n@{body('Run_Functional_Tests')}<br>\n<br>\nGateway slot not swapped.</p>",
                             "Subject": "[concat('[', parameters('serviceName'), '] ', 'Trials updating process failed to complete')]",
                             "To": "[parameters('accountId')]"
                           },
