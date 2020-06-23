@@ -1246,7 +1246,7 @@
         "isXenon": false,
         "hyperV": false,
         "scmSiteAlsoStopped": false,
-        "clientAffinityEnabled": false,
+        "clientAffinityEnabled": true,
         "clientCertEnabled": false,
         "hostNamesDisabled": false,
         "containerSize": 0,
