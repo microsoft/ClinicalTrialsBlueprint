@@ -16,8 +16,8 @@
         },
         "resourceTags": {
             "value": {
-				"Environment": "Prod",
-				"Project": "FHIR Server"
+                "Environment": "Prod",
+                "Project": "FHIR Server"
             }
         }
     }
