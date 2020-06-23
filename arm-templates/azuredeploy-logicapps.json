@@ -14,7 +14,7 @@
       "type": "bool",
       "defaultValue": false
     },
-	 "functionalTestsFileUrl": {
+     "functionalTestsFileUrl": {
       "type": "string"
     },
     "resourceTags": {
@@ -32,7 +32,7 @@
     "sechedulerLogicAppName": "[concat(parameters('serviceName'),'-secheduler-logic-app')]",
     "structurerLogicAppName": "[concat(parameters('serviceName'),'-structurer-logic-app')]",
     "finisherLogicAppName": "[concat(parameters('serviceName'),'-finisher-logic-app')]",
-	"funcTestsAppName": "[concat(parameters('serviceName'),'-ctm-func-tests-webapp')]",
+    "funcTestsAppName": "[concat(parameters('serviceName'),'-ctm-func-tests-webapp')]",
     // Reference to workflow
     "workflows_structurer_logic_app": "[concat(subscription().id,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Logic/workflows/', variables('structurerLogicAppName'))]",
     "userName": "[if(parameters('isLiveId'), concat('live.com#', parameters('accountId')), parameters('accountId'))]",
@@ -702,12 +702,12 @@
                           "Ready"
                         ]
                       },
-					  {
-						"equals": [
-						  "@outputs('Run_Functional_Tests')['statusCode']",
-							200
-						]
-					  }
+                      {
+                        "equals": [
+                          "@outputs('Run_Functional_Tests')['statusCode']",
+                            200
+                        ]
+                      }
                     ]
                   },
                   "runAfter": {
@@ -715,7 +715,7 @@
                       "Succeeded",
                       "Failed",
                       "TimedOut",
-					  "Skipped"
+                      "Skipped"
                     ]
                   },
                   "type": "If"
@@ -740,7 +740,7 @@
                   },
                   "type": "ApiConnection"
                 },
-				 "Run_Functional_Tests": {
+                 "Run_Functional_Tests": {
                                     "runAfter": {
                                         "Until_disqualifier_is_ready": [
                                             "Succeeded"
