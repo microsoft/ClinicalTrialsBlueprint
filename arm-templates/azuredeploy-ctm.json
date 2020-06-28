@@ -48,7 +48,7 @@
     },
 	 "funcTestsImageTag": {
       "type": "string",
-      "defaultValue": "2020.0510.1"
+      "defaultValue": "2020.0625.3"
     },
     "queryCountry": {
       "type": "string"
@@ -1246,7 +1246,7 @@
         "isXenon": false,
         "hyperV": false,
         "scmSiteAlsoStopped": false,
-        "clientAffinityEnabled": false,
+        "clientAffinityEnabled": true,
         "clientCertEnabled": false,
         "hostNamesDisabled": false,
         "containerSize": 0,
@@ -1273,7 +1273,7 @@
             },
             {
               "name": "WEBSITES_ENABLE_APP_SERVICE_STORAGE",
-              "value": "false"
+              "value": "true"
             },
             {
               "name":"SECRETS",
