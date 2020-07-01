@@ -50,6 +50,10 @@
 					"regex":"state/i",
 					"response":{"type":"Message","value":"CA"}
 				},
+                {
+					"regex":"^(ECOG).*\\?/i",
+					"response":{"type":"Message","value":"0"}
+				},
 				{
 					"regex":"^(what is the patient).*\\?/i",
 					"response":{"type":"Message","value":"20"}
