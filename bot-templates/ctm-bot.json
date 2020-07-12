@@ -52,7 +52,7 @@
                         "designer": {
                             "xLocation": 106,
                             "yLocation": 232,
-                            "next": "8c88d783cc4e-0e754492b0ec4336-9e6f"
+                            "next": "8b1dd19a14ad-9f9d1f1c8dafd0f8-eb30"
                         },
                         "text": "scenario.questions.ageQuestion",
                         "variable": "ageValue",
@@ -65,8 +65,8 @@
                         "type": "prompt",
                         "dataType": "['Specific city', 'Specific state', 'Entire US']",
                         "designer": {
-                            "xLocation": 108,
-                            "yLocation": 340,
+                            "xLocation": 107,
+                            "yLocation": 433,
                             "next": "a5666316fe16-e2e41e2529a50af9-1d56",
                             "listStyle": 3
                         },
@@ -83,7 +83,7 @@
                         "dataType": "string",
                         "designer": {
                             "xLocation": 107,
-                            "yLocation": 287,
+                            "yLocation": 371,
                             "next": "2e32f9cb24af-0917e334df80b409-7140"
                         },
                         "text": "scenario.questions.conditionQuestion",
@@ -98,7 +98,7 @@
                         "label": "Normalize values",
                         "designer": {
                             "xLocation": 113,
-                            "yLocation": 500,
+                            "yLocation": 620,
                             "next": "162067c1f357-741c663bd45a2170-d303"
                         },
                         "onInit": "// gender \nif (scenario.luis.gender != null) {\n    scenario.gender = scenario.luis.gender;\n} else {\n    if (scenario.genderValue.entity !== \"Prefer not to say\") {\n        scenario.gender = scenario.genderValue.entity.toLowerCase();\n    }\n}\n// age\nif (scenario.luis.age != null) {\n    scenario.age = scenario.luis.age;\n} else {\n    scenario.age = scenario.ageValue + \"\";\n}\n// condition\nif (scenario.luis.condition != null) {\n    scenario.condition = scenario.luis.condition;\n} else {\n    scenario.condition = scenario.conditionValue;\n}\n// location\nif (scenario.luis.location != null) {\n    scenario.searchLocationCountry = scenario.luis.location.country;\n    scenario.searchLocationState = scenario.luis.location.state;\n    scenario.searchLocationCity = scenario.luis.location.city;\n} else {\n    scenario.searchLocationCountry = scenario.countryValue != null ? scenario.countryValue : null;\n    scenario.searchLocationState = scenario.stateValue != null ? scenario.stateValue : null;\n    scenario.searchLocationCity = scenario.cityValue != null ? scenario.cityValue : null;\n}"
@@ -248,7 +248,7 @@
                         "type": "statement",
                         "designer": {
                             "xLocation": 106,
-                            "yLocation": 580,
+                            "yLocation": 700,
                             "next": "fb7403c86d6a-1e24272165de9c1b-92f7"
                         },
                         "text": "Matching clinical trials...This might take a few moments.",
@@ -259,8 +259,8 @@
                         "type": "prompt",
                         "dataType": "string",
                         "designer": {
-                            "xLocation": 109,
-                            "yLocation": 394,
+                            "xLocation": 108,
+                            "yLocation": 490,
                             "next": "00de89f7fffe-ffa4760c9fba5d58-3902"
                         },
                         "text": "scenario.questions.stateQuestion",
@@ -274,8 +274,8 @@
                         "type": "prompt",
                         "dataType": "string",
                         "designer": {
-                            "xLocation": 109,
-                            "yLocation": 448,
+                            "xLocation": 107,
+                            "yLocation": 553,
                             "next": "102cf72eca14-b299a2caf0e80fe6-bf31"
                         },
                         "text": "scenario.questions.cityQuestion",
@@ -618,6 +618,29 @@
                             "next": "6b3fdcb8915e-ec4dc8cd89a2ebbd-a086"
                         },
                         "onInit": "var disqualifyResponseExtended = {};\ndisqualifyResponseExtended.userAnswer = scenario.questionAnswer;\ndisqualifyResponseExtended.disqualifiedTrialsNum = scenario.trialsCountPrev - scenario.trials.length;\ndisqualifyResponseExtended.questionsNum = scenario.totalQuestionsAsked;\nsession.logCustomEvent('DISQUALIFY_RESPONSE', disqualifyResponseExtended);"
+                    },
+                    {
+                        "id": "8b1dd19a14ad-9f9d1f1c8dafd0f8-eb30",
+                        "type": "branch",
+                        "condition": "scenario.ageValue > 0 && scenario.ageValue <= 120",
+                        "designer": {
+                            "xLocation": 114,
+                            "yLocation": 294,
+                            "next": "d7f9f8f263ee-750aabea6911ad93-9cf9"
+                        },
+                        "label": "Validate Age",
+                        "targetStepId": "8c88d783cc4e-0e754492b0ec4336-9e6f"
+                    },
+                    {
+                        "id": "d7f9f8f263ee-750aabea6911ad93-9cf9",
+                        "type": "statement",
+                        "designer": {
+                            "xLocation": 11,
+                            "yLocation": 313
+                        },
+                        "text": "Sorry but the service cannot be offered to people in that age group.",
+                        "label": "Age Message",
+                        "stringId": "stringId_83d12063af14ce3a"
                     }
                 ],
                 "returningMessage": "",
