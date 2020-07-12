@@ -813,12 +813,26 @@
                     "timeout": "PT1H"
                   },
                   "runAfter": {
-                    "Restart_disqualifier_service": [
+                    "Wait_for_restart_to_finish": [
                       "Succeeded"
                     ]
                   },
                   "type": "Until"
-                }
+                },
+                "Wait_for_restart_to_finish": {
+                        "inputs": {
+                            "interval": {
+                                "count": 3,
+                                "unit": "Minute"
+                            }
+                        },
+                        "runAfter": {
+                            "Restart_disqualifier_service": [
+                                "Succeeded"
+                            ]
+                        },
+                        "type": "wait"
+                    }
               },
               "else": {
                 "actions": {
