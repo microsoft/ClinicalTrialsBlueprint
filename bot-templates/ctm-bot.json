@@ -26,7 +26,7 @@
                             "yLocation": 28,
                             "next": "26f08a4aca2e-734b7ed483cc7215-a262"
                         },
-                        "onInit": "scenario.totalQuestionsAsked = 0;\nscenario.TRIALS_THRESHOLD = 5;\nscenario.QUESTIONS_THRESHOLD = 10; \nscenario.messageText = session.message.text;\nscenario.timeStarted = new Date().getTime();\nscenario.luis = {};\nvar locationCity = null;\nvar locationCountry = null;\nvar locationState = null;\nvar ageResolution = null;\nscenario.notMapped = [];\nif(scenario.scenarioArgs.entities != null) {\n    // iterate all LUIS entities and set their values to scenario\n    scenario.scenarioArgs.entities.forEach(ent => {\n        switch(ent.type) {\n                case \"gender\":\n                    scenario.luis.gender = ent.role;\n                    break;\n                case \"builtin.age\":\n                    ageResolution = ent.resolution;\n                    break;\n                case \"disease\":\n                    scenario.luis.condition = scenario.messageText.substring(ent.startIndex, ent.endIndex + 1);\n                    break;\n                case \"builtin.geographyV2.countryRegion\":\n                    locationCountry = ent.entity;\n                    break;\n                case \"builtin.geographyV2.state\":\n                    locationState = ent.entity;\n                    break;\n                case \"builtin.geographyV2.city\":\n                    locationCity = ent.entity;\n                    break;\n                default:\n                    scenario.notMapped.push(ent.entity);\n            }\n    });\n}\n// age convertion\nif (ageResolution != null) {\n    switch (ageResolution.unit) {\n        case \"Year\":\n            scenario.luis.age = ageResolution.value;\n            break;\n        case \"Month\":\n            scenario.luis.age = (+ageResolution.value / 12) + \"\";\n            break;\n        case \"Week\":\n            scenario.luis.age = (+ageResolution.value / 52) + \"\";\n            break;\n        case \"Day\":\n            scenario.luis.age = (+ageResolution.value / 365) + \"\";\n            break;\n        default:\n            scenario.luis.age = null;        \n    }\n}\n// one of location types was initialized\nif(locationCountry != null || locationState != null || locationCity != null) {\n    scenario.luis.location = {};\n    if(locationCountry != null) {\n        scenario.luis.location.country = locationCountry;\n    }\n    if(locationState != null) {\n        scenario.luis.location.state = locationState;\n    }\n    if(locationCity != null) {\n        scenario.luis.location.city = locationCity;\n    }\n};"
+                        "onInit": "scenario.totalQuestionsAsked = 0;\nscenario.TRIALS_THRESHOLD = 5;\nscenario.QUESTIONS_THRESHOLD = 10;\nscenario.MIN_AGE = 0;\nscenario.MAX_AGE = 120;\nscenario.messageText = session.message.text;\nscenario.timeStarted = new Date().getTime();\nscenario.luis = {};\nvar locationCity = null;\nvar locationCountry = null;\nvar locationState = null;\nvar ageResolution = null;\nscenario.notMapped = [];\nif(scenario.scenarioArgs.entities != null) {\n    // iterate all LUIS entities and set their values to scenario\n    scenario.scenarioArgs.entities.forEach(ent => {\n        switch(ent.type) {\n                case \"gender\":\n                    scenario.luis.gender = ent.role;\n                    break;\n                case \"builtin.age\":\n                    ageResolution = ent.resolution;\n                    break;\n                case \"disease\":\n                    scenario.luis.condition = scenario.messageText.substring(ent.startIndex, ent.endIndex + 1);\n                    break;\n                case \"builtin.geographyV2.countryRegion\":\n                    locationCountry = ent.entity;\n                    break;\n                case \"builtin.geographyV2.state\":\n                    locationState = ent.entity;\n                    break;\n                case \"builtin.geographyV2.city\":\n                    locationCity = ent.entity;\n                    break;\n                default:\n                    scenario.notMapped.push(ent.entity);\n            }\n    });\n}\n// age convertion\nif (ageResolution != null) {\n    switch (ageResolution.unit) {\n        case \"Year\":\n            scenario.luis.age = ageResolution.value;\n            break;\n        case \"Month\":\n            scenario.luis.age = (+ageResolution.value / 12) + \"\";\n            break;\n        case \"Week\":\n            scenario.luis.age = (+ageResolution.value / 52) + \"\";\n            break;\n        case \"Day\":\n            scenario.luis.age = (+ageResolution.value / 365) + \"\";\n            break;\n        default:\n            scenario.luis.age = null;        \n    }\n}\n// one of location types was initialized\nif(locationCountry != null || locationState != null || locationCity != null) {\n    scenario.luis.location = {};\n    if(locationCountry != null) {\n        scenario.luis.location.country = locationCountry;\n    }\n    if(locationState != null) {\n        scenario.luis.location.state = locationState;\n    }\n    if(locationCity != null) {\n        scenario.luis.location.city = locationCity;\n    }\n};"
                     },
                     {
                         "id": "38d94695a028-665828e3737523ec-bd42",
@@ -36,7 +36,7 @@
                             "xLocation": 108,
                             "yLocation": 180,
                             "listStyle": 3,
-                            "next": "88eb37226f1d-d7b87141b90e761b-519e"
+                            "next": "34034aac82a9-ebdebd338a48ba21-6a36"
                         },
                         "text": "scenario.questions.genderQuestion",
                         "variable": "genderValue",
@@ -50,14 +50,14 @@
                         "type": "prompt",
                         "dataType": "number",
                         "designer": {
-                            "xLocation": 106,
-                            "yLocation": 232,
+                            "xLocation": 100,
+                            "yLocation": 346,
                             "next": "8b1dd19a14ad-9f9d1f1c8dafd0f8-eb30"
                         },
                         "text": "scenario.questions.ageQuestion",
                         "variable": "ageValue",
                         "stringId": "stringId_ecd82ef4f4fa4061",
-                        "visible": "scenario.luis.age == null",
+                        "visible": "true",
                         "label": "Age Question"
                     },
                     {
@@ -66,7 +66,7 @@
                         "dataType": "['Specific city', 'Specific state', 'Entire US']",
                         "designer": {
                             "xLocation": 107,
-                            "yLocation": 433,
+                            "yLocation": 571,
                             "next": "a5666316fe16-e2e41e2529a50af9-1d56",
                             "listStyle": 3
                         },
@@ -82,8 +82,8 @@
                         "type": "prompt",
                         "dataType": "string",
                         "designer": {
-                            "xLocation": 107,
-                            "yLocation": 371,
+                            "xLocation": 108,
+                            "yLocation": 512,
                             "next": "2e32f9cb24af-0917e334df80b409-7140"
                         },
                         "text": "scenario.questions.conditionQuestion",
@@ -97,8 +97,8 @@
                         "type": "action",
                         "label": "Normalize values",
                         "designer": {
-                            "xLocation": 113,
-                            "yLocation": 620,
+                            "xLocation": 111,
+                            "yLocation": 747,
                             "next": "162067c1f357-741c663bd45a2170-d303"
                         },
                         "onInit": "// gender \nif (scenario.luis.gender != null) {\n    scenario.gender = scenario.luis.gender;\n} else {\n    if (scenario.genderValue.entity !== \"Prefer not to say\") {\n        scenario.gender = scenario.genderValue.entity.toLowerCase();\n    }\n}\n// age\nif (scenario.luis.age != null) {\n    scenario.age = scenario.luis.age;\n} else {\n    scenario.age = scenario.ageValue + \"\";\n}\n// condition\nif (scenario.luis.condition != null) {\n    scenario.condition = scenario.luis.condition;\n} else {\n    scenario.condition = scenario.conditionValue;\n}\n// location\nif (scenario.luis.location != null) {\n    scenario.searchLocationCountry = scenario.luis.location.country;\n    scenario.searchLocationState = scenario.luis.location.state;\n    scenario.searchLocationCity = scenario.luis.location.city;\n} else {\n    scenario.searchLocationCountry = scenario.countryValue != null ? scenario.countryValue : null;\n    scenario.searchLocationState = scenario.stateValue != null ? scenario.stateValue : null;\n    scenario.searchLocationCity = scenario.cityValue != null ? scenario.cityValue : null;\n}"
@@ -248,7 +248,7 @@
                         "type": "statement",
                         "designer": {
                             "xLocation": 106,
-                            "yLocation": 700,
+                            "yLocation": 830,
                             "next": "fb7403c86d6a-1e24272165de9c1b-92f7"
                         },
                         "text": "Matching clinical trials...This might take a few moments.",
@@ -259,8 +259,8 @@
                         "type": "prompt",
                         "dataType": "string",
                         "designer": {
-                            "xLocation": 108,
-                            "yLocation": 490,
+                            "xLocation": 106,
+                            "yLocation": 633,
                             "next": "00de89f7fffe-ffa4760c9fba5d58-3902"
                         },
                         "text": "scenario.questions.stateQuestion",
@@ -274,8 +274,8 @@
                         "type": "prompt",
                         "dataType": "string",
                         "designer": {
-                            "xLocation": 107,
-                            "yLocation": 553,
+                            "xLocation": 106,
+                            "yLocation": 687,
                             "next": "102cf72eca14-b299a2caf0e80fe6-bf31"
                         },
                         "text": "scenario.questions.cityQuestion",
@@ -622,10 +622,10 @@
                     {
                         "id": "8b1dd19a14ad-9f9d1f1c8dafd0f8-eb30",
                         "type": "branch",
-                        "condition": "scenario.ageValue > 0 && scenario.ageValue <= 120",
+                        "condition": "scenario.ageValue > scenario.MIN_AGE && scenario.ageValue <= scenario.MAX_AGE",
                         "designer": {
-                            "xLocation": 114,
-                            "yLocation": 294,
+                            "xLocation": 109,
+                            "yLocation": 420,
                             "next": "d7f9f8f263ee-750aabea6911ad93-9cf9"
                         },
                         "label": "Validate Age",
@@ -635,12 +635,25 @@
                         "id": "d7f9f8f263ee-750aabea6911ad93-9cf9",
                         "type": "statement",
                         "designer": {
-                            "xLocation": 11,
-                            "yLocation": 313
+                            "xLocation": 0,
+                            "yLocation": 440,
+                            "next": "88eb37226f1d-d7b87141b90e761b-519e"
                         },
-                        "text": "Sorry but the service cannot be offered to people in that age group.",
+                        "text": "Age must be between 0 - 120 years.",
                         "label": "Age Message",
                         "stringId": "stringId_83d12063af14ce3a"
+                    },
+                    {
+                        "id": "34034aac82a9-ebdebd338a48ba21-6a36",
+                        "type": "branch",
+                        "condition": "scenario.luis.age && parseFloat(scenario.luis.age) > scenario.MIN_AGE && parseFloat(scenario.luis.age) <= scenario.MAX_AGE",
+                        "designer": {
+                            "xLocation": 114,
+                            "yLocation": 248,
+                            "next": "88eb37226f1d-d7b87141b90e761b-519e"
+                        },
+                        "label": "Verify luis age",
+                        "targetStepId": "8c88d783cc4e-0e754492b0ec4336-9e6f"
                     }
                 ],
                 "returningMessage": "",
