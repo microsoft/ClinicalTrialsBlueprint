@@ -44,7 +44,7 @@
 				},
 				{
 					"regex":"search/i",
-					"response":{"type":"Message","value":"Specific State"}a
+					"response":{"type":"Message","value":"Specific State"}
 				},
 				{
 					"regex":"state/i",
