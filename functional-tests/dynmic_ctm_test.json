@@ -44,11 +44,15 @@
 				},
 				{
 					"regex":"search/i",
-					"response":{"type":"Message","value":"Specific State"}
+					"response":{"type":"Message","value":"Specific State"}a
 				},
 				{
 					"regex":"state/i",
 					"response":{"type":"Message","value":"CA"}
+				},
+                {
+					"regex":"^(ECOG score).*\\?/i",
+					"response":{"type":"Message","value":"0"}
 				},
 				{
 					"regex":"^(what is the patient).*\\?/i",
@@ -56,7 +60,7 @@
 				},
 				{
 					"regex":"^(what .* condition).*\\?/i",
-					"response":{"type":"Message","value":"lung cancer"}
+					"response":{"type":"Message","value":"diabetes mellitus type 2"}
 				},
 				{
 					"regex":"What would you like to do/i",
