@@ -3,10 +3,10 @@
 		{
 			"testType":"DynamicTestData",
 			"name": "functional_CTM_test",
-			"scenario":"clinical_trials_matching_general",
 			"defaultSelectedChoice":0,
+            "conversationStartText":"begin clinical_trials_matching_general",
 			"conversationEndRegex":"(Thank you for using this service)|(clinical trials the patient may qualify)/i",
-			"tests":[
+			"assertions":[
 				{
 					"regex":"Found (\\d+) relevant trials/i",
 					"test":{"target":"Text","type":"GreaterThan","save":"$LAST","value":"0","error":"trials count is ZERO"}
@@ -51,7 +51,7 @@
 					"response":{"type":"Message","value":"CA"}
 				},
                 {
-					"regex":"^(ECOG).*\\?/i",
+					"regex":"^(ECOG score).*\\?/i",
 					"response":{"type":"Message","value":"0"}
 				},
 				{
@@ -60,7 +60,7 @@
 				},
 				{
 					"regex":"^(what .* condition).*\\?/i",
-					"response":{"type":"Message","value":"lung cancer"}
+					"response":{"type":"Message","value":"diabetes mellitus type 2"}
 				},
 				{
 					"regex":"What would you like to do/i",
