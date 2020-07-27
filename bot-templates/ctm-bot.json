@@ -289,8 +289,8 @@
                         "type": "action",
                         "label": "Create Disqualify Request",
                         "designer": {
-                            "xLocation": 900,
-                            "yLocation": 220,
+                            "xLocation": 926,
+                            "yLocation": 260,
                             "next": "d5398bdc9019-e4c6eb78e63ffdc5-416a"
                         },
                         "onInit": "var trialIds = scenario.trials.map(trial => trial.nctId);\n\nscenario.disqualifyRequest = {\n    trialIds,\n    profile: scenario.profile\n};"
@@ -300,8 +300,8 @@
                         "type": "action",
                         "label": "Create Question Args",
                         "designer": {
-                            "xLocation": 1200,
-                            "yLocation": 600,
+                            "xLocation": 1260,
+                            "yLocation": 647,
                             "next": "8cc8d6de3179-a14e044b3f7d5fd5-2360"
                         },
                         "onInit": "// keeping track for total questions\r\nscenario.totalQuestionsAsked++;\r\n\r\nvar criterion = scenario.disqualifyResponse.criteria[scenario.questionIndex];\r\nscenario.questionArgs = {};\r\nscenario.questionArgs.question = criterion;\r\nscenario.questionArgs.profile = scenario.profile;\r\nscenario.questionArgs.questionsNum = scenario.totalQuestionsAsked;"
@@ -310,8 +310,8 @@
                         "id": "8cc8d6de3179-a14e044b3f7d5fd5-2360",
                         "type": "beginScenario",
                         "designer": {
-                            "xLocation": 1040,
-                            "yLocation": 547,
+                            "xLocation": 1071,
+                            "yLocation": 586,
                             "next": "ac3e4757a04f-95c5731ff4cd2f2f-c783"
                         },
                         "scenario": "question_generation",
@@ -324,8 +324,8 @@
                         "type": "branch",
                         "condition": "scenario.questionAnswer.answer == null",
                         "designer": {
-                            "xLocation": 874,
-                            "yLocation": 340,
+                            "xLocation": 920,
+                            "yLocation": 371,
                             "next": "c0b338e361df-f9260a30a63543e5-2d46"
                         },
                         "targetStepId": "c7320a2517ea-1c8780d20d47cb35-e956",
@@ -336,8 +336,8 @@
                         "type": "action",
                         "label": "Next Question Index",
                         "designer": {
-                            "xLocation": 1480,
-                            "yLocation": 532,
+                            "xLocation": 1600,
+                            "yLocation": 580,
                             "next": "275cf280677e-52bf72c7f8f55bad-ae74"
                         },
                         "onInit": "scenario.questionIndex++;"
@@ -347,8 +347,8 @@
                         "type": "action",
                         "label": "Save answer to profile",
                         "designer": {
-                            "xLocation": 913,
-                            "yLocation": 488,
+                            "xLocation": 960,
+                            "yLocation": 487,
                             "next": "c7f40688bbe6-46591d81f769a6a1-9d1f"
                         },
                         "onInit": "scenario.profile.askedCodes.push(scenario.questionAnswer);"
@@ -357,8 +357,8 @@
                         "id": "d5398bdc9019-e4c6eb78e63ffdc5-416a",
                         "type": "datasource",
                         "designer": {
-                            "xLocation": 946,
-                            "yLocation": 126,
+                            "xLocation": 966,
+                            "yLocation": 153,
                             "next": "57b8d246f882-fccf0daa5e3e5f5e-a939",
                             "errorStepId": "7cf5829caf3b-b595e08171a799bc-2f59"
                         },
@@ -380,8 +380,8 @@
                         "type": "action",
                         "label": "Process disqualify response",
                         "designer": {
-                            "xLocation": 1048,
-                            "yLocation": 54,
+                            "xLocation": 1066,
+                            "yLocation": 80,
                             "next": "42b4b5fab0ed-0ff1c03b236e69bd-63c4"
                         },
                         "onInit": "// update scenario.trialsCountPrev and scenario.trials\r\nscenario.trialsCountPrev = scenario.trials.length;\r\nscenario.trials = scenario.disqualifyResponse.trials;"
@@ -391,8 +391,8 @@
                         "type": "action",
                         "label": "Init Question Index",
                         "designer": {
-                            "xLocation": 1534,
-                            "yLocation": 460,
+                            "xLocation": 1680,
+                            "yLocation": 506,
                             "next": "275cf280677e-52bf72c7f8f55bad-ae74"
                         },
                         "onInit": "scenario.questionIndex = 0;"
@@ -402,8 +402,8 @@
                         "type": "branch",
                         "condition": "scenario.questionIndex < scenario.disqualifyResponse.criteria.length",
                         "designer": {
-                            "xLocation": 1352,
-                            "yLocation": 586,
+                            "xLocation": 1447,
+                            "yLocation": 630,
                             "next": "c0b338e361df-f9260a30a63543e5-2d46"
                         },
                         "targetStepId": "22130a4fa790-7398bd4e67a60462-949a",
@@ -414,8 +414,8 @@
                         "type": "prompt",
                         "dataType": "[\"Answer additional questions\", \"Get results\"]",
                         "designer": {
-                            "xLocation": 1540,
-                            "yLocation": 200,
+                            "xLocation": 1691,
+                            "yLocation": 280,
                             "listStyle": 3,
                             "next": "f3aa06e2bb65-6697b1be21430325-586f"
                         },
@@ -429,9 +429,9 @@
                         "type": "branch",
                         "condition": "scenario.totalQuestionsAsked > 0 && \r\n(scenario.trialsCountPrev === scenario.trials.length || \r\n scenario.totalQuestionsAsked >= scenario.QUESTIONS_THRESHOLD)\r\n",
                         "designer": {
-                            "xLocation": 1500,
-                            "yLocation": 109,
-                            "next": "ba24c6c14552-29a155c3df1c4f2f-b738"
+                            "xLocation": 1680,
+                            "yLocation": 180,
+                            "next": "d46040c72921-e874ae9773008129-3f14"
                         },
                         "label": "Should ask user to continue",
                         "targetStepId": "c0b5312656d6-cb6b198a64649879-f53d"
@@ -441,12 +441,12 @@
                         "type": "branch",
                         "condition": "scenario.continueAsking.entity === \"Answer additional questions\"",
                         "designer": {
-                            "xLocation": 1566,
-                            "yLocation": 268,
+                            "xLocation": 1709,
+                            "yLocation": 380,
                             "next": "2093a915c20d-8fc2e7481038d764-affd"
                         },
                         "label": "Additional questions",
-                        "targetStepId": "ba24c6c14552-29a155c3df1c4f2f-b738"
+                        "targetStepId": "d46040c72921-e874ae9773008129-3f14"
                     },
                     {
                         "id": "2093a915c20d-8fc2e7481038d764-affd",
@@ -465,19 +465,19 @@
                         "type": "branch",
                         "condition": "(scenario.disqualifyResponse.criteria == null || \r\n scenario.disqualifyResponse.criteria.length === 0)",
                         "designer": {
-                            "xLocation": 1568,
-                            "yLocation": 380,
-                            "next": "d46040c72921-e874ae9773008129-3f14"
+                            "xLocation": 1193,
+                            "yLocation": 20,
+                            "next": "6b3fdcb8915e-ec4dc8cd89a2ebbd-a086"
                         },
                         "label": "Is criteria empty",
-                        "targetStepId": "2093a915c20d-8fc2e7481038d764-affd"
+                        "targetStepId": "9fb7affe3548-5c84b2220de6ce15-cbda"
                     },
                     {
                         "id": "b1119c0d3562-c592b7cced67f2b2-e89c",
                         "type": "statement",
                         "designer": {
-                            "xLocation": 1320,
-                            "yLocation": 26,
+                            "xLocation": 1560,
+                            "yLocation": 60,
                             "next": "efdb922881fd-730358f2fa29dc39-73b0"
                         },
                         "text": "\"Found \" + scenario.trials.length.toString() + \" relevant trial\" + (scenario.trials.length === 1 ? \"\" : \"s\") + \".\"",
@@ -489,8 +489,8 @@
                         "type": "branch",
                         "condition": "scenario.trials.length > 0",
                         "designer": {
-                            "xLocation": 1220,
-                            "yLocation": 8,
+                            "xLocation": 1469,
+                            "yLocation": 20,
                             "next": "e8e69e5b6b47-4c7e389965d6aef4-6dd1"
                         },
                         "targetStepId": "b1119c0d3562-c592b7cced67f2b2-e89c",
@@ -501,8 +501,8 @@
                         "type": "branch",
                         "condition": "scenario.trials.length > scenario.TRIALS_THRESHOLD",
                         "designer": {
-                            "xLocation": 1429,
-                            "yLocation": 53,
+                            "xLocation": 1620,
+                            "yLocation": 100,
                             "next": "2093a915c20d-8fc2e7481038d764-affd"
                         },
                         "targetStepId": "42bc07ec8bf1-57c03e2a91e4689e-f6cc",
@@ -591,8 +591,8 @@
                         "type": "action",
                         "label": "Log Continue Asking Response",
                         "designer": {
-                            "xLocation": 1660,
-                            "yLocation": 240,
+                            "xLocation": 1770,
+                            "yLocation": 220,
                             "next": "04bde4fbe4fd-cde1c2bb3509913a-e268"
                         },
                         "onInit": "var continueAskingExtended = {};\r\ncontinueAskingExtended.entity = scenario.continueAsking.entity;\r\ncontinueAskingExtended.trialsNum = scenario.trials.length;\r\nsession.logCustomEvent('USER_CONTINUE_ASKING_RESPONSE', continueAskingExtended);"
@@ -602,8 +602,8 @@
                         "type": "action",
                         "label": "Log User Answer",
                         "designer": {
-                            "xLocation": 780,
-                            "yLocation": 380,
+                            "xLocation": 791,
+                            "yLocation": 500,
                             "next": "bd61cf721cfb-286941d86a9f1950-d264"
                         },
                         "onInit": "var userAnswer = {};\nuserAnswer.questionsNum = scenario.totalQuestionsAsked;\nuserAnswer.answer = scenario.questionAnswer;\nuserAnswer.profile = scenario.profile;\nsession.logCustomEvent('USER_ANSWER', userAnswer);"
@@ -613,9 +613,9 @@
                         "type": "action",
                         "label": "Log Disqualify Response",
                         "designer": {
-                            "xLocation": 1160,
-                            "yLocation": 88,
-                            "next": "6b3fdcb8915e-ec4dc8cd89a2ebbd-a086"
+                            "xLocation": 1050,
+                            "yLocation": 7,
+                            "next": "ba24c6c14552-29a155c3df1c4f2f-b738"
                         },
                         "onInit": "var disqualifyResponseExtended = {};\ndisqualifyResponseExtended.userAnswer = scenario.questionAnswer;\ndisqualifyResponseExtended.disqualifiedTrialsNum = scenario.trialsCountPrev - scenario.trials.length;\ndisqualifyResponseExtended.questionsNum = scenario.totalQuestionsAsked;\nsession.logCustomEvent('DISQUALIFY_RESPONSE', disqualifyResponseExtended);"
                     },
@@ -654,6 +654,29 @@
                         },
                         "label": "Verify luis age",
                         "targetStepId": "8c88d783cc4e-0e754492b0ec4336-9e6f"
+                    },
+                    {
+                        "id": "9fb7affe3548-5c84b2220de6ce15-cbda",
+                        "type": "statement",
+                        "designer": {
+                            "xLocation": 1340,
+                            "yLocation": 20,
+                            "next": "56dfa186629f-62e11a8c3f24b35f-483f"
+                        },
+                        "text": "No additional questions are available to qualify the patient.",
+                        "stringId": "stringId_aa9be14de87b88a7"
+                    },
+                    {
+                        "id": "56dfa186629f-62e11a8c3f24b35f-483f",
+                        "type": "branch",
+                        "condition": "scenario.trials && scenario.trials.length > 0\r\n",
+                        "designer": {
+                            "xLocation": 607,
+                            "yLocation": 340,
+                            "next": "e8e69e5b6b47-4c7e389965d6aef4-6dd1"
+                        },
+                        "targetStepId": "2093a915c20d-8fc2e7481038d764-affd",
+                        "label": "Trials > 0"
                     }
                 ],
                 "returningMessage": "",
