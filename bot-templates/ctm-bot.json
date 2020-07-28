@@ -1,703 +1,20 @@
 {
     "scenarios": [
         {
-            "odata.etag": "W/\"datetime'2020-03-11T11%3A38%3A49.6333825Z'\"",
+            "odata.etag": "W/\"datetime'2020-07-28T10%3A34%3A45.1248129Z'\"",
             "PartitionKey": "f9b1843e-bbd8-4143-b7da-112c5cdf4e28",
-            "RowKey": "0d2d11e9-05aa-4d1f-8ed2-3d7027d0e7df",
-            "name": "clinical_trials_matching_general",
-            "scenario_trigger": "clinical_trials_matching_general",
-            "description": "clinical_trials_matching_general",
-            "userDisplayName": "Ronny Roktel",
+            "RowKey": "58265767-8c27-4153-8a56-6ff298e25bca",
             "active": true,
-            "version": 1,
-            "updated@odata.type": "Edm.DateTime",
-            "updated": "2020-03-10T13:08:30.1840000Z",
-            "currentUser": "Ronny Roktel",
-            "Timestamp": "2020-03-11T11:38:49.6333825Z",
-            "code": {
-                "version": 3,
-                "steps": [
-                    {
-                        "id": "7a107a8597cc-b1b4a5eef7e89f91-a47f",
-                        "type": "action",
-                        "label": "Init Variables",
-                        "designer": {
-                            "xLocation": 112,
-                            "yLocation": 28,
-                            "next": "26f08a4aca2e-734b7ed483cc7215-a262"
-                        },
-                        "onInit": "scenario.totalQuestionsAsked = 0;\nscenario.TRIALS_THRESHOLD = 5;\nscenario.QUESTIONS_THRESHOLD = 10;\nscenario.MIN_AGE = 0;\nscenario.MAX_AGE = 120;\nscenario.messageText = session.message.text;\nscenario.timeStarted = new Date().getTime();\nscenario.luis = {};\nvar locationCity = null;\nvar locationCountry = null;\nvar locationState = null;\nvar ageResolution = null;\nscenario.notMapped = [];\nif(scenario.scenarioArgs.entities != null) {\n    // iterate all LUIS entities and set their values to scenario\n    scenario.scenarioArgs.entities.forEach(ent => {\n        switch(ent.type) {\n                case \"gender\":\n                    scenario.luis.gender = ent.role;\n                    break;\n                case \"builtin.age\":\n                    ageResolution = ent.resolution;\n                    break;\n                case \"disease\":\n                    scenario.luis.condition = scenario.messageText.substring(ent.startIndex, ent.endIndex + 1);\n                    break;\n                case \"builtin.geographyV2.countryRegion\":\n                    locationCountry = ent.entity;\n                    break;\n                case \"builtin.geographyV2.state\":\n                    locationState = ent.entity;\n                    break;\n                case \"builtin.geographyV2.city\":\n                    locationCity = ent.entity;\n                    break;\n                default:\n                    scenario.notMapped.push(ent.entity);\n            }\n    });\n}\n// age convertion\nif (ageResolution != null) {\n    switch (ageResolution.unit) {\n        case \"Year\":\n            scenario.luis.age = ageResolution.value;\n            break;\n        case \"Month\":\n            scenario.luis.age = (+ageResolution.value / 12) + \"\";\n            break;\n        case \"Week\":\n            scenario.luis.age = (+ageResolution.value / 52) + \"\";\n            break;\n        case \"Day\":\n            scenario.luis.age = (+ageResolution.value / 365) + \"\";\n            break;\n        default:\n            scenario.luis.age = null;        \n    }\n}\n// one of location types was initialized\nif(locationCountry != null || locationState != null || locationCity != null) {\n    scenario.luis.location = {};\n    if(locationCountry != null) {\n        scenario.luis.location.country = locationCountry;\n    }\n    if(locationState != null) {\n        scenario.luis.location.state = locationState;\n    }\n    if(locationCity != null) {\n        scenario.luis.location.city = locationCity;\n    }\n};"
-                    },
-                    {
-                        "id": "38d94695a028-665828e3737523ec-bd42",
-                        "type": "prompt",
-                        "dataType": "[\"Female\", \"Male\", \"Prefer not to say\"]",
-                        "designer": {
-                            "xLocation": 108,
-                            "yLocation": 180,
-                            "listStyle": 3,
-                            "next": "34034aac82a9-ebdebd338a48ba21-6a36"
-                        },
-                        "text": "scenario.questions.genderQuestion",
-                        "variable": "genderValue",
-                        "stringId": "stringId_42fe2799587299a9",
-                        "visible": "scenario.luis.gender == null",
-                        "choiceType": "choice",
-                        "label": "Gender Question"
-                    },
-                    {
-                        "id": "88eb37226f1d-d7b87141b90e761b-519e",
-                        "type": "prompt",
-                        "dataType": "number",
-                        "designer": {
-                            "xLocation": 100,
-                            "yLocation": 346,
-                            "next": "8b1dd19a14ad-9f9d1f1c8dafd0f8-eb30"
-                        },
-                        "text": "scenario.questions.ageQuestion",
-                        "variable": "ageValue",
-                        "stringId": "stringId_ecd82ef4f4fa4061",
-                        "visible": "true",
-                        "label": "Age Question"
-                    },
-                    {
-                        "id": "2e32f9cb24af-0917e334df80b409-7140",
-                        "type": "prompt",
-                        "dataType": "['Specific city', 'Specific state', 'Entire US']",
-                        "designer": {
-                            "xLocation": 107,
-                            "yLocation": 571,
-                            "next": "a5666316fe16-e2e41e2529a50af9-1d56",
-                            "listStyle": 3
-                        },
-                        "text": "scenario.questions.locationQuestion",
-                        "variable": "locationValue",
-                        "stringId": "stringId_f7f5e89e7164bf5a",
-                        "visible": "scenario.luis.location == null",
-                        "label": "Location Question",
-                        "choiceType": "choice"
-                    },
-                    {
-                        "id": "8c88d783cc4e-0e754492b0ec4336-9e6f",
-                        "type": "prompt",
-                        "dataType": "string",
-                        "designer": {
-                            "xLocation": 108,
-                            "yLocation": 512,
-                            "next": "2e32f9cb24af-0917e334df80b409-7140"
-                        },
-                        "text": "scenario.questions.conditionQuestion",
-                        "variable": "conditionValue",
-                        "visible": "scenario.luis.condition == null",
-                        "stringId": "stringId_c71e799de878687c",
-                        "label": "Condition Question"
-                    },
-                    {
-                        "id": "102cf72eca14-b299a2caf0e80fe6-bf31",
-                        "type": "action",
-                        "label": "Normalize values",
-                        "designer": {
-                            "xLocation": 111,
-                            "yLocation": 747,
-                            "next": "162067c1f357-741c663bd45a2170-d303"
-                        },
-                        "onInit": "// gender \nif (scenario.luis.gender != null) {\n    scenario.gender = scenario.luis.gender;\n} else {\n    if (scenario.genderValue.entity !== \"Prefer not to say\") {\n        scenario.gender = scenario.genderValue.entity.toLowerCase();\n    }\n}\n// age\nif (scenario.luis.age != null) {\n    scenario.age = scenario.luis.age;\n} else {\n    scenario.age = scenario.ageValue + \"\";\n}\n// condition\nif (scenario.luis.condition != null) {\n    scenario.condition = scenario.luis.condition;\n} else {\n    scenario.condition = scenario.conditionValue;\n}\n// location\nif (scenario.luis.location != null) {\n    scenario.searchLocationCountry = scenario.luis.location.country;\n    scenario.searchLocationState = scenario.luis.location.state;\n    scenario.searchLocationCity = scenario.luis.location.city;\n} else {\n    scenario.searchLocationCountry = scenario.countryValue != null ? scenario.countryValue : null;\n    scenario.searchLocationState = scenario.stateValue != null ? scenario.stateValue : null;\n    scenario.searchLocationCity = scenario.cityValue != null ? scenario.cityValue : null;\n}"
-                    },
-                    {
-                        "id": "fb7403c86d6a-1e24272165de9c1b-92f7",
-                        "type": "action",
-                        "label": "Create QeRequest",
-                        "designer": {
-                            "xLocation": 351,
-                            "yLocation": 31,
-                            "next": "7d13692c028c-c62feba5d349bb6e-7959"
-                        },
-                        "onInit": "// initialize profile\nvar profile = {};\nprofile.gender = scenario.gender;\nprofile.age = scenario.age;\nprofile.location = scenario.location;\nprofile.searchLocationCity = scenario.searchLocationCity;\nprofile.searchLocationState = scenario.searchLocationState;\nprofile.distance = scenario.distance;\nprofile.condition = scenario.condition;\nprofile.askedCodes = [];\nscenario.profile = profile;\n\n// initialize qeRequest\nvar qeRequest = {};\nqeRequest.id = new Date().getTime().toString();\nqeRequest.profile = scenario.profile;\nscenario.qeRequest = qeRequest;\nscenario.qeRequest.expandCondition = true\nconsole.log(scenario.profile);"
-                    },
-                    {
-                        "id": "95f6b5f256da-ed1cea46c0187621-f7b9",
-                        "type": "datasource",
-                        "designer": {
-                            "xLocation": 349,
-                            "yLocation": 110,
-                            "errorStepId": "7cf5829caf3b-b595e08171a799bc-2f59",
-                            "next": "c2cb2cc32790-39376ffe807a6893-5e86"
-                        },
-                        "dataConnection": "ctm-query-engine-prod",
-                        "urlBase": "https://prod-eastus-ctm-qe-webapp.azurewebsites.net",
-                        "urlPath": "match",
-                        "urlParams": "",
-                        "contentType": "raw",
-                        "method": "post",
-                        "headers": "",
-                        "payload": "scenario.qeRequest",
-                        "opJson": true,
-                        "opResolveWithFullResponse": false,
-                        "response": "qeResponse",
-                        "error": "qeError",
-                        "label": "Query Engine endpoint"
-                    },
-                    {
-                        "id": "7cf5829caf3b-b595e08171a799bc-2f59",
-                        "type": "statement",
-                        "designer": {
-                            "xLocation": 590,
-                            "yLocation": 580
-                        },
-                        "text": "Sorry, there seems to be a problem with the matching service. \r\nPlease try again later.",
-                        "stringId": "stringId_a38152ce3e7f6b5f"
-                    },
-                    {
-                        "id": "c2cb2cc32790-39376ffe807a6893-5e86",
-                        "type": "action",
-                        "label": "Process QeResponse",
-                        "designer": {
-                            "xLocation": 354,
-                            "yLocation": 180,
-                            "next": "2d52c58f3c9f-311c95e0e7a51ce9-5ed7"
-                        },
-                        "onInit": "scenario.trials = scenario.qeResponse.trials;\nscenario.trialsCountPrev = scenario.trials.length;\nscenario.qeTrials = scenario.trials;"
-                    },
-                    {
-                        "id": "8eb78c0e15f8-3aa0bdbacd6795d8-0ac6",
-                        "type": "branch",
-                        "condition": "scenario.trials.length > 0",
-                        "designer": {
-                            "xLocation": 360,
-                            "yLocation": 273,
-                            "next": "e8e69e5b6b47-4c7e389965d6aef4-6dd1"
-                        },
-                        "targetStepId": "c38230cbc10d-7c8058bc6dc833c6-6a00",
-                        "label": "Trials > 0"
-                    },
-                    {
-                        "id": "e8e69e5b6b47-4c7e389965d6aef4-6dd1",
-                        "type": "statement",
-                        "designer": {
-                            "xLocation": 260,
-                            "yLocation": 380
-                        },
-                        "text": "Sorry, no relevant trials were found",
-                        "stringId": "stringId_537880f504287022"
-                    },
-                    {
-                        "id": "6c395b7ffcbf-9a3ac0cb171f8c36-4154",
-                        "type": "statement",
-                        "designer": {
-                            "xLocation": 340,
-                            "yLocation": 492,
-                            "next": "2093a915c20d-8fc2e7481038d764-affd"
-                        },
-                        "text": "\"Found \" + scenario.trials.length.toString() + \" relevant trial\" + (scenario.trials.length === 1 ? \"\" : \"s\") + \".\"",
-                        "stringId": "stringId_00902617ba8079bf",
-                        "label": "Relevant trials number"
-                    },
-                    {
-                        "id": "138c2cc32f4e-265ec16959d65e96-6083",
-                        "type": "action",
-                        "label": "Create Results Card",
-                        "designer": {
-                            "xLocation": 346,
-                            "yLocation": 830,
-                            "next": "b880d5732a03-3c5ec70d6ab91ed6-6218"
-                        },
-                        "onInit": "var cardBody = scenario.trials.map(trial => {\n    return {\n\t\t\"type\": \"Container\",\n\t\t\"separator\": true,\n\t\t\"spacing\": \"Large\",\n\t\t\"items\": [\n            {\n                \"type\": \"TextBlock\",\n                \"text\": \"RECRUITING\",\n                \"separator\": true,\n                \"color\": \"dark\"\n            },{\n                \"type\": \"TextBlock\",\n                \"color\": \"accent\",\n                \"text\": \"[\" + trial.briefTitle + \"](https://clinicaltrials.gov/ct2/show/\" + trial.nctId + \")\",\n                \"spacing\": \"none\",\n                \"wrap\": true,\n                \"color\": \"blue\"\n            },{\n                \"type\": \"TextBlock\",\n                \"text\": \"Clinical trial ID: \" + trial.nctId,\n                \"isSubtle\": true,\n                \"weight\": \"lighter\"\n            }\n        ]\n    }\n});\n\nscenario.card = {\n  \"$schema\": \"http://adaptivecards.io/schemas/adaptive-card.json\",\n  \"type\": \"AdaptiveCard\",\n  \"version\": \"1.0\",\n  \"body\": cardBody\n};"
-                    },
-                    {
-                        "id": "b880d5732a03-3c5ec70d6ab91ed6-6218",
-                        "type": "statement",
-                        "designer": {
-                            "xLocation": 340,
-                            "yLocation": 911
-                        },
-                        "layout": "vertical",
-                        "attachment": [
-                            {
-                                "type": "AdaptiveCard",
-                                "cardCode": "scenario.card"
-                            }
-                        ],
-                        "label": "Show Results"
-                    },
-                    {
-                        "id": "c38230cbc10d-7c8058bc6dc833c6-6a00",
-                        "type": "branch",
-                        "condition": "scenario.trials.length > scenario.TRIALS_THRESHOLD\r\n",
-                        "designer": {
-                            "xLocation": 360,
-                            "yLocation": 380,
-                            "next": "6c395b7ffcbf-9a3ac0cb171f8c36-4154",
-                            "reverse": true
-                        },
-                        "targetStepId": "c0b338e361df-f9260a30a63543e5-2d46",
-                        "label": "Trials > Threshold"
-                    },
-                    {
-                        "id": "26f08a4aca2e-734b7ed483cc7215-a262",
-                        "type": "action",
-                        "label": "Init questions",
-                        "designer": {
-                            "xLocation": 114,
-                            "yLocation": 100,
-                            "next": "38d94695a028-665828e3737523ec-bd42"
-                        },
-                        "onInit": "var messageText = scenario.messageText.toLowerCase();\n\nscenario.questions = {};\nscenario.questions.genderQuestion = \"Please specify the patient's sex:\";\nscenario.questions.ageQuestion = \"How old is the patient (in years)?\";\nscenario.questions.conditionQuestion = \"What is the patient's condition?\";\nscenario.questions.locationQuestion = \"Where would the patient like to search for trials?\";\nscenario.questions.stateQuestion = \"Please enter state:\";\nscenario.questions.cityQuestion = \"Please enter city:\";\n"
-                    },
-                    {
-                        "id": "162067c1f357-741c663bd45a2170-d303",
-                        "type": "statement",
-                        "designer": {
-                            "xLocation": 106,
-                            "yLocation": 830,
-                            "next": "fb7403c86d6a-1e24272165de9c1b-92f7"
-                        },
-                        "text": "Matching clinical trials...This might take a few moments.",
-                        "stringId": "stringId_a46894ffc1bf4ca9"
-                    },
-                    {
-                        "id": "a5666316fe16-e2e41e2529a50af9-1d56",
-                        "type": "prompt",
-                        "dataType": "string",
-                        "designer": {
-                            "xLocation": 106,
-                            "yLocation": 633,
-                            "next": "00de89f7fffe-ffa4760c9fba5d58-3902"
-                        },
-                        "text": "scenario.questions.stateQuestion",
-                        "variable": "stateValue",
-                        "visible": "scenario.locationValue != null && scenario.locationValue.entity === \"Specific state\"",
-                        "stringId": "stringId_75e3d09cf5a74d66",
-                        "label": "State Question"
-                    },
-                    {
-                        "id": "00de89f7fffe-ffa4760c9fba5d58-3902",
-                        "type": "prompt",
-                        "dataType": "string",
-                        "designer": {
-                            "xLocation": 106,
-                            "yLocation": 687,
-                            "next": "102cf72eca14-b299a2caf0e80fe6-bf31"
-                        },
-                        "text": "scenario.questions.cityQuestion",
-                        "variable": "cityValue",
-                        "visible": "scenario.locationValue != null && scenario.locationValue.entity === \"Specific city\"",
-                        "stringId": "stringId_75e3d09cf5a74d66",
-                        "label": "City Question"
-                    },
-                    {
-                        "id": "c0b338e361df-f9260a30a63543e5-2d46",
-                        "type": "action",
-                        "label": "Create Disqualify Request",
-                        "designer": {
-                            "xLocation": 926,
-                            "yLocation": 260,
-                            "next": "d5398bdc9019-e4c6eb78e63ffdc5-416a"
-                        },
-                        "onInit": "var trialIds = scenario.trials.map(trial => trial.nctId);\n\nscenario.disqualifyRequest = {\n    trialIds,\n    profile: scenario.profile\n};"
-                    },
-                    {
-                        "id": "22130a4fa790-7398bd4e67a60462-949a",
-                        "type": "action",
-                        "label": "Create Question Args",
-                        "designer": {
-                            "xLocation": 1260,
-                            "yLocation": 647,
-                            "next": "8cc8d6de3179-a14e044b3f7d5fd5-2360"
-                        },
-                        "onInit": "// keeping track for total questions\r\nscenario.totalQuestionsAsked++;\r\n\r\nvar criterion = scenario.disqualifyResponse.criteria[scenario.questionIndex];\r\nscenario.questionArgs = {};\r\nscenario.questionArgs.question = criterion;\r\nscenario.questionArgs.profile = scenario.profile;\r\nscenario.questionArgs.questionsNum = scenario.totalQuestionsAsked;"
-                    },
-                    {
-                        "id": "8cc8d6de3179-a14e044b3f7d5fd5-2360",
-                        "type": "beginScenario",
-                        "designer": {
-                            "xLocation": 1071,
-                            "yLocation": 586,
-                            "next": "ac3e4757a04f-95c5731ff4cd2f2f-c783"
-                        },
-                        "scenario": "question_generation",
-                        "variable": "questionAnswer",
-                        "args": "scenario.questionArgs",
-                        "label": "Question Generation"
-                    },
-                    {
-                        "id": "bd61cf721cfb-286941d86a9f1950-d264",
-                        "type": "branch",
-                        "condition": "scenario.questionAnswer.answer == null",
-                        "designer": {
-                            "xLocation": 920,
-                            "yLocation": 371,
-                            "next": "c0b338e361df-f9260a30a63543e5-2d46"
-                        },
-                        "targetStepId": "c7320a2517ea-1c8780d20d47cb35-e956",
-                        "label": "Is Don't Know"
-                    },
-                    {
-                        "id": "c7320a2517ea-1c8780d20d47cb35-e956",
-                        "type": "action",
-                        "label": "Next Question Index",
-                        "designer": {
-                            "xLocation": 1600,
-                            "yLocation": 580,
-                            "next": "275cf280677e-52bf72c7f8f55bad-ae74"
-                        },
-                        "onInit": "scenario.questionIndex++;"
-                    },
-                    {
-                        "id": "ac3e4757a04f-95c5731ff4cd2f2f-c783",
-                        "type": "action",
-                        "label": "Save answer to profile",
-                        "designer": {
-                            "xLocation": 960,
-                            "yLocation": 487,
-                            "next": "c7f40688bbe6-46591d81f769a6a1-9d1f"
-                        },
-                        "onInit": "scenario.profile.askedCodes.push(scenario.questionAnswer);"
-                    },
-                    {
-                        "id": "d5398bdc9019-e4c6eb78e63ffdc5-416a",
-                        "type": "datasource",
-                        "designer": {
-                            "xLocation": 966,
-                            "yLocation": 153,
-                            "next": "57b8d246f882-fccf0daa5e3e5f5e-a939",
-                            "errorStepId": "7cf5829caf3b-b595e08171a799bc-2f59"
-                        },
-                        "dataConnection": "ctm-disqualifier-prod",
-                        "urlBase": "https://prod-eastus-ctm-disq-webapp.azurewebsites.net",
-                        "urlPath": "disqualify",
-                        "urlParams": "",
-                        "contentType": "raw",
-                        "method": "post",
-                        "headers": "",
-                        "payload": "scenario.disqualifyRequest",
-                        "opJson": true,
-                        "opResolveWithFullResponse": false,
-                        "response": "disqualifyResponse",
-                        "label": "Disqualify Enpoint"
-                    },
-                    {
-                        "id": "57b8d246f882-fccf0daa5e3e5f5e-a939",
-                        "type": "action",
-                        "label": "Process disqualify response",
-                        "designer": {
-                            "xLocation": 1066,
-                            "yLocation": 80,
-                            "next": "42b4b5fab0ed-0ff1c03b236e69bd-63c4"
-                        },
-                        "onInit": "// update scenario.trialsCountPrev and scenario.trials\r\nscenario.trialsCountPrev = scenario.trials.length;\r\nscenario.trials = scenario.disqualifyResponse.trials;"
-                    },
-                    {
-                        "id": "d46040c72921-e874ae9773008129-3f14",
-                        "type": "action",
-                        "label": "Init Question Index",
-                        "designer": {
-                            "xLocation": 1680,
-                            "yLocation": 506,
-                            "next": "275cf280677e-52bf72c7f8f55bad-ae74"
-                        },
-                        "onInit": "scenario.questionIndex = 0;"
-                    },
-                    {
-                        "id": "275cf280677e-52bf72c7f8f55bad-ae74",
-                        "type": "branch",
-                        "condition": "scenario.questionIndex < scenario.disqualifyResponse.criteria.length",
-                        "designer": {
-                            "xLocation": 1447,
-                            "yLocation": 630,
-                            "next": "c0b338e361df-f9260a30a63543e5-2d46"
-                        },
-                        "targetStepId": "22130a4fa790-7398bd4e67a60462-949a",
-                        "label": "Still have questions"
-                    },
-                    {
-                        "id": "c0b5312656d6-cb6b198a64649879-f53d",
-                        "type": "prompt",
-                        "dataType": "[\"Answer additional questions\", \"Get results\"]",
-                        "designer": {
-                            "xLocation": 1691,
-                            "yLocation": 280,
-                            "listStyle": 3,
-                            "next": "f3aa06e2bb65-6697b1be21430325-586f"
-                        },
-                        "text": "What would you like to do?",
-                        "variable": "continueAsking",
-                        "stringId": "stringId_b73a4cc0c608505e",
-                        "choiceType": "choice"
-                    },
-                    {
-                        "id": "42bc07ec8bf1-57c03e2a91e4689e-f6cc",
-                        "type": "branch",
-                        "condition": "scenario.totalQuestionsAsked > 0 && \r\n(scenario.trialsCountPrev === scenario.trials.length || \r\n scenario.totalQuestionsAsked >= scenario.QUESTIONS_THRESHOLD)\r\n",
-                        "designer": {
-                            "xLocation": 1680,
-                            "yLocation": 180,
-                            "next": "d46040c72921-e874ae9773008129-3f14"
-                        },
-                        "label": "Should ask user to continue",
-                        "targetStepId": "c0b5312656d6-cb6b198a64649879-f53d"
-                    },
-                    {
-                        "id": "04bde4fbe4fd-cde1c2bb3509913a-e268",
-                        "type": "branch",
-                        "condition": "scenario.continueAsking.entity === \"Answer additional questions\"",
-                        "designer": {
-                            "xLocation": 1709,
-                            "yLocation": 380,
-                            "next": "2093a915c20d-8fc2e7481038d764-affd"
-                        },
-                        "label": "Additional questions",
-                        "targetStepId": "d46040c72921-e874ae9773008129-3f14"
-                    },
-                    {
-                        "id": "2093a915c20d-8fc2e7481038d764-affd",
-                        "type": "statement",
-                        "designer": {
-                            "xLocation": 340,
-                            "yLocation": 560,
-                            "next": "46c223b11a89-3ac967716fd0b465-98b6"
-                        },
-                        "text": "Here are the clinical trials the patient may qualify for:",
-                        "stringId": "stringId_00902617ba8079bf",
-                        "label": "Here are the trials"
-                    },
-                    {
-                        "id": "ba24c6c14552-29a155c3df1c4f2f-b738",
-                        "type": "branch",
-                        "condition": "(scenario.disqualifyResponse.criteria == null || \r\n scenario.disqualifyResponse.criteria.length === 0)",
-                        "designer": {
-                            "xLocation": 1193,
-                            "yLocation": 20,
-                            "next": "6b3fdcb8915e-ec4dc8cd89a2ebbd-a086"
-                        },
-                        "label": "Is criteria empty",
-                        "targetStepId": "9fb7affe3548-5c84b2220de6ce15-cbda"
-                    },
-                    {
-                        "id": "b1119c0d3562-c592b7cced67f2b2-e89c",
-                        "type": "statement",
-                        "designer": {
-                            "xLocation": 1560,
-                            "yLocation": 60,
-                            "next": "efdb922881fd-730358f2fa29dc39-73b0"
-                        },
-                        "text": "\"Found \" + scenario.trials.length.toString() + \" relevant trial\" + (scenario.trials.length === 1 ? \"\" : \"s\") + \".\"",
-                        "stringId": "stringId_00902617ba8079bf",
-                        "label": "Relevant trials number"
-                    },
-                    {
-                        "id": "6b3fdcb8915e-ec4dc8cd89a2ebbd-a086",
-                        "type": "branch",
-                        "condition": "scenario.trials.length > 0",
-                        "designer": {
-                            "xLocation": 1469,
-                            "yLocation": 20,
-                            "next": "e8e69e5b6b47-4c7e389965d6aef4-6dd1"
-                        },
-                        "targetStepId": "b1119c0d3562-c592b7cced67f2b2-e89c",
-                        "label": "Trials > 0"
-                    },
-                    {
-                        "id": "efdb922881fd-730358f2fa29dc39-73b0",
-                        "type": "branch",
-                        "condition": "scenario.trials.length > scenario.TRIALS_THRESHOLD",
-                        "designer": {
-                            "xLocation": 1620,
-                            "yLocation": 100,
-                            "next": "2093a915c20d-8fc2e7481038d764-affd"
-                        },
-                        "targetStepId": "42bc07ec8bf1-57c03e2a91e4689e-f6cc",
-                        "label": "Trials > Threshold"
-                    },
-                    {
-                        "id": "46c223b11a89-3ac967716fd0b465-98b6",
-                        "type": "action",
-                        "label": "Add trials ids to QeRequest",
-                        "designer": {
-                            "xLocation": 346,
-                            "yLocation": 620,
-                            "next": "c6b04222f48b-efa91a748ac26834-1f22"
-                        },
-                        "onInit": "// add trialsIds to details request\nscenario.qeRequest.trialIds = scenario.trials.map(trial => trial.nctId);"
-                    },
-                    {
-                        "id": "c6b04222f48b-efa91a748ac26834-1f22",
-                        "type": "datasource",
-                        "designer": {
-                            "xLocation": 340,
-                            "yLocation": 694,
-                            "errorStepId": "7cf5829caf3b-b595e08171a799bc-2f59",
-                            "next": "2333bc1d943a-dbd4cf50e0a91eee-125b"
-                        },
-                        "dataConnection": "ctm-query-engine-prod",
-                        "urlBase": "https://prod-gateway-webapp.azurewebsites.net/qe",
-                        "urlPath": "trials-details",
-                        "urlParams": "",
-                        "contentType": "raw",
-                        "method": "post",
-                        "headers": "",
-                        "payload": "scenario.qeRequest",
-                        "opJson": true,
-                        "opResolveWithFullResponse": false,
-                        "response": "qeResponse",
-                        "error": "qeError",
-                        "label": "QE trials-details endpoint"
-                    },
-                    {
-                        "id": "2333bc1d943a-dbd4cf50e0a91eee-125b",
-                        "type": "action",
-                        "label": "Process trials-details",
-                        "designer": {
-                            "xLocation": 346,
-                            "yLocation": 753,
-                            "next": "e588f774bae0-892987238b37e51d-68d3"
-                        },
-                        "onInit": "scenario.trials = scenario.qeResponse.trials;"
-                    },
-                    {
-                        "id": "7d13692c028c-c62feba5d349bb6e-7959",
-                        "type": "action",
-                        "label": "Log Profile",
-                        "designer": {
-                            "xLocation": 492,
-                            "yLocation": 48,
-                            "next": "95f6b5f256da-ed1cea46c0187621-f7b9"
-                        },
-                        "onInit": "session.logCustomEvent('USER_PROFILE', scenario.profile);"
-                    },
-                    {
-                        "id": "2d52c58f3c9f-311c95e0e7a51ce9-5ed7",
-                        "type": "action",
-                        "label": "Log QE response",
-                        "designer": {
-                            "xLocation": 480,
-                            "yLocation": 208,
-                            "next": "8eb78c0e15f8-3aa0bdbacd6795d8-0ac6"
-                        },
-                        "onInit": "var qeResponse = {};\nqeResponse.trials = scenario.trials;\nqeResponse.qeTrialsNum = scenario.trials.length;\nsession.logCustomEvent('QE_RESPONSE', qeResponse);"
-                    },
-                    {
-                        "id": "e588f774bae0-892987238b37e51d-68d3",
-                        "type": "action",
-                        "label": "Log Trials Results",
-                        "designer": {
-                            "xLocation": 466,
-                            "yLocation": 780,
-                            "next": "138c2cc32f4e-265ec16959d65e96-6083"
-                        },
-                        "onInit": "var trialResults = {};\ntrialResults.totalQuestions = scenario.totalQuestionsAsked;\ntrialResults.resultTrialsNum = scenario.trials.length;\ntrialResults.qeTrialsNum = scenario.qeTrials.length;\ntrialResults.resultTrials = scenario.trials.map(trial => {\n    return {\n        \"nctId\": trial.nctId,\n        \"sponsor\": trial.leadSponsor\n    };\n});\ntrialResults.secondsSpent = (new Date().getTime() - scenario.timeStarted) / 1000;\ntrialResults.profile = scenario.profile;\nsession.logCustomEvent('TRIALS_RESULTS', trialResults);"
-                    },
-                    {
-                        "id": "f3aa06e2bb65-6697b1be21430325-586f",
-                        "type": "action",
-                        "label": "Log Continue Asking Response",
-                        "designer": {
-                            "xLocation": 1770,
-                            "yLocation": 220,
-                            "next": "04bde4fbe4fd-cde1c2bb3509913a-e268"
-                        },
-                        "onInit": "var continueAskingExtended = {};\r\ncontinueAskingExtended.entity = scenario.continueAsking.entity;\r\ncontinueAskingExtended.trialsNum = scenario.trials.length;\r\nsession.logCustomEvent('USER_CONTINUE_ASKING_RESPONSE', continueAskingExtended);"
-                    },
-                    {
-                        "id": "c7f40688bbe6-46591d81f769a6a1-9d1f",
-                        "type": "action",
-                        "label": "Log User Answer",
-                        "designer": {
-                            "xLocation": 791,
-                            "yLocation": 500,
-                            "next": "bd61cf721cfb-286941d86a9f1950-d264"
-                        },
-                        "onInit": "var userAnswer = {};\nuserAnswer.questionsNum = scenario.totalQuestionsAsked;\nuserAnswer.answer = scenario.questionAnswer;\nuserAnswer.profile = scenario.profile;\nsession.logCustomEvent('USER_ANSWER', userAnswer);"
-                    },
-                    {
-                        "id": "42b4b5fab0ed-0ff1c03b236e69bd-63c4",
-                        "type": "action",
-                        "label": "Log Disqualify Response",
-                        "designer": {
-                            "xLocation": 1050,
-                            "yLocation": 7,
-                            "next": "ba24c6c14552-29a155c3df1c4f2f-b738"
-                        },
-                        "onInit": "var disqualifyResponseExtended = {};\ndisqualifyResponseExtended.userAnswer = scenario.questionAnswer;\ndisqualifyResponseExtended.disqualifiedTrialsNum = scenario.trialsCountPrev - scenario.trials.length;\ndisqualifyResponseExtended.questionsNum = scenario.totalQuestionsAsked;\nsession.logCustomEvent('DISQUALIFY_RESPONSE', disqualifyResponseExtended);"
-                    },
-                    {
-                        "id": "8b1dd19a14ad-9f9d1f1c8dafd0f8-eb30",
-                        "type": "branch",
-                        "condition": "scenario.ageValue > scenario.MIN_AGE && scenario.ageValue <= scenario.MAX_AGE",
-                        "designer": {
-                            "xLocation": 109,
-                            "yLocation": 420,
-                            "next": "d7f9f8f263ee-750aabea6911ad93-9cf9"
-                        },
-                        "label": "Validate Age",
-                        "targetStepId": "8c88d783cc4e-0e754492b0ec4336-9e6f"
-                    },
-                    {
-                        "id": "d7f9f8f263ee-750aabea6911ad93-9cf9",
-                        "type": "statement",
-                        "designer": {
-                            "xLocation": 0,
-                            "yLocation": 440,
-                            "next": "88eb37226f1d-d7b87141b90e761b-519e"
-                        },
-                        "text": "Age must be between 0 - 120 years.",
-                        "label": "Age Message",
-                        "stringId": "stringId_83d12063af14ce3a"
-                    },
-                    {
-                        "id": "34034aac82a9-ebdebd338a48ba21-6a36",
-                        "type": "branch",
-                        "condition": "scenario.luis.age && parseFloat(scenario.luis.age) > scenario.MIN_AGE && parseFloat(scenario.luis.age) <= scenario.MAX_AGE",
-                        "designer": {
-                            "xLocation": 114,
-                            "yLocation": 248,
-                            "next": "88eb37226f1d-d7b87141b90e761b-519e"
-                        },
-                        "label": "Verify luis age",
-                        "targetStepId": "8c88d783cc4e-0e754492b0ec4336-9e6f"
-                    },
-                    {
-                        "id": "9fb7affe3548-5c84b2220de6ce15-cbda",
-                        "type": "statement",
-                        "designer": {
-                            "xLocation": 1340,
-                            "yLocation": 20,
-                            "next": "56dfa186629f-62e11a8c3f24b35f-483f"
-                        },
-                        "text": "No additional questions are available to qualify the patient.",
-                        "stringId": "stringId_aa9be14de87b88a7"
-                    },
-                    {
-                        "id": "56dfa186629f-62e11a8c3f24b35f-483f",
-                        "type": "branch",
-                        "condition": "scenario.trials && scenario.trials.length > 0\r\n",
-                        "designer": {
-                            "xLocation": 607,
-                            "yLocation": 340,
-                            "next": "e8e69e5b6b47-4c7e389965d6aef4-6dd1"
-                        },
-                        "targetStepId": "2093a915c20d-8fc2e7481038d764-affd",
-                        "label": "Trials > 0"
-                    }
-                ],
-                "returningMessage": "",
-                "interrupting": false,
-                "breaking": false
-            }
-        },
-        {
-            "odata.etag": "W/\"datetime'2020-03-11T11%3A38%3A38.5544193Z'\"",
-            "PartitionKey": "f9b1843e-bbd8-4143-b7da-112c5cdf4e28",
-            "RowKey": "84145a79-71ad-4d96-8d2f-bf251c0737a2",
-            "name": "question_generation",
-            "scenario_trigger": "question_generation",
-            "description": "question_generation",
-            "userDisplayName": "Ronny Roktel",
-            "active": true,
-            "version": 1,
-            "updated@odata.type": "Edm.DateTime",
-            "updated": "2020-03-11T11:38:35.9640000Z",
             "currentUser": "",
-            "Timestamp": "2020-03-11T11:38:38.5544193Z",
+            "description": "clinical_trials_matching_question_generation",
+            "name": "clinical_trials_matching_question_generation",
+            "scenario_trigger": "clinical_trials_matching_question_generation",
+            "updated@odata.type": "Edm.DateTime",
+            "updated": "2020-07-27T14:39:57.5650000Z",
+            "userDisplayName": "Ronny Roktel",
+            "version": 1,
+            "snapshots": 0,
+            "Timestamp": "2020-07-28T10:34:45.1248129Z",
             "code": {
                 "version": 3,
                 "steps": [
@@ -931,6 +248,809 @@
                 "breaking": false,
                 "returningMessage": ""
             }
+        },
+        {
+            "odata.etag": "W/\"datetime'2020-07-28T13%3A51%3A57.1314689Z'\"",
+            "PartitionKey": "f9b1843e-bbd8-4143-b7da-112c5cdf4e28",
+            "RowKey": "7217425e-9210-48cc-bf54-efdbf44cf853",
+            "name": "clinical_trials_matching_core",
+            "scenario_trigger": "clinical_trials_matching_core",
+            "description": "clinical_trials_matching_core",
+            "userDisplayName": "Ronny Roktel",
+            "active": true,
+            "version": 1,
+            "updated@odata.type": "Edm.DateTime",
+            "updated": "2020-07-28T13:51:57.1070000Z",
+            "currentUser": "",
+            "Timestamp": "2020-07-28T13:51:57.1314689Z",
+            "code": {
+                "version": 3,
+                "steps": [
+                    {
+                        "id": "7a107a8597cc-b1b4a5eef7e89f91-a47f",
+                        "type": "action",
+                        "label": "Init Variables",
+                        "designer": {
+                            "xLocation": 107,
+                            "yLocation": 28,
+                            "next": "9984e7e32e45-ea107757d2768337-d656"
+                        },
+                        "onInit": "scenario.timeStarted = new Date().getTime();\nscenario.maxloggedTrialsNum = 112;\nscenario.luis = {};\n// temp variables for normalization\nvar locationCity = null;\nvar locationCountry = null;\nvar locationState = null;\nvar ageResolution = null;\n// for research and improving language model\nvar notMappedEntities = [];\n// conversation started with arguments\nif(scenario.scenarioArgs.entities != null) {\n    // iterate all LUIS entities and set their values\n    scenario.scenarioArgs.entities.forEach(ent => {\n        switch(ent.type) {\n            case \"gender\":\n                scenario.luis.gender = ent.role;\n                break;\n            case \"builtin.age\":\n                ageResolution = ent.resolution;\n                break;\n            case \"disease\":\n                scenario.luis.condition = ent.entity;\n                break;\n            case \"builtin.geographyV2.countryRegion\":\n                locationCountry = ent.entity;\n                break;\n            case \"builtin.geographyV2.state\":\n                locationState = ent.entity;\n                break;\n            case \"builtin.geographyV2.city\":\n                locationCity = ent.entity;\n                break;\n            default:\n                notMappedEntities.push(ent.entity);\n        }\n    });\n}\n// age normalization\nif (ageResolution != null) {\n    switch (ageResolution.unit) {\n        case \"Year\":\n            scenario.luis.age = ageResolution.value;\n            break;\n        case \"Month\":\n            scenario.luis.age = (+ageResolution.value / 12) + \"\";\n            break;\n        case \"Week\":\n            scenario.luis.age = (+ageResolution.value / 52) + \"\";\n            break;\n        case \"Day\":\n            scenario.luis.age = (+ageResolution.value / 365) + \"\";\n            break;\n        default:\n            scenario.luis.age = null;        \n    }\n}\n// location normalization\nif(locationCountry != null || locationState != null || locationCity != null) {\n    scenario.luis.location = {};\n    if(locationCountry != null) {\n        scenario.luis.location.country = locationCountry;\n    }\n    if(locationState != null) {\n        scenario.luis.location.state = locationState;\n    }\n    if(locationCity != null) {\n        scenario.luis.location.city = locationCity;\n    }\n};"
+                    },
+                    {
+                        "id": "102cf72eca14-b299a2caf0e80fe6-bf31",
+                        "type": "action",
+                        "label": "Assign Values",
+                        "designer": {
+                            "xLocation": 107,
+                            "yLocation": 227,
+                            "next": "162067c1f357-741c663bd45a2170-d303"
+                        },
+                        "onInit": "scenario.consts = scenario.initScenarioResponse.consts;\nscenario.consts.trialsLogLimit = 100;\n\nscenario.messages = scenario.initScenarioResponse.messages;\nscenario.profile = scenario.initScenarioResponse.userProfile;\nscenario.questions = scenario.initScenarioResponse.questions;"
+                    },
+                    {
+                        "id": "fb7403c86d6a-1e24272165de9c1b-92f7",
+                        "type": "action",
+                        "label": "Create QeRequest",
+                        "designer": {
+                            "xLocation": 107,
+                            "yLocation": 389,
+                            "next": "7d13692c028c-c62feba5d349bb6e-7959"
+                        },
+                        "onInit": "// initialize askedCodes\nscenario.profile.askedCodes = [];\n\n// initialize qeRequest\nvar qeRequest = {};\nqeRequest.id = new Date().getTime().toString();\nqeRequest.profile = scenario.profile;\nscenario.qeRequest = qeRequest;\nscenario.qeRequest.expandCondition = true;"
+                    },
+                    {
+                        "id": "95f6b5f256da-ed1cea46c0187621-f7b9",
+                        "type": "datasource",
+                        "designer": {
+                            "xLocation": 100,
+                            "yLocation": 480,
+                            "errorStepId": "7cf5829caf3b-b595e08171a799bc-2f59",
+                            "next": "c2cb2cc32790-39376ffe807a6893-5e86",
+                            "reverse": true
+                        },
+                        "dataConnection": "ctm-query-engine-prod",
+                        "urlBase": "https://prod-eastus-ctm-qe-webapp.azurewebsites.net",
+                        "urlPath": "match",
+                        "urlParams": "",
+                        "contentType": "raw",
+                        "method": "post",
+                        "headers": "",
+                        "payload": "scenario.qeRequest",
+                        "opJson": true,
+                        "opResolveWithFullResponse": false,
+                        "response": "qeResponse",
+                        "error": "qeError",
+                        "label": "Query Engine endpoint"
+                    },
+                    {
+                        "id": "7cf5829caf3b-b595e08171a799bc-2f59",
+                        "type": "statement",
+                        "designer": {
+                            "xLocation": 500,
+                            "yLocation": 712
+                        },
+                        "text": "scenario.messages.serviceProblem",
+                        "stringId": "stringId_a38152ce3e7f6b5f",
+                        "label": "Service Problem"
+                    },
+                    {
+                        "id": "c2cb2cc32790-39376ffe807a6893-5e86",
+                        "type": "action",
+                        "label": "Process QeResponse",
+                        "designer": {
+                            "xLocation": 106,
+                            "yLocation": 547,
+                            "next": "2d52c58f3c9f-311c95e0e7a51ce9-5ed7"
+                        },
+                        "onInit": "scenario.trials = scenario.qeResponse.trials;\nscenario.trialsCountPrev = scenario.trials.length;\nscenario.qeTrials = scenario.trials;"
+                    },
+                    {
+                        "id": "8eb78c0e15f8-3aa0bdbacd6795d8-0ac6",
+                        "type": "branch",
+                        "condition": "scenario.trials.length > 0",
+                        "designer": {
+                            "xLocation": 340,
+                            "yLocation": 27,
+                            "next": "e8e69e5b6b47-4c7e389965d6aef4-6dd1",
+                            "reverse": true
+                        },
+                        "targetStepId": "c38230cbc10d-7c8058bc6dc833c6-6a00",
+                        "label": "Trials > 0"
+                    },
+                    {
+                        "id": "e8e69e5b6b47-4c7e389965d6aef4-6dd1",
+                        "type": "statement",
+                        "designer": {
+                            "xLocation": 673,
+                            "yLocation": 711
+                        },
+                        "text": "scenario.messages.noRelavantTrials",
+                        "stringId": "stringId_537880f504287022",
+                        "label": "No Trials"
+                    },
+                    {
+                        "id": "6c395b7ffcbf-9a3ac0cb171f8c36-4154",
+                        "type": "statement",
+                        "designer": {
+                            "xLocation": 329,
+                            "yLocation": 220,
+                            "next": "46c223b11a89-3ac967716fd0b465-98b6"
+                        },
+                        "text": "scenario.messages.relevantTrialsPrefix + \" \" + scenario.trials.length",
+                        "stringId": "stringId_00902617ba8079bf",
+                        "label": "Relevant trials number"
+                    },
+                    {
+                        "id": "c38230cbc10d-7c8058bc6dc833c6-6a00",
+                        "type": "branch",
+                        "condition": "scenario.trials.length > scenario.consts.TRIALS_THRESHOLD",
+                        "designer": {
+                            "xLocation": 340,
+                            "yLocation": 120,
+                            "next": "6c395b7ffcbf-9a3ac0cb171f8c36-4154",
+                            "reverse": false
+                        },
+                        "targetStepId": "c0b338e361df-f9260a30a63543e5-2d46",
+                        "label": "Trials > Threshold"
+                    },
+                    {
+                        "id": "162067c1f357-741c663bd45a2170-d303",
+                        "type": "statement",
+                        "designer": {
+                            "xLocation": 100,
+                            "yLocation": 320,
+                            "next": "fb7403c86d6a-1e24272165de9c1b-92f7"
+                        },
+                        "text": "scenario.messages.matchingTrials",
+                        "stringId": "stringId_a46894ffc1bf4ca9",
+                        "label": "Matching Trials"
+                    },
+                    {
+                        "id": "c0b338e361df-f9260a30a63543e5-2d46",
+                        "type": "action",
+                        "label": "Create Disqualify Request",
+                        "designer": {
+                            "xLocation": 912,
+                            "yLocation": 380,
+                            "next": "d5398bdc9019-e4c6eb78e63ffdc5-416a"
+                        },
+                        "onInit": "var trialIds = scenario.trials.map(trial => trial.nctId);\n\nscenario.disqualifyRequest = {\n    trialIds,\n    profile: scenario.profile\n};"
+                    },
+                    {
+                        "id": "22130a4fa790-7398bd4e67a60462-949a",
+                        "type": "action",
+                        "label": "Create Question Args",
+                        "designer": {
+                            "xLocation": 1280,
+                            "yLocation": 728,
+                            "next": "8cc8d6de3179-a14e044b3f7d5fd5-2360"
+                        },
+                        "onInit": "// keeping track for total questions\r\nscenario.totalQuestionsAsked++;\r\n\r\nvar criterion = scenario.disqualifyResponse.criteria[scenario.questionIndex];\r\nscenario.questionArgs = {};\r\nscenario.questionArgs.question = criterion;\r\nscenario.questionArgs.profile = scenario.profile;\r\nscenario.questionArgs.questionsNum = scenario.totalQuestionsAsked;"
+                    },
+                    {
+                        "id": "8cc8d6de3179-a14e044b3f7d5fd5-2360",
+                        "type": "beginScenario",
+                        "designer": {
+                            "xLocation": 1134,
+                            "yLocation": 694,
+                            "next": "ac3e4757a04f-95c5731ff4cd2f2f-c783"
+                        },
+                        "scenario": "clinical_trials_matching_question_generation",
+                        "variable": "questionAnswer",
+                        "args": "scenario.questionArgs",
+                        "label": "Question Generation"
+                    },
+                    {
+                        "id": "bd61cf721cfb-286941d86a9f1950-d264",
+                        "type": "branch",
+                        "condition": "scenario.questionAnswer.answer == null",
+                        "designer": {
+                            "xLocation": 940,
+                            "yLocation": 507,
+                            "next": "c0b338e361df-f9260a30a63543e5-2d46"
+                        },
+                        "targetStepId": "c7320a2517ea-1c8780d20d47cb35-e956",
+                        "label": "Is Don't Know"
+                    },
+                    {
+                        "id": "c7320a2517ea-1c8780d20d47cb35-e956",
+                        "type": "action",
+                        "label": "Next Question Index",
+                        "designer": {
+                            "xLocation": 1640,
+                            "yLocation": 620,
+                            "next": "275cf280677e-52bf72c7f8f55bad-ae74"
+                        },
+                        "onInit": "scenario.questionIndex++;"
+                    },
+                    {
+                        "id": "ac3e4757a04f-95c5731ff4cd2f2f-c783",
+                        "type": "action",
+                        "label": "Save answer to profile",
+                        "designer": {
+                            "xLocation": 993,
+                            "yLocation": 620,
+                            "next": "c7f40688bbe6-46591d81f769a6a1-9d1f"
+                        },
+                        "onInit": "scenario.profile.askedCodes.push(scenario.questionAnswer);"
+                    },
+                    {
+                        "id": "d5398bdc9019-e4c6eb78e63ffdc5-416a",
+                        "type": "datasource",
+                        "designer": {
+                            "xLocation": 913,
+                            "yLocation": 280,
+                            "next": "57b8d246f882-fccf0daa5e3e5f5e-a939",
+                            "errorStepId": "7cf5829caf3b-b595e08171a799bc-2f59"
+                        },
+                        "dataConnection": "ctm-disqualifier-prod",
+                        "urlBase": "https://prod-eastus-ctm-disq-webapp.azurewebsites.net",
+                        "urlPath": "disqualify",
+                        "urlParams": "",
+                        "contentType": "raw",
+                        "method": "post",
+                        "headers": "",
+                        "payload": "scenario.disqualifyRequest",
+                        "opJson": true,
+                        "opResolveWithFullResponse": false,
+                        "response": "disqualifyResponse",
+                        "label": "Disqualify Enpoint"
+                    },
+                    {
+                        "id": "57b8d246f882-fccf0daa5e3e5f5e-a939",
+                        "type": "action",
+                        "label": "Process disqualify response",
+                        "designer": {
+                            "xLocation": 990,
+                            "yLocation": 170,
+                            "next": "42b4b5fab0ed-0ff1c03b236e69bd-63c4"
+                        },
+                        "onInit": "// update scenario.trialsCountPrev and scenario.trials\r\nscenario.trialsCountPrev = scenario.trials.length;\r\nscenario.trials = scenario.disqualifyResponse.trials;"
+                    },
+                    {
+                        "id": "d46040c72921-e874ae9773008129-3f14",
+                        "type": "action",
+                        "label": "Init Question Index",
+                        "designer": {
+                            "xLocation": 1680,
+                            "yLocation": 506,
+                            "next": "275cf280677e-52bf72c7f8f55bad-ae74"
+                        },
+                        "onInit": "scenario.questionIndex = 0;"
+                    },
+                    {
+                        "id": "275cf280677e-52bf72c7f8f55bad-ae74",
+                        "type": "branch",
+                        "condition": "scenario.questionIndex < scenario.disqualifyResponse.criteria.length",
+                        "designer": {
+                            "xLocation": 1480,
+                            "yLocation": 700,
+                            "next": "c0b338e361df-f9260a30a63543e5-2d46"
+                        },
+                        "targetStepId": "22130a4fa790-7398bd4e67a60462-949a",
+                        "label": "Still have questions"
+                    },
+                    {
+                        "id": "c0b5312656d6-cb6b198a64649879-f53d",
+                        "type": "prompt",
+                        "dataType": "[\"Answer additional questions\", \"Get results\"]",
+                        "designer": {
+                            "xLocation": 1691,
+                            "yLocation": 280,
+                            "listStyle": 3,
+                            "next": "f3aa06e2bb65-6697b1be21430325-586f"
+                        },
+                        "text": "scenario.questions.shouldContinueAsking",
+                        "variable": "continueAsking",
+                        "stringId": "stringId_b73a4cc0c608505e",
+                        "choiceType": "choice",
+                        "label": "Continue Asking"
+                    },
+                    {
+                        "id": "42bc07ec8bf1-57c03e2a91e4689e-f6cc",
+                        "type": "branch",
+                        "condition": "scenario.totalQuestionsAsked > 0 && \r\n(scenario.trialsCountPrev === scenario.trials.length || \r\n scenario.totalQuestionsAsked >= scenario.consts.QUESTIONS_THRESHOLD)\r\n",
+                        "designer": {
+                            "xLocation": 1654,
+                            "yLocation": 180,
+                            "next": "d46040c72921-e874ae9773008129-3f14"
+                        },
+                        "label": "Should ask user to continue",
+                        "targetStepId": "c0b5312656d6-cb6b198a64649879-f53d"
+                    },
+                    {
+                        "id": "04bde4fbe4fd-cde1c2bb3509913a-e268",
+                        "type": "branch",
+                        "condition": "scenario.continueAsking.entity === \"Answer additional questions\"",
+                        "designer": {
+                            "xLocation": 1709,
+                            "yLocation": 380,
+                            "next": "46c223b11a89-3ac967716fd0b465-98b6"
+                        },
+                        "label": "Additional questions",
+                        "targetStepId": "d46040c72921-e874ae9773008129-3f14"
+                    },
+                    {
+                        "id": "ba24c6c14552-29a155c3df1c4f2f-b738",
+                        "type": "branch",
+                        "condition": "(scenario.disqualifyResponse.criteria == null || \r\n scenario.disqualifyResponse.criteria.length === 0)",
+                        "designer": {
+                            "xLocation": 1120,
+                            "yLocation": 80,
+                            "next": "6b3fdcb8915e-ec4dc8cd89a2ebbd-a086",
+                            "reverse": true
+                        },
+                        "label": "Is criteria empty",
+                        "targetStepId": "9fb7affe3548-5c84b2220de6ce15-cbda"
+                    },
+                    {
+                        "id": "b1119c0d3562-c592b7cced67f2b2-e89c",
+                        "type": "statement",
+                        "designer": {
+                            "xLocation": 1420,
+                            "yLocation": 80,
+                            "next": "efdb922881fd-730358f2fa29dc39-73b0"
+                        },
+                        "text": "scenario.messages.relevantTrialsPrefix + \" \" + scenario.trials.length",
+                        "stringId": "stringId_00902617ba8079bf",
+                        "label": "Relevant trials number"
+                    },
+                    {
+                        "id": "6b3fdcb8915e-ec4dc8cd89a2ebbd-a086",
+                        "type": "branch",
+                        "condition": "scenario.trials.length > 0",
+                        "designer": {
+                            "xLocation": 1280,
+                            "yLocation": 60,
+                            "next": "e8e69e5b6b47-4c7e389965d6aef4-6dd1"
+                        },
+                        "targetStepId": "b1119c0d3562-c592b7cced67f2b2-e89c",
+                        "label": "Trials > 0"
+                    },
+                    {
+                        "id": "efdb922881fd-730358f2fa29dc39-73b0",
+                        "type": "branch",
+                        "condition": "scenario.trials.length > scenario.consts.TRIALS_THRESHOLD",
+                        "designer": {
+                            "xLocation": 1553,
+                            "yLocation": 120,
+                            "next": "46c223b11a89-3ac967716fd0b465-98b6"
+                        },
+                        "targetStepId": "42bc07ec8bf1-57c03e2a91e4689e-f6cc",
+                        "label": "Trials > Threshold"
+                    },
+                    {
+                        "id": "46c223b11a89-3ac967716fd0b465-98b6",
+                        "type": "action",
+                        "label": "Set trials ids to QeRequest",
+                        "designer": {
+                            "xLocation": 332,
+                            "yLocation": 307,
+                            "next": "c6b04222f48b-efa91a748ac26834-1f22"
+                        },
+                        "onInit": "scenario.qeRequest.trialIds = scenario.trials.map(trial => trial.nctId);"
+                    },
+                    {
+                        "id": "c6b04222f48b-efa91a748ac26834-1f22",
+                        "type": "datasource",
+                        "designer": {
+                            "xLocation": 326,
+                            "yLocation": 400,
+                            "errorStepId": "7cf5829caf3b-b595e08171a799bc-2f59",
+                            "next": "2333bc1d943a-dbd4cf50e0a91eee-125b",
+                            "reverse": true
+                        },
+                        "dataConnection": "ctm-query-engine-prod",
+                        "urlBase": "https://prod-gateway-webapp.azurewebsites.net/qe",
+                        "urlPath": "trials-details",
+                        "urlParams": "",
+                        "contentType": "raw",
+                        "method": "post",
+                        "headers": "",
+                        "payload": "scenario.qeRequest",
+                        "opJson": true,
+                        "opResolveWithFullResponse": false,
+                        "response": "qeResponse",
+                        "error": "qeError",
+                        "label": "QE trials-details endpoint"
+                    },
+                    {
+                        "id": "2333bc1d943a-dbd4cf50e0a91eee-125b",
+                        "type": "action",
+                        "label": "Process trials-details Response",
+                        "designer": {
+                            "xLocation": 330,
+                            "yLocation": 474,
+                            "next": "e588f774bae0-892987238b37e51d-68d3"
+                        },
+                        "onInit": "scenario.trials = scenario.qeResponse.trials;"
+                    },
+                    {
+                        "id": "7d13692c028c-c62feba5d349bb6e-7959",
+                        "type": "action",
+                        "label": "Log Profile",
+                        "designer": {
+                            "xLocation": 209,
+                            "yLocation": 446,
+                            "next": "95f6b5f256da-ed1cea46c0187621-f7b9"
+                        },
+                        "onInit": "session.logCustomEvent('USER_PROFILE', scenario.profile);"
+                    },
+                    {
+                        "id": "2d52c58f3c9f-311c95e0e7a51ce9-5ed7",
+                        "type": "action",
+                        "label": "Log QE response",
+                        "designer": {
+                            "xLocation": 210,
+                            "yLocation": 586,
+                            "next": "8eb78c0e15f8-3aa0bdbacd6795d8-0ac6"
+                        },
+                        "onInit": "var qeResponse = {};\nqeResponse.trials = scenario.trials;\nqeResponse.qeTrialsNum = scenario.trials.length;\nsession.logCustomEvent('QE_RESPONSE', qeResponse);"
+                    },
+                    {
+                        "id": "e588f774bae0-892987238b37e51d-68d3",
+                        "type": "action",
+                        "label": "Log Trials Results",
+                        "designer": {
+                            "xLocation": 434,
+                            "yLocation": 560,
+                            "next": "ccd45520d814-45f9691a3edb8f42-897f"
+                        },
+                        "onInit": "var trialResults = {};\ntrialResults.totalQuestions = scenario.totalQuestionsAsked;\ntrialResults.resultTrialsNum = scenario.trials.length;\ntrialResults.qeTrialsNum = scenario.qeTrials.length;\ntrialResults.resultTrials = scenario.trials.slice(0, scenario.consts.trialsLogLimit).map(trial => {\n    return {\n        \"nctId\": trial.nctId,\n        \"sponsor\": trial.leadSponsor\n    };\n});\ntrialResults.secondsSpent = (new Date().getTime() - scenario.timeStarted) / 1000;\ntrialResults.profile = scenario.profile;\nsession.logCustomEvent('TRIALS_RESULTS', trialResults);"
+                    },
+                    {
+                        "id": "f3aa06e2bb65-6697b1be21430325-586f",
+                        "type": "action",
+                        "label": "Log Continue Asking Response",
+                        "designer": {
+                            "xLocation": 1580,
+                            "yLocation": 330,
+                            "next": "04bde4fbe4fd-cde1c2bb3509913a-e268"
+                        },
+                        "onInit": "var continueAskingExtended = {};\r\ncontinueAskingExtended.entity = scenario.continueAsking.entity;\r\ncontinueAskingExtended.trialsNum = scenario.trials.length;\r\nsession.logCustomEvent('USER_CONTINUE_ASKING_RESPONSE', continueAskingExtended);"
+                    },
+                    {
+                        "id": "c7f40688bbe6-46591d81f769a6a1-9d1f",
+                        "type": "action",
+                        "label": "Log User Answer",
+                        "designer": {
+                            "xLocation": 1091,
+                            "yLocation": 567,
+                            "next": "bd61cf721cfb-286941d86a9f1950-d264"
+                        },
+                        "onInit": "var userAnswer = {};\nuserAnswer.questionsNum = scenario.totalQuestionsAsked;\nuserAnswer.answer = scenario.questionAnswer;\nuserAnswer.profile = scenario.profile;\nsession.logCustomEvent('USER_ANSWER', userAnswer);"
+                    },
+                    {
+                        "id": "42b4b5fab0ed-0ff1c03b236e69bd-63c4",
+                        "type": "action",
+                        "label": "Log Disqualify Response",
+                        "designer": {
+                            "xLocation": 1140,
+                            "yLocation": 260,
+                            "next": "ba24c6c14552-29a155c3df1c4f2f-b738"
+                        },
+                        "onInit": "var disqualifyResponseExtended = {};\ndisqualifyResponseExtended.userAnswer = scenario.questionAnswer;\ndisqualifyResponseExtended.disqualifiedTrialsNum = scenario.trialsCountPrev - scenario.trials.length;\ndisqualifyResponseExtended.questionsNum = scenario.totalQuestionsAsked;\nsession.logCustomEvent('DISQUALIFY_RESPONSE', disqualifyResponseExtended);"
+                    },
+                    {
+                        "id": "9fb7affe3548-5c84b2220de6ce15-cbda",
+                        "type": "statement",
+                        "designer": {
+                            "xLocation": 600,
+                            "yLocation": 40,
+                            "next": "56dfa186629f-62e11a8c3f24b35f-483f"
+                        },
+                        "text": "scenario.messages.noAdditionalQuestions",
+                        "stringId": "stringId_aa9be14de87b88a7",
+                        "label": "No Additional Questions"
+                    },
+                    {
+                        "id": "56dfa186629f-62e11a8c3f24b35f-483f",
+                        "type": "branch",
+                        "condition": "scenario.trials && scenario.trials.length > 0\r\n",
+                        "designer": {
+                            "xLocation": 608,
+                            "yLocation": 113,
+                            "next": "e8e69e5b6b47-4c7e389965d6aef4-6dd1",
+                            "reverse": true
+                        },
+                        "targetStepId": "46c223b11a89-3ac967716fd0b465-98b6",
+                        "label": "Trials > 0"
+                    },
+                    {
+                        "id": "9984e7e32e45-ea107757d2768337-d656",
+                        "type": "beginScenario",
+                        "designer": {
+                            "xLocation": 113,
+                            "yLocation": 120,
+                            "next": "102cf72eca14-b299a2caf0e80fe6-bf31"
+                        },
+                        "scenario": "clinical_trials_matching_initialization",
+                        "variable": "initScenarioResponse",
+                        "args": "{\r\n    luis: scenario.luis\r\n}",
+                        "label": "Initialization scenario"
+                    },
+                    {
+                        "id": "ccd45520d814-45f9691a3edb8f42-897f",
+                        "type": "beginScenario",
+                        "designer": {
+                            "xLocation": 330,
+                            "yLocation": 693
+                        },
+                        "scenario": "clinical_trials_matching_results",
+                        "variable": "resultsScenarioResponse",
+                        "args": "{\r\n    \"trials\": scenario.trials\r\n}",
+                        "label": "Results scenario"
+                    }
+                ],
+                "returningMessage": "",
+                "interrupting": false,
+                "breaking": false
+            }
+        },
+        {
+            "odata.etag": "W/\"datetime'2020-07-28T13%3A15%3A15.4520065Z'\"",
+            "PartitionKey": "f9b1843e-bbd8-4143-b7da-112c5cdf4e28",
+            "RowKey": "71896f33-a707-4cd5-aabd-c485390dfb27",
+            "name": "clinical_trials_matching_initialization",
+            "scenario_trigger": "clinical_trials_matching_initialization",
+            "description": "clinical_trials_matching_initialization",
+            "userDisplayName": "Ronny Roktel",
+            "active": true,
+            "version": 1,
+            "updated@odata.type": "Edm.DateTime",
+            "updated": "2020-07-28T13:15:15.4350000Z",
+            "currentUser": "",
+            "Timestamp": "2020-07-28T13:15:15.4520065Z",
+            "code": {
+                "version": 3,
+                "steps": [
+                    {
+                        "id": "09db9a1c39d3-e8ae2ae214eacb87-4873",
+                        "type": "action",
+                        "label": "Init variables",
+                        "designer": {
+                            "xLocation": 432,
+                            "yLocation": 20,
+                            "next": "de86f22bb596-7c65f50cb311e848-299b"
+                        },
+                        "onInit": "scenario.luis = scenario.scenarioArgs.luis;\n\nscenario.consts = {};\nscenario.consts.TRIALS_THRESHOLD = 5;\nscenario.consts.QUESTIONS_THRESHOLD = 10;\nscenario.consts.MIN_AGE = 0;\nscenario.consts.MAX_AGE = 120;\n\nscenario.questions = {};\nscenario.questions.gender = \"Please specify the patient's sex:\";\nscenario.questions.age = \"How old is the patient (in years)?\";\nscenario.questions.condition = \"What is the patient's condition?\";\nscenario.questions.location = \"Where would the patient like to search for trials?\";\nscenario.questions.state = \"Please enter state:\";\nscenario.questions.city = \"Please enter city:\";\nscenario.questions.shouldContinueAsking = \"What would you like to do?\";\n\nscenario.messages = {};\nscenario.messages.unsupportedAge = \"Age must be between 0 - 120 years.\";\nscenario.messages.matchingTrials = \"Matching clinical trials...This might take a few moments.\";\nscenario.messages.noRelavantTrials = \"Sorry, no relevant trials were found.\";\nscenario.messages.serviceProblem = \"Sorry, there seems to be a problem with the matching service.\\nPlease try again later.\";\nscenario.messages.noAdditionalQuestions = \"No additional questions are available to qualify the patient.\";\nscenario.messages.relevantTrialsPrefix = \"Number of relevant trials found:\";"
+                    },
+                    {
+                        "id": "de86f22bb596-7c65f50cb311e848-299b",
+                        "type": "prompt",
+                        "dataType": "[\"Female\", \"Male\", \"Prefer not to say\"]",
+                        "designer": {
+                            "xLocation": 426,
+                            "yLocation": 109,
+                            "listStyle": 3,
+                            "next": "774ca676858f-dc86dce31145b233-1250"
+                        },
+                        "text": "scenario.questions.gender",
+                        "variable": "genderValue",
+                        "submitTitle": "Submit",
+                        "label": "Gender",
+                        "visible": "scenario.luis.gender == null",
+                        "stringId": "stringId_fd866a19347eef73",
+                        "choiceType": "choice"
+                    },
+                    {
+                        "id": "774ca676858f-dc86dce31145b233-1250",
+                        "type": "branch",
+                        "condition": "scenario.luis.age &&\r\nparseFloat(scenario.luis.age) > scenario.consts.MIN_AGE &&\r\nparseFloat(scenario.luis.age) <= scenario.consts.MAX_AGE",
+                        "designer": {
+                            "xLocation": 434,
+                            "yLocation": 166,
+                            "next": "76b36f8389b4-0faf6d75e6f30328-77e2"
+                        },
+                        "label": "Verify Age",
+                        "targetStepId": "6d31de90868b-1c041e8a7b606c9c-273f"
+                    },
+                    {
+                        "id": "76b36f8389b4-0faf6d75e6f30328-77e2",
+                        "type": "prompt",
+                        "dataType": "number",
+                        "designer": {
+                            "xLocation": 426,
+                            "yLocation": 249,
+                            "next": "e39413f93f82-b68dc752553926bf-386c"
+                        },
+                        "text": "scenario.questions.age",
+                        "variable": "ageValue",
+                        "submitTitle": "Submit",
+                        "label": "Age",
+                        "visible": "true",
+                        "stringId": "stringId_f2b2ba4e21407e7f"
+                    },
+                    {
+                        "id": "e39413f93f82-b68dc752553926bf-386c",
+                        "type": "branch",
+                        "condition": "scenario.ageValue > scenario.consts.MIN_AGE &&\r\nscenario.ageValue <= scenario.consts.MAX_AGE",
+                        "designer": {
+                            "xLocation": 433,
+                            "yLocation": 320,
+                            "next": "d333290bfd11-8236a6af24b28a6b-b7e3"
+                        },
+                        "label": "Validate Age",
+                        "targetStepId": "6d31de90868b-1c041e8a7b606c9c-273f"
+                    },
+                    {
+                        "id": "6d31de90868b-1c041e8a7b606c9c-273f",
+                        "type": "prompt",
+                        "dataType": "string",
+                        "designer": {
+                            "xLocation": 427,
+                            "yLocation": 414,
+                            "next": "430567f66139-7a809f8b81937b31-f4f6"
+                        },
+                        "text": "scenario.questions.condition",
+                        "variable": "conditionValue",
+                        "submitTitle": "Submit",
+                        "label": "Condition",
+                        "visible": "scenario.luis.condition == null",
+                        "stringId": "stringId_4cf1956510b3b02e"
+                    },
+                    {
+                        "id": "d333290bfd11-8236a6af24b28a6b-b7e3",
+                        "type": "statement",
+                        "designer": {
+                            "xLocation": 273,
+                            "yLocation": 393,
+                            "next": "76b36f8389b4-0faf6d75e6f30328-77e2"
+                        },
+                        "text": "scenario.messages.unsupportedAge",
+                        "label": "Unsupported Age",
+                        "stringId": "stringId_d8eae28ead1d3eb5"
+                    },
+                    {
+                        "id": "430567f66139-7a809f8b81937b31-f4f6",
+                        "type": "prompt",
+                        "dataType": "['Specific city', 'Specific state', 'Entire US']",
+                        "designer": {
+                            "xLocation": 428,
+                            "yLocation": 480,
+                            "listStyle": 3,
+                            "next": "f5a2e5d498e1-fe3e715a36ca0d77-53e4"
+                        },
+                        "text": "scenario.questions.location",
+                        "variable": "locationValue",
+                        "submitTitle": "Submit",
+                        "label": "Location",
+                        "visible": "scenario.luis.location == null",
+                        "stringId": "stringId_50ee1357548714d8",
+                        "choiceType": "choice"
+                    },
+                    {
+                        "id": "f5a2e5d498e1-fe3e715a36ca0d77-53e4",
+                        "type": "prompt",
+                        "dataType": "string",
+                        "designer": {
+                            "xLocation": 428,
+                            "yLocation": 540,
+                            "next": "107785e07dc2-7a2b3a5159c1b105-7819"
+                        },
+                        "text": "scenario.questions.state",
+                        "variable": "stateValue",
+                        "submitTitle": "Submit",
+                        "label": "State",
+                        "visible": "scenario.locationValue != null && scenario.locationValue.entity === \"Specific state\"",
+                        "stringId": "stringId_9211b4901d8adfae"
+                    },
+                    {
+                        "id": "107785e07dc2-7a2b3a5159c1b105-7819",
+                        "type": "prompt",
+                        "dataType": "string",
+                        "designer": {
+                            "xLocation": 427,
+                            "yLocation": 600,
+                            "next": "304be1c70c2d-7564feea80bc45fe-b7db"
+                        },
+                        "text": "scenario.questions.city",
+                        "variable": "cityValue",
+                        "submitTitle": "Submit",
+                        "label": "City",
+                        "visible": "scenario.locationValue != null && scenario.locationValue.entity === \"Specific city\"",
+                        "stringId": "stringId_9211b4901d8adfae"
+                    },
+                    {
+                        "id": "304be1c70c2d-7564feea80bc45fe-b7db",
+                        "type": "action",
+                        "label": "Normalize Values",
+                        "designer": {
+                            "xLocation": 432,
+                            "yLocation": 660,
+                            "next": "f7c3614521fb-fc5c2048fe78a135-3977"
+                        },
+                        "onInit": "var userProfile = {};\n// gender \nif (scenario.luis.gender != null) {\n    userProfile.gender = scenario.luis.gender;\n} else {\n    if (scenario.genderValue.entity !== \"Prefer not to say\") {\n        userProfile.gender = scenario.genderValue.entity.toLowerCase();\n    }\n}\n// age\nif (scenario.luis.age != null) {\n    userProfile.age = scenario.luis.age;\n} else {\n    userProfile.age = scenario.ageValue + \"\";\n}\n// condition\nif (scenario.luis.condition != null) {\n    userProfile.condition = scenario.luis.condition;\n} else {\n    userProfile.condition = scenario.conditionValue;\n}\n// location\nif (scenario.luis.location != null) {\n    userProfile.searchLocationCountry = scenario.luis.location.country;\n    userProfile.searchLocationState = scenario.luis.location.state;\n    userProfile.searchLocationCity = scenario.luis.location.city;\n} else {\n    userProfile.searchLocationCountry = scenario.countryValue != null ? scenario.countryValue : null;\n    userProfile.searchLocationState = scenario.stateValue != null ? scenario.stateValue : null;\n    userProfile.searchLocationCity = scenario.cityValue != null ? scenario.cityValue : null;\n}\n// assign values to scenario\nscenario.userProfile = userProfile;"
+                    },
+                    {
+                        "id": "f7c3614521fb-fc5c2048fe78a135-3977",
+                        "type": "endwithresult",
+                        "designer": {
+                            "xLocation": 427,
+                            "yLocation": 752
+                        },
+                        "endScope": "scenario",
+                        "returnValue": "{\r\n    consts: scenario.consts,\r\n    messages: scenario.messages,\r\n    questions: scenario.questions,\r\n    userProfile: scenario.userProfile,\r\n}",
+                        "label": "Result"
+                    }
+                ],
+                "interrupting": false,
+                "breaking": false,
+                "returningMessage": ""
+            }
+        },
+        {
+            "odata.etag": "W/\"datetime'2020-07-28T13%3A35%3A27.1339009Z'\"",
+            "PartitionKey": "f9b1843e-bbd8-4143-b7da-112c5cdf4e28",
+            "RowKey": "5e27c853-73d9-4289-8949-18410174bcfd",
+            "name": "clinical_trials_matching_results",
+            "scenario_trigger": "clinical_trials_matching_results",
+            "description": "clinical_trials_matching_results",
+            "userDisplayName": "Ronny Roktel",
+            "active": true,
+            "version": 1,
+            "updated@odata.type": "Edm.DateTime",
+            "updated": "2020-07-28T13:35:27.1060000Z",
+            "currentUser": "",
+            "Timestamp": "2020-07-28T13:35:27.1339009Z",
+            "code": {
+                "version": 3,
+                "steps": [
+                    {
+                        "id": "0a692feea650-27867dd568fdac24-8962",
+                        "type": "action",
+                        "label": "Init",
+                        "designer": {
+                            "xLocation": 833,
+                            "yLocation": 40,
+                            "next": "9bfd640bba67-4d9917adbf400edc-784a"
+                        },
+                        "onInit": "scenario.trials = scenario.scenarioArgs.trials;"
+                    },
+                    {
+                        "id": "9bfd640bba67-4d9917adbf400edc-784a",
+                        "type": "statement",
+                        "designer": {
+                            "xLocation": 830,
+                            "yLocation": 120,
+                            "next": "051596a5e9c4-f8bb980a161b64eb-cb87"
+                        },
+                        "text": "Here are the clinical trials the patient may qualify for:",
+                        "stringId": "stringId_1e9a67f771cb8273"
+                    },
+                    {
+                        "id": "051596a5e9c4-f8bb980a161b64eb-cb87",
+                        "type": "action",
+                        "label": "Create Card",
+                        "designer": {
+                            "xLocation": 833,
+                            "yLocation": 186,
+                            "next": "4aab6a82b7d0-6298a11eccabfacb-b01c"
+                        },
+                        "onInit": "var cardBody = scenario.trials.map(trial => {\n    return {\n\t\t\"type\": \"Container\",\n\t\t\"separator\": true,\n\t\t\"spacing\": \"Large\",\n\t\t\"items\": [\n            {\n                \"type\": \"TextBlock\",\n                \"text\": \"RECRUITING\",\n                \"separator\": true,\n                \"color\": \"dark\"\n            },{\n                \"type\": \"TextBlock\",\n                \"color\": \"accent\",\n                \"text\": \"[\" + trial.briefTitle + \"](https://clinicaltrials.gov/ct2/show/\" + trial.nctId + \")\",\n                \"spacing\": \"none\",\n                \"wrap\": true,\n                \"color\": \"blue\"\n            },{\n                \"type\": \"TextBlock\",\n                \"text\": \"Clinical trial ID: \" + trial.nctId,\n                \"isSubtle\": true,\n                \"weight\": \"lighter\"\n            }\n        ]\n    }\n});\n\nscenario.card = {\n  \"$schema\": \"http://adaptivecards.io/schemas/adaptive-card.json\",\n  \"type\": \"AdaptiveCard\",\n  \"version\": \"1.0\",\n  \"body\": cardBody\n};"
+                    },
+                    {
+                        "id": "4aab6a82b7d0-6298a11eccabfacb-b01c",
+                        "type": "statement",
+                        "designer": {
+                            "xLocation": 828,
+                            "yLocation": 269
+                        },
+                        "layout": "vertical",
+                        "attachment": [
+                            {
+                                "type": "AdaptiveCard",
+                                "cardCode": "scenario.card"
+                            }
+                        ],
+                        "label": "Show Card"
+                    }
+                ],
+                "interrupting": false,
+                "breaking": false,
+                "returningMessage": ""
+            }
         }
     ],
     "dataConnections": [
@@ -990,7 +1110,7 @@
             },
             "intent_handler_map": {
                 "Clinical Trials Matching": {
-                    "handler": "/scenarios/clinical_trials_matching_general"
+                    "handler": "/scenarios/clinical_trials_matching_core"
                 }
             }
         },
