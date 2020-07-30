@@ -1,20 +1,20 @@
 {
     "scenarios": [
         {
-            "odata.etag": "W/\"datetime'2020-07-28T10%3A34%3A45.1248129Z'\"",
+            "odata.etag": "W/\"datetime'2020-07-29T14%3A28%3A46.2556161Z'\"",
             "PartitionKey": "f9b1843e-bbd8-4143-b7da-112c5cdf4e28",
             "RowKey": "58265767-8c27-4153-8a56-6ff298e25bca",
             "active": true,
-            "currentUser": "",
+            "currentUser": "Ronny Roktel ( System Admin )",
             "description": "clinical_trials_matching_question_generation",
             "name": "clinical_trials_matching_question_generation",
             "scenario_trigger": "clinical_trials_matching_question_generation",
             "updated@odata.type": "Edm.DateTime",
-            "updated": "2020-07-27T14:39:57.5650000Z",
+            "updated": "2020-07-29T14:28:46.2400000Z",
             "userDisplayName": "Ronny Roktel",
             "version": 1,
             "snapshots": 0,
-            "Timestamp": "2020-07-28T10:34:45.1248129Z",
+            "Timestamp": "2020-07-29T14:28:46.2556161Z",
             "code": {
                 "version": 3,
                 "steps": [
@@ -214,12 +214,13 @@
                         "id": "a87f34be753f-59cc272dc1a85b29-5eaa",
                         "type": "statement",
                         "designer": {
-                            "xLocation": 207,
-                            "yLocation": 580,
+                            "xLocation": 194,
+                            "yLocation": 552,
                             "next": "3ea76a3a5e9c-4532826d6e64fc15-ffc7"
                         },
-                        "text": "I didn't understand. Please enter a number.",
-                        "stringId": "stringId_58d05e50bd880b8a"
+                        "text": "customLocalizedStrings[\"CTM/messages/enterNumber\"]",
+                        "stringId": "stringId_58d05e50bd880b8a",
+                        "label": "Enter Number"
                     },
                     {
                         "id": "a3c94443f8bf-cb9a8364eac92c34-ca3c",
@@ -250,7 +251,7 @@
             }
         },
         {
-            "odata.etag": "W/\"datetime'2020-07-28T13%3A51%3A57.1314689Z'\"",
+            "odata.etag": "W/\"datetime'2020-07-29T15%3A15%3A06.9878273Z'\"",
             "PartitionKey": "f9b1843e-bbd8-4143-b7da-112c5cdf4e28",
             "RowKey": "7217425e-9210-48cc-bf54-efdbf44cf853",
             "name": "clinical_trials_matching_core",
@@ -260,9 +261,9 @@
             "active": true,
             "version": 1,
             "updated@odata.type": "Edm.DateTime",
-            "updated": "2020-07-28T13:51:57.1070000Z",
-            "currentUser": "",
-            "Timestamp": "2020-07-28T13:51:57.1314689Z",
+            "updated": "2020-07-29T15:15:06.9560000Z",
+            "currentUser": "Ronny Roktel ( System Admin )",
+            "Timestamp": "2020-07-29T15:15:06.9878273Z",
             "code": {
                 "version": 3,
                 "steps": [
@@ -275,7 +276,7 @@
                             "yLocation": 28,
                             "next": "9984e7e32e45-ea107757d2768337-d656"
                         },
-                        "onInit": "scenario.timeStarted = new Date().getTime();\nscenario.maxloggedTrialsNum = 112;\nscenario.luis = {};\n// temp variables for normalization\nvar locationCity = null;\nvar locationCountry = null;\nvar locationState = null;\nvar ageResolution = null;\n// for research and improving language model\nvar notMappedEntities = [];\n// conversation started with arguments\nif(scenario.scenarioArgs.entities != null) {\n    // iterate all LUIS entities and set their values\n    scenario.scenarioArgs.entities.forEach(ent => {\n        switch(ent.type) {\n            case \"gender\":\n                scenario.luis.gender = ent.role;\n                break;\n            case \"builtin.age\":\n                ageResolution = ent.resolution;\n                break;\n            case \"disease\":\n                scenario.luis.condition = ent.entity;\n                break;\n            case \"builtin.geographyV2.countryRegion\":\n                locationCountry = ent.entity;\n                break;\n            case \"builtin.geographyV2.state\":\n                locationState = ent.entity;\n                break;\n            case \"builtin.geographyV2.city\":\n                locationCity = ent.entity;\n                break;\n            default:\n                notMappedEntities.push(ent.entity);\n        }\n    });\n}\n// age normalization\nif (ageResolution != null) {\n    switch (ageResolution.unit) {\n        case \"Year\":\n            scenario.luis.age = ageResolution.value;\n            break;\n        case \"Month\":\n            scenario.luis.age = (+ageResolution.value / 12) + \"\";\n            break;\n        case \"Week\":\n            scenario.luis.age = (+ageResolution.value / 52) + \"\";\n            break;\n        case \"Day\":\n            scenario.luis.age = (+ageResolution.value / 365) + \"\";\n            break;\n        default:\n            scenario.luis.age = null;        \n    }\n}\n// location normalization\nif(locationCountry != null || locationState != null || locationCity != null) {\n    scenario.luis.location = {};\n    if(locationCountry != null) {\n        scenario.luis.location.country = locationCountry;\n    }\n    if(locationState != null) {\n        scenario.luis.location.state = locationState;\n    }\n    if(locationCity != null) {\n        scenario.luis.location.city = locationCity;\n    }\n};"
+                        "onInit": "scenario.timeStarted = new Date().getTime();\nscenario.totalQuestionsAsked = 0;\nscenario.luis = {};\n// temp variables for normalization\nvar locationCity = null;\nvar locationCountry = null;\nvar locationState = null;\nvar ageResolution = null;\n// for research and improving language model\nvar notMappedEntities = [];\n// conversation started with arguments\nif(scenario.scenarioArgs.entities != null) {\n    // iterate all LUIS entities and set their values\n    scenario.scenarioArgs.entities.forEach(ent => {\n        switch(ent.type) {\n            case \"gender\":\n                scenario.luis.gender = ent.role;\n                break;\n            case \"builtin.age\":\n                ageResolution = ent.resolution;\n                break;\n            case \"disease\":\n                scenario.luis.condition = ent.entity;\n                break;\n            case \"builtin.geographyV2.countryRegion\":\n                locationCountry = ent.entity;\n                break;\n            case \"builtin.geographyV2.state\":\n                locationState = ent.entity;\n                break;\n            case \"builtin.geographyV2.city\":\n                locationCity = ent.entity;\n                break;\n            default:\n                notMappedEntities.push(ent.entity);\n        }\n    });\n}\n// age normalization\nif (ageResolution != null) {\n    switch (ageResolution.unit) {\n        case \"Year\":\n            scenario.luis.age = ageResolution.value;\n            break;\n        case \"Month\":\n            scenario.luis.age = (+ageResolution.value / 12) + \"\";\n            break;\n        case \"Week\":\n            scenario.luis.age = (+ageResolution.value / 52) + \"\";\n            break;\n        case \"Day\":\n            scenario.luis.age = (+ageResolution.value / 365) + \"\";\n            break;\n        default:\n            scenario.luis.age = null;        \n    }\n}\n// location normalization\nif(locationCountry != null || locationState != null || locationCity != null) {\n    scenario.luis.location = {};\n    if(locationCountry != null) {\n        scenario.luis.location.country = locationCountry;\n    }\n    if(locationState != null) {\n        scenario.luis.location.state = locationState;\n    }\n    if(locationCity != null) {\n        scenario.luis.location.city = locationCity;\n    }\n};"
                     },
                     {
                         "id": "102cf72eca14-b299a2caf0e80fe6-bf31",
@@ -286,7 +287,7 @@
                             "yLocation": 227,
                             "next": "162067c1f357-741c663bd45a2170-d303"
                         },
-                        "onInit": "scenario.consts = scenario.initScenarioResponse.consts;\nscenario.consts.trialsLogLimit = 100;\n\nscenario.messages = scenario.initScenarioResponse.messages;\nscenario.profile = scenario.initScenarioResponse.userProfile;\nscenario.questions = scenario.initScenarioResponse.questions;"
+                        "onInit": "scenario.consts = scenario.initScenarioResponse.consts;\n// add explicit log\nscenario.consts.TRIALS_LOG_LIMIT = 100;\n\nscenario.profile = scenario.initScenarioResponse.userProfile;"
                     },
                     {
                         "id": "fb7403c86d6a-1e24272165de9c1b-92f7",
@@ -305,12 +306,12 @@
                         "designer": {
                             "xLocation": 100,
                             "yLocation": 480,
-                            "errorStepId": "7cf5829caf3b-b595e08171a799bc-2f59",
+                            "errorStepId": "b06934c57c28-f7976d41b9a5e831-ef13",
                             "next": "c2cb2cc32790-39376ffe807a6893-5e86",
                             "reverse": true
                         },
                         "dataConnection": "ctm-query-engine-prod",
-                        "urlBase": "https://prod-eastus-ctm-qe-webapp.azurewebsites.net",
+                        "urlBase": "https://prod-gateway-webapp.azurewebsites.net/qe",
                         "urlPath": "match",
                         "urlParams": "",
                         "contentType": "raw",
@@ -322,17 +323,6 @@
                         "response": "qeResponse",
                         "error": "qeError",
                         "label": "Query Engine endpoint"
-                    },
-                    {
-                        "id": "7cf5829caf3b-b595e08171a799bc-2f59",
-                        "type": "statement",
-                        "designer": {
-                            "xLocation": 500,
-                            "yLocation": 712
-                        },
-                        "text": "scenario.messages.serviceProblem",
-                        "stringId": "stringId_a38152ce3e7f6b5f",
-                        "label": "Service Problem"
                     },
                     {
                         "id": "c2cb2cc32790-39376ffe807a6893-5e86",
@@ -352,22 +342,11 @@
                         "designer": {
                             "xLocation": 340,
                             "yLocation": 27,
-                            "next": "e8e69e5b6b47-4c7e389965d6aef4-6dd1",
+                            "next": "5b4a6c548e07-1673cffccb42b3b4-c522",
                             "reverse": true
                         },
                         "targetStepId": "c38230cbc10d-7c8058bc6dc833c6-6a00",
                         "label": "Trials > 0"
-                    },
-                    {
-                        "id": "e8e69e5b6b47-4c7e389965d6aef4-6dd1",
-                        "type": "statement",
-                        "designer": {
-                            "xLocation": 673,
-                            "yLocation": 711
-                        },
-                        "text": "scenario.messages.noRelavantTrials",
-                        "stringId": "stringId_537880f504287022",
-                        "label": "No Trials"
                     },
                     {
                         "id": "6c395b7ffcbf-9a3ac0cb171f8c36-4154",
@@ -377,7 +356,7 @@
                             "yLocation": 220,
                             "next": "46c223b11a89-3ac967716fd0b465-98b6"
                         },
-                        "text": "scenario.messages.relevantTrialsPrefix + \" \" + scenario.trials.length",
+                        "text": "customLocalizedStrings[\"CTM/messages/relevantTrialsPrefix\"] + \" \" + scenario.trials.length",
                         "stringId": "stringId_00902617ba8079bf",
                         "label": "Relevant trials number"
                     },
@@ -402,7 +381,7 @@
                             "yLocation": 320,
                             "next": "fb7403c86d6a-1e24272165de9c1b-92f7"
                         },
-                        "text": "scenario.messages.matchingTrials",
+                        "text": "customLocalizedStrings[\"CTM/messages/matchingTrials\"]",
                         "stringId": "stringId_a46894ffc1bf4ca9",
                         "label": "Matching Trials"
                     },
@@ -411,7 +390,7 @@
                         "type": "action",
                         "label": "Create Disqualify Request",
                         "designer": {
-                            "xLocation": 912,
+                            "xLocation": 900,
                             "yLocation": 380,
                             "next": "d5398bdc9019-e4c6eb78e63ffdc5-416a"
                         },
@@ -437,14 +416,14 @@
                             "next": "ac3e4757a04f-95c5731ff4cd2f2f-c783"
                         },
                         "scenario": "clinical_trials_matching_question_generation",
-                        "variable": "questionAnswer",
+                        "variable": "questionGenerationResponse",
                         "args": "scenario.questionArgs",
                         "label": "Question Generation"
                     },
                     {
                         "id": "bd61cf721cfb-286941d86a9f1950-d264",
                         "type": "branch",
-                        "condition": "scenario.questionAnswer.answer == null",
+                        "condition": "scenario.questionGenerationResponse.answer == null",
                         "designer": {
                             "xLocation": 940,
                             "yLocation": 507,
@@ -473,7 +452,7 @@
                             "yLocation": 620,
                             "next": "c7f40688bbe6-46591d81f769a6a1-9d1f"
                         },
-                        "onInit": "scenario.profile.askedCodes.push(scenario.questionAnswer);"
+                        "onInit": "scenario.profile.askedCodes.push(scenario.questionGenerationResponse);"
                     },
                     {
                         "id": "d5398bdc9019-e4c6eb78e63ffdc5-416a",
@@ -482,10 +461,10 @@
                             "xLocation": 913,
                             "yLocation": 280,
                             "next": "57b8d246f882-fccf0daa5e3e5f5e-a939",
-                            "errorStepId": "7cf5829caf3b-b595e08171a799bc-2f59"
+                            "errorStepId": "b06934c57c28-f7976d41b9a5e831-ef13"
                         },
                         "dataConnection": "ctm-disqualifier-prod",
-                        "urlBase": "https://prod-eastus-ctm-disq-webapp.azurewebsites.net",
+                        "urlBase": "https://prod-gateway-webapp.azurewebsites.net/disq",
                         "urlPath": "disqualify",
                         "urlParams": "",
                         "contentType": "raw",
@@ -534,14 +513,14 @@
                     {
                         "id": "c0b5312656d6-cb6b198a64649879-f53d",
                         "type": "prompt",
-                        "dataType": "[\"Answer additional questions\", \"Get results\"]",
+                        "dataType": "[customLocalizedStrings[\"CTM/answers/additionalQuestions\"], customLocalizedStrings[\"CTM/answers/getResults\"]]",
                         "designer": {
                             "xLocation": 1691,
                             "yLocation": 280,
                             "listStyle": 3,
                             "next": "f3aa06e2bb65-6697b1be21430325-586f"
                         },
-                        "text": "scenario.questions.shouldContinueAsking",
+                        "text": "customLocalizedStrings[\"CTM/questions/shouldContinueAsking\"]",
                         "variable": "continueAsking",
                         "stringId": "stringId_b73a4cc0c608505e",
                         "choiceType": "choice",
@@ -562,13 +541,13 @@
                     {
                         "id": "04bde4fbe4fd-cde1c2bb3509913a-e268",
                         "type": "branch",
-                        "condition": "scenario.continueAsking.entity === \"Answer additional questions\"",
+                        "condition": "scenario.continueAsking.entity === customLocalizedStrings[\"CTM/answers/additionalQuestions\"]",
                         "designer": {
                             "xLocation": 1709,
                             "yLocation": 380,
                             "next": "46c223b11a89-3ac967716fd0b465-98b6"
                         },
-                        "label": "Additional questions",
+                        "label": "is Additional questions",
                         "targetStepId": "d46040c72921-e874ae9773008129-3f14"
                     },
                     {
@@ -592,7 +571,7 @@
                             "yLocation": 80,
                             "next": "efdb922881fd-730358f2fa29dc39-73b0"
                         },
-                        "text": "scenario.messages.relevantTrialsPrefix + \" \" + scenario.trials.length",
+                        "text": "customLocalizedStrings[\"CTM/messages/relevantTrialsPrefix\"] + \" \" + scenario.trials.length",
                         "stringId": "stringId_00902617ba8079bf",
                         "label": "Relevant trials number"
                     },
@@ -603,7 +582,7 @@
                         "designer": {
                             "xLocation": 1280,
                             "yLocation": 60,
-                            "next": "e8e69e5b6b47-4c7e389965d6aef4-6dd1"
+                            "next": "5b4a6c548e07-1673cffccb42b3b4-c522"
                         },
                         "targetStepId": "b1119c0d3562-c592b7cced67f2b2-e89c",
                         "label": "Trials > 0"
@@ -637,7 +616,7 @@
                         "designer": {
                             "xLocation": 326,
                             "yLocation": 400,
-                            "errorStepId": "7cf5829caf3b-b595e08171a799bc-2f59",
+                            "errorStepId": "b06934c57c28-f7976d41b9a5e831-ef13",
                             "next": "2333bc1d943a-dbd4cf50e0a91eee-125b",
                             "reverse": true
                         },
@@ -682,22 +661,22 @@
                         "type": "action",
                         "label": "Log QE response",
                         "designer": {
-                            "xLocation": 210,
-                            "yLocation": 586,
+                            "xLocation": 206,
+                            "yLocation": 620,
                             "next": "8eb78c0e15f8-3aa0bdbacd6795d8-0ac6"
                         },
-                        "onInit": "var qeResponse = {};\nqeResponse.trials = scenario.trials;\nqeResponse.qeTrialsNum = scenario.trials.length;\nsession.logCustomEvent('QE_RESPONSE', qeResponse);"
+                        "onInit": "var qeResponse = {};\nqeResponse.trials = scenario.trials.slice(0, scenario.consts.TRIALS_LOG_LIMIT).map(trial => {\n    return {\n        \"nctId\": trial.nctId\n    };\n});\nqeResponse.qeTrialsNum = scenario.trials.length;\nsession.logCustomEvent('QE_RESPONSE', qeResponse);"
                     },
                     {
                         "id": "e588f774bae0-892987238b37e51d-68d3",
                         "type": "action",
                         "label": "Log Trials Results",
                         "designer": {
-                            "xLocation": 434,
-                            "yLocation": 560,
+                            "xLocation": 454,
+                            "yLocation": 620,
                             "next": "ccd45520d814-45f9691a3edb8f42-897f"
                         },
-                        "onInit": "var trialResults = {};\ntrialResults.totalQuestions = scenario.totalQuestionsAsked;\ntrialResults.resultTrialsNum = scenario.trials.length;\ntrialResults.qeTrialsNum = scenario.qeTrials.length;\ntrialResults.resultTrials = scenario.trials.slice(0, scenario.consts.trialsLogLimit).map(trial => {\n    return {\n        \"nctId\": trial.nctId,\n        \"sponsor\": trial.leadSponsor\n    };\n});\ntrialResults.secondsSpent = (new Date().getTime() - scenario.timeStarted) / 1000;\ntrialResults.profile = scenario.profile;\nsession.logCustomEvent('TRIALS_RESULTS', trialResults);"
+                        "onInit": "var trialResults = {};\ntrialResults.totalQuestions = scenario.totalQuestionsAsked;\ntrialResults.resultTrialsNum = scenario.trials.length;\ntrialResults.qeTrialsNum = scenario.qeTrials.length;\ntrialResults.resultTrials = scenario.trials.slice(0, scenario.consts.TRIALS_LOG_LIMIT).map(trial => {\n    return {\n        \"nctId\": trial.nctId,\n        \"sponsor\": trial.leadSponsor\n    };\n});\ntrialResults.secondsSpent = (new Date().getTime() - scenario.timeStarted) / 1000;\ntrialResults.profile = scenario.profile;\nsession.logCustomEvent('TRIALS_RESULTS', trialResults);"
                     },
                     {
                         "id": "f3aa06e2bb65-6697b1be21430325-586f",
@@ -719,7 +698,7 @@
                             "yLocation": 567,
                             "next": "bd61cf721cfb-286941d86a9f1950-d264"
                         },
-                        "onInit": "var userAnswer = {};\nuserAnswer.questionsNum = scenario.totalQuestionsAsked;\nuserAnswer.answer = scenario.questionAnswer;\nuserAnswer.profile = scenario.profile;\nsession.logCustomEvent('USER_ANSWER', userAnswer);"
+                        "onInit": "var userAnswer = {};\nuserAnswer.questionsNum = scenario.totalQuestionsAsked;\nuserAnswer.answer = scenario.questionGenerationResponse;\nuserAnswer.profile = scenario.profile;\nsession.logCustomEvent('USER_ANSWER', userAnswer);"
                     },
                     {
                         "id": "42b4b5fab0ed-0ff1c03b236e69bd-63c4",
@@ -736,11 +715,11 @@
                         "id": "9fb7affe3548-5c84b2220de6ce15-cbda",
                         "type": "statement",
                         "designer": {
-                            "xLocation": 600,
+                            "xLocation": 660,
                             "yLocation": 40,
                             "next": "56dfa186629f-62e11a8c3f24b35f-483f"
                         },
-                        "text": "scenario.messages.noAdditionalQuestions",
+                        "text": "customLocalizedStrings[\"CTM/messages/noAdditionalQuestions\"]",
                         "stringId": "stringId_aa9be14de87b88a7",
                         "label": "No Additional Questions"
                     },
@@ -749,9 +728,9 @@
                         "type": "branch",
                         "condition": "scenario.trials && scenario.trials.length > 0\r\n",
                         "designer": {
-                            "xLocation": 608,
-                            "yLocation": 113,
-                            "next": "e8e69e5b6b47-4c7e389965d6aef4-6dd1",
+                            "xLocation": 669,
+                            "yLocation": 100,
+                            "next": "5b4a6c548e07-1673cffccb42b3b4-c522",
                             "reverse": true
                         },
                         "targetStepId": "46c223b11a89-3ac967716fd0b465-98b6",
@@ -774,13 +753,35 @@
                         "id": "ccd45520d814-45f9691a3edb8f42-897f",
                         "type": "beginScenario",
                         "designer": {
-                            "xLocation": 330,
-                            "yLocation": 693
+                            "xLocation": 587,
+                            "yLocation": 720
                         },
-                        "scenario": "clinical_trials_matching_results",
-                        "variable": "resultsScenarioResponse",
-                        "args": "{\r\n    \"trials\": scenario.trials\r\n}",
-                        "label": "Results scenario"
+                        "scenario": "clinical_trials_matching_outcome",
+                        "variable": "outcomeScenarioResponse",
+                        "args": "{\r\n    \"trials\": scenario.trials,\r\n    \"error\": scenario.error,\r\n}",
+                        "label": "Outcome scenario"
+                    },
+                    {
+                        "id": "5b4a6c548e07-1673cffccb42b3b4-c522",
+                        "type": "action",
+                        "label": "Verify empty trials",
+                        "designer": {
+                            "xLocation": 700,
+                            "yLocation": 620,
+                            "next": "ccd45520d814-45f9691a3edb8f42-897f"
+                        },
+                        "onInit": "// verifying that trials is not null, and empty array\r\nscenario.trials = [];"
+                    },
+                    {
+                        "id": "b06934c57c28-f7976d41b9a5e831-ef13",
+                        "type": "action",
+                        "label": "Set Error",
+                        "designer": {
+                            "xLocation": 580,
+                            "yLocation": 620,
+                            "next": "ccd45520d814-45f9691a3edb8f42-897f"
+                        },
+                        "onInit": "scenario.error = customLocalizedStrings[\"CTM/messages/serviceProblem\"]"
                     }
                 ],
                 "returningMessage": "",
@@ -789,7 +790,7 @@
             }
         },
         {
-            "odata.etag": "W/\"datetime'2020-07-28T13%3A15%3A15.4520065Z'\"",
+            "odata.etag": "W/\"datetime'2020-07-29T15%3A19%3A34.9604353Z'\"",
             "PartitionKey": "f9b1843e-bbd8-4143-b7da-112c5cdf4e28",
             "RowKey": "71896f33-a707-4cd5-aabd-c485390dfb27",
             "name": "clinical_trials_matching_initialization",
@@ -799,9 +800,9 @@
             "active": true,
             "version": 1,
             "updated@odata.type": "Edm.DateTime",
-            "updated": "2020-07-28T13:15:15.4350000Z",
-            "currentUser": "",
-            "Timestamp": "2020-07-28T13:15:15.4520065Z",
+            "updated": "2020-07-29T15:19:34.9180000Z",
+            "currentUser": "Ronny Roktel ( System Admin )",
+            "Timestamp": "2020-07-29T15:19:34.9604353Z",
             "code": {
                 "version": 3,
                 "steps": [
@@ -814,7 +815,7 @@
                             "yLocation": 20,
                             "next": "de86f22bb596-7c65f50cb311e848-299b"
                         },
-                        "onInit": "scenario.luis = scenario.scenarioArgs.luis;\n\nscenario.consts = {};\nscenario.consts.TRIALS_THRESHOLD = 5;\nscenario.consts.QUESTIONS_THRESHOLD = 10;\nscenario.consts.MIN_AGE = 0;\nscenario.consts.MAX_AGE = 120;\n\nscenario.questions = {};\nscenario.questions.gender = \"Please specify the patient's sex:\";\nscenario.questions.age = \"How old is the patient (in years)?\";\nscenario.questions.condition = \"What is the patient's condition?\";\nscenario.questions.location = \"Where would the patient like to search for trials?\";\nscenario.questions.state = \"Please enter state:\";\nscenario.questions.city = \"Please enter city:\";\nscenario.questions.shouldContinueAsking = \"What would you like to do?\";\n\nscenario.messages = {};\nscenario.messages.unsupportedAge = \"Age must be between 0 - 120 years.\";\nscenario.messages.matchingTrials = \"Matching clinical trials...This might take a few moments.\";\nscenario.messages.noRelavantTrials = \"Sorry, no relevant trials were found.\";\nscenario.messages.serviceProblem = \"Sorry, there seems to be a problem with the matching service.\\nPlease try again later.\";\nscenario.messages.noAdditionalQuestions = \"No additional questions are available to qualify the patient.\";\nscenario.messages.relevantTrialsPrefix = \"Number of relevant trials found:\";"
+                        "onInit": "scenario.luis = scenario.scenarioArgs.luis;\n\nscenario.consts = {};\nscenario.consts.TRIALS_THRESHOLD = 5;\nscenario.consts.QUESTIONS_THRESHOLD = 5;\nscenario.consts.MIN_AGE = 0;\nscenario.consts.MAX_AGE = 120;"
                     },
                     {
                         "id": "de86f22bb596-7c65f50cb311e848-299b",
@@ -826,7 +827,7 @@
                             "listStyle": 3,
                             "next": "774ca676858f-dc86dce31145b233-1250"
                         },
-                        "text": "scenario.questions.gender",
+                        "text": "customLocalizedStrings[\"CTM/questions/gender\"]",
                         "variable": "genderValue",
                         "submitTitle": "Submit",
                         "label": "Gender",
@@ -840,10 +841,10 @@
                         "condition": "scenario.luis.age &&\r\nparseFloat(scenario.luis.age) > scenario.consts.MIN_AGE &&\r\nparseFloat(scenario.luis.age) <= scenario.consts.MAX_AGE",
                         "designer": {
                             "xLocation": 434,
-                            "yLocation": 166,
+                            "yLocation": 167,
                             "next": "76b36f8389b4-0faf6d75e6f30328-77e2"
                         },
-                        "label": "Verify Age",
+                        "label": "Verify Luis Age",
                         "targetStepId": "6d31de90868b-1c041e8a7b606c9c-273f"
                     },
                     {
@@ -855,7 +856,7 @@
                             "yLocation": 249,
                             "next": "e39413f93f82-b68dc752553926bf-386c"
                         },
-                        "text": "scenario.questions.age",
+                        "text": "customLocalizedStrings[\"CTM/questions/age\"]",
                         "variable": "ageValue",
                         "submitTitle": "Submit",
                         "label": "Age",
@@ -883,7 +884,7 @@
                             "yLocation": 414,
                             "next": "430567f66139-7a809f8b81937b31-f4f6"
                         },
-                        "text": "scenario.questions.condition",
+                        "text": "customLocalizedStrings[\"CTM/questions/condition\"]",
                         "variable": "conditionValue",
                         "submitTitle": "Submit",
                         "label": "Condition",
@@ -894,11 +895,11 @@
                         "id": "d333290bfd11-8236a6af24b28a6b-b7e3",
                         "type": "statement",
                         "designer": {
-                            "xLocation": 273,
-                            "yLocation": 393,
+                            "xLocation": 260,
+                            "yLocation": 349,
                             "next": "76b36f8389b4-0faf6d75e6f30328-77e2"
                         },
-                        "text": "scenario.messages.unsupportedAge",
+                        "text": "customLocalizedStrings[\"CTM/messages/unsupportedAge\"]",
                         "label": "Unsupported Age",
                         "stringId": "stringId_d8eae28ead1d3eb5"
                     },
@@ -912,7 +913,7 @@
                             "listStyle": 3,
                             "next": "f5a2e5d498e1-fe3e715a36ca0d77-53e4"
                         },
-                        "text": "scenario.questions.location",
+                        "text": "customLocalizedStrings[\"CTM/questions/location\"]",
                         "variable": "locationValue",
                         "submitTitle": "Submit",
                         "label": "Location",
@@ -929,7 +930,7 @@
                             "yLocation": 540,
                             "next": "107785e07dc2-7a2b3a5159c1b105-7819"
                         },
-                        "text": "scenario.questions.state",
+                        "text": "customLocalizedStrings[\"CTM/questions/state\"]",
                         "variable": "stateValue",
                         "submitTitle": "Submit",
                         "label": "State",
@@ -945,7 +946,7 @@
                             "yLocation": 600,
                             "next": "304be1c70c2d-7564feea80bc45fe-b7db"
                         },
-                        "text": "scenario.questions.city",
+                        "text": "customLocalizedStrings[\"CTM/questions/city\"]",
                         "variable": "cityValue",
                         "submitTitle": "Submit",
                         "label": "City",
@@ -981,19 +982,19 @@
             }
         },
         {
-            "odata.etag": "W/\"datetime'2020-07-28T13%3A35%3A27.1339009Z'\"",
+            "odata.etag": "W/\"datetime'2020-07-29T14%3A42%3A44.9654785Z'\"",
             "PartitionKey": "f9b1843e-bbd8-4143-b7da-112c5cdf4e28",
             "RowKey": "5e27c853-73d9-4289-8949-18410174bcfd",
-            "name": "clinical_trials_matching_results",
-            "scenario_trigger": "clinical_trials_matching_results",
-            "description": "clinical_trials_matching_results",
+            "name": "clinical_trials_matching_outcome",
+            "scenario_trigger": "clinical_trials_matching_outcome",
+            "description": "clinical_trials_matching_outcome",
             "userDisplayName": "Ronny Roktel",
             "active": true,
             "version": 1,
             "updated@odata.type": "Edm.DateTime",
-            "updated": "2020-07-28T13:35:27.1060000Z",
+            "updated": "2020-07-29T14:25:54.2180000Z",
             "currentUser": "",
-            "Timestamp": "2020-07-28T13:35:27.1339009Z",
+            "Timestamp": "2020-07-29T14:42:44.9654785Z",
             "code": {
                 "version": 3,
                 "steps": [
@@ -1002,30 +1003,31 @@
                         "type": "action",
                         "label": "Init",
                         "designer": {
-                            "xLocation": 833,
-                            "yLocation": 40,
-                            "next": "9bfd640bba67-4d9917adbf400edc-784a"
+                            "xLocation": 694,
+                            "yLocation": 20,
+                            "next": "e8373a213672-980afb41805ad195-1746"
                         },
-                        "onInit": "scenario.trials = scenario.scenarioArgs.trials;"
+                        "onInit": "scenario.trials = scenario.scenarioArgs.trials;\r\nscenario.error = scenario.scenarioArgs.error;"
                     },
                     {
                         "id": "9bfd640bba67-4d9917adbf400edc-784a",
                         "type": "statement",
                         "designer": {
-                            "xLocation": 830,
-                            "yLocation": 120,
+                            "xLocation": 692,
+                            "yLocation": 280,
                             "next": "051596a5e9c4-f8bb980a161b64eb-cb87"
                         },
-                        "text": "Here are the clinical trials the patient may qualify for:",
-                        "stringId": "stringId_1e9a67f771cb8273"
+                        "text": "customLocalizedStrings[\"CTM/messages/qualifiedTrials\"]",
+                        "stringId": "stringId_1e9a67f771cb8273",
+                        "label": "Qualified Trials"
                     },
                     {
                         "id": "051596a5e9c4-f8bb980a161b64eb-cb87",
                         "type": "action",
                         "label": "Create Card",
                         "designer": {
-                            "xLocation": 833,
-                            "yLocation": 186,
+                            "xLocation": 700,
+                            "yLocation": 340,
                             "next": "4aab6a82b7d0-6298a11eccabfacb-b01c"
                         },
                         "onInit": "var cardBody = scenario.trials.map(trial => {\n    return {\n\t\t\"type\": \"Container\",\n\t\t\"separator\": true,\n\t\t\"spacing\": \"Large\",\n\t\t\"items\": [\n            {\n                \"type\": \"TextBlock\",\n                \"text\": \"RECRUITING\",\n                \"separator\": true,\n                \"color\": \"dark\"\n            },{\n                \"type\": \"TextBlock\",\n                \"color\": \"accent\",\n                \"text\": \"[\" + trial.briefTitle + \"](https://clinicaltrials.gov/ct2/show/\" + trial.nctId + \")\",\n                \"spacing\": \"none\",\n                \"wrap\": true,\n                \"color\": \"blue\"\n            },{\n                \"type\": \"TextBlock\",\n                \"text\": \"Clinical trial ID: \" + trial.nctId,\n                \"isSubtle\": true,\n                \"weight\": \"lighter\"\n            }\n        ]\n    }\n});\n\nscenario.card = {\n  \"$schema\": \"http://adaptivecards.io/schemas/adaptive-card.json\",\n  \"type\": \"AdaptiveCard\",\n  \"version\": \"1.0\",\n  \"body\": cardBody\n};"
@@ -1034,8 +1036,8 @@
                         "id": "4aab6a82b7d0-6298a11eccabfacb-b01c",
                         "type": "statement",
                         "designer": {
-                            "xLocation": 828,
-                            "yLocation": 269
+                            "xLocation": 694,
+                            "yLocation": 420
                         },
                         "layout": "vertical",
                         "attachment": [
@@ -1045,6 +1047,53 @@
                             }
                         ],
                         "label": "Show Card"
+                    },
+                    {
+                        "id": "e8373a213672-980afb41805ad195-1746",
+                        "type": "branch",
+                        "condition": "scenario.error != null",
+                        "designer": {
+                            "xLocation": 700,
+                            "yLocation": 100,
+                            "reverse": false,
+                            "next": "f811cb392fdf-a32a2f56f1c9b0d0-c6e0"
+                        },
+                        "label": "Is Error",
+                        "targetStepId": "765a04839f1f-3d3353eeb1427b34-6403"
+                    },
+                    {
+                        "id": "f811cb392fdf-a32a2f56f1c9b0d0-c6e0",
+                        "type": "branch",
+                        "condition": "scenario.trials != null && scenario.trials.length > 0",
+                        "designer": {
+                            "xLocation": 620,
+                            "yLocation": 188,
+                            "next": "e2e9b3e42244-2cd1b869abb8fcec-926a"
+                        },
+                        "label": "Has Trials",
+                        "targetStepId": "9bfd640bba67-4d9917adbf400edc-784a"
+                    },
+                    {
+                        "id": "765a04839f1f-3d3353eeb1427b34-6403",
+                        "type": "statement",
+                        "designer": {
+                            "xLocation": 860,
+                            "yLocation": 280
+                        },
+                        "text": "scenario.error",
+                        "stringId": "stringId_99981a857235d0e8",
+                        "label": "Show error"
+                    },
+                    {
+                        "id": "e2e9b3e42244-2cd1b869abb8fcec-926a",
+                        "type": "statement",
+                        "designer": {
+                            "xLocation": 528,
+                            "yLocation": 280
+                        },
+                        "text": "customLocalizedStrings[\"CTM/messages/noRelavantTrials\"]",
+                        "label": "No relevant trials",
+                        "stringId": "stringId_e3c9220490296efb"
                     }
                 ],
                 "interrupting": false,
@@ -1204,700 +1253,140 @@
         ],
         "custom": [
             {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.4831745Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfZDA2YmVlNDE5NzQxM2JkYQ==",
-                "stringId": "stringId_d06bee4197413bda",
-                "en_us": "May I help you find a Contoso provider?",
-                "Timestamp": "2020-02-28T18:18:52.4831745Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.4848129Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfM2FhNjI3ZDZmNzMyOGJlZQ==",
-                "stringId": "stringId_3aa627d6f7328bee",
-                "en_us": "If you have any further questions, please don??Tt hesitate to contact me.",
-                "Timestamp": "2020-02-28T18:18:52.4848129Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.4862465Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfNjE0OTNmYjE0YTk2Y2UzOQ==",
-                "stringId": "stringId_61493fb14a96ce39",
-                "en_us": "What type of provider do you look for?",
-                "Timestamp": "2020-02-28T18:18:52.4862465Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.4877825Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfYTU1ZTFkMWZmZjdjZmYyMg==",
-                "stringId": "stringId_a55e1d1fff7cff22",
-                "en_us": "Are you interested in a specific specialty of the doctor? Please select from the list below:",
-                "Timestamp": "2020-02-28T18:18:52.4877825Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.4895233Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfM2EwZmRlYWNlYWNmODVlMQ==",
-                "stringId": "stringId_3a0fdeaceacf85e1",
-                "en_us": "Do you have any gender preference?",
-                "Timestamp": "2020-02-28T18:18:52.4895233Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.4910593Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfN2Y3MjZjZDE3OGQ2NjljOA==",
-                "stringId": "stringId_7f726cd178d669c8",
-                "en_us": "JSON.stringify(${err});",
-                "Timestamp": "2020-02-28T18:18:52.4910593Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.4929025Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfZjliNzFmMzQ2MTdmOGZmYQ==",
-                "stringId": "stringId_f9b71f34617f8ffa",
-                "en_us": "Got it! I will be happy to assist. Should I use your current location or would you like to specify a ZIP code?",
-                "Timestamp": "2020-02-28T18:18:52.4929025Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.4950529Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfM2RiYjk4ZjU1OWE0MzIzYQ==",
-                "stringId": "stringId_3dbb98f559a4323a",
-                "en_us": "No doctors were found that meet all criteria",
-                "Timestamp": "2020-02-28T18:18:52.4950529Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.4966913Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfYzc2NjQ5ZTQ2YzlkNDBkNA==",
-                "stringId": "stringId_c76649e46c9d40d4",
-                "en_us": "This option is not implemented yet. Please try another one.",
-                "Timestamp": "2020-02-28T18:18:52.4966913Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.4983297Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfNTc3MDY4MGRlOWZjYjM1MQ==",
-                "stringId": "stringId_5770680de9fcb351",
-                "en_us": "Developer notice!",
-                "Timestamp": "2020-02-28T18:18:52.4983297Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.4999681Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfY2YxNGViZDczYmZhZGRiYg==",
-                "stringId": "stringId_cf14ebd73bfaddbb",
-                "en_us": "Please enter a ZIP code",
-                "Timestamp": "2020-02-28T18:18:52.4999681Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5015041Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfZmE5OThiM2JiODY3MWM1NA==",
-                "stringId": "stringId_fa998b3bb8671c54",
-                "en_us": "enter your location",
-                "Timestamp": "2020-02-28T18:18:52.5015041Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5029377Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfNjMxZTAzYWRhZTkwNDM0YQ==",
-                "stringId": "stringId_631e03adae90434a",
-                "en_us": "Do you want to leave?",
-                "Timestamp": "2020-02-28T18:18:52.5029377Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5044737Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfYTQ5NGQ2MTFjMjZmNjBmMw==",
-                "stringId": "stringId_a494d611c26f60f3",
-                "en_us": "Welcome to israel!",
-                "Timestamp": "2020-02-28T18:18:52.5044737Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5060097Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfZWEyZDBhMDU2N2Y5OWYyMA==",
-                "stringId": "stringId_ea2d0a0567f99f20",
-                "en_us": "Have you incurred medical, vision, or dental expenses from a provider who did not bill the plan directly?\r\n",
-                "Timestamp": "2020-02-28T18:18:52.5060097Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5075457Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfODc1NjFlNDIzN2IwMzIwNA==",
-                "stringId": "stringId_87561e4237b03204",
-                "en_us": "If you have any further questions, please don??Tt hesitate to contact me.",
-                "Timestamp": "2020-02-28T18:18:52.5075457Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5093889Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfZDU1ODkxYjM3MmNhNGY4Yw==",
-                "stringId": "stringId_d55891b372ca4f8c",
-                "en_us": "I would be happy to assist you submitting your claim. \r\nPlease start by providing the following details :\r\n",
-                "Timestamp": "2020-02-28T18:18:52.5093889Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5112321Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfNDdlYTVkZTM1NjdlYzQyYg==",
-                "stringId": "stringId_47ea5de3567ec42b",
-                "en_us": "What is your prefix and ID number ? (see ID card)",
-                "Timestamp": "2020-02-28T18:18:52.5112321Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5126657Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfNDhiYjgwMGJkMDU5NzRiZQ==",
-                "stringId": "stringId_48bb800bd05974be",
-                "en_us": "What is your insurance Group number ? \r\n",
-                "Timestamp": "2020-02-28T18:18:52.5126657Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5142017Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfNTc1NzMzYmM0YjAyNWYzMA==",
-                "stringId": "stringId_575733bc4b025f30",
-                "en_us": "What is the name of the provider ?\r\n",
-                "Timestamp": "2020-02-28T18:18:52.5142017Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5158401Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfMTZmNjYzMjk2YTRkOTdkNw==",
-                "stringId": "stringId_16f663296a4d97d7",
-                "en_us": "Where was the service performed?\r\n",
-                "Timestamp": "2020-02-28T18:18:52.5158401Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5174785Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfODhhMzdjMGZkYzU3NTM1Yg==",
-                "stringId": "stringId_88a37c0fdc57535b",
-                "en_us": "Please upload your bill by selecting the 'attachment' icon below",
-                "Timestamp": "2020-02-28T18:18:52.5174785Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5190145Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfNjBmOTY0NjU5ZmU3NmM5MQ==",
-                "stringId": "stringId_60f964659fe76c91",
-                "en_us": "Thank you for filling in the details!\r\nWe will follow up with confirmation e-mail",
-                "Timestamp": "2020-02-28T18:18:52.5190145Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5208577Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfOGVhNDFlN2U3ODA5MDM2Ng==",
-                "stringId": "stringId_8ea41e7e78090366",
-                "en_us": "'Summary of claim ' + ${refNumber}",
-                "Timestamp": "2020-02-28T18:18:52.5208577Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5222913Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfNmJkNTU2YzYzMmExZjllYQ==",
-                "stringId": "stringId_6bd556c632a1f9ea",
-                "en_us": "${claimSummary}",
-                "Timestamp": "2020-02-28T18:18:52.5222913Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5238273Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfMDBjYmYzYzI1ZDhmNWQyNA==",
-                "stringId": "stringId_00cbf3c25d8f5d24",
-                "en_us": "Is this claim due to an accidental injury?\r\n",
-                "Timestamp": "2020-02-28T18:18:52.5238273Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5254657Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfOGFkNzhkMTllMTYxYTY5Zg==",
-                "stringId": "stringId_8ad78d19e161a69f",
-                "en_us": "Now, please attach the itemized bill. \r\nYour bill must contain all of the following information:\r\n- Name of the member who incurred the expense\r\n- Name, address, and tax identification number of the provider\r\n- Date and charge for each service rendered ",
-                "Timestamp": "2020-02-28T18:18:52.5254657Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5272065Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfZGExNTI3OWQ1NDgyNmJlYg==",
-                "stringId": "stringId_da15279d54826beb",
-                "en_us": "multi choice?           ",
-                "Timestamp": "2020-02-28T18:18:52.5272065Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5288449Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfYzNiZmQ2NTZmN2MzYWMwMw==",
-                "stringId": "stringId_c3bfd656f7c3ac03",
-                "en_us": "choise value?",
-                "Timestamp": "2020-02-28T18:18:52.5288449Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5302785Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfZWFkNTA2MTEzMjYwMzM0Nw==",
-                "stringId": "stringId_ead5061132603347",
-                "en_us": "boolean prompt?",
-                "Timestamp": "2020-02-28T18:18:52.5302785Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5319169Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfOGYxMGE5OTk1ZjU4MTFhYQ==",
-                "stringId": "stringId_8f10a9995f5811aa",
-                "en_us": "multi choise?",
-                "Timestamp": "2020-02-28T18:18:52.5319169Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5335553Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfNGU1M2E2ZWM4Y2YyZjZhMw==",
-                "stringId": "stringId_4e53a6ec8cf2f6a3",
-                "en_us": "Welcome to USA!",
-                "Timestamp": "2020-02-28T18:18:52.5335553Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5350913Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfOTZiMGJjYjNkOGU3MTY2Ng==",
-                "stringId": "stringId_96b0bcb3d8e71666",
-                "en_us": "\"welcome to \" + scenario.user_location ",
-                "Timestamp": "2020-02-28T18:18:52.5350913Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5369345Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfYzFhNjZlNTVlMzlkMzE2NA==",
-                "stringId": "stringId_c1a66e55e39d3164",
-                "en_us": "Welcome to Israel",
-                "Timestamp": "2020-02-28T18:18:52.5369345Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5384705Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfMGRiMDY2YmQ0YzY1N2EzYQ==",
-                "stringId": "stringId_0db066bd4c657a3a",
-                "en_us": "choise?",
-                "Timestamp": "2020-02-28T18:18:52.5384705Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5399041Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfOTgwMGJmZjliODBiZTE3NQ==",
-                "stringId": "stringId_9800bff9b80be175",
-                "en_us": "Welcome to USA!",
-                "Timestamp": "2020-02-28T18:18:52.5399041Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5417473Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfNjhmYWQyZjQ4ZGViNmQ0Ng==",
-                "stringId": "stringId_68fad2f48deb6d46",
-                "en_us": "Welcome to Israel",
-                "Timestamp": "2020-02-28T18:18:52.5417473Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5444097Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfYzA2MjIxMDgxMDcxNmY3ZA==",
-                "stringId": "stringId_c062210810716f7d",
-                "en_us": "Which group is the best on site?",
-                "Timestamp": "2020-02-28T18:18:52.5444097Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5459457Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfZDM4ZDMxMWMwMTg2NDMxOQ==",
-                "stringId": "stringId_d38d311c01864319",
-                "en_us": "Are you planning to eat soon?",
-                "Timestamp": "2020-02-28T18:18:52.5459457Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5474817Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfYzE3NjkxNjcyZTBmMzdhMA==",
-                "stringId": "stringId_c17691672e0f37a0",
-                "en_us": "Are you hungry?",
-                "Timestamp": "2020-02-28T18:18:52.5474817Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5490177Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfYmQzODEwZDM5NDY5MjM3YQ==",
-                "stringId": "stringId_bd3810d39469237a",
-                "en_us": "Whom are you going to eat with?",
-                "Timestamp": "2020-02-28T18:18:52.5490177Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5506561Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfYmQyNTNhOTBkOGE5YmIzMg==",
-                "stringId": "stringId_bd253a90d8a9bb32",
-                "en_us": "Wrong Answer, try again...",
-                "Timestamp": "2020-02-28T18:18:52.5506561Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5524993Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfYjRmZTI5ZGUyMjUxYzk3NQ==",
-                "stringId": "stringId_b4fe29de2251c975",
-                "en_us": "${with_whom_list} bon apetite!",
-                "Timestamp": "2020-02-28T18:18:52.5524993Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5540353Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfNWRkMDBhYTkxMDkwZGVmNA==",
-                "stringId": "stringId_5dd00aa91090def4",
-                "en_us": "scenario.with_whom_list",
-                "Timestamp": "2020-02-28T18:18:52.5540353Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5557761Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfZTgxYmQ4MmE0NTk4Mzc2OA==",
-                "stringId": "stringId_e81bd82a45983768",
-                "en_us": "scenario.with_whom_list.map(item => item.entity) + \" bon appetite!\"",
-                "Timestamp": "2020-02-28T18:18:52.5557761Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5582337Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfOTZhYmRhNmYzZTJkMWE3ZQ==",
-                "stringId": "stringId_96abda6f3e2d1a7e",
-                "en_us": "scenario.with_whom_list.map(item => item.entity) + \" bon appetite!\"",
-                "Timestamp": "2020-02-28T18:18:52.5582337Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5599745Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfYzFiYzYzMWZhZTEyZjdkZg==",
-                "stringId": "stringId_c1bc631fae12f7df",
-                "en_us": "Please select from the below list:",
-                "Timestamp": "2020-02-28T18:18:52.5599745Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5616129Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfNGRkODhmNjVmYWQ1YWYwYQ==",
-                "stringId": "stringId_4dd88f65fad5af0a",
-                "en_us": "Got it! I will be happy to assist you in with setting an ${selectedServiceType} appointment.",
-                "Timestamp": "2020-02-28T18:18:52.5616129Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5630465Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfNTAzMWM0NGI1MWQ1YzY5MA==",
-                "stringId": "stringId_5031c44b51d5c690",
-                "en_us": "\"output \" + scenario.output",
-                "Timestamp": "2020-02-28T18:18:52.5630465Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5645825Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfNTlkOTU1Zjg0MjBiMTlmYw==",
-                "stringId": "stringId_59d955f8420b19fc",
-                "en_us": "Welcome to USA!",
-                "Timestamp": "2020-02-28T18:18:52.5645825Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5661185Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfMTBiMjE3YTRjMzJlNzBjNg==",
-                "stringId": "stringId_10b217a4c32e70c6",
-                "en_us": "Welcome to Israel",
-                "Timestamp": "2020-02-28T18:18:52.5661185Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5676545Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfODJmZGQ5YTM4ZTUxY2UzMw==",
-                "stringId": "stringId_82fdd9a38e51ce33",
-                "en_us": "Welcome to USA!",
-                "Timestamp": "2020-02-28T18:18:52.5676545Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5690881Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfMDUwZDczOWQzN2E1Mjg3Mw==",
-                "stringId": "stringId_050d739d37a52873",
-                "en_us": "Welcome to Israel",
-                "Timestamp": "2020-02-28T18:18:52.5690881Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5706241Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfMjQ2MzlhZGE2Nzg1ZDFlYg==",
-                "stringId": "stringId_24639ada6785d1eb",
-                "en_us": "Hi welcome Contoso Hospital and Medical Center Imaging Department! \\r\\nMay I help you schedule an appointment for one of our imaging services?",
-                "Timestamp": "2020-02-28T18:18:52.5706241Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5722625Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfN2RkMmJiMmM1ODBhYjBkYw==",
-                "stringId": "stringId_7dd2bb2c580ab0dc",
-                "en_us": "If you have any further questions, please don??Tt hesitate to contact me.",
-                "Timestamp": "2020-02-28T18:18:52.5722625Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5739009Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfNzYxYTZmNGZkM2MzZDFmNQ==",
-                "stringId": "stringId_761a6f4fd3c3d1f5",
-                "en_us": "I was not able to find open slots, please try again later.",
-                "Timestamp": "2020-02-28T18:18:52.5739009Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5754369Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfMzBiMmM2MWU2YTJhMDFkNw==",
-                "stringId": "stringId_30b2c61e6a2a01d7",
-                "en_us": "Developer notice:\r\n(Delete this step before sharing this scenario with real users)",
-                "Timestamp": "2020-02-28T18:18:52.5754369Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5769729Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfYjhjMDBiMDZlYWVlODcwNg==",
-                "stringId": "stringId_b8c00b06eaee8706",
-                "en_us": "During the **last 4 weeks**, how much have you been bothered by any of the following problems:",
-                "Timestamp": "2020-02-28T18:18:52.5769729Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5788161Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfODE1N2Q5MDcxN2EwOGNhNQ==",
-                "stringId": "stringId_8157d90717a08ca5",
-                "en_us": "If you have had any problems, how difficult have these problems made it for you to do your work, take care of things at home, or get along with other people?\n",
-                "Timestamp": "2020-02-28T18:18:52.5788161Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5803521Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfMTAwMTFjZTlkZmJlNDdmMA==",
-                "stringId": "stringId_10011ce9dfbe47f0",
-                "en_us": "Over the **last 2 weeks**, how often have you been bothered by any of the following problems:",
-                "Timestamp": "2020-02-28T18:18:52.5803521Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5819905Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfOTM0MTk3M2Y5MGFjOGVjNg==",
-                "stringId": "stringId_9341973f90ac8ec6",
-                "en_us": "Over the **last 2 weeks**, how often have you been bothered by any of the following problems:",
-                "Timestamp": "2020-02-28T18:18:52.5819905Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5837313Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfY2I0NGNjYTQ5ZDE3Njk3NQ==",
-                "stringId": "stringId_cb44cca49d176975",
-                "en_us": "Please let me know if I can help with anything else.",
-                "Timestamp": "2020-02-28T18:18:52.5837313Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5855745Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfZmRiZjQzY2IxN2E4YzM0NQ==",
-                "stringId": "stringId_fdbf43cb17a8c345",
-                "en_us": "I??Tm going to ask you to fill out a short questionnaire.\r\n\r\nThis questionnaire is an important part of providing you with the best health care possible. \r\n\r\nYour answers will help in understanding problems that you may have. Please answer every question to the best of your ability.\r\n",
-                "Timestamp": "2020-02-28T18:18:52.5855745Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5870081Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfZmM4OTViNWQ3MjEyZTkzMA==",
-                "stringId": "stringId_fc895b5d7212e930",
-                "en_us": "\"Thank you for answering these questions. You have just completed the **PHQ-15** questionnaire.\\n\\n\" +\r\n\"Your score in the questionnaire (**\"+ scenario.severity.score + \"**) is mapped to **\" + scenario.severity.severity + \" somatic symptom severity**.\"",
-                "Timestamp": "2020-02-28T18:18:52.5870081Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5886465Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfMWRiNGY5NmZhOGZlNTZjYw==",
-                "stringId": "stringId_1db4f96fa8fe56cc",
-                "en_us": "I??Td like to ask you just a few more questions.",
-                "Timestamp": "2020-02-28T18:18:52.5886465Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5901825Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfODgzZmM5YmYyZmUwNzBiZQ==",
-                "stringId": "stringId_883fc9bf2fe070be",
-                "en_us": "Thank you. You have completed the **PHQ-SADS** screener. The answers you provided will be useful for your clinician.",
-                "Timestamp": "2020-02-28T18:18:52.5901825Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5918209Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfNmY4YjcyMjRmNjlhZDI5ZQ==",
-                "stringId": "stringId_6f8b7224f69ad29e",
-                "en_us": "\"Thank you for answering these questions. You have just completed the **PHQ-9** questionnaire.\\n\\n\" +\r\n\"Your score in the questionnaire (**\"+ scenario.severity.score + \"**) is mapped to **\" + scenario.severity.severity + \" depression**.\"",
-                "Timestamp": "2020-02-28T18:18:52.5918209Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5936641Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfZmQwOWY5MjlkMDViZGZiNA==",
-                "stringId": "stringId_fd09f929d05bdfb4",
-                "en_us": "\"Thank you for answering these questions. You have just completed the **GAD-7** questionnaire.\\n\\n\" +\r\n\"Your score in the questionnaire (**\"+ scenario.severity.score + \"**) is mapped to **\" + scenario.severity.severity + \" anxiety**.\"",
-                "Timestamp": "2020-02-28T18:18:52.5936641Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5955073Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfODc0ZjhjNTZhYTUwYjZlZQ==",
-                "stringId": "stringId_874f8c56aa50b6ee",
-                "en_us": "scenario.questions[scenario.question_index]",
-                "Timestamp": "2020-02-28T18:18:52.5955073Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5973505Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfMGI1OTBmMmZiOTRmZjhiNw==",
-                "stringId": "stringId_0b590f2fb94ff8b7",
-                "en_us": "Cannot find the mental health q&a",
-                "Timestamp": "2020-02-28T18:18:52.5973505Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.5992961Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfNmMxZTE3OTE3NDc5NjYwYw==",
-                "stringId": "stringId_6c1e17917479660c",
-                "en_us": "scenario.questions[scenario.question_index]",
-                "Timestamp": "2020-02-28T18:18:52.5992961Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.6010369Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfNmVkODJlOTdiYTViMDEyOQ==",
-                "stringId": "stringId_6ed82e97ba5b0129",
-                "en_us": "scenario.questions[scenario.question_index]",
-                "Timestamp": "2020-02-28T18:18:52.6010369Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.6027777Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfMDA5MDI2MTdiYTgwNzliZg==",
-                "en_us": "\"System found \" + ${trials_count}.toString() + \" relevant trials. Here are clinical trials that might be relevant for the situation\"",
-                "stringId": "stringId_00902617ba8079bf",
-                "Timestamp": "2020-02-28T18:18:52.6027777Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.6047233Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfNDJmZTI3OTk1ODcyOTlhOQ==",
-                "en_us": "${gender_question}",
-                "stringId": "stringId_42fe2799587299a9",
-                "Timestamp": "2020-02-28T18:18:52.6047233Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.6062593Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfNTM3ODgwZjUwNDI4NzAyMg==",
-                "en_us": "Sorry, no relevant trials were found",
-                "stringId": "stringId_537880f504287022",
-                "Timestamp": "2020-02-28T18:18:52.6062593Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.6080001Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfOGE3ODJkZTExMTI3NzM1Nw==",
-                "en_us": "\"found \" + ${trials_count}.toString() + \" relevant trials\"",
-                "stringId": "stringId_8a782de111277357",
-                "Timestamp": "2020-02-28T18:18:52.6080001Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.6098433Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfYTM4MTUyY2UzZTdmNmI1Zg==",
-                "en_us": "Sorry, there is seem to be a problem with an external data resource",
-                "stringId": "stringId_a38152ce3e7f6b5f",
-                "Timestamp": "2020-02-28T18:18:52.6098433Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.6115841Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfYTdmY2JlOTY3MDdiODc1OQ==",
-                "en_us": "${questions}[${question_index}].QUESTION",
-                "stringId": "stringId_a7fcbe96707b8759",
-                "Timestamp": "2020-02-28T18:18:52.6115841Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.6132225Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfYjNkZDQ1M2E0NDJjMzI2ZQ==",
-                "en_us": "${questions}[${question_index}].QUESTION",
-                "stringId": "stringId_b3dd453a442c326e",
-                "Timestamp": "2020-02-28T18:18:52.6132225Z"
-            },
-            {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.6149633Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfYjczYTRjYzBjNjA4NTA1ZQ==",
+                "odata.etag": "W/\"datetime'2020-07-29T12%3A33%3A44.2197505Z'\"",
+                "PartitionKey": "f9b1843e-bbd8-4143-b7da-112c5cdf4e28",
+                "RowKey": "Q1RNL3F1ZXN0aW9ucy9nZW5kZXI=",
+                "stringId": "CTM/questions/gender",
+                "en_us": "Please specify the patient's sex:",
+                "Timestamp": "2020-07-29T12:33:44.2197505Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-07-29T12%3A42%3A07.7137921Z'\"",
+                "PartitionKey": "f9b1843e-bbd8-4143-b7da-112c5cdf4e28",
+                "RowKey": "Q1RNL3F1ZXN0aW9ucy9zaG91bGRDb250aW51ZUFza2luZw==",
+                "stringId": "CTM/questions/shouldContinueAsking",
                 "en_us": "What would you like to do?",
-                "stringId": "stringId_b73a4cc0c608505e",
-                "Timestamp": "2020-02-28T18:18:52.6149633Z"
+                "Timestamp": "2020-07-29T12:42:07.7137921Z"
             },
             {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.6164993Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfYzcxZTc5OWRlODc4Njg3Yw==",
-                "en_us": "${condition_question}",
-                "stringId": "stringId_c71e799de878687c",
-                "Timestamp": "2020-02-28T18:18:52.6164993Z"
+                "odata.etag": "W/\"datetime'2020-07-29T12%3A42%3A07.7143041Z'\"",
+                "PartitionKey": "f9b1843e-bbd8-4143-b7da-112c5cdf4e28",
+                "RowKey": "Q1RNL3F1ZXN0aW9ucy9jaXR5",
+                "stringId": "CTM/questions/city",
+                "en_us": "Please enter city:",
+                "Timestamp": "2020-07-29T12:42:07.7143041Z"
             },
             {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.6180353Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfZDk0MTA3ZWZlNWExNGMzOA==",
-                "en_us": "${preferance_question}",
-                "stringId": "stringId_d94107efe5a14c38",
-                "Timestamp": "2020-02-28T18:18:52.6180353Z"
+                "odata.etag": "W/\"datetime'2020-07-29T12%3A42%3A07.7148161Z'\"",
+                "PartitionKey": "f9b1843e-bbd8-4143-b7da-112c5cdf4e28",
+                "RowKey": "Q1RNL3F1ZXN0aW9ucy9zdGF0ZQ==",
+                "stringId": "CTM/questions/state",
+                "en_us": "Please enter state:",
+                "Timestamp": "2020-07-29T12:42:07.7148161Z"
             },
             {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.6197761Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfZWNkODJlZjRmNGZhNDA2MQ==",
-                "en_us": "${age_question}",
-                "stringId": "stringId_ecd82ef4f4fa4061",
-                "Timestamp": "2020-02-28T18:18:52.6197761Z"
+                "odata.etag": "W/\"datetime'2020-07-29T12%3A42%3A07.7153281Z'\"",
+                "PartitionKey": "f9b1843e-bbd8-4143-b7da-112c5cdf4e28",
+                "RowKey": "Q1RNL3F1ZXN0aW9ucy9sb2NhdGlvbg==",
+                "stringId": "CTM/questions/location",
+                "en_us": "Where would the patient like to search for trials?",
+                "Timestamp": "2020-07-29T12:42:07.7153281Z"
             },
             {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.6213121Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfZjdmNWU4OWU3MTY0YmY1YQ==",
-                "en_us": "${living_place_question}",
-                "stringId": "stringId_f7f5e89e7164bf5a",
-                "Timestamp": "2020-02-28T18:18:52.6213121Z"
+                "odata.etag": "W/\"datetime'2020-07-29T12%3A42%3A07.7157377Z'\"",
+                "PartitionKey": "f9b1843e-bbd8-4143-b7da-112c5cdf4e28",
+                "RowKey": "Q1RNL3F1ZXN0aW9ucy9jb25kaXRpb24=",
+                "stringId": "CTM/questions/condition",
+                "en_us": "What is the patient's condition?",
+                "Timestamp": "2020-07-29T12:42:07.7157377Z"
             },
             {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.6230529Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfYTdmODcxYjc3MzA0ODI2OA==",
-                "stringId": "stringId_a7f871b773048268",
-                "en_us": "scenario.questionText",
-                "Timestamp": "2020-02-28T18:18:52.6230529Z"
+                "odata.etag": "W/\"datetime'2020-07-29T12%3A42%3A07.7163521Z'\"",
+                "PartitionKey": "f9b1843e-bbd8-4143-b7da-112c5cdf4e28",
+                "RowKey": "Q1RNL3F1ZXN0aW9ucy9hZ2U=",
+                "stringId": "CTM/questions/age",
+                "en_us": "How old is the patient (in years)?",
+                "Timestamp": "2020-07-29T12:42:07.7163521Z"
             },
             {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.6247937Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfYWU0MThkZTA5OWIzYThlOQ==",
-                "stringId": "stringId_ae418de099b3a8e9",
-                "en_us": "scenario.questionText",
-                "Timestamp": "2020-02-28T18:18:52.6247937Z"
+                "odata.etag": "W/\"datetime'2020-07-29T12%3A42%3A07.7108225Z'\"",
+                "PartitionKey": "f9b1843e-bbd8-4143-b7da-112c5cdf4e28",
+                "RowKey": "Q1RNL21lc3NhZ2VzL3JlbGV2YW50VHJpYWxzUHJlZml4",
+                "stringId": "CTM/messages/relevantTrialsPrefix",
+                "en_us": "Number of relevant trials found:",
+                "Timestamp": "2020-07-29T12:42:07.7108225Z"
             },
             {
-                "odata.etag": "W/\"datetime'2020-02-28T18%3A18%3A52.6264321Z'\"",
-                "PartitionKey": "882274bb-d5ca-48d2-81e6-d8c25926b692",
-                "RowKey": "c3RyaW5nSWRfMDJlOTc0YTVkYTY2YTFmOA==",
-                "stringId": "stringId_02e974a5da66a1f8",
-                "en_us": "scenario.questionText",
-                "Timestamp": "2020-02-28T18:18:52.6264321Z"
+                "odata.etag": "W/\"datetime'2020-07-29T12%3A42%3A07.7114369Z'\"",
+                "PartitionKey": "f9b1843e-bbd8-4143-b7da-112c5cdf4e28",
+                "RowKey": "Q1RNL21lc3NhZ2VzL25vQWRkaXRpb25hbFF1ZXN0aW9ucw==",
+                "stringId": "CTM/messages/noAdditionalQuestions",
+                "en_us": "No additional questions are available to qualify the patient.",
+                "Timestamp": "2020-07-29T12:42:07.7114369Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-07-29T12%3A42%3A07.7118465Z'\"",
+                "PartitionKey": "f9b1843e-bbd8-4143-b7da-112c5cdf4e28",
+                "RowKey": "Q1RNL21lc3NhZ2VzL3NlcnZpY2VQcm9ibGVt",
+                "stringId": "CTM/messages/serviceProblem",
+                "en_us": "Sorry, there seems to be a problem with the matching service.\\nPlease try again later.",
+                "Timestamp": "2020-07-29T12:42:07.7118465Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-07-29T12%3A42%3A07.7123585Z'\"",
+                "PartitionKey": "f9b1843e-bbd8-4143-b7da-112c5cdf4e28",
+                "RowKey": "Q1RNL21lc3NhZ2VzL25vUmVsYXZhbnRUcmlhbHM=",
+                "stringId": "CTM/messages/noRelavantTrials",
+                "en_us": "Sorry, no relevant trials were found.",
+                "Timestamp": "2020-07-29T12:42:07.7123585Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-07-29T12%3A42%3A07.7128705Z'\"",
+                "PartitionKey": "f9b1843e-bbd8-4143-b7da-112c5cdf4e28",
+                "RowKey": "Q1RNL21lc3NhZ2VzL21hdGNoaW5nVHJpYWxz",
+                "stringId": "CTM/messages/matchingTrials",
+                "en_us": "Matching clinical trials...This might take a few moments.",
+                "Timestamp": "2020-07-29T12:42:07.7128705Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-07-29T12%3A42%3A07.7133825Z'\"",
+                "PartitionKey": "f9b1843e-bbd8-4143-b7da-112c5cdf4e28",
+                "RowKey": "Q1RNL21lc3NhZ2VzL3Vuc3VwcG9ydGVkQWdl",
+                "stringId": "CTM/messages/unsupportedAge",
+                "en_us": "Age must be between 0 - 120 years.",
+                "Timestamp": "2020-07-29T12:42:07.7133825Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-07-29T13%3A59%3A37.7778689Z'\"",
+                "PartitionKey": "f9b1843e-bbd8-4143-b7da-112c5cdf4e28",
+                "RowKey": "Q1RNL21lc3NhZ2VzL2VudGVyTnVtYmVy",
+                "stringId": "CTM/messages/enterNumber",
+                "en_us": "I didn't understand. Please enter a number.",
+                "Timestamp": "2020-07-29T13:59:37.7778689Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-07-29T13%3A59%3A37.7786881Z'\"",
+                "PartitionKey": "f9b1843e-bbd8-4143-b7da-112c5cdf4e28",
+                "RowKey": "Q1RNL21lc3NhZ2VzL3F1YWxpZmllZFRyaWFscw==",
+                "stringId": "CTM/messages/qualifiedTrials",
+                "en_us": "Here are the clinical trials the patient may qualify for:",
+                "Timestamp": "2020-07-29T13:59:37.7786881Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-07-29T14%3A51%3A30.2048769Z'\"",
+                "PartitionKey": "f9b1843e-bbd8-4143-b7da-112c5cdf4e28",
+                "RowKey": "Q1RNL2Fuc3dlcnMvZ2V0UmVzdWx0cw==",
+                "stringId": "CTM/answers/getResults",
+                "en_us": "Get results",
+                "Timestamp": "2020-07-29T14:51:30.2048769Z"
+            },
+            {
+                "odata.etag": "W/\"datetime'2020-07-29T14%3A51%3A30.2054913Z'\"",
+                "PartitionKey": "f9b1843e-bbd8-4143-b7da-112c5cdf4e28",
+                "RowKey": "Q1RNL2Fuc3dlcnMvYWRkaXRpb25hbFF1ZXN0aW9ucw==",
+                "stringId": "CTM/answers/additionalQuestions",
+                "en_us": "Answer additional questions",
+                "Timestamp": "2020-07-29T14:51:30.2054913Z"
             }
         ]
     }
