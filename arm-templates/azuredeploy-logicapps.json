@@ -714,7 +714,7 @@
                       {
                         "equals": [
                           "@outputs('Run_Functional_Tests')['statusCode']",
-                            200
+                            "200"
                         ]
                       }
                     ]
