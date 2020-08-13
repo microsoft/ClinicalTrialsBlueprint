@@ -173,7 +173,7 @@
                             "yLocation": 626,
                             "next": "d2c813d56c6d-e873f367b262b7e6-030c"
                         },
-                        "onInit": "if (scenario.response && scenario.response.match(/[D,d]on[',’]?t [K,k]now|[N,n]ot [S,s]ure|[D,d]on[',’]?t [W,w]ant [T,t]o [A,a]nswer/)) {\n    scenario.response = null;\n}"
+                        "onInit": "if (scenario.response && scenario.response.match(/[D,d]on[',\u2019,\u2018]?t [K,k]now|[N,n]ot [S,s]ure|[D,d]on[',\u2019,\u2018]?t [W,w]ant [T,t]o [A,a]nswer/)) {\n    scenario.response = null;\n}"
                     },
                     {
                         "id": "866538462ffa-d8fd8b6a3b13d383-9195",
@@ -184,7 +184,7 @@
                             "yLocation": 470,
                             "next": "867f3d768ac6-b2cd67ca62309894-52a6"
                         },
-                        "onInit": "if (scenario.responseNum.match(/[D,d]on[',’]?t [K,k]now|[N,n]ot [S,s]ure|[D,d]on[',’]?t [W,w]ant [T,t]o [A,a]nswer/)) {\r\n    scenario.num = null;\r\n} else {\r\n    scenario.num = parseFloat(scenario.responseNum);\r\n}"
+                        "onInit": "if (scenario.responseNum.match(/[D,d]on[',\u2019,\u2018]?t [K,k]now|[N,n]ot [S,s]ure|[D,d]on[',\u2019,\u2018]?t [W,w]ant [T,t]o [A,a]nswer/)) {\r\n    scenario.num = null;\r\n} else {\r\n    scenario.num = parseFloat(scenario.responseNum);\r\n}"
                     },
                     {
                         "id": "867f3d768ac6-b2cd67ca62309894-52a6",
