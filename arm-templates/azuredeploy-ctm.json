@@ -934,7 +934,7 @@
                   "value":"[variables('redisAddress')]"
                 },
                 {
-                  "name":"structuring__finished_notifier_address",
+                  "name":"preprocessing__finished_notifier_address",
                   "value":"[listCallbackURL(concat(resourceId('Microsoft.Logic/workflows/', concat(parameters('serviceName'),'-finisher-logic-app')),'/triggers/manual'), '2016-06-01').value]"
                 }
               ],
