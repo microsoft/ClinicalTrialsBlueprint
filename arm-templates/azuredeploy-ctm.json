@@ -92,6 +92,8 @@
     "disqualificationWebAppName": "[concat(parameters('serviceName'),'-ctm-disq-webapp',variables('suffix'))]",
     "postgresqlServerFullName":"[concat(parameters('serviceName'),'-ctm-postgresql',variables('suffix'))]",
     "keyVaultName": "[concat(parameters('serviceName'),'-ctm-kv',variables('suffix'))]",
+    "ayalonWebAppName": "[concat(parameters('serviceName'),'-ayalon-webapp',variables('suffix'))]",
+
     // Unique resources
     "insightsName": "[concat(parameters('serviceName'),'-ctm-insights')]",
     "proxyApiKey": "[uniqueString(subscription().id)]",
@@ -99,13 +101,13 @@
     "ctmServicePlan": "[concat(parameters('serviceName'),'-ctm-plan')]",
     "ayalonServicePlan": "[concat(parameters('serviceName'),'-ayalon-plan')]",
     "gatewayWebAppName": "[concat(parameters('serviceName'),'-gateway-webapp')]",
-    "ayalonWebAppName": "[concat(parameters('serviceName'),'-ayalon-webapp')]",
     "textAnalyticsName": "[concat(parameters('serviceName'),'-ctm-ta')]",
 	"functionalTestsServiceName": "[concat(parameters('serviceName'),'-ctm-func-tests-webapp')]",
     // Addresses
     "redisAddress": "[concat(variables('redisCacheName'),'.redis.cache.windows.net')]",
     "keyVaultAddress": "[concat('https://',variables('keyVaultName'),'.vault.azure.net/')]",
     "fhirAddress": "[concat('https://',variables('gatewayWebAppName'), if(parameters('isSecondary'), '-secondary',''),'.azurewebsites.net/fhir/')]",
+    "ayalonAddress": "[concat('https://',variables('gatewayWebAppName'), if(parameters('isSecondary'), '-secondary',''),'.azurewebsites.net/ta4h/')]",
     // Resource Ids
     "gatewayResourceId": "[resourceId('Microsoft.Web/sites',variables('gatewayWebAppName'))]",
     "queryEngineResourceId": "[resourceId('Microsoft.Web/sites',variables('queryEngineWebAppName'))]",
@@ -131,7 +133,7 @@
       "fhir": "[concat('https://',parameters('serviceName'),'-fhir.azurewebsites.net/')]"      
     },
     "servicesSecondary": {
-      "ta4h":"[concat('https://',variables('ayalonWebAppName'),'.azurewebsites.net')]",
+      "ta4h":"[concat('https://',variables('ayalonWebAppName'),'-s.azurewebsites.net')]",
       "qe":  "[concat('https://',variables('queryEngineWebAppName'),'-s.azurewebsites.net')]", 
       "disq":"[concat('https://',variables('disqualificationWebAppName'),'-s.azurewebsites.net')]", 
       "fhir": "[concat('https://',parameters('serviceName'),'-fhir-s.azurewebsites.net/')]"      
@@ -911,7 +913,7 @@
                 },
                 {
                   "name": "ayalon__address",
-                  "value": "[concat('https://',variables('gatewayWebAppName'),'.azurewebsites.net/ta4h/') ]"
+                  "value": "[variables('ayalonAddress')]"
                 },
                 {
                   "name": "ctti__host",
