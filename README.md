@@ -194,6 +194,11 @@ You can now deploy a secondary Healthcare bot by running this command
                 -botLocation US -matchingOutput $matchingSecondaryOutput 
 ```
 
+To view a Power BI report of your primary Healthcare Bot usage:
+ * First you need to open the bot's application insights (should be '$botServiceName-insights') and obtain the application_id in insight's 'API Access' tab.
+ * Open the report file under 'power-bi/CTM_PowerBI_report.pbit' and provide the application_id obtained in previous step.  
+
+
 ### Configuration Change
 
 When it's necessary to change the configuration of the matching services,
