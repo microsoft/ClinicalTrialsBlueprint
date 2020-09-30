@@ -904,10 +904,6 @@
                   "value": "[variables('keyVaultAddress')]"
                 },
                 {
-                  "name": "azure_maps__api_key",
-                  "value": "[listKeys(variables('mapsServiceName'),'2018-05-01').primaryKey]"
-                },
-                {
                   "name": "fhir__address",
                   "value": "[variables('fhirAddress')]"
                 },
@@ -923,14 +919,7 @@
                   "name": "ctti__user_name",
                   "value": "[variables('cttiUserName')]"
                 },
-          			{
-                  "name": "ctti__secret_name",
-                  "value": "ctti-client-secret"
-                },
-                {
-                  "name":"application_insight__instrumentation_key",
-                  "value":"[reference(variables('insightsName'), '2015-05-01').instrumentationKey]"
-                },
+
                 {
                   "name":"redis__address",
                   "value":"[variables('redisAddress')]"
@@ -1079,10 +1068,6 @@
               "value": "[variables('cttiUserName')]"         
             },
             {
-              "name":"ctti__secret_name",
-              "value":"ctti-client-secret"             
-            },
-            {
               "name":"ctti__database",
               "value":"aact"
             },
@@ -1091,16 +1076,8 @@
               "value":"[variables('redisAddress')]"
             },
             {
-              "name":"redis__secret_name",
-              "value":"redis-client-secret"
-            },
-            {
               "name":"ayalon__address",
               "value":"[concat('https://',variables('ayalonWebAppName'),'.azurewebsites.net/') ]"
-            },
-            {
-              "name":"application_insight__instrumentation_key",
-              "value":"[reference(variables('insightsName'), '2015-05-01').instrumentationKey]"
             },
             {
               "name": "query__country",
@@ -1456,24 +1433,12 @@
               "value": "[variables('cttiUserName')]"         
             },
             {
-              "name":"ctti__secret_name",
-              "value":"ctti-client-secret"             
-            },
-            {
               "name":"redis__address",
               "value":"[variables('redisAddress')]"
             },
             {
-              "name":"redis__secret_name",
-              "value":"redis-client-secret"
-            },
-            {
               "name":"ayalon__address",
               "value":"[concat('https://',variables('ayalonWebAppName'),'.azurewebsites.net/') ]"
-            },
-            {
-              "name":"application_insight__instrumentation_key",
-              "value":"[reference(variables('insightsName'), '2015-05-01').instrumentationKey]"
             }
           ]
         }
