@@ -790,7 +790,7 @@
     },
     {
       "type": "Microsoft.KeyVault/vaults/secrets",
-      "name": "[concat(variables('keyVaultName'), '/azuremaps-key')]",
+      "name": "[concat(variables('keyVaultName'), '/AzureMapsConfiguration--AzureMapsKey')]",
       "apiVersion": "2016-10-01",
       "tags": "[parameters('resourceTags')]",
       "dependsOn": [
@@ -803,7 +803,7 @@
     },
     {
       "type": "Microsoft.KeyVault/vaults/secrets",
-      "name": "[concat(variables('keyVaultName'), '/redis-client-secret')]",
+      "name": "[concat(variables('keyVaultName'), '/RedisConfiguration--ClientSecret')]",
       "tags": "[parameters('resourceTags')]",
       "apiVersion": "2016-10-01",
       "dependsOn": [
@@ -816,7 +816,7 @@
     },
     {
       "type": "Microsoft.KeyVault/vaults/secrets",
-      "name": "[concat(variables('keyVaultName'), '/proxy-api-key')]",
+      "name": "[concat(variables('keyVaultName'), '/GatewayConfiguration--ProxyApiKey')]",
       "tags": "[parameters('resourceTags')]",
       "apiVersion": "2016-10-01",
       "dependsOn": [
@@ -828,7 +828,7 @@
     },
     {
       "type": "Microsoft.KeyVault/vaults/secrets",
-      "name": "[concat(variables('keyVaultName'), '/instrumentation-key')]",
+      "name": "[concat(variables('keyVaultName'), '/ApplicationInsightConfiguration--InstrumentationKey')]",
       "apiVersion": "2016-10-01",
       "tags": "[parameters('resourceTags')]",
       "dependsOn": [
@@ -841,7 +841,7 @@
     },
     {
       "type": "Microsoft.KeyVault/vaults/secrets",
-      "name": "[concat(variables('keyVaultName'), '/ctti-client-secret')]",
+      "name": "[concat(variables('keyVaultName'), '/CTTIConfiguration--ClientSecret')]",
       "apiVersion": "2016-10-01",
       "tags": "[parameters('resourceTags')]",
       "dependsOn": [
