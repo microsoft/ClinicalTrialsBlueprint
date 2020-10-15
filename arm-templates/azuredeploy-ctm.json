@@ -880,52 +880,52 @@
                   "value": "[parameters('env')]"
                 },
                 {
-                  "name": "query__country",
+                  "name": "TenantQueryConfiguration__Country",
                   "value": "[parameters('queryCountry')]"
                 },
                 {
-                  "name": "query__phases",
+                  "name": "TenantQueryConfiguration__Phases",
                   "value": "[parameters('queryPhases')]"
                 },
                 {
-                  "name": "query__recruitment",
+                  "name": "TenantQueryConfiguration__Recruitment",
                   "value": "[parameters('queryRecruitment')]"
                 },
                 {
-                  "name": "query__sponsors",
+                  "name": "TenantQueryConfiguration__Sponsors",
                   "value": "[parameters('querySponsors')]"
                 },
                 {
-                  "name": "query__conditions",
+                  "name": "TenantQueryConfiguration__Conditions",
                   "value": "[parameters('queryConditions')]"
                 },
                 {
-                  "name": "key_vault__address",
+                  "name": "KeyVaultConfiguration__Address",
                   "value": "[variables('keyVaultAddress')]"
                 },
                 {
-                  "name": "fhir__address",
+                  "name": "FHIRConfiguration__Address",
                   "value": "[variables('fhirAddress')]"
                 },
                 {
-                  "name": "ayalon__address",
+                  "name": "AyalonConfiguration__Address",
                   "value": "[variables('ayalonAddress')]"
                 },
                 {
-                  "name": "ctti__host",
+                  "name": "CTTIConfiguration__Host",
                   "value": "[variables('cttiHost')]"              
                 },
                 {
-                  "name": "ctti__user_name",
+                  "name": "CTTIConfiguration__UserName",
                   "value": "[variables('cttiUserName')]"
                 },
 
                 {
-                  "name":"redis__address",
+                  "name":"RedisConfiguration__Address",
                   "value":"[variables('redisAddress')]"
                 },
                 {
-                  "name":"preprocessing__finished_notifier_address",
+                  "name":"PreprocessingConfiguration__FinishedNotifierAddress",
                   "value":"[listCallbackURL(concat(resourceId('Microsoft.Logic/workflows/', concat(parameters('serviceName'),'-finisher-logic-app')),'/triggers/manual'), '2016-06-01').value]"
                 }
               ],
@@ -1056,47 +1056,43 @@
               "value": "false"
             },
             {
-              "name":"key_vault__address",
+              "name":"KeyVaultConfiguration__Address",
               "value": "[variables('keyVaultAddress')]"
             },
             {
-                "name": "ctti__host",
+                "name": "CTTIConfiguration__Host",
                 "value": "[variables('cttiHost')]"
             },
             {
-              "name": "ctti__user_name",
+              "name": "CTTIConfiguration__UserName",
               "value": "[variables('cttiUserName')]"         
             },
             {
-              "name":"ctti__database",
-              "value":"aact"
-            },
-            {
-              "name":"redis__address",
+              "name":"RedisConfiguration__Address",
               "value":"[variables('redisAddress')]"
             },
             {
-              "name":"ayalon__address",
+              "name":"AyalonConfiguration__Address",
               "value":"[concat('https://',variables('ayalonWebAppName'),'.azurewebsites.net/') ]"
             },
             {
-              "name": "query__country",
+              "name": "TenantQueryConfiguration__Country",
               "value": "[parameters('queryCountry')]"
             },
             {
-              "name": "query__phases",
+              "name": "TenantQueryConfiguration__Phases",
               "value": "[parameters('queryPhases')]"
             },
             {
-              "name": "query__recruitment",
+              "name": "TenantQueryConfiguration__Recruitment",
               "value": "[parameters('queryRecruitment')]"
             },
             {
-              "name": "query__sponsors",
+              "name": "TenantQueryConfiguration__Sponsors",
               "value": "[parameters('querySponsors')]"
             },
             {
-              "name": "query__conditions",
+              "name": "TenantQueryConfiguration__Conditions",
               "value": "[parameters('queryConditions')]"
             }
           ]
@@ -1421,23 +1417,23 @@
               "value": "false"
             },
             {
-              "name":"key_vault__address",
+              "name":"KeyVaultConfiguration__Address",
               "value": "[variables('keyVaultAddress')]"
             },
             {
-              "name": "ctti__host",
+              "name": "CTTIConfiguration__Host",
               "value": "[variables('cttiHost')]"
             },
             {
-              "name": "ctti__user_name",
+              "name": "CTTIConfiguration__UserName",
               "value": "[variables('cttiUserName')]"         
             },
             {
-              "name":"redis__address",
+              "name":"RedisConfiguration__Address",
               "value":"[variables('redisAddress')]"
             },
             {
-              "name":"ayalon__address",
+              "name":"AyalonConfiguration__Address",
               "value":"[concat('https://',variables('ayalonWebAppName'),'.azurewebsites.net/') ]"
             }
           ]
