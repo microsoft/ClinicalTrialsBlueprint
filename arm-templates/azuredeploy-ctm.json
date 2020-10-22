@@ -927,6 +927,10 @@
                 {
                   "name":"PreprocessingConfiguration__FinishedNotifierAddress",
                   "value":"[listCallbackURL(concat(resourceId('Microsoft.Logic/workflows/', concat(parameters('serviceName'),'-finisher-logic-app')),'/triggers/manual'), '2016-06-01').value]"
+                },
+                {
+                  "name": "PreprocessingConfiguration__Env",
+                  "value": "[if(parameters('isSecondary'), 'secondary', 'primary')]"
                 }
               ],
               "resources": {
