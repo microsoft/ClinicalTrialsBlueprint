@@ -108,6 +108,7 @@
     "keyVaultAddress": "[concat('https://',variables('keyVaultName'),'.vault.azure.net/')]",
     "fhirAddress": "[concat('https://',variables('gatewayWebAppName'), if(parameters('isSecondary'), '-secondary',''),'.azurewebsites.net/fhir/')]",
     "ayalonAddress": "[concat('https://',variables('gatewayWebAppName'), if(parameters('isSecondary'), '-secondary',''),'.azurewebsites.net/ta4h/')]",
+    "gatewayAddress": "[concat('https://',variables('gatewayWebAppName'), '.azurewebsites.net')]",
     // Resource Ids
     "gatewayResourceId": "[resourceId('Microsoft.Web/sites',variables('gatewayWebAppName'))]",
     "queryEngineResourceId": "[resourceId('Microsoft.Web/sites',variables('queryEngineWebAppName'))]",
@@ -121,8 +122,8 @@
     "disqualificationDockerImageName":  "[concat('DOCKER|',parameters('acrServer'),'/clinical-trials-disqualification:',parameters('disqualifierImageTag'))]",
     "structuringImageName":             "[concat(parameters('acrServer'),'/clinical-trials-structuring:',parameters('structuringImageTag'))]",
     "constituencyParserImageName":      "[concat(parameters('acrServer'),'/constituency-parser-server:',parameters('conParserImageTag'))]",
-	"functionalTestsImageName":
-    "[concat('DOCKER|',parameters('acrServer'),'/ctm-bot-functional-testing:',parameters('funcTestsImageTag'))]",
+	  "functionalTestsImageName":
+      "[concat('DOCKER|',parameters('acrServer'),'/ctm-bot-functional-testing:',parameters('funcTestsImageTag'))]",
     // Gateway services
     "cttiHost": "[concat(variables('postgresqlServerFullName'),'.postgres.database.azure.com')]",
     "cttiUserName":"[concat(parameters('postgreSqlAdministratorLogin'),'@',variables('cttiHost'))]",
@@ -919,18 +920,21 @@
                   "name": "CTTIConfiguration__UserName",
                   "value": "[variables('cttiUserName')]"
                 },
-
                 {
-                  "name":"RedisConfiguration__Address",
+                  "name": "RedisConfiguration__Address",
                   "value":"[variables('redisAddress')]"
                 },
                 {
-                  "name":"PreprocessingConfiguration__FinishedNotifierAddress",
+                  "name": "PreprocessingConfiguration__FinishedNotifierAddress",
                   "value":"[listCallbackURL(concat(resourceId('Microsoft.Logic/workflows/', concat(parameters('serviceName'),'-finisher-logic-app')),'/triggers/manual'), '2016-06-01').value]"
                 },
                 {
                   "name": "PreprocessingConfiguration__Env",
                   "value": "[if(parameters('isSecondary'), 'secondary', 'primary')]"
+                },
+                {
+                  "name": "GatewayConfiguration__Address",
+                  "value": "[variables('gatewayAddress')]"
                 }
               ],
               "resources": {
