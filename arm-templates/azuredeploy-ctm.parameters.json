@@ -24,22 +24,22 @@
             "value": "ctmprodreader"
         },
         "structuringImageTag": {
-            "value": "2020.0528.1"
+            "value": "2020.1025.1"
         },
         "queryEngineImageTag": {
-            "value": "2020.0528.1"
+            "value": "2020.1025.1"
         },
         "disqualifierImageTag": {
-            "value": "2020.0528.1"
+            "value": "2020.1025.1"
         },
         "conParserImageTag": {
-            "value": "2020.0531.5"
+            "value": "2020.0916.1"
         },
         "ta4hImageTag": {
-            "value": "2020.0510.1"
+            "value": "2020.0924.1"
         },
         "gatewayImageTag": {
-            "value": "2020.0510.1"
+            "value": "20201018.1"
         },
 		"funcTestsImageTag": {
             "value": "2020.0625.3"
