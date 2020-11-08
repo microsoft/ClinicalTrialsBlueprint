@@ -174,17 +174,20 @@ Deploy a primary Healthcare Bot resources for the Marketplace SaaS application y
 
 ```PowerShell
 .\scripts\azuredeploy-healthcarebot.ps1 -ResourceGroup $ctmRg.ResourceGroupName `
-                -saasSubscriptionId $saasSubscriptionId  -serviceName $botServiceName `
-                -botLocation US -matchingOutput $matchingOutput 
+                -saasSubscriptionId $saasSubscriptionId  -botServiceName $botServiceName `
+                -botLocation US -matchingOutput $matchingOutput `
+                -TemplateParameterFile .\arm-templates\azuredeploy-healthcarebot.parameters.json `
 ```
 
-You can now deploy a secondary Healthcare bot by running this command
+You can now deploy a secondary Healthcare bot and functional testing webapp by running this command
 
 ```PowerShell
 .\scripts\azuredeploy-healthcarebot.ps1 -ResourceGroup $ctmRg.ResourceGroupName `
                 -saasSubscriptionId $secondarySaaSSubscriptionId  `
-                -serviceName $secondaryBotServiceName `
-                -botLocation US -matchingOutput $matchingSecondaryOutput 
+                -botServiceName $secondaryBotServiceName `
+                -botLocation US -matchingOutput $matchingSecondaryOutput `
+                -TemplateParameterFile .\arm-templates\azuredeploy-healthcarebot.parameters.json `
+                -isSecondary $true
 ```
 
 To view a Power BI report of your primary Healthcare Bot usage:

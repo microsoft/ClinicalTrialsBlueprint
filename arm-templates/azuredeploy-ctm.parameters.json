@@ -41,9 +41,6 @@
         "gatewayImageTag": {
             "value": "2020.0510.1"
         },
-		"funcTestsImageTag": {
-            "value": "2020.0625.3"
-        },
         "queryCountry": {
             "value": "us"
         },

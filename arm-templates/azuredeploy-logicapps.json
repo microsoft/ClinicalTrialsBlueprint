@@ -416,15 +416,6 @@
               "type": "Object"
             }
           },
-          "staticResults": {
-            "Run_Functional_Tests_Static": {
-                "status": "Succeeded",
-                "outputs": {
-                    "headers": {},
-                    "statusCode": "200"
-                }
-            }
-        },
           "triggers": {
             "manual": {
               "type": "Request",
@@ -637,6 +628,18 @@
             },
             "Is_structuring_successful": {
               "actions": {
+                "Get_Functional_Test_Status": {
+                                    "runAfter": {
+                                        "Until_disqualifier_is_ready": [
+                                            "Succeeded"
+                                        ]
+                                    },
+                                    "type": "Http",
+                                    "inputs": {
+                                        "method": "GET",
+                                        "uri": "[concat('https://', variables('funcTestsAppName'),'.azurewebsites.net/status')]"
+                                    }
+                                },
                 "Is_Service_Ready": {
                   "actions": {
                     "Send_a_success_email": {
@@ -705,19 +708,31 @@
                   },
                   "expression": {
                     "and": [
-                      {
-                        "startsWith": [
-                          "@variables('readiness')",
-                          "Ready"
-                        ]
-                      },
-                      {
-                        "equals": [
-                          "@outputs('Run_Functional_Tests')['statusCode']",
-                            "200"
-                        ]
-                      }
-                    ]
+                        {
+                            "startsWith": [
+                                "@variables('readiness')",
+                                "Ready"
+                            ]
+                        },
+                        {
+                            "or": [
+                                {
+                                    "not": {
+                                        "equals": [
+                                            "@outputs('Get_Functional_Test_Status')?['statusCode']",
+                                            200
+                                        ]
+                                    }
+                                },
+                                {
+                                    "equals": [
+                                        "@outputs('Run_Functional_Tests')['statusCode']",
+                                        200
+                                    ]
+                                }
+                            ]
+                        }
+                      ]
                   },
                   "runAfter": {
                     "Run_Functional_Tests": [
@@ -750,14 +765,8 @@
                   "type": "ApiConnection"
                 },
                  "Run_Functional_Tests": {
-                     "runtimeConfiguration": {
-                        "staticResult": {
-                            "staticResultOptions": "Enabled",
-                            "name": "Run_Functional_Tests_Static"
-                        }
-                    },
                     "runAfter": {
-                        "Until_disqualifier_is_ready": [
+                        "Get_Functional_Test_Status": [
                             "Succeeded"
                         ]
                     },

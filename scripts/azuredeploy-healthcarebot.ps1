@@ -3,6 +3,9 @@ param(
     $saasSubscriptionId,
     [Parameter(Mandatory=$true)]
     [String]
+    $botServiceName,
+    [Parameter(Mandatory=$true)]
+    [String]
     $serviceName,
     [Parameter(Mandatory=$true)]
     [ValidateSet("US","EU")]
@@ -11,11 +14,14 @@ param(
     $ResourceGroup,
     [Parameter(Mandatory=$true)]
     $matchingOutput,
+    [boolean]
+    $isSecondary = $false,
     [Parameter(Mandatory=$false)]
-    $resourceTags
+    $resourceTags,
+    [Parameter()]
+    $TemplateParameterFile = './arm-templates/azuredeploy-healthcarebot-parameters.json'
+    
 )
-
-
 
 $matchingParameters = $matchingOutput.Parameters
 $matchingOutputs = $matchingOutput.Outputs
@@ -32,18 +38,25 @@ $luisPath = "./lu"
 $restorePath = "./bot-templates"
 
 
-$parms = @{'serviceName'=$serviceName;
-		   'ResourceGroupName'=$ResourceGroup;
-           'saasSubscriptionId'=$saasSubscriptionId;
+
+Try {
+    
+    $parms = @{
+           'botServiceName' = $botServiceName;
+           'isSecondary' = $isSecondary;
+		   'ResourceGroupName' = $ResourceGroup;
+           'saasSubscriptionId' = $saasSubscriptionId;
+           'TemplateParameterFile' = $TemplateParameterFile;
+           'serviceName' = $serviceName;
            'TemplateFile'='./arm-templates/azuredeploy-healthcarebot.json'
           }
 		  
-if ($null -ne $resourceTags){
-	$parms.resourceTags = $resourceTags`
-}
+    if ($null -ne $resourceTags){
+        $parms.resourceTags = $resourceTags`
+    }
 
 
-Try {
+    
     Write-Host "Running Template Deployment..."
     $output = New-AzResourceGroupDeployment @parms
 
@@ -53,7 +66,7 @@ Try {
     $tenantId = $output.Outputs["serviceUniqueName"].Value    
 
     Write-Host "Creating Healthcare Bot Tenant $tenantId..." -NoNewline
-    $saasTenant = New-HbsTenant -name $serviceName -tenantId $tenantId `
+    $saasTenant = New-HbsTenant -name $botServiceName -tenantId $tenantId `
                                 -saasSubscriptionId $saasSubscriptionId `
                                 -location $botLocation `
                                 -instrumentationKey $output.Outputs["instrumentationKey"].Value
@@ -79,7 +92,7 @@ Try {
         
         Write-Host "Assigning LUIS app " $_.BaseName " to LUIS account..." -NoNewline
         $assignLuisApp = Set-LuisApplicationAccount -appId $luisApplicationId -subscriptionId $subscriptionId `
-                            -resourceGroup $ResourceGroup -accountName $serviceName"-prediction" `
+                            -resourceGroup $ResourceGroup -accountName $botServiceName"-prediction" `
                             -location $luisAuthLocation -authKey $output.Outputs["luisAuthotingKey"].Value
 
         Write-Host "Done" -ForegroundColor Green
@@ -150,7 +163,7 @@ Try {
 	
 		# update functional-tests app with bot name and secret
 		Write-Host "updating bot function test app with bot tenant id: $tenantId"
-		$funcTestApp = Get-AzWebApp -ResourceGroupName $ResourceGroup -Name $matchingOutputs.funcTestsServiceName.Value
+		$funcTestApp = Get-AzWebApp -ResourceGroupName $ResourceGroup -Name $output.Outputs.funcTestsServiceName.Value
 		$settings =  $funcTestApp.SiteConfig.AppSettings
 		$hashTable = @{}
 		$settings | ForEach-Object {
@@ -159,7 +172,7 @@ Try {
 
 		$hashTable
 		
-		if($matchingParameters.isSecondary.Value){	
+		if($isSecondary){	
 			$hashTable["DefaultBot"] = $tenantId
 		}
 		
@@ -167,7 +180,7 @@ Try {
 		$secrets[$tenantId] = $webchatSecret
 		$hashTable["SECRETS"] = ConvertTo-Json $secrets
 		$hashTable["SECRETS"] = $hashTable["SECRETS"].ToString()
-		Set-AzWebApp -ResourceGroupName $ResourceGroup -Name $matchingOutputs.funcTestsServiceName.Value -AppSettings $hashTable
+		Set-AzWebApp -ResourceGroupName $ResourceGroup -Name $output.Outputs.funcTestsServiceName.Value -AppSettings $hashTable
     
 }    
 Catch {

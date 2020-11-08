@@ -2,9 +2,12 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "serviceName": {
+        "botServiceName": {
             "value": "## TO BE DEFINED ##"
-        },
+        },  
+         "serviceName": {
+            "value": "## TO BE DEFINED ##"
+        },  
         "saasSubscriptionId": {
             "value": "## TO BE DEFINED ##"
         },
@@ -17,11 +20,23 @@
         "luisAuthLocation": {
             "value": "westus"
         },
+        "funcTestsImageTag": {
+            "value": "20.10.2020"
+        },
         "resourceTags": {
             "value": {
                 "Environment": "Dev",
                 "Project": "Tutorial"
             }
+        },
+        "acrServer": {
+            "value": "ctmprod.azurecr.io"
+        },
+        "acrUsername": {
+            "value": "ctmprodreader"
+        },
+          "acrPassword": {
+            "value": "## TO BE DEFINED ##"
         }
     }
 }

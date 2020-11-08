@@ -46,10 +46,6 @@
       "type": "string",
       "defaultValue": "2020.0510.1"
     },
-	 "funcTestsImageTag": {
-      "type": "string",
-      "defaultValue": "2020.0625.3"
-    },
     "queryCountry": {
       "type": "string"
     },
@@ -102,7 +98,6 @@
     "ayalonServicePlan": "[concat(parameters('serviceName'),'-ayalon-plan')]",
     "gatewayWebAppName": "[concat(parameters('serviceName'),'-gateway-webapp')]",
     "textAnalyticsName": "[concat(parameters('serviceName'),'-ctm-ta')]",
-	"functionalTestsServiceName": "[concat(parameters('serviceName'),'-ctm-func-tests-webapp')]",
     // Addresses
     "redisAddress": "[concat(variables('redisCacheName'),'.redis.cache.windows.net')]",
     "keyVaultAddress": "[concat('https://',variables('keyVaultName'),'.vault.azure.net/')]",
@@ -122,8 +117,6 @@
     "disqualificationDockerImageName":  "[concat('DOCKER|',parameters('acrServer'),'/clinical-trials-disqualification:',parameters('disqualifierImageTag'))]",
     "structuringImageName":             "[concat(parameters('acrServer'),'/clinical-trials-structuring:',parameters('structuringImageTag'))]",
     "constituencyParserImageName":      "[concat(parameters('acrServer'),'/constituency-parser-server:',parameters('conParserImageTag'))]",
-	  "functionalTestsImageName":
-      "[concat('DOCKER|',parameters('acrServer'),'/ctm-bot-functional-testing:',parameters('funcTestsImageTag'))]",
     // Gateway services
     "cttiHost": "[concat(variables('postgresqlServerFullName'),'.postgres.database.azure.com')]",
     "cttiUserName":"[concat(parameters('postgreSqlAdministratorLogin'),'@',variables('cttiHost'))]",
@@ -1197,168 +1190,6 @@
         "hostNameType": "Verified"
       }
     },
-	{
-      "type": "Microsoft.Web/sites",
-      "apiVersion": "2018-11-01",
-      "name": "[variables('functionalTestsServiceName')]",
-      "location": "[resourceGroup().location]",
-      "tags": "[parameters('resourceTags')]",
-      "kind": "app,linux,container",
-      "identity": {
-        "type": "SystemAssigned"
-      },
-      "dependsOn": [
-        "[resourceId('Microsoft.Web/serverfarms', variables('ctmServicePlan'))]"    
-      ],
-      "properties": {
-        "enabled": true,
-        "hostNameSslStates": [
-          {
-            "name": "[concat(variables('functionalTestsServiceName'), '.azurewebsites.net')]",
-            "sslState": "Disabled",
-            "hostType": "Standard"
-          },
-          {
-            "name": "[concat(variables('functionalTestsServiceName'), '.scm.azurewebsites.net')]",
-            "sslState": "Disabled",
-            "hostType": "Repository"
-          }
-        ],
-        "serverFarmId": "[variables('ctmServicePlan')]",
-        "reserved": true,
-        "isXenon": false,
-        "hyperV": false,
-        "scmSiteAlsoStopped": false,
-        "clientAffinityEnabled": true,
-        "clientCertEnabled": false,
-        "hostNamesDisabled": false,
-        "containerSize": 0,
-        "dailyMemoryTimeQuota": 0,
-        "httpsOnly": false,
-        "redundancyMode": "None",
-        "siteConfig": {
-          "appSettings": [
-            {
-              "name": "DOCKER_REGISTRY_SERVER_URL",
-              "value": "[parameters('acrServer')]"
-            },
-            {
-              "name": "DOCKER_REGISTRY_SERVER_USERNAME",
-              "value": "[parameters('acrUsername')]"
-            },
-            {
-              "name": "DOCKER_REGISTRY_SERVER_PASSWORD",
-              "value": "[parameters('acrPassword')]"
-            },
-            {
-              "name": "DOCKER_ENABLE_CI",
-              "value": "true"
-            },
-            {
-              "name": "WEBSITES_ENABLE_APP_SERVICE_STORAGE",
-              "value": "true"
-            },
-            {
-              "name":"SECRETS",
-              "value": "{'bot-name-here': 'bot-secret-here'}"
-            },
-            {
-                "name": "DefaultBot",
-                "value": ""
-            },
-          ]
-        }
-      }
-    },
-	{
-        "type": "Microsoft.Web/sites/config",
-        "condition":"[not(parameters('isSecondary'))]",
-        "apiVersion": "2018-11-01",
-        "name": "[concat(variables('functionalTestsServiceName'), '/web')]",
-        "tags": "[parameters('resourceTags')]",
-        "location": "[resourceGroup().location]",
-        "dependsOn": [
-            "[resourceId('Microsoft.Web/sites', variables('functionalTestsServiceName'))]"
-        ],
-        "properties": {
-            "numberOfWorkers": 1,
-            "defaultDocuments": [
-                "Default.htm",
-                "Default.html",
-                "Default.asp",
-                "index.htm",
-                "index.html",
-                "iisstart.htm",
-                "default.aspx",
-                "index.php",
-                "hostingstart.html"
-            ],
-            "netFrameworkVersion": "v4.0",
-            "linuxFxVersion": "[variables('functionalTestsImageName')]",
-            "requestTracingEnabled": false,
-            "remoteDebuggingEnabled": false,
-            "remoteDebuggingVersion": "VS2019",
-            "httpLoggingEnabled": true,
-            "logsDirectorySizeLimit": 35,
-            "detailedErrorLoggingEnabled": false,
-            "publishingUsername": "func-test-ctm-gateway-webapp",
-            "scmType": "None",
-            "use32BitWorkerProcess": true,
-            "webSocketsEnabled": false,
-            "alwaysOn": true,
-            "managedPipelineMode": "Integrated",
-            "virtualApplications": [
-                {
-                    "virtualPath": "/",
-                    "physicalPath": "site\\wwwroot",
-                    "preloadEnabled": true
-                }
-            ],
-            "loadBalancing": "LeastRequests",
-            "experiments": {
-                "rampUpRules": []
-            },
-            "autoHealEnabled": false,
-            "localMySqlEnabled": false,
-            "ipSecurityRestrictions": [
-                {
-                    "ipAddress": "Any",
-                    "action": "Allow",
-                    "priority": 1,
-                    "name": "Allow all",
-                    "description": "Allow all access"
-                }
-            ],
-            "scmIpSecurityRestrictions": [
-                {
-                    "ipAddress": "Any",
-                    "action": "Allow",
-                    "priority": 1,
-                    "name": "Allow all",
-                    "description": "Allow all access"
-                }
-            ],
-            "scmIpSecurityRestrictionsUseMain": false,
-            "http20Enabled": false,
-            "minTlsVersion": "1.2",
-            "ftpsState": "AllAllowed",
-            "reservedInstanceCount": 0
-        }
-    },
-    {
-      "type": "Microsoft.Web/sites/hostNameBindings",
-      "apiVersion": "2018-11-01",
-      "name": "[concat(variables('functionalTestsServiceName'), '/', variables('functionalTestsServiceName'), '.azurewebsites.net')]",
-      "tags": "[parameters('resourceTags')]",
-      "location": "[resourceGroup().location]",
-      "dependsOn": [
-        "[resourceId('Microsoft.Web/sites', variables('functionalTestsServiceName'))]"
-      ],
-      "properties": {
-        "siteName": "[variables('functionalTestsServiceName')]",
-        "hostNameType": "Verified"
-      }
-    },
     {
       "type": "Microsoft.Web/sites",
       "apiVersion": "2018-11-01",
@@ -1643,10 +1474,6 @@
     "structuringName": {
       "type":"string",
       "value":"[variables('structuringName')]"
-    },
-	"funcTestsServiceName": {
-      "type":"string",
-      "value":"[variables('functionalTestsServiceName')]"
-    }  	
+    }
   }
 }
