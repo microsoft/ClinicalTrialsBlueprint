@@ -182,7 +182,7 @@ Deploy a primary Healthcare Bot resources for the Marketplace SaaS application y
 ```PowerShell
 .\scripts\azuredeploy-healthcarebot.ps1 -ResourceGroup $ctmRg.ResourceGroupName `
                 -saasSubscriptionId $saasSubscriptionId  -botServiceName $botServiceName `
-                -botLocation US -matchingOutput $matchingOutput '
+                -botLocation US -matchingOutput $matchingOutput `
                 -TemplateParameterFile .\arm-templates\azuredeploy-healthcarebot.parameters.json `
 ```
 
