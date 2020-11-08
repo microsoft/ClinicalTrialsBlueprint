@@ -30,16 +30,16 @@ also fill the parameter files with missing parameters and chosen service same as
 ```
 ## Setup the FHIR Server
 
-Create a Resource group for the FHIR server. It must be in a separate resource group from other resources in the blueprint becuase we are creating a Windows service plan
+Create Resource Group that will contain all the resources required for the blueprint resources
 
 ```PowerShell
-$fhirRg = New-AzResourceGroup -Name <fhir server group name> -Location eastus
+$ctmRg = New-AzResourceGroup -Name <resources group name> -Location eastus
 ```
 
 Create the FHIR server deployment. You will to provide a admin password for the SQL server
 
 ```PowerShell
-New-AzResourceGroupDeployment -ResourceGroupName $fhirRg.ResourceGroupName `
+New-AzResourceGroupDeployment -ResourceGroupName $ctmRg.ResourceGroupName `
                               -TemplateFile .\arm-templates\azuredeploy-fhir.json `
                               -TemplateParameterFile .\arm-templates\azuredeploy-fhir.parameters.json 
                               
@@ -48,7 +48,7 @@ New-AzResourceGroupDeployment -ResourceGroupName $fhirRg.ResourceGroupName `
 Create secondary FHIR server
 
 ```PowerShell
-New-AzResourceGroupDeployment -ResourceGroupName $fhirRg.ResourceGroupName `
+New-AzResourceGroupDeployment -ResourceGroupName $ctmRg.ResourceGroupName `
                               -TemplateFile .\arm-templates\azuredeploy-fhir.json `
                               -TemplateParameterFile .\arm-templates\azuredeploy-fhir.parameters.json `
                               -isSecondary $true
@@ -65,12 +65,6 @@ $metadata.RawContent
 It will take a minute or so for the server to respond the first time.
 
 ## Setup the Matching service
-
-Create Resource Group that will contain all the resources required for the blueprint resources
-
-```PowerShell
-$ctmRg = New-AzResourceGroup -Name <service Name> -Location eastus
-```
 
 Create Logic Applications to manage automatic restructuring
 
@@ -145,8 +139,7 @@ $disqualificationResponse.RawContent
 ```
 
 ```PowerShell
-Add-CTMRestrictIPs -resourceGroupName $ctmRg.ResourceGroupName -serviceName $ctmServiceName `
-                   -fhirResoureGroupName $fhirRg.ResourceGroupName 
+Add-CTMRestrictIPs -resourceGroupName $ctmRg.ResourceGroupName -serviceName $ctmServiceName
 ```
 
 ### Setup the Healthcare Bot Service
