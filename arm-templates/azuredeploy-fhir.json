@@ -172,7 +172,7 @@
     },
     "resources": [
         {
-            "condition": "[not(parameters('IsSecondary'))]",
+            "condition": "[not(parameters('isSecondary'))]",
             "apiVersion": "2018-02-01",
             "name": "[variables('appServicePlanName')]",
             "type": "Microsoft.Web/serverfarms",
