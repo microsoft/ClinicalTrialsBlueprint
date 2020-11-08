@@ -5,9 +5,7 @@ function Add-CTMRestrictIPs {
         [Parameter(Mandatory=$true)]
         $resourceGroupName,
         [Parameter(Mandatory=$true)]
-        $serviceName,
-        [Parameter(Mandatory=$true)]
-        $fhirResoureGroupName
+        $serviceName
     )
     
     $gatewayWebApp = "$serviceName-gateway-webapp"
@@ -18,7 +16,6 @@ function Add-CTMRestrictIPs {
         Add-RestrictRule -resourceGroupName $resourceGroupName -appName "$serviceName-ctm-qe-webapp" -ip $ip
         Add-RestrictRule -resourceGroupName $resourceGroupName -appName "$serviceName-ctm-disq-webapp" -ip $ip
         Add-RestrictRule -resourceGroupName $resourceGroupName -appName "$serviceName-ayalon-webapp" -ip $ip
-        Add-RestrictRule -resourceGroupName $fhirResoureGroupName -appName "$serviceName-fhir" -ip $ip
     }
 
     Write-Host "Getting outbound IPs of Secondary Gateway..." -NoNewline
@@ -27,7 +24,6 @@ function Add-CTMRestrictIPs {
     foreach  ($ip in $ips) {
         Add-RestrictRule -resourceGroupName $resourceGroupName -appName "$serviceName-ctm-qe-webapp-s" -ip $ip
         Add-RestrictRule -resourceGroupName $resourceGroupName -appName "$serviceName-ctm-disq-webapp-s" -ip $ip
-        Add-RestrictRule -resourceGroupName $fhirResoureGroupName -appName "$serviceName-fhir-s" -ip $ip
     }
 }
 
