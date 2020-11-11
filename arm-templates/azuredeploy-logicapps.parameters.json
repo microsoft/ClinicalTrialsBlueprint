@@ -3,7 +3,7 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "serviceName": {
-            "value": "## TO BE DEFINED ##"
+            "value": "wba"
         },
         "accountId": {
             "value": "## TO BE DEFINED ##"
@@ -11,7 +11,7 @@
         "isLiveId": {
             "value": false
         },
-        "functionalTestsFileUrl": {
+		    "functionalTestsFileUrl": {
             "value": "https://raw.githubusercontent.com/microsoft/ClinicalTrialsBlueprint/master/functional-tests/dynmic_ctm_test.json"
         },
         "resourceTags": {
