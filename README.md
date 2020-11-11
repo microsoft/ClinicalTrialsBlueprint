@@ -69,7 +69,7 @@ It will take a minute or so for the server to respond the first time.
 Create Logic Applications to manage automatic restructuring
 
 ```Powershell
-$logicAppsOutput = New-AzResourceGroupDeployment -ResourceGroupName $ctmRg.ResourceGroupName `
+New-AzResourceGroupDeployment -ResourceGroupName $ctmRg.ResourceGroupName `
                   -TemplateFile .\arm-templates\azuredeploy-logicapps.json `
                   -TemplateParameterFile .\arm-templates\azuredeploy-logicapps.parameters.json `
                   -accountId (Get-AzContext).Account.Id

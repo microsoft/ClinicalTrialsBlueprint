@@ -11,14 +11,8 @@
         "isSecondary": {
             "value": false
         },
-        "appServicePlanResourceGroup": {
-            "value": ""
-        },
         "appServicePlanName": {
             "value": ""
-        },
-        "appServicePlanSku": {
-            "value": "P2"
         },
         "securityAuthenticationAuthority": {
             "value": ""
@@ -29,9 +23,6 @@
         "enableAadSmartOnFhirProxy": {
             "value": false
         },
-        "msdeployPackageUrl": {
-            "value": ""
-        },
         "deployApplicationInsights": {
             "value": true
         },
@@ -40,9 +31,6 @@
         },
         "additionalFhirServerConfigProperties": {
             "value": {}
-        },
-        "solutionType": {
-            "value": "FhirServerSqlServer"
         },
         "fhirVersion": {
             "value": "R4"

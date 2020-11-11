@@ -14,7 +14,7 @@
       "type": "bool",
       "defaultValue": false
     },
-     "functionalTestsFileUrl": {
+    "functionalTestsFileUrl": {
       "type": "string"
     },
     "resourceTags": {

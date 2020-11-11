@@ -3,7 +3,7 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "serviceName": {
-      "type": "string",            
+      "type": "string",
       "minLength": 3,
       "maxLength": 17
     },
@@ -34,9 +34,9 @@
       "type": "string",
       "defaultValue": "2020.0510.1"
     },
-    "conParserImageTag": {
+    "nlpServicesImageTag": {
       "type": "string",
-      "defaultValue": "16897"
+      "defaultValue": "2020.1108.1"
     },
     "ta4hImageTag": {
       "type": "string",
@@ -62,10 +62,10 @@
       "type": "string"
     },
     "postgreSqlAdministratorLogin": {
-        "type": "string"
+      "type": "string"
     },
     "postgreSqladministratorLoginPassword": {
-        "type": "securestring"
+      "type": "securestring"
     },
     "resourceTags": {
       "type": "object",
@@ -75,601 +75,609 @@
       }
     },
     "isSecondary": {
-      "type":"bool",
+      "type": "bool",
       "defaultValue": false
     }
   },
-  "variables": {    
+  "variables": {
     // Duplicated resources
-    "suffix":"[if(parameters('isSecondary'), '-s','')]",
-    "structuringName": "[concat(parameters('serviceName'),'-ctm-struct-aci',variables('suffix'))]",    
-    "redisCacheName": "[concat(parameters('serviceName'),'-ctm-redis',variables('suffix'))]",    
+    "suffix": "[if(parameters('isSecondary'), '-s', '')]",
+    "structuringName": "[concat(parameters('serviceName'),'-ctm-struct-aci',variables('suffix'))]",
+    "redisCacheName": "[concat(parameters('serviceName'),'-ctm-redis',variables('suffix'))]",
     "queryEngineWebAppName": "[concat(parameters('serviceName'),'-ctm-qe-webapp',variables('suffix'))]",
     "disqualificationWebAppName": "[concat(parameters('serviceName'),'-ctm-disq-webapp',variables('suffix'))]",
-    "postgresqlServerFullName":"[concat(parameters('serviceName'),'-ctm-postgresql',variables('suffix'))]",
+    "postgresqlServerFullName": "[concat(parameters('serviceName'),'-ctm-postgresql',variables('suffix'))]",
     "keyVaultName": "[concat(parameters('serviceName'),'-ctm-kv',variables('suffix'))]",
     "ayalonWebAppName": "[concat(parameters('serviceName'),'-ayalon-webapp',variables('suffix'))]",
-
+    "managedIdentityName": "[concat(parameters('serviceName'),'-managed-identity',variables('suffix'))]",
     // Unique resources
     "insightsName": "[concat(parameters('serviceName'),'-ctm-insights')]",
     "proxyApiKey": "[uniqueString(subscription().id)]",
     "mapsServiceName": "[concat(parameters('serviceName'),'-ctm-map')]",
-    "ctmServicePlan": "[concat(parameters('serviceName'),'-ctm-plan')]",
-    "ayalonServicePlan": "[concat(parameters('serviceName'),'-ayalon-plan')]",
+    "ctmServicePlanName": "[concat(parameters('serviceName'),'-ctm-plan')]",
+    "ayalonServicePlanName": "[concat(parameters('serviceName'),'-ayalon-plan')]",
     "gatewayWebAppName": "[concat(parameters('serviceName'),'-gateway-webapp')]",
     "textAnalyticsName": "[concat(parameters('serviceName'),'-ctm-ta')]",
+    "autoScaleName": "[concat(parameters('serviceName'), '-plan-auto-scale')]",
     // Addresses
     "redisAddress": "[concat(variables('redisCacheName'),'.redis.cache.windows.net')]",
     "keyVaultAddress": "[concat('https://',variables('keyVaultName'),'.vault.azure.net/')]",
     "fhirAddress": "[concat('https://',variables('gatewayWebAppName'), if(parameters('isSecondary'), '-secondary',''),'.azurewebsites.net/fhir/')]",
     "ayalonAddress": "[concat('https://',variables('gatewayWebAppName'), if(parameters('isSecondary'), '-secondary',''),'.azurewebsites.net/ta4h/')]",
     "gatewayAddress": "[concat('https://',variables('gatewayWebAppName'), '.azurewebsites.net')]",
-    // Resource Ids
+    // Resource Ids For KeyVault access
     "gatewayResourceId": "[resourceId('Microsoft.Web/sites',variables('gatewayWebAppName'))]",
     "queryEngineResourceId": "[resourceId('Microsoft.Web/sites',variables('queryEngineWebAppName'))]",
     "gatewaySecondaryResourceId": "[resourceId('Microsoft.Web/sites/slots',variables('gatewayWebAppName'),'secondary')]",
     "disqualificationResourceId": "[resourceId('Microsoft.Web/sites',variables('disqualificationWebAppName'))]",
     "structuringResourceId": "[resourceId('Microsoft.ContainerInstance/containerGroups',variables('structuringName'))]",
+    "managedIdentityResourceId": "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities',variables('managedIdentityName'))]",
     // Docker Image Names
-    "gatewayDockerImageName":           "[concat('DOCKER|',parameters('acrServer'),'/clinical-trials-gateway:',parameters('gatewayImageTag'))]",
-    "ayalonDockerImageName":            "[concat('DOCKER|',parameters('acrServer'),'/cognitive-services-healthcare:',parameters('ta4hImageTag'))]",
-    "queryEngineDockerImageName":       "[concat('DOCKER|',parameters('acrServer'),'/query-engine:',parameters('queryEngineImageTag'))]",
-    "disqualificationDockerImageName":  "[concat('DOCKER|',parameters('acrServer'),'/clinical-trials-disqualification:',parameters('disqualifierImageTag'))]",
-    "structuringImageName":             "[concat(parameters('acrServer'),'/clinical-trials-structuring:',parameters('structuringImageTag'))]",
-    "constituencyParserImageName":      "[concat(parameters('acrServer'),'/constituency-parser-server:',parameters('conParserImageTag'))]",
+    "gatewayDockerImageName": "[concat('DOCKER|',parameters('acrServer'),'/clinical-trials-gateway:',parameters('gatewayImageTag'))]",
+    "ayalonDockerImageName": "[concat('DOCKER|',parameters('acrServer'),'/cognitive-services-healthcare:',parameters('ta4hImageTag'))]",
+    "queryEngineDockerImageName": "[concat('DOCKER|',parameters('acrServer'),'/query-engine:',parameters('queryEngineImageTag'))]",
+    "disqualificationDockerImageName": "[concat('DOCKER|',parameters('acrServer'),'/clinical-trials-disqualification:',parameters('disqualifierImageTag'))]",
+    "structuringImageName": "[concat(parameters('acrServer'),'/clinical-trials-structuring:',parameters('structuringImageTag'))]",
+    "nlpServicesImageName": "[concat(parameters('acrServer'),'/nlp-services-server:',parameters('nlpServicesImageTag'))]",
     // Gateway services
     "cttiHost": "[concat(variables('postgresqlServerFullName'),'.postgres.database.azure.com')]",
-    "cttiUserName":"[concat(parameters('postgreSqlAdministratorLogin'),'@',variables('cttiHost'))]",
+    "cttiUserName": "[concat(parameters('postgreSqlAdministratorLogin'),'@',variables('cttiHost'))]",
     "services": {
-      "ta4h":"[concat('https://',variables('ayalonWebAppName'),'.azurewebsites.net')]",
-      "qe":  "[concat('https://',variables('queryEngineWebAppName'),'.azurewebsites.net')]", 
-      "disq":"[concat('https://',variables('disqualificationWebAppName'),'.azurewebsites.net')]", 
-      "fhir": "[concat('https://',parameters('serviceName'),'-fhir.azurewebsites.net/')]"      
+      "ta4h": "[concat('https://',variables('ayalonWebAppName'),'.azurewebsites.net')]",
+      "qe": "[concat('https://',variables('queryEngineWebAppName'),'.azurewebsites.net')]",
+      "disq": "[concat('https://',variables('disqualificationWebAppName'),'.azurewebsites.net')]",
+      "fhir": "[concat('https://',parameters('serviceName'),'-fhir.azurewebsites.net/')]"
     },
     "servicesSecondary": {
-      "ta4h":"[concat('https://',variables('ayalonWebAppName'),'-s.azurewebsites.net')]",
-      "qe":  "[concat('https://',variables('queryEngineWebAppName'),'-s.azurewebsites.net')]", 
-      "disq":"[concat('https://',variables('disqualificationWebAppName'),'-s.azurewebsites.net')]", 
-      "fhir": "[concat('https://',parameters('serviceName'),'-fhir-s.azurewebsites.net/')]"      
+      "ta4h": "[concat('https://',variables('ayalonWebAppName'),'-s.azurewebsites.net')]",
+      "qe": "[concat('https://',variables('queryEngineWebAppName'),'-s.azurewebsites.net')]",
+      "disq": "[concat('https://',variables('disqualificationWebAppName'),'-s.azurewebsites.net')]",
+      "fhir": "[concat('https://',parameters('serviceName'),'-fhir-s.azurewebsites.net/')]"
     },
     "allowedPaths": "/status,/,/ready,/swagger/*,/metadata"
   },
   "resources": [
     {
-        "type": "microsoft.insights/components",
-        "apiVersion": "2015-05-01",
-        "name": "[variables('insightsName')]",
-        "location": "[resourceGroup().location]",
-        "kind": "web",
-        "tags": "[parameters('resourceTags')]",
-        "properties": {
-            "Application_Type": "web"
-        }
+      "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
+      "apiVersion": "2018-11-30",
+      "name": "[variables('managedIdentityName')]",
+      "location": "[resourceGroup().location]"
     },
     {
-        "type": "Microsoft.CognitiveServices/accounts",
-        "apiVersion": "2017-04-18",
-        "name": "[variables('textAnalyticsName')]",
-        "location": "[resourceGroup().location]",
-        "sku": {
-            "name": "S"
-        },
-        "tags": "[parameters('resourceTags')]",
-        "kind": "TextAnalytics",
-        "properties": {
-            "customSubDomainName": "[variables('textAnalyticsName')]"
-        }
+      "type": "microsoft.insights/components",
+      "apiVersion": "2015-05-01",
+      "name": "[variables('insightsName')]",
+      "location": "[resourceGroup().location]",
+      "kind": "web",
+      "tags": "[parameters('resourceTags')]",
+      "properties": {
+        "Application_Type": "web"
+      }
     },
     {
-        "type": "Microsoft.Web/serverfarms",
-        "apiVersion": "2018-02-01",
-        "name": "[variables('ayalonServicePlan')]",
-        "location": "[resourceGroup().location]",
-        "tags": "[parameters('resourceTags')]",
-        "sku": {
-            "name": "P3v2",
-            "capacity": 2
-        },
-        "kind": "linux",
-        "properties": {
-            "perSiteScaling": false,
-            "maximumElasticWorkerCount": 1,
-            "isSpot": false,
-            "reserved": true,
-            "isXenon": false,
-            "hyperV": false,
-            "targetWorkerCount": 0,
-            "targetWorkerSizeId": 0
-        }
-    },    
+      "type": "Microsoft.CognitiveServices/accounts",
+      "apiVersion": "2017-04-18",
+      "name": "[variables('textAnalyticsName')]",
+      "location": "[resourceGroup().location]",
+      "sku": {
+        "name": "S"
+      },
+      "tags": "[parameters('resourceTags')]",
+      "kind": "TextAnalytics",
+      "properties": {
+        "customSubDomainName": "[variables('textAnalyticsName')]"
+      }
+    },
     {
-        "type": "Microsoft.Web/sites",
-        "apiVersion": "2018-11-01",
-        "condition":"[not(parameters('isSecondary'))]",
-        "name": "[variables('gatewayWebAppName')]",
-        "location": "[resourceGroup().location]",
-        "tags": "[parameters('resourceTags')]",
-        "kind": "app,linux,container",
-        "identity": {
-            "type": "SystemAssigned"
-        },
-        "dependsOn": [
-          "[resourceId('Microsoft.Web/serverfarms', variables('ctmServicePlan'))]",
-          "[concat('Microsoft.Insights/components/', variables('insightsName'))]"      
+      "type": "Microsoft.Web/serverfarms",
+      "apiVersion": "2018-02-01",
+      "name": "[variables('ayalonServicePlanName')]",
+      "location": "[resourceGroup().location]",
+      "tags": "[parameters('resourceTags')]",
+      "sku": {
+        "name": "P3v2",
+        "capacity": 2
+      },
+      "kind": "linux",
+      "properties": {
+        "perSiteScaling": false,
+        "maximumElasticWorkerCount": 1,
+        "isSpot": false,
+        "reserved": true,
+        "isXenon": false,
+        "hyperV": false,
+        "targetWorkerCount": 0,
+        "targetWorkerSizeId": 0
+      }
+    },
+    {
+      "type": "Microsoft.Web/sites",
+      "apiVersion": "2018-11-01",
+      "condition": "[not(parameters('isSecondary'))]",
+      "name": "[variables('gatewayWebAppName')]",
+      "location": "[resourceGroup().location]",
+      "tags": "[parameters('resourceTags')]",
+      "kind": "app,linux,container",
+      "identity": {
+        "type": "SystemAssigned"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/serverfarms', variables('ctmServicePlanName'))]",
+        "[concat('Microsoft.Insights/components/', variables('insightsName'))]"
+      ],
+      "properties": {
+        "enabled": true,
+        "hostNameSslStates": [
+          {
+            "name": "[concat(variables('gatewayWebAppName'), '.azurewebsites.net')]",
+            "sslState": "Disabled",
+            "hostType": "Standard"
+          },
+          {
+            "name": "[concat(variables('gatewayWebAppName'), '.scm.azurewebsites.net')]",
+            "sslState": "Disabled",
+            "hostType": "Repository"
+          }
         ],
-        "properties": {
-            "enabled": true,
-            "hostNameSslStates": [
-                {
-                    "name": "[concat(variables('gatewayWebAppName'), '.azurewebsites.net')]",
-                    "sslState": "Disabled",
-                    "hostType": "Standard"
-                },
-                {
-                    "name": "[concat(variables('gatewayWebAppName'), '.scm.azurewebsites.net')]",
-                    "sslState": "Disabled",
-                    "hostType": "Repository"
-                }
-            ],
-            "serverFarmId": "[variables('ctmServicePlan')]",
-            "reserved": true,
-            "isXenon": false,
-            "hyperV": false,
-            "scmSiteAlsoStopped": false,
-            "clientAffinityEnabled": false,
-            "clientCertEnabled": false,
-            "hostNamesDisabled": false,
-            "containerSize": 0,
-            "dailyMemoryTimeQuota": 0,
-            "httpsOnly": false,
-            "redundancyMode": "None",
-            "siteConfig":{
-              "appSettings": [
-                {
-                    "name": "DOCKER_REGISTRY_SERVER_URL",
-                    "value": "[parameters('acrServer')]"
-                },
-                {
-                    "name": "DOCKER_REGISTRY_SERVER_USERNAME",
-                    "value": "[parameters('acrUsername')]"
-                },
-                {
-                    "name": "DOCKER_REGISTRY_SERVER_PASSWORD",
-                    "value": "[parameters('acrPassword')]"
-                },
-                {
-                  "name":"KEYVAULT_URL",
-                  "value":"[variables('keyVaultAddress')]"
-                },
-                {
-                  "name":"SERVICES",
-                  "value":"[string(variables('services'))]"
-                },
-                {
-                  "name":"ALLOWED_PATHS",
-                  "value": "[variables('allowedPaths')]"
-                },
-                {
-                  "name":"SLOT",
-                  "value":"primary"
-                }
-              ]
-            }
-        }
-    },
-    {
-        "type": "Microsoft.Web/sites/config",
-        "condition":"[not(parameters('isSecondary'))]",
-        "apiVersion": "2018-11-01",
-        "name": "[concat(variables('gatewayWebAppName'), '/web')]",
-        "tags": "[parameters('resourceTags')]",
-        "location": "East US",
-        "dependsOn": [
-            "[resourceId('Microsoft.Web/sites', variables('gatewayWebAppName'))]"
-        ],
-        "properties": {
-            "numberOfWorkers": 1,
-            "defaultDocuments": [
-                "Default.htm",
-                "Default.html",
-                "Default.asp",
-                "index.htm",
-                "index.html",
-                "iisstart.htm",
-                "default.aspx",
-                "index.php",
-                "hostingstart.html"
-            ],
-            "netFrameworkVersion": "v4.0",
-            "linuxFxVersion": "[variables('gatewayDockerImageName')]",
-            "requestTracingEnabled": false,
-            "remoteDebuggingEnabled": false,
-            "remoteDebuggingVersion": "VS2019",
-            "httpLoggingEnabled": true,
-            "logsDirectorySizeLimit": 35,
-            "detailedErrorLoggingEnabled": false,
-            "publishingUsername": "$findcare-ctm-gateway-webapp",
-            "scmType": "None",
-            "use32BitWorkerProcess": true,
-            "webSocketsEnabled": false,
-            "alwaysOn": true,
-            "managedPipelineMode": "Integrated",
-            "virtualApplications": [
-                {
-                    "virtualPath": "/",
-                    "physicalPath": "site\\wwwroot",
-                    "preloadEnabled": true
-                }
-            ],
-            "loadBalancing": "LeastRequests",
-            "experiments": {
-                "rampUpRules": []
+        "serverFarmId": "[variables('ctmServicePlanName')]",
+        "reserved": true,
+        "isXenon": false,
+        "hyperV": false,
+        "scmSiteAlsoStopped": false,
+        "clientAffinityEnabled": false,
+        "clientCertEnabled": false,
+        "hostNamesDisabled": false,
+        "containerSize": 0,
+        "dailyMemoryTimeQuota": 0,
+        "httpsOnly": false,
+        "redundancyMode": "None",
+        "siteConfig": {
+          "appSettings": [
+            {
+              "name": "DOCKER_REGISTRY_SERVER_URL",
+              "value": "[parameters('acrServer')]"
             },
-            "autoHealEnabled": false,
-            "localMySqlEnabled": false,
-            "managedServiceIdentityId": 1713,
-            "ipSecurityRestrictions": [
-                {
-                    "ipAddress": "Any",
-                    "action": "Allow",
-                    "priority": 1,
-                    "name": "Allow all",
-                    "description": "Allow all access"
-                }
-            ],
-            "scmIpSecurityRestrictions": [
-                {
-                    "ipAddress": "Any",
-                    "action": "Allow",
-                    "priority": 1,
-                    "name": "Allow all",
-                    "description": "Allow all access"
-                }
-            ],
-            "scmIpSecurityRestrictionsUseMain": false,
-            "http20Enabled": false,
-            "minTlsVersion": "1.2",
-            "ftpsState": "AllAllowed",
-            "reservedInstanceCount": 0
+            {
+              "name": "DOCKER_REGISTRY_SERVER_USERNAME",
+              "value": "[parameters('acrUsername')]"
+            },
+            {
+              "name": "DOCKER_REGISTRY_SERVER_PASSWORD",
+              "value": "[parameters('acrPassword')]"
+            },
+            {
+              "name": "KEYVAULT_URL",
+              "value": "[variables('keyVaultAddress')]"
+            },
+            {
+              "name": "SERVICES",
+              "value": "[string(variables('services'))]"
+            },
+            {
+              "name": "ALLOWED_PATHS",
+              "value": "[variables('allowedPaths')]"
+            },
+            {
+              "name": "SLOT",
+              "value": "primary"
+            }
+          ]
         }
+      }
     },
     {
-        "type": "Microsoft.Web/sites/hostNameBindings",
-        "condition":"[not(parameters('isSecondary'))]",
-        "apiVersion": "2018-11-01",
-        "name": "[concat(variables('gatewayWebAppName'), '/', variables('gatewayWebAppName'), '.azurewebsites.net')]",
-        "location": "[resourceGroup().location]",
-        "tags": "[parameters('resourceTags')]",
-        "dependsOn": [
-            "[resourceId('Microsoft.Web/sites', variables('gatewayWebAppName'))]"
+      "type": "Microsoft.Web/sites/config",
+      "condition": "[not(parameters('isSecondary'))]",
+      "apiVersion": "2018-11-01",
+      "name": "[concat(variables('gatewayWebAppName'), '/web')]",
+      "tags": "[parameters('resourceTags')]",
+      "location": "East US",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/sites', variables('gatewayWebAppName'))]"
+      ],
+      "properties": {
+        "numberOfWorkers": 1,
+        "defaultDocuments": [
+          "Default.htm",
+          "Default.html",
+          "Default.asp",
+          "index.htm",
+          "index.html",
+          "iisstart.htm",
+          "default.aspx",
+          "index.php",
+          "hostingstart.html"
         ],
-        "properties": {
-            "siteName": "[variables('ayalonWebAppName')]",
-            "hostNameType": "Verified"
-        }
-    },
-    {
-        "condition":"[not(parameters('isSecondary'))]",
-        "type": "Microsoft.Web/sites/slots",
-        "apiVersion": "2018-11-01",        
-        "name": "[concat(variables('gatewayWebAppName'), '/secondary')]",
-        "location": "[resourceGroup().location]",
-        "tags": "[parameters('resourceTags')]",
-        "dependsOn": [
-            "[resourceId('Microsoft.Web/sites', variables('gatewayWebAppName'))]"
+        "netFrameworkVersion": "v4.0",
+        "linuxFxVersion": "[variables('gatewayDockerImageName')]",
+        "requestTracingEnabled": false,
+        "remoteDebuggingEnabled": false,
+        "remoteDebuggingVersion": "VS2019",
+        "httpLoggingEnabled": true,
+        "logsDirectorySizeLimit": 35,
+        "detailedErrorLoggingEnabled": false,
+        "publishingUsername": "$findcare-ctm-gateway-webapp",
+        "scmType": "None",
+        "use32BitWorkerProcess": true,
+        "webSocketsEnabled": false,
+        "alwaysOn": true,
+        "managedPipelineMode": "Integrated",
+        "virtualApplications": [
+          {
+            "virtualPath": "/",
+            "physicalPath": "site\\wwwroot",
+            "preloadEnabled": true
+          }
         ],
-        "kind": "app,linux,container",
-        "identity": {
-            "type": "SystemAssigned"
+        "loadBalancing": "LeastRequests",
+        "experiments": {
+          "rampUpRules": []
         },
-        "properties": {
-            "enabled": true,
-            "hostNameSslStates": [
-                {
-                    "name": "[concat(variables('gatewayWebAppName'),'-secondary.azurewebsites.net')]",
-                    "sslState": "Disabled",
-                    "hostType": "Standard"
-                },
-                {
-                    "name": "[concat(variables('gatewayWebAppName'),'-secondary.scm.azurewebsites.net')]",
-                    "sslState": "Disabled",
-                    "hostType": "Repository"
-                }
-            ],
-            "serverFarmId": "[variables('ctmServicePlan')]",
-            "reserved": true,
-            "isXenon": false,
-            "hyperV": false,
-            "scmSiteAlsoStopped": false,
-            "clientAffinityEnabled": false,
-            "clientCertEnabled": false,
-            "hostNamesDisabled": false,
-            "containerSize": 0,
-            "dailyMemoryTimeQuota": 0,
-            "httpsOnly": false,
-            "redundancyMode": "None",
-            "siteConfig":{
-              "appSettings": [
-                {
-                    "name": "DOCKER_REGISTRY_SERVER_URL",
-                    "value": "[parameters('acrServer')]"
-                },
-                {
-                    "name": "DOCKER_REGISTRY_SERVER_USERNAME",
-                    "value": "[parameters('acrUsername')]"
-                },
-                {
-                    "name": "DOCKER_REGISTRY_SERVER_PASSWORD",
-                    "value": "[parameters('acrPassword')]"
-                },
-                {
-                  "name":"KEYVAULT_URL",
-                  "value": "[variables('keyVaultAddress')]"
-                },
-                {
-                  "name":"SERVICES",
-                  "value": "[string(variables('servicesSecondary'))]"
-                },
-                {
-                  "name":"ALLOWED_PATHS",
-                  "value": "[variables('allowedPaths')]"
-                },
-                {
-                  "name":"SLOT",
-                  "value":"secondary"
-                }
-              ]
-            }
-        }
+        "autoHealEnabled": false,
+        "localMySqlEnabled": false,
+        "managedServiceIdentityId": 1713,
+        "ipSecurityRestrictions": [
+          {
+            "ipAddress": "Any",
+            "action": "Allow",
+            "priority": 1,
+            "name": "Allow all",
+            "description": "Allow all access"
+          }
+        ],
+        "scmIpSecurityRestrictions": [
+          {
+            "ipAddress": "Any",
+            "action": "Allow",
+            "priority": 1,
+            "name": "Allow all",
+            "description": "Allow all access"
+          }
+        ],
+        "scmIpSecurityRestrictionsUseMain": false,
+        "http20Enabled": false,
+        "minTlsVersion": "1.2",
+        "ftpsState": "AllAllowed",
+        "reservedInstanceCount": 0
+      }
     },
     {
-        "condition":"[not(parameters('isSecondary'))]",
-        "type": "Microsoft.Web/sites/slots/config",
-        "apiVersion": "2018-11-01",
-        "name": "[concat(variables('gatewayWebAppName'), '/secondary/web')]",
-        "location": "[resourceGroup().location]",
-        "tags": "[parameters('resourceTags')]",
-        "dependsOn": [
-            "[resourceId('Microsoft.Web/sites/slots', variables('gatewayWebAppName'), 'secondary')]",
-            "[resourceId('Microsoft.Web/sites', variables('gatewayWebAppName'))]"
+      "type": "Microsoft.Web/sites/hostNameBindings",
+      "condition": "[not(parameters('isSecondary'))]",
+      "apiVersion": "2018-11-01",
+      "name": "[concat(variables('gatewayWebAppName'), '/', variables('gatewayWebAppName'), '.azurewebsites.net')]",
+      "location": "[resourceGroup().location]",
+      "tags": "[parameters('resourceTags')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/sites', variables('gatewayWebAppName'))]"
+      ],
+      "properties": {
+        "siteName": "[variables('ayalonWebAppName')]",
+        "hostNameType": "Verified"
+      }
+    },
+    {
+      "condition": "[not(parameters('isSecondary'))]",
+      "type": "Microsoft.Web/sites/slots",
+      "apiVersion": "2018-11-01",
+      "name": "[concat(variables('gatewayWebAppName'), '/secondary')]",
+      "location": "[resourceGroup().location]",
+      "tags": "[parameters('resourceTags')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/sites', variables('gatewayWebAppName'))]"
+      ],
+      "kind": "app,linux,container",
+      "identity": {
+        "type": "SystemAssigned"
+      },
+      "properties": {
+        "enabled": true,
+        "hostNameSslStates": [
+          {
+            "name": "[concat(variables('gatewayWebAppName'),'-secondary.azurewebsites.net')]",
+            "sslState": "Disabled",
+            "hostType": "Standard"
+          },
+          {
+            "name": "[concat(variables('gatewayWebAppName'),'-secondary.scm.azurewebsites.net')]",
+            "sslState": "Disabled",
+            "hostType": "Repository"
+          }
         ],
-        "properties": {
-            "numberOfWorkers": 1,
-            "defaultDocuments": [
-                "Default.htm",
-                "Default.html",
-                "Default.asp",
-                "index.htm",
-                "index.html",
-                "iisstart.htm",
-                "default.aspx",
-                "index.php",
-                "hostingstart.html"
-            ],
-            "netFrameworkVersion": "v4.0",
-            "linuxFxVersion": "[variables('gatewayDockerImageName')]",
-            "requestTracingEnabled": false,
-            "remoteDebuggingEnabled": false,
-            "remoteDebuggingVersion": "VS2019",
-            "httpLoggingEnabled": true,
-            "logsDirectorySizeLimit": 35,
-            "detailedErrorLoggingEnabled": false,
-            "publishingUsername": "$findcare-gateway-webapp__secondary",
-            "scmType": "None",
-            "use32BitWorkerProcess": true,
-            "webSocketsEnabled": false,
-            "alwaysOn": true,
-            "managedPipelineMode": "Integrated",
-            "virtualApplications": [
-                {
-                    "virtualPath": "/",
-                    "physicalPath": "site\\wwwroot",
-                    "preloadEnabled": true
-                }
-            ],
-            "loadBalancing": "LeastRequests",
-            "experiments": {
-                "rampUpRules": []
+        "serverFarmId": "[variables('ctmServicePlanName')]",
+        "reserved": true,
+        "isXenon": false,
+        "hyperV": false,
+        "scmSiteAlsoStopped": false,
+        "clientAffinityEnabled": false,
+        "clientCertEnabled": false,
+        "hostNamesDisabled": false,
+        "containerSize": 0,
+        "dailyMemoryTimeQuota": 0,
+        "httpsOnly": false,
+        "redundancyMode": "None",
+        "siteConfig": {
+          "appSettings": [
+            {
+              "name": "DOCKER_REGISTRY_SERVER_URL",
+              "value": "[parameters('acrServer')]"
             },
-            "autoHealEnabled": false,
-            "localMySqlEnabled": false,
-            "managedServiceIdentityId": 1788,
-            "ipSecurityRestrictions": [
-                {
-                    "ipAddress": "Any",
-                    "action": "Allow",
-                    "priority": 1,
-                    "name": "Allow all",
-                    "description": "Allow all access"
-                }
-            ],
-            "scmIpSecurityRestrictions": [
-                {
-                    "ipAddress": "Any",
-                    "action": "Allow",
-                    "priority": 1,
-                    "name": "Allow all",
-                    "description": "Allow all access"
-                }
-            ],
-            "scmIpSecurityRestrictionsUseMain": false,
-            "http20Enabled": false,
-            "minTlsVersion": "1.2",
-            "ftpsState": "AllAllowed",
-            "reservedInstanceCount": 0
-        }
-    },
-    {
-        "condition":"[not(parameters('isSecondary'))]",
-        "type": "Microsoft.Web/sites/slots/hostNameBindings",
-        "apiVersion": "2018-11-01",
-        "name": "[concat(variables('gatewayWebAppName'), '/secondary/', variables('gatewayWebAppName'), '-secondary.azurewebsites.net')]",
-        "location": "[resourceGroup().location]",
-        "tags": "[parameters('resourceTags')]",
-        "dependsOn": [
-            "[resourceId('Microsoft.Web/sites/slots', variables('gatewayWebAppName'), 'secondary')]",
-            "[resourceId('Microsoft.Web/sites', variables('gatewayWebAppName'))]"
-        ],
-        "properties": {
-            "siteName": "[concat(variables('gatewayWebAppName'),'-gateway-webapp(secondary)')]",
-            "hostNameType": "Verified"
-        }
-    },
-    {
-        "type": "Microsoft.Web/sites",
-        "apiVersion": "2018-11-01",
-        "name": "[variables('ayalonWebAppName')]",
-        "tags": "[parameters('resourceTags')]",
-        "location": "[resourceGroup().location]",
-        "dependsOn": [
-            "[resourceId('Microsoft.Web/serverfarms', variables('ayalonServicePlan'))]",            
-            "[resourceId('Microsoft.KeyVault/vaults', variables('keyVaultName'))]"
-        ],
-        "kind": "app,linux,container",
-        "properties": {
-            "enabled": true,
-            "hostNameSslStates": [
-                {
-                    "name": "[concat(variables('ayalonWebAppName'), '.azurewebsites.net')]",
-                    "sslState": "Disabled",
-                    "hostType": "Standard"
-                },
-                {
-                    "name": "[concat(variables('ayalonWebAppName'), '.scm.azurewebsites.net')]",
-                    "sslState": "Disabled",
-                    "hostType": "Repository"
-                }
-            ],
-            "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('ayalonServicePlan'))]",
-            "reserved": true,
-            "isXenon": false,
-            "hyperV": false,
-            "scmSiteAlsoStopped": false,
-            "clientAffinityEnabled": false,
-            "clientCertEnabled": false,
-            "hostNamesDisabled": false,
-            "containerSize": 0,
-            "dailyMemoryTimeQuota": 0,
-            "httpsOnly": false,
-            "redundancyMode": "None",
-            "siteConfig": {
-                "appSettings": [
-                    {
-                        "name": "DOCKER_REGISTRY_SERVER_URL",
-                        "value": "[parameters('acrServer')]"
-                    },
-                    {
-                        "name": "DOCKER_REGISTRY_SERVER_USERNAME",
-                        "value": "[parameters('acrUsername')]"
-                    },
-                    {
-                        "name": "DOCKER_REGISTRY_SERVER_PASSWORD",
-                        "value": "[parameters('acrPassword')]"
-                    },
-                    {
-                        "name":"ApiKey",
-                        "value":"[listKeys(variables('textAnalyticsName'), '2017-04-18').key1]"
-                    },
-                    {
-                        "name":"Billing",
-                        "value":"[concat('https://',variables('textAnalyticsName'),'.cognitiveservices.azure.com')]"
-                    },
-                    {
-                        "name":"Eula",
-                        "value":"accept"
-                    }
-                ]
-            }
-        }
-    },
-    {
-        "type": "Microsoft.Web/sites/config",
-        "apiVersion": "2018-11-01",
-        "name": "[concat(variables('ayalonWebAppName'), '/web')]",
-        "location": "East US",
-        "tags": "[parameters('resourceTags')]",
-        "dependsOn": [
-            "[resourceId('Microsoft.Web/sites', variables('ayalonWebAppName'))]",
-            "[resourceId('Microsoft.CognitiveServices/accounts', variables('textAnalyticsName'))]"
-        ],
-        "properties": {
-            "numberOfWorkers": 1,
-            "defaultDocuments": [
-                "Default.htm",
-                "Default.html",
-                "Default.asp",
-                "index.htm",
-                "index.html",
-                "iisstart.htm",
-                "default.aspx",
-                "index.php",
-                "hostingstart.html"
-            ],
-            "netFrameworkVersion": "v4.0",
-            "linuxFxVersion": "[variables('ayalonDockerImageName')]",
-            "requestTracingEnabled": false,
-            "remoteDebuggingEnabled": false,
-            "httpLoggingEnabled": false,
-            "logsDirectorySizeLimit": 35,
-            "detailedErrorLoggingEnabled": false,
-            "publishingUsername": "$ctm-bot",
-            "scmType": "None",
-            "use32BitWorkerProcess": true,
-            "webSocketsEnabled": false,
-            "alwaysOn": true,
-            "managedPipelineMode": "Integrated",
-            "virtualApplications": [
-                {
-                    "virtualPath": "/",
-                    "physicalPath": "site\\wwwroot",
-                    "preloadEnabled": true
-                }
-            ],
-            "loadBalancing": "LeastRequests",
-            "experiments": {
-                "rampUpRules": [
-                ]
+            {
+              "name": "DOCKER_REGISTRY_SERVER_USERNAME",
+              "value": "[parameters('acrUsername')]"
             },
-            "autoHealEnabled": false,
-            "localMySqlEnabled": false,
-            "ipSecurityRestrictions": [
-                {
-                    "ipAddress": "Any",
-                    "action": "Allow",
-                    "priority": 1,
-                    "name": "Allow all",
-                    "description": "Allow all access"
-                }
-            ],
-            "scmIpSecurityRestrictions": [
-                {
-                    "ipAddress": "Any",
-                    "action": "Allow",
-                    "priority": 1,
-                    "name": "Allow all",
-                    "description": "Allow all access"
-                }
-            ],
-            "scmIpSecurityRestrictionsUseMain": false,
-            "http20Enabled": false,
-            "minTlsVersion": "1.2",
-            "ftpsState": "AllAllowed",
-            "reservedInstanceCount": 0
+            {
+              "name": "DOCKER_REGISTRY_SERVER_PASSWORD",
+              "value": "[parameters('acrPassword')]"
+            },
+            {
+              "name": "KEYVAULT_URL",
+              "value": "[variables('keyVaultAddress')]"
+            },
+            {
+              "name": "SERVICES",
+              "value": "[string(variables('servicesSecondary'))]"
+            },
+            {
+              "name": "ALLOWED_PATHS",
+              "value": "[variables('allowedPaths')]"
+            },
+            {
+              "name": "SLOT",
+              "value": "secondary"
+            }
+          ]
         }
+      }
     },
     {
-        "type": "Microsoft.Web/sites/hostNameBindings",
-        "apiVersion": "2018-11-01",
-        "tags": "[parameters('resourceTags')]",
-        "name": "[concat(variables('ayalonWebAppName'), '/', variables('ayalonWebAppName'), '.azurewebsites.net')]",
-        "location": "[resourceGroup().location]",
-        "dependsOn": [
-            "[resourceId('Microsoft.Web/sites', variables('ayalonWebAppName'))]"
+      "condition": "[not(parameters('isSecondary'))]",
+      "type": "Microsoft.Web/sites/slots/config",
+      "apiVersion": "2018-11-01",
+      "name": "[concat(variables('gatewayWebAppName'), '/secondary/web')]",
+      "location": "[resourceGroup().location]",
+      "tags": "[parameters('resourceTags')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/sites/slots', variables('gatewayWebAppName'), 'secondary')]",
+        "[resourceId('Microsoft.Web/sites', variables('gatewayWebAppName'))]"
+      ],
+      "properties": {
+        "numberOfWorkers": 1,
+        "defaultDocuments": [
+          "Default.htm",
+          "Default.html",
+          "Default.asp",
+          "index.htm",
+          "index.html",
+          "iisstart.htm",
+          "default.aspx",
+          "index.php",
+          "hostingstart.html"
         ],
-        "properties": {
-            "siteName": "ctm-bot",
-            "hostNameType": "Verified"
+        "netFrameworkVersion": "v4.0",
+        "linuxFxVersion": "[variables('gatewayDockerImageName')]",
+        "requestTracingEnabled": false,
+        "remoteDebuggingEnabled": false,
+        "remoteDebuggingVersion": "VS2019",
+        "httpLoggingEnabled": true,
+        "logsDirectorySizeLimit": 35,
+        "detailedErrorLoggingEnabled": false,
+        "publishingUsername": "$findcare-gateway-webapp__secondary",
+        "scmType": "None",
+        "use32BitWorkerProcess": true,
+        "webSocketsEnabled": false,
+        "alwaysOn": true,
+        "managedPipelineMode": "Integrated",
+        "virtualApplications": [
+          {
+            "virtualPath": "/",
+            "physicalPath": "site\\wwwroot",
+            "preloadEnabled": true
+          }
+        ],
+        "loadBalancing": "LeastRequests",
+        "experiments": {
+          "rampUpRules": []
+        },
+        "autoHealEnabled": false,
+        "localMySqlEnabled": false,
+        "managedServiceIdentityId": 1788,
+        "ipSecurityRestrictions": [
+          {
+            "ipAddress": "Any",
+            "action": "Allow",
+            "priority": 1,
+            "name": "Allow all",
+            "description": "Allow all access"
+          }
+        ],
+        "scmIpSecurityRestrictions": [
+          {
+            "ipAddress": "Any",
+            "action": "Allow",
+            "priority": 1,
+            "name": "Allow all",
+            "description": "Allow all access"
+          }
+        ],
+        "scmIpSecurityRestrictionsUseMain": false,
+        "http20Enabled": false,
+        "minTlsVersion": "1.2",
+        "ftpsState": "AllAllowed",
+        "reservedInstanceCount": 0
+      }
+    },
+    {
+      "condition": "[not(parameters('isSecondary'))]",
+      "type": "Microsoft.Web/sites/slots/hostNameBindings",
+      "apiVersion": "2018-11-01",
+      "name": "[concat(variables('gatewayWebAppName'), '/secondary/', variables('gatewayWebAppName'), '-secondary.azurewebsites.net')]",
+      "location": "[resourceGroup().location]",
+      "tags": "[parameters('resourceTags')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/sites/slots', variables('gatewayWebAppName'), 'secondary')]",
+        "[resourceId('Microsoft.Web/sites', variables('gatewayWebAppName'))]"
+      ],
+      "properties": {
+        "siteName": "[concat(variables('gatewayWebAppName'),'-gateway-webapp(secondary)')]",
+        "hostNameType": "Verified"
+      }
+    },
+    {
+      "type": "Microsoft.Web/sites",
+      "apiVersion": "2018-11-01",
+      "name": "[variables('ayalonWebAppName')]",
+      "tags": "[parameters('resourceTags')]",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/serverfarms', variables('ayalonServicePlanName'))]",
+        "[resourceId('Microsoft.KeyVault/vaults', variables('keyVaultName'))]"
+      ],
+      "kind": "app,linux,container",
+      "properties": {
+        "enabled": true,
+        "hostNameSslStates": [
+          {
+            "name": "[concat(variables('ayalonWebAppName'), '.azurewebsites.net')]",
+            "sslState": "Disabled",
+            "hostType": "Standard"
+          },
+          {
+            "name": "[concat(variables('ayalonWebAppName'), '.scm.azurewebsites.net')]",
+            "sslState": "Disabled",
+            "hostType": "Repository"
+          }
+        ],
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('ayalonServicePlanName'))]",
+        "reserved": true,
+        "isXenon": false,
+        "hyperV": false,
+        "scmSiteAlsoStopped": false,
+        "clientAffinityEnabled": false,
+        "clientCertEnabled": false,
+        "hostNamesDisabled": false,
+        "containerSize": 0,
+        "dailyMemoryTimeQuota": 0,
+        "httpsOnly": false,
+        "redundancyMode": "None",
+        "siteConfig": {
+          "appSettings": [
+            {
+              "name": "DOCKER_REGISTRY_SERVER_URL",
+              "value": "[parameters('acrServer')]"
+            },
+            {
+              "name": "DOCKER_REGISTRY_SERVER_USERNAME",
+              "value": "[parameters('acrUsername')]"
+            },
+            {
+              "name": "DOCKER_REGISTRY_SERVER_PASSWORD",
+              "value": "[parameters('acrPassword')]"
+            },
+            {
+              "name": "ApiKey",
+              "value": "[listKeys(variables('textAnalyticsName'), '2017-04-18').key1]"
+            },
+            {
+              "name": "Billing",
+              "value": "[concat('https://',variables('textAnalyticsName'),'.cognitiveservices.azure.com')]"
+            },
+            {
+              "name": "Eula",
+              "value": "accept"
+            }
+          ]
         }
+      }
+    },
+    {
+      "type": "Microsoft.Web/sites/config",
+      "apiVersion": "2018-11-01",
+      "name": "[concat(variables('ayalonWebAppName'), '/web')]",
+      "location": "East US",
+      "tags": "[parameters('resourceTags')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/sites', variables('ayalonWebAppName'))]",
+        "[resourceId('Microsoft.CognitiveServices/accounts', variables('textAnalyticsName'))]"
+      ],
+      "properties": {
+        "numberOfWorkers": 1,
+        "defaultDocuments": [
+          "Default.htm",
+          "Default.html",
+          "Default.asp",
+          "index.htm",
+          "index.html",
+          "iisstart.htm",
+          "default.aspx",
+          "index.php",
+          "hostingstart.html"
+        ],
+        "netFrameworkVersion": "v4.0",
+        "linuxFxVersion": "[variables('ayalonDockerImageName')]",
+        "requestTracingEnabled": false,
+        "remoteDebuggingEnabled": false,
+        "httpLoggingEnabled": false,
+        "logsDirectorySizeLimit": 35,
+        "detailedErrorLoggingEnabled": false,
+        "publishingUsername": "$ctm-bot",
+        "scmType": "None",
+        "use32BitWorkerProcess": true,
+        "webSocketsEnabled": false,
+        "alwaysOn": true,
+        "managedPipelineMode": "Integrated",
+        "virtualApplications": [
+          {
+            "virtualPath": "/",
+            "physicalPath": "site\\wwwroot",
+            "preloadEnabled": true
+          }
+        ],
+        "loadBalancing": "LeastRequests",
+        "experiments": {
+          "rampUpRules": [
+          ]
+        },
+        "autoHealEnabled": false,
+        "localMySqlEnabled": false,
+        "ipSecurityRestrictions": [
+          {
+            "ipAddress": "Any",
+            "action": "Allow",
+            "priority": 1,
+            "name": "Allow all",
+            "description": "Allow all access"
+          }
+        ],
+        "scmIpSecurityRestrictions": [
+          {
+            "ipAddress": "Any",
+            "action": "Allow",
+            "priority": 1,
+            "name": "Allow all",
+            "description": "Allow all access"
+          }
+        ],
+        "scmIpSecurityRestrictionsUseMain": false,
+        "http20Enabled": false,
+        "minTlsVersion": "1.2",
+        "ftpsState": "AllAllowed",
+        "reservedInstanceCount": 0
+      }
+    },
+    {
+      "type": "Microsoft.Web/sites/hostNameBindings",
+      "apiVersion": "2018-11-01",
+      "tags": "[parameters('resourceTags')]",
+      "name": "[concat(variables('ayalonWebAppName'), '/', variables('ayalonWebAppName'), '.azurewebsites.net')]",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/sites', variables('ayalonWebAppName'))]"
+      ],
+      "properties": {
+        "siteName": "ctm-bot",
+        "hostNameType": "Verified"
+      }
     },
     {
       "name": "[variables('mapsServiceName')]",
@@ -713,7 +721,7 @@
         "[variables('gatewaySecondaryResourceId')]",
         "[variables('queryEngineResourceId')]",
         "[variables('disqualificationResourceId')]",
-        "[variables('structuringResourceId')]"
+        "[variables('managedIdentityResourceId')]"
       ],
       "properties": {
         "enabledForDeployment": false,
@@ -722,54 +730,54 @@
         "tenantId": "[subscription().tenantId]",
         "accessPolicies": [
           {
-              "tenantId": "[reference(variables('gatewayResourceId'), '2015-08-01', 'Full').Identity.tenantId]",
-              "objectId": "[reference(variables('gatewayResourceId'), '2015-08-01', 'Full').Identity.principalId]",
-              "permissions": {
-                  "secrets": [
-                      "get",
-                      "list"
-                  ]
-              }
+            "tenantId": "[reference(variables('gatewayResourceId'), '2015-08-01', 'Full').Identity.tenantId]",
+            "objectId": "[reference(variables('gatewayResourceId'), '2015-08-01', 'Full').Identity.principalId]",
+            "permissions": {
+              "secrets": [
+                "get",
+                "list"
+              ]
+            }
           },
           {
-              "tenantId": "[reference(variables('gatewaySecondaryResourceId'), '2015-08-01', 'Full').Identity.tenantId]",
-              "objectId": "[reference(variables('gatewaySecondaryResourceId'), '2015-08-01', 'Full').Identity.principalId]",
-              "permissions": {
-                  "secrets": [
-                      "get",
-                      "list"
-                  ]
-              }
+            "tenantId": "[reference(variables('gatewaySecondaryResourceId'), '2015-08-01', 'Full').Identity.tenantId]",
+            "objectId": "[reference(variables('gatewaySecondaryResourceId'), '2015-08-01', 'Full').Identity.principalId]",
+            "permissions": {
+              "secrets": [
+                "get",
+                "list"
+              ]
+            }
           },
           {
-              "tenantId": "[reference(variables('queryEngineResourceId'), '2015-08-01', 'Full').Identity.tenantId]",
-              "objectId": "[reference(variables('queryEngineResourceId'), '2015-08-01', 'Full').Identity.principalId]",
-              "permissions": {
-                  "secrets": [
-                      "get",
-                      "list"
-                  ]
-              }
+            "tenantId": "[reference(variables('queryEngineResourceId'), '2015-08-01', 'Full').Identity.tenantId]",
+            "objectId": "[reference(variables('queryEngineResourceId'), '2015-08-01', 'Full').Identity.principalId]",
+            "permissions": {
+              "secrets": [
+                "get",
+                "list"
+              ]
+            }
           },
           {
-              "tenantId": "[reference(variables('disqualificationResourceId'), '2015-08-01', 'Full').Identity.tenantId]",
-              "objectId": "[reference(variables('disqualificationResourceId'), '2015-08-01', 'Full').Identity.principalId]",
-              "permissions": {
-                  "secrets": [
-                      "get",
-                      "list"
-                  ]
-              }
+            "tenantId": "[reference(variables('disqualificationResourceId'), '2015-08-01', 'Full').Identity.tenantId]",
+            "objectId": "[reference(variables('disqualificationResourceId'), '2015-08-01', 'Full').Identity.principalId]",
+            "permissions": {
+              "secrets": [
+                "get",
+                "list"
+              ]
+            }
           },
           {
-              "tenantId": "[reference(variables('structuringResourceId'), '2019-12-01', 'Full').Identity.tenantId]",
-              "objectId": "[reference(variables('structuringResourceId'), '2019-12-01', 'Full').Identity.principalId]",
-              "permissions": {
-                  "secrets": [
-                      "get",
-                      "list"
-                  ]
-              }
+            "tenantId": "[reference(variables('managedIdentityResourceId'), '2018-11-30', 'Full').properties.tenantId]",
+            "objectId": "[reference(variables('managedIdentityResourceId'), '2018-11-30', 'Full').properties.principalId]",
+            "permissions": {
+              "secrets": [
+                "get",
+                "list"
+              ]
+            }
           }
         ],
         "sku": {
@@ -851,13 +859,17 @@
       "apiVersion": "2018-10-01",
       "tags": "[parameters('resourceTags')]",
       "location": "[resourceGroup().location]",
-      "identity": {
-        "type": "SystemAssigned"
-      },
       "dependsOn": [
         "[resourceId('Microsoft.Maps/accounts', variables('mapsServiceName'))]",
-        "[resourceId('Microsoft.Insights/components/', variables('insightsName'))]"		
+        "[resourceId('Microsoft.Insights/components/', variables('insightsName'))]",
+        "[variables('managedIdentityResourceId')]"
       ],
+      "identity": {
+        "type": "UserAssigned",
+        "userAssignedIdentities": {
+          "[variables('managedIdentityResourceId')]": {}
+        }
+      },
       "properties": {
         "containers": [
           {
@@ -872,6 +884,10 @@
                 {
                   "name": "ASPNETCORE_ENVIRONMENT",
                   "value": "[parameters('env')]"
+                },
+                {
+                  "name": "IDENTITY_APP_ID",
+                  "value": "[reference(variables('managedIdentityResourceId'), '2018-11-30', 'Full').properties.clientId]"
                 },
                 {
                   "name": "TenantQueryConfiguration__Country",
@@ -907,7 +923,7 @@
                 },
                 {
                   "name": "CTTIConfiguration__Host",
-                  "value": "[variables('cttiHost')]"              
+                  "value": "[variables('cttiHost')]"
                 },
                 {
                   "name": "CTTIConfiguration__UserName",
@@ -915,11 +931,11 @@
                 },
                 {
                   "name": "RedisConfiguration__Address",
-                  "value":"[variables('redisAddress')]"
+                  "value": "[variables('redisAddress')]"
                 },
                 {
                   "name": "PreprocessingConfiguration__FinishedNotifierAddress",
-                  "value":"[listCallbackURL(concat(resourceId('Microsoft.Logic/workflows/', concat(parameters('serviceName'),'-finisher-logic-app')),'/triggers/manual'), '2016-06-01').value]"
+                  "value": "[listCallbackURL(concat(resourceId('Microsoft.Logic/workflows/', concat(parameters('serviceName'),'-finisher-logic-app')),'/triggers/manual'), '2016-06-01').value]"
                 },
                 {
                   "name": "PreprocessingConfiguration__Env",
@@ -939,10 +955,10 @@
             }
           },
           {
-            "name": "constituency-parser",
+            "name": "nlp-services",
             "properties": {
-              "image": "[variables('constituencyParserImageName')]",
-			        "environmentVariables": [
+              "image": "[variables('nlpServicesImageName')]",
+              "environmentVariables": [
                 {
                   "name": "APP_INSIGHT_KEY",
                   "value": "[reference(variables('insightsName'), '2015-05-01').instrumentationKey]"
@@ -971,12 +987,12 @@
     {
       "type": "Microsoft.Web/serverfarms",
       "apiVersion": "2018-02-01",
-      "name": "[variables('ctmServicePlan')]",
+      "name": "[variables('ctmServicePlanName')]",
       "tags": "[parameters('resourceTags')]",
       "location": "[resourceGroup().location]",
       "sku": {
-          "name": "P3v2",
-          "capacity": 2
+        "name": "P3v2",
+        "capacity": 2
       },
       "kind": "linux",
       "properties": {
@@ -1001,8 +1017,8 @@
         "type": "SystemAssigned"
       },
       "dependsOn": [
-        "[resourceId('Microsoft.Web/serverfarms', variables('ctmServicePlan'))]",
-        "[concat('Microsoft.Insights/components/', variables('insightsName'))]"      
+        "[resourceId('Microsoft.Web/serverfarms', variables('ctmServicePlanName'))]",
+        "[concat('Microsoft.Insights/components/', variables('insightsName'))]"
       ],
       "properties": {
         "enabled": true,
@@ -1018,7 +1034,7 @@
             "hostType": "Repository"
           }
         ],
-        "serverFarmId": "[variables('ctmServicePlan')]",
+        "serverFarmId": "[variables('ctmServicePlanName')]",
         "reserved": true,
         "isXenon": false,
         "hyperV": false,
@@ -1057,24 +1073,24 @@
               "value": "false"
             },
             {
-              "name":"KeyVaultConfiguration__Address",
+              "name": "KeyVaultConfiguration__Address",
               "value": "[variables('keyVaultAddress')]"
             },
             {
-                "name": "CTTIConfiguration__Host",
-                "value": "[variables('cttiHost')]"
+              "name": "CTTIConfiguration__Host",
+              "value": "[variables('cttiHost')]"
             },
             {
               "name": "CTTIConfiguration__UserName",
-              "value": "[variables('cttiUserName')]"         
+              "value": "[variables('cttiUserName')]"
             },
             {
-              "name":"RedisConfiguration__Address",
-              "value":"[variables('redisAddress')]"
+              "name": "RedisConfiguration__Address",
+              "value": "[variables('redisAddress')]"
             },
             {
-              "name":"AyalonConfiguration__Address",
-              "value":"[concat('https://',variables('ayalonWebAppName'),'.azurewebsites.net/') ]"
+              "name": "AyalonConfiguration__Address",
+              "value": "[concat('https://',variables('ayalonWebAppName'),'.azurewebsites.net/') ]"
             },
             {
               "name": "TenantQueryConfiguration__Country",
@@ -1176,7 +1192,7 @@
         "reservedInstanceCount": 0
       }
     },
-	{
+    {
       "type": "Microsoft.Web/sites/hostNameBindings",
       "apiVersion": "2018-11-01",
       "name": "[concat(variables('queryEngineWebAppName'), '/', variables('queryEngineWebAppName'), '.azurewebsites.net')]",
@@ -1196,12 +1212,12 @@
       "tags": "[parameters('resourceTags')]",
       "name": "[variables('disqualificationWebAppName')]",
       "location": "[resourceGroup().location]",
-      "identity":{
-        "type":"SystemAssigned"
+      "identity": {
+        "type": "SystemAssigned"
       },
       "kind": "app,linux,container",
-      "dependsOn":[
-        "[resourceId('Microsoft.Web/serverfarms', variables('ctmServicePlan'))]"
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/serverfarms', variables('ctmServicePlanName'))]"
       ],
       "properties": {
         "enabled": true,
@@ -1217,7 +1233,7 @@
             "hostType": "Repository"
           }
         ],
-        "serverFarmId": "[variables('ctmServicePlan')]",
+        "serverFarmId": "[variables('ctmServicePlanName')]",
         "reserved": true,
         "isXenon": false,
         "hyperV": false,
@@ -1256,7 +1272,7 @@
               "value": "false"
             },
             {
-              "name":"KeyVaultConfiguration__Address",
+              "name": "KeyVaultConfiguration__Address",
               "value": "[variables('keyVaultAddress')]"
             },
             {
@@ -1265,15 +1281,15 @@
             },
             {
               "name": "CTTIConfiguration__UserName",
-              "value": "[variables('cttiUserName')]"         
+              "value": "[variables('cttiUserName')]"
             },
             {
-              "name":"RedisConfiguration__Address",
-              "value":"[variables('redisAddress')]"
+              "name": "RedisConfiguration__Address",
+              "value": "[variables('redisAddress')]"
             },
             {
-              "name":"AyalonConfiguration__Address",
-              "value":"[concat('https://',variables('ayalonWebAppName'),'.azurewebsites.net/') ]"
+              "name": "AyalonConfiguration__Address",
+              "value": "[concat('https://',variables('ayalonWebAppName'),'.azurewebsites.net/') ]"
             }
           ]
         }
@@ -1373,107 +1389,109 @@
       }
     },
     {
-        "type": "Microsoft.DBforPostgreSQL/servers",
-        "apiVersion": "2017-12-01",
-        "name": "[variables('postgresqlServerFullName')]",
-        "tags": "[parameters('resourceTags')]",
-        "location": "[resourceGroup().location]",
-        "sku": {
-            "name": "GP_Gen5_4",
-            "tier": "GeneralPurpose",
-            "family": "Gen5",
-            "capacity": 4
-        },
-		    "resources": [{
-                    "name": "AllowAzureServices",
-                    "type": "firewallRules",
-                    "apiVersion": "2017-12-01",
-                    "properties": {
-                        "startIpAddress": "0.0.0.0",
-                        "endIpAddress": "0.0.0.0"
-                    },
-					"dependsOn": [
-					  "[variables('postgresqlServerFullName')]"
-				  ]
-        }],
-        "properties": {
-            "administratorLogin": "[parameters('postgreSqlAdministratorLogin')]",
-            "administratorLoginPassword": "[parameters('postgreSqladministratorLoginPassword')]",                
-            "storageProfile": {
-                "storageMB": 102400,
-                "backupRetentionDays": 7,
-                "geoRedundantBackup": "Disabled",
-                "storageAutogrow": "Enabled"
-            },
-            "version": "11",
-            "sslEnforcement": "Disabled"
+      "type": "Microsoft.DBforPostgreSQL/servers",
+      "apiVersion": "2017-12-01",
+      "name": "[variables('postgresqlServerFullName')]",
+      "tags": "[parameters('resourceTags')]",
+      "location": "[resourceGroup().location]",
+      "sku": {
+        "name": "GP_Gen5_4",
+        "tier": "GeneralPurpose",
+        "family": "Gen5",
+        "capacity": 4
+      },
+      "resources": [
+        {
+          "name": "AllowAzureServices",
+          "type": "firewallRules",
+          "apiVersion": "2017-12-01",
+          "properties": {
+            "startIpAddress": "0.0.0.0",
+            "endIpAddress": "0.0.0.0"
+          },
+          "dependsOn": [
+            "[variables('postgresqlServerFullName')]"
+          ]
         }
+      ],
+      "properties": {
+        "administratorLogin": "[parameters('postgreSqlAdministratorLogin')]",
+        "administratorLoginPassword": "[parameters('postgreSqladministratorLoginPassword')]",
+        "storageProfile": {
+          "storageMB": 102400,
+          "backupRetentionDays": 7,
+          "geoRedundantBackup": "Disabled",
+          "storageAutogrow": "Enabled"
+        },
+        "version": "11",
+        "sslEnforcement": "Disabled"
+      }
     },
-	  {
-      "name": "[concat('plan-auto-scale',variables('suffix'))]",
+    {
+      "name": "[variables('autoScaleName')]",
       "type": "Microsoft.Insights/autoscaleSettings",
-      "condition":"[not(parameters('isSecondary'))]",
+      "condition": "[not(parameters('isSecondary'))]",
       "apiVersion": "2015-04-01",
       "location": "[resourceGroup().location]",
       "tags": "[parameters('resourceTags')]",
       "dependsOn": [
-        "[resourceId('Microsoft.Web/serverfarms', variables('ctmServicePlan'))]"
+        "[resourceId('Microsoft.Web/serverfarms', variables('ctmServicePlanName'))]"
       ],
       "properties": {
-          "name": "[concat('plan-auto-scale',variables('suffix'))]",
-          "enabled": true,
-          "targetResourceUri": "[resourceId('Microsoft.Web/serverfarms', variables('ctmServicePlan'))]",
-          "profiles": [
+        "name": "[variables('autoScaleName')]",
+        "enabled": true,
+        "targetResourceUri": "[resourceId('Microsoft.Web/serverfarms', variables('ctmServicePlanName'))]",
+        "profiles": [
+          {
+            "name": "Auto created scale condition",
+            "capacity": {
+              "minimum": "2",
+              "maximum": "8",
+              "default": "2"
+            },
+            "rules": [
               {
-                  "name": "Auto created scale condition",
-                  "capacity": {
-                      "minimum": "2",
-                      "maximum": "8",
-                      "default": "2"
-                  },
-                  "rules": [
-                      {
-                          "scaleAction": {
-                              "direction": "Increase",
-                              "type": "ChangeCount",
-                              "value": "1",
-                              "cooldown": "PT5M"
-                          },
-                          "metricTrigger": {
-                              "metricName": "CpuPercentage",
-                              "metricNamespace": "microsoft.web/serverfarms",
-                              "metricResourceUri": "[resourceId('Microsoft.Web/serverfarms', variables('ctmServicePlan'))]",
-                              "operator": "GreaterThan",
-                              "statistic": "Average",
-                              "threshold": 70,
-                              "timeAggregation": "Average",
-                              "timeGrain": "PT1M",
-                              "timeWindow": "PT5M",
-                              "Dimensions": [],
-                              "dividePerInstance": false
-                          }
-                      }
-                  ]
+                "scaleAction": {
+                  "direction": "Increase",
+                  "type": "ChangeCount",
+                  "value": "1",
+                  "cooldown": "PT5M"
+                },
+                "metricTrigger": {
+                  "metricName": "CpuPercentage",
+                  "metricNamespace": "microsoft.web/serverfarms",
+                  "metricResourceUri": "[resourceId('Microsoft.Web/serverfarms', variables('ctmServicePlanName'))]",
+                  "operator": "GreaterThan",
+                  "statistic": "Average",
+                  "threshold": 70,
+                  "timeAggregation": "Average",
+                  "timeGrain": "PT1M",
+                  "timeWindow": "PT5M",
+                  "Dimensions": [],
+                  "dividePerInstance": false
+                }
               }
-          ],
-          "notifications": [],
-          "targetResourceLocation": "[resourceGroup().location]"
+            ]
+          }
+        ],
+        "notifications": [],
+        "targetResourceLocation": "[resourceGroup().location]"
       }
     }
   ],
   "outputs": {
     "gatewayEndpoint": {
-      "type":"string",
-      "value":"[if(parameters('isSecondary'), concat('https://', variables('gatewayWebAppName'),'-secondary.azurewebsites.net'),
+      "type": "string",
+      "value": "[if(parameters('isSecondary'), concat('https://', variables('gatewayWebAppName'),'-secondary.azurewebsites.net'),
                                               concat('https://', variables('gatewayWebAppName'),'.azurewebsites.net')) ]"
     },
     "proxyApiKey": {
-      "type":"string",
-      "value":"[variables('proxyApiKey')]"
+      "type": "string",
+      "value": "[variables('proxyApiKey')]"
     },
     "structuringName": {
-      "type":"string",
-      "value":"[variables('structuringName')]"
+      "type": "string",
+      "value": "[variables('structuringName')]"
     }
   }
 }
