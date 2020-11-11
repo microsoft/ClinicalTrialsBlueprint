@@ -3,43 +3,43 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "serviceName": {
-            "value": "wba"
+            "value": "##TO BE DEFINED##"
         },
         "postgreSqlAdministratorLogin": {
-            "value": "pgadmin"
+            "value": "## TO BE DEFINED ##"
         },
         "postgreSqladministratorLoginPassword": {
-            "value": "AsdZxc123!@#"
+            "value": "## TO BE DEFINED ##"
         },
         "acrPassword": {
-            "value": "M4QqIr/1TeAc0OnqQ2Q8DOrrP8gJ1Fxt"
+            "value": "## TO BE DEFINED ##"
         },
         "env": {
-            "value": "dev_us"
+            "value": "prod_us"
         },
         "acrServer": {
-            "value": "ctmdev.azurecr.io"
+            "value": "ctmprod.azurecr.io"
         },
         "acrUsername": {
-            "value": "ctmdev"
+            "value": "ctmprodreader"
         },
         "structuringImageTag": {
-            "value": "managed"
+            "value": "2020.0528.1"
         },
         "queryEngineImageTag": {
-            "value": "2020.1108.11"
+            "value": "2020.0528.1"
         },
         "disqualifierImageTag": {
-            "value": "2020.1108.11"
+            "value": "2020.0528.1"
         },
         "nlpServicesImageTag": {
-            "value": "2020.1108.2"
+            "value": "2020.0531.5"
         },
         "ta4hImageTag": {
-            "value": "2020.0924.2"
+            "value": "2020.0510.1"
         },
         "gatewayImageTag": {
-            "value": "20201018.2"
+            "value": "2020.0510.1"
         },
         "queryCountry": {
             "value": "us"
