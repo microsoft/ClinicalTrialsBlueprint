@@ -23,7 +23,6 @@ param(
     
 )
 
-$matchingParameters = $matchingOutput.Parameters
 $matchingOutputs = $matchingOutput.Outputs
 
 . ./scripts/profile.ps1
@@ -160,28 +159,31 @@ Try {
     Select-Object @{n = "portal"; e = {"$portalEndpoint/$tenantId"}},
                   @{n = "SaaSApplication"; e = {"https://ms.portal.azure.com/#@/resource/providers/Microsoft.SaaS/saasresources/$saasSubscriptionId/overview"}},
                   @{n = "WebChat"; e ={"https://hatenantstorageprod.blob.core.windows.net/public-websites/webchat/index.html?s=$webchatSecret"}} -InputObject ""
-	
-		# update functional-tests app with bot name and secret
-		Write-Host "updating bot function test app with bot tenant id: $tenantId"
-		$funcTestApp = Get-AzWebApp -ResourceGroupName $ResourceGroup -Name $output.Outputs.funcTestsServiceName.Value
-		$settings =  $funcTestApp.SiteConfig.AppSettings
-		$hashTable = @{}
-		$settings | ForEach-Object {
-			$hashTable[$_.Name] = $_.Value
-		}
 
-		$hashTable
-		
-		if($isSecondary){	
-			$hashTable["DefaultBot"] = $tenantId
-		}
-		
-		$secrets = ConvertFrom-Json $hashTable["SECRETS"] -AsHashtable
-		$secrets[$tenantId] = $webchatSecret
-		$hashTable["SECRETS"] = ConvertTo-Json $secrets
-		$hashTable["SECRETS"] = $hashTable["SECRETS"].ToString()
-		Set-AzWebApp -ResourceGroupName $ResourceGroup -Name $output.Outputs.funcTestsServiceName.Value -AppSettings $hashTable
-    
+        if($isSecondary){	
+            # update functional-tests app with bot name and secret
+            #get bot settings
+            Write-Host "updating bot function test app with bot tenant id: $tenantId"
+            $funcTestApp = Get-AzWebApp -ResourceGroupName $ResourceGroup -Name $output.Outputs.funcTestsServiceName.Value
+            $settings =  $funcTestApp.SiteConfig.AppSettings
+            $hashTable = @{}
+            $settings | ForEach-Object {
+                $hashTable[$_.Name] = $_.Value
+            }
+
+            #set default bot value
+            $hashTable
+            $hashTable["DefaultBot"] = $tenantId
+            
+            # set secret value
+            $secrets = ConvertFrom-Json $hashTable["SECRETS"]
+            $secrets | Add-Member -NotePropertyName $tenantId -NotePropertyValue $webchatSecret
+            $hashTable["SECRETS"] = ConvertTo-Json $secrets
+            $hashTable["SECRETS"] = $hashTable["SECRETS"].ToString()
+
+            #set bot settings
+            Set-AzWebApp -ResourceGroupName $ResourceGroup -Name $output.Outputs.funcTestsServiceName.Value -AppSettings $hashTable
+        }
 }    
 Catch {
     Write-Host
