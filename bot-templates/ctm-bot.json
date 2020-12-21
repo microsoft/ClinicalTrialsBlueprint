@@ -1,20 +1,20 @@
 {
     "scenarios": [
        {
-            "odata.etag": "W/\"datetime'2020-12-08T15%3A06%3A54.4121857Z'\"",
-            "PartitionKey": "88b23018-4ca9-4610-945f-6faa1eef20bd",
-            "RowKey": "452a23de-d438-4e3e-b564-933e9173ff2b",
+            "odata.etag": "W/\"datetime'2020-12-21T12%3A41%3A58.4302081Z'\"",
+            "PartitionKey": "8b0156d5-d95a-422c-a566-34dd83459375",
+            "RowKey": "707551cd-4749-4edc-8e69-2e80d17de573",
             "active": true,
             "currentUser": "Yochai Lehman ( System Admin )",
             "description": "clinical_trials_matching_question_generation",
             "name": "clinical_trials_matching_question_generation",
             "scenario_trigger": "clinical_trials_matching_question_generation",
             "updated@odata.type": "Edm.DateTime",
-            "updated": "2020-12-08T15:06:54.3750000Z",
+            "updated": "2020-12-21T12:41:58.3370000Z",
             "userDisplayName": "Yochai Lehman",
             "version": 1,
-            "snapshots": 2,
-            "Timestamp": "2020-12-08T15:06:54.4121857Z",
+            "snapshots": 3,
+            "Timestamp": "2020-12-21T12:41:58.4302081Z",
             "code": {
                 "version": 3,
                 "steps": [
@@ -23,18 +23,18 @@
                         "type": "action",
                         "label": "Init",
                         "designer": {
-                            "xLocation": 527,
-                            "yLocation": 13,
+                            "xLocation": 528,
+                            "yLocation": 11,
                             "next": "5a7612a135ea-f722c6246f11df1a-3c52"
                         },
-                        "onInit": "scenario.question = scenario.scenarioArgs.question;\r\nscenario.profile = scenario.scenarioArgs.profile;\r\nscenario.questionsNum = scenario.scenarioArgs.questionsNum;\r\nscenario.dontKnowRegex = \"[D,d]on[',']?t [K,k]now|[N,n]ot [S,s]ure|[D,d]on[',']?t [W,w]ant [T,t]o [A,a]nswer\""
+                        "onInit": "scenario.question = scenario.scenarioArgs.question;\r\nscenario.profile = scenario.scenarioArgs.profile;\r\nscenario.questionsNum = scenario.scenarioArgs.questionsNum;\r\nscenario.dontKnowRegex = \"[D,d]on[',']?t [K,k]now|[N,n]ot [S,s]ure|[D,d]on[',']?t [W,w]ant [T,t]o [A,a]nswer\";\r\nsession.trace(\"skfldjdsaljlsdsda\" ,1)"
                     },
                     {
                         "id": "5a7612a135ea-f722c6246f11df1a-3c52",
                         "type": "datasource",
                         "designer": {
                             "xLocation": 520,
-                            "yLocation": 100,
+                            "yLocation": 93,
                             "next": "a3c94443f8bf-cb9a8364eac92c34-ca3c"
                         },
                         "dataConnection": "",
@@ -54,8 +54,7 @@
                         "type": "switch",
                         "designer": {
                             "xLocation": 500,
-                            "yLocation": 250,
-                            "next": "8aeffd2e40e8-337b6d429d9549c3-722d"
+                            "yLocation": 250
                         },
                         "cases": [
                             {
@@ -99,7 +98,7 @@
                         "dataType": "[\"Yes\", \"No\", \"Don't know / Don't want to answer\"]",
                         "designer": {
                             "xLocation": 526,
-                            "yLocation": 412,
+                            "yLocation": 410,
                             "next": "218a732dc7f7-b3ded10c1434bb26-8d69",
                             "listStyle": 3
                         },
@@ -141,8 +140,8 @@
                         "type": "action",
                         "label": "Prepare Choices",
                         "designer": {
-                            "xLocation": 672,
-                            "yLocation": 320,
+                            "xLocation": 660,
+                            "yLocation": 348,
                             "next": "60e09c9bdc82-fd2741a80f33e4f4-d9e4"
                         },
                         "onInit": "scenario.choicesArray = scenario.choices.map(choice => choice.toString());\nscenario.choicesArray.push(\"Don't know / Don't want to answer\");"
@@ -174,7 +173,7 @@
                         "type": "action",
                         "label": "Don't know handling",
                         "designer": {
-                            "xLocation": 526,
+                            "xLocation": 520,
                             "yLocation": 626,
                             "next": "1a3faa5227a9-d3b84705529e7419-838f"
                         },
@@ -197,7 +196,7 @@
                         "condition": "Number.isNaN(scenario.num)",
                         "designer": {
                             "xLocation": 320,
-                            "yLocation": 533,
+                            "yLocation": 534,
                             "next": "71b4f50f833a-b15090e77a91a966-0ee0",
                             "reverse": true
                         },
@@ -236,7 +235,7 @@
                             "yLocation": 160,
                             "next": "4b1932a7c977-8d1720745c3e8cdb-4079"
                         },
-                        "onInit": "// if has question by entity type\nif (scenario.languageJson.entityTypes[scenario.question.ayalonEntityType] != null) {\n    scenario.questionText = scenario.languageJson.entityTypes[scenario.question.ayalonEntityType].question;\n} else if(scenario.languageJson.allowedConcepts[scenario.question.umlsConceptId] != null) {\n    // has question by concept\n    let conept = scenario.languageJson.allowedConcepts[scenario.question.umlsConceptId];\n    scenario.questionText = conept.question;\n    scenario.question.ayalonEntityText = conept.name;\n    scenario.choices = conept.choices || conept.multiChoice;\n} else {\n    // got concept id without a valid question mapped to it\n    scenario.questionText = scenario.question.umlsConceptId + \"?\"\n}\n\nscenario.questionText = scenario.questionText.replace(\"%p1%\", scenario.question.ayalonEntityText);"
+                        "onInit": "// if has question by entity type\nif (scenario.languageJson.entityTypes[scenario.question.ayalonEntityType] != null) {\n    scenario.questionText = scenario.languageJson.entityTypes[scenario.question.ayalonEntityType].question;\n} else if(scenario.languageJson.allowedConcepts[scenario.question.umlsConceptId] != null) {\n    // has question by concept\n    let conept = scenario.languageJson.allowedConcepts[scenario.question.umlsConceptId];\n    scenario.questionText = conept.question;\n    scenario.question.ayalonEntityText = conept.name;\n    scenario.choices = conept.choices;\n    scenario.multiChoice conept.multiChoice;\n} else {\n    // got concept id without a valid question mapped to it\n    scenario.questionText = scenario.question.umlsConceptId + \"?\"\n}\n\nscenario.questionText = scenario.questionText.replace(\"%p1%\", scenario.question.ayalonEntityText);"
                     },
                     {
                         "id": "4b1932a7c977-8d1720745c3e8cdb-4079",
@@ -254,8 +253,8 @@
                         "type": "prompt",
                         "dataType": "object",
                         "designer": {
-                            "xLocation": 791,
-                            "yLocation": 409,
+                            "xLocation": 792,
+                            "yLocation": 408,
                             "next": "4acbd42df9f1-f3b0d55707ca0fbf-7bb3"
                         },
                         "variable": "response",
@@ -278,7 +277,7 @@
                             "yLocation": 320,
                             "next": "3b616b3c2497-7bd649f243256db8-58b0"
                         },
-                        "onInit": "scenario.cardChoices = []\r\nfor (const code in scenario.choices) {\r\n  scenario.choices[code].code = code\r\n  scenario.cardChoices.push({\r\n        title: scenario.choices[code].name,\r\n        value: code\r\n      })\r\n}"
+                        "onInit": "scenario.cardChoices = []\r\nfor (const code in scenario.multiChoice) {\r\n  scenario.multiChoice[code].code = code\r\n  scenario.cardChoices.push({\r\n        title: scenario.multiChoice[code].name,\r\n        value: code\r\n      })\r\n}"
                     },
                     {
                         "id": "4acbd42df9f1-f3b0d55707ca0fbf-7bb3",
@@ -311,15 +310,15 @@
                             "yLocation": 740,
                             "next": "d2c813d56c6d-e873f367b262b7e6-030c"
                         },
-                        "onInit": "let resultSet = null;\r\nlet dontKnow = false;\r\nif(scenario.response == null){\r\n    dontKnow = true;\r\n}else{\r\n    resultSet = new Set(scenario.response.choices?.split(\",\") || [])\r\n}\r\n\r\nscenario.result = scenario.cardChoices.map(r=>\r\n({\r\n    code: r.value,\r\n    answer: dontKnow ? null:(resultSet.has(r.value) ? \"True\" : \"False\"),\r\n    answerType: \"Boolean\",\r\n    ayalonEntityText: r.title,\r\n    ayalonEntityType: scenario.question.ayalonEntityType\r\n}))"
+                        "onInit": "let resultSet = null;\r\nlet dontKnow = false;\r\n// the response is null only when user answers \"don't know\"\r\nif(scenario.response == null){\r\n    dontKnow = true;\r\n}else{\r\n    resultSet = new Set(scenario.response.choices?.split(\",\") || []);\r\n}\r\n\r\nscenario.result = scenario.cardChoices.map(r=>\r\n({\r\n    code: r.value,\r\n    answer: dontKnow ? null:(resultSet.has(r.value) ? \"True\" : \"False\"),\r\n    answerType: \"Boolean\",\r\n    ayalonEntityText: r.title,\r\n    ayalonEntityType: scenario.question.ayalonEntityType\r\n}))"
                     },
                     {
                         "id": "5bd3cf10493e-0671cb8fe48883d7-82ec",
                         "type": "branch",
                         "condition": "typeof scenario.response === \"string\"",
                         "designer": {
-                            "xLocation": 794,
-                            "yLocation": 560,
+                            "xLocation": 800,
+                            "yLocation": 572,
                             "next": "37caa515995f-5a395085b9bdfa2c-9b2f",
                             "reverse": true
                         },
