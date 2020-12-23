@@ -27,7 +27,7 @@
                             "yLocation": 11,
                             "next": "5a7612a135ea-f722c6246f11df1a-3c52"
                         },
-                        "onInit": "scenario.question = scenario.scenarioArgs.question;\r\nscenario.profile = scenario.scenarioArgs.profile;\r\nscenario.questionsNum = scenario.scenarioArgs.questionsNum;\r\nscenario.dontKnowRegex = \"[D,d]on[',']?t [K,k]now|[N,n]ot [S,s]ure|[D,d]on[',']?t [W,w]ant [T,t]o [A,a]nswer\";\r\nsession.trace(\"skfldjdsaljlsdsda\" ,1)"
+                        "onInit": "scenario.question = scenario.scenarioArgs.question;\r\nscenario.profile = scenario.scenarioArgs.profile;\r\nscenario.questionsNum = scenario.scenarioArgs.questionsNum;\r\nscenario.dontKnowRegex = \"[D,d]on[',']?t [K,k]now|[N,n]ot [S,s]ure|[D,d]on[',']?t [W,w]ant [T,t]o [A,a]nswer\";"
                     },
                     {
                         "id": "5a7612a135ea-f722c6246f11df1a-3c52",
