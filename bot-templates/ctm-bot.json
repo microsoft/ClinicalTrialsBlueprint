@@ -277,7 +277,7 @@
                             "yLocation": 320,
                             "next": "3b616b3c2497-7bd649f243256db8-58b0"
                         },
-                        "onInit": "scenario.cardChoices = []\r\nfor (const code in scenario.multiChoice) {\r\n  scenario.multiChoice[code].code = code\r\n  scenario.cardChoices.push({\r\n        title: scenario.multiChoice[code].name,\r\n        value: code\r\n      })\r\n}"
+                        "onInit": "scenario.cardChoices = []\r\nfor (const code in scenario.multiChoice) {\r\n  scenario.cardChoices.push({\r\n        title: scenario.multiChoice[code].name,\r\n        value: code\r\n      })\r\n}"
                     },
                     {
                         "id": "4acbd42df9f1-f3b0d55707ca0fbf-7bb3",
