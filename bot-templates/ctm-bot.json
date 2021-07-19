@@ -23,18 +23,18 @@
                         "type": "action",
                         "label": "Init",
                         "designer": {
-                            "xLocation": 527,
-                            "yLocation": 13,
+                            "xLocation": 528,
+                            "yLocation": 11,
                             "next": "5a7612a135ea-f722c6246f11df1a-3c52"
                         },
-                        "onInit": "scenario.question = scenario.scenarioArgs.question;\r\nscenario.profile = scenario.scenarioArgs.profile;\r\nscenario.questionsNum = scenario.scenarioArgs.questionsNum;"
+                        "onInit": "scenario.question = scenario.scenarioArgs.question;\r\nscenario.profile = scenario.scenarioArgs.profile;\r\nscenario.questionsNum = scenario.scenarioArgs.questionsNum;\r\nscenario.dontKnowRegex = \"[D,d]on[',']?t [K,k]now|[N,n]ot [S,s]ure|[D,d]on[',']?t [W,w]ant [T,t]o [A,a]nswer\";"
                     },
                     {
                         "id": "5a7612a135ea-f722c6246f11df1a-3c52",
                         "type": "datasource",
                         "designer": {
                             "xLocation": 520,
-                            "yLocation": 100,
+                            "yLocation": 93,
                             "next": "a3c94443f8bf-cb9a8364eac92c34-ca3c"
                         },
                         "dataConnection": "",
@@ -68,6 +68,10 @@
                             {
                                 "value": "Choice",
                                 "targetStepId": "f3afc3fc6aec-13259a9ba88e3d44-3f8b"
+                            },
+                            {
+                                "value": "MultiChoice",
+                                "targetStepId": "8aeffd2e40e8-337b6d429d9549c3-722d"
                             }
                         ],
                         "condition": "scenario.question.answerType",
@@ -94,7 +98,7 @@
                         "dataType": "[\"Yes\", \"No\", \"Don't know / Don't want to answer\"]",
                         "designer": {
                             "xLocation": 526,
-                            "yLocation": 412,
+                            "yLocation": 410,
                             "next": "218a732dc7f7-b3ded10c1434bb26-8d69",
                             "listStyle": 3
                         },
@@ -124,11 +128,11 @@
                         "id": "d2c813d56c6d-e873f367b262b7e6-030c",
                         "type": "endwithresult",
                         "designer": {
-                            "xLocation": 520,
-                            "yLocation": 720
+                            "xLocation": 612,
+                            "yLocation": 851
                         },
                         "endScope": "scenario",
-                        "returnValue": "{\r\n    \"code\": scenario.question.umlsConceptId,\r\n    \"answer\": scenario.response,\r\n    \"answerType\": scenario.question.answerType,\r\n    \"ayalonEntityText\": scenario.question.ayalonEntityText,\r\n    \"ayalonEntityType\": scenario.question.ayalonEntityType\r\n}",
+                        "returnValue": "scenario.result",
                         "label": "Scenario Result"
                     },
                     {
@@ -137,10 +141,10 @@
                         "label": "Prepare Choices",
                         "designer": {
                             "xLocation": 660,
-                            "yLocation": 309,
+                            "yLocation": 328,
                             "next": "60e09c9bdc82-fd2741a80f33e4f4-d9e4"
                         },
-                        "onInit": "scenario.choicesArray = scenario.question.choices.map(choice => choice.toString());\nscenario.choicesArray.push(\"Don't know / Don't want to answer\");"
+                        "onInit": "scenario.choicesArray = scenario.choices.map(choice => choice.toString());\nscenario.choicesArray.push(\"Don't know / Don't want to answer\");"
                     },
                     {
                         "id": "218a732dc7f7-b3ded10c1434bb26-8d69",
@@ -169,22 +173,22 @@
                         "type": "action",
                         "label": "Don't know handling",
                         "designer": {
-                            "xLocation": 526,
-                            "yLocation": 626,
-                            "next": "d2c813d56c6d-e873f367b262b7e6-030c"
+                            "xLocation": 534,
+                            "yLocation": 614,
+                            "next": "1a3faa5227a9-d3b84705529e7419-838f"
                         },
-                        "onInit": "if (scenario.response && scenario.response.match(/[D,d]on[',\u2019,\u2018]?t [K,k]now|[N,n]ot [S,s]ure|[D,d]on[',\u2019,\u2018]?t [W,w]ant [T,t]o [A,a]nswer/)) {\n    scenario.response = null;\n}"
+                        "onInit": "if (scenario.response && new RegExp(scenario.dontKnowRegex).test(scenario.response)) {\n    scenario.response = null;\n}"
                     },
                     {
                         "id": "866538462ffa-d8fd8b6a3b13d383-9195",
                         "type": "action",
                         "label": "Numeric Response",
                         "designer": {
-                            "xLocation": 386,
-                            "yLocation": 470,
+                            "xLocation": 387,
+                            "yLocation": 471,
                             "next": "867f3d768ac6-b2cd67ca62309894-52a6"
                         },
-                        "onInit": "if (scenario.responseNum.match(/[D,d]on[',\u2019,\u2018]?t [K,k]now|[N,n]ot [S,s]ure|[D,d]on[',\u2019,\u2018]?t [W,w]ant [T,t]o [A,a]nswer/)) {\r\n    scenario.num = null;\r\n} else {\r\n    scenario.num = parseFloat(scenario.responseNum);\r\n}"
+                        "onInit": "if (new RegExp(scenario.dontKnowRegex).test(scenario.responseNum)) {\r\n    scenario.num = null;\r\n} else {\r\n    scenario.num = parseFloat(scenario.responseNum);\r\n}"
                     },
                     {
                         "id": "867f3d768ac6-b2cd67ca62309894-52a6",
@@ -192,7 +196,7 @@
                         "condition": "Number.isNaN(scenario.num)",
                         "designer": {
                             "xLocation": 320,
-                            "yLocation": 533,
+                            "yLocation": 534,
                             "next": "71b4f50f833a-b15090e77a91a966-0ee0",
                             "reverse": true
                         },
@@ -231,7 +235,7 @@
                             "yLocation": 160,
                             "next": "4b1932a7c977-8d1720745c3e8cdb-4079"
                         },
-                        "onInit": "// if has question by entity type\nif (scenario.languageJson.entityTypes[scenario.question.ayalonEntityType] != null) {\n    scenario.questionText = scenario.languageJson.entityTypes[scenario.question.ayalonEntityType].question;\n} else if(scenario.languageJson.allowedConcepts[scenario.question.umlsConceptId] != null) {\n    // has question or points to concepet with question\n    if (scenario.languageJson.allowedConcepts[scenario.question.umlsConceptId].question != null) {\n        scenario.questionText = scenario.languageJson.allowedConcepts[scenario.question.umlsConceptId].question;\n    } else {\n        var concept = scenario.languageJson.allowedConcepts[scenario.question.umlsConceptId];\n        scenario.questionText = scenario.languageJson.allowedConcepts[concept.mappedTo].question;\n    }\n} else {\n    // got concept id without a valid question mapped to it\n    scenario.questionText = \"?\"\n}\n\nscenario.questionText = scenario.questionText.replace(\"%p1%\", scenario.question.ayalonEntityText);"
+                        "onInit": "\nconst semanticTypeKey = scenario.question.ayalonEntityType + \",\" + scenario.question.semanticType;\nif(scenario.languageJson.allowedConcepts[scenario.question.code] != null) {\n    // has question by concept\n    let conept = scenario.languageJson.allowedConcepts[scenario.question.code];\n    scenario.questionText = conept.question;\n    scenario.question.ayalonEntityText = conept.name;\n    scenario.choices = conept.choices;\n    scenario.multiChoice = conept.multiChoice;\n}\nelse if (scenario.languageJson.semanticTypes[semanticTypeKey] != null) {\n    // if has question by entity type X semantic type\n    scenario.questionText = scenario.languageJson.semanticTypes[semanticTypeKey].question;\n}\nelse if (scenario.languageJson.entityTypes[scenario.question.ayalonEntityType] != null) {\n    // if has question by entity type\n    scenario.questionText = scenario.languageJson.entityTypes[scenario.question.ayalonEntityType].question;\n}  else {\n    // got concept id without a valid question mapped to it\n    // this should not happend\n    scenario.questionText = scenario.question.ayalonEntityText + \"?\"\n}\n\nscenario.questionText = scenario.questionText.replace(\"%p1%\", scenario.question.ayalonEntityText);"
                     },
                     {
                         "id": "4b1932a7c977-8d1720745c3e8cdb-4079",
@@ -242,7 +246,71 @@
                             "yLocation": 200,
                             "next": "3710c6e2876e-55c99f0c2563d4f5-647e"
                         },
-                        "onInit": "var userQuestion = {};\r\nuserQuestion.question = scenario.question;\r\nuserQuestion.questionText = scenario.questionText;\r\nuserQuestion.profile = scenario.profile;\r\nuserQuestion.questionsNum = scenario.questionsNum;\r\nsession.logCustomEvent('USER_QUESTION', userQuestion);"
+                        "onInit": "var userQuestion = {};\r\nuserQuestion.question = scenario.concept;\r\nuserQuestion.questionText = scenario.questionText;\r\nuserQuestion.profile = scenario.profile;\r\nuserQuestion.questionsNum = scenario.questionsNum;\r\nsession.logCustomEvent('USER_QUESTION', userQuestion);"
+                    },
+                    {
+                        "id": "3b616b3c2497-7bd649f243256db8-58b0",
+                        "type": "prompt",
+                        "dataType": "object",
+                        "designer": {
+                            "xLocation": 792,
+                            "yLocation": 408,
+                            "next": "4acbd42df9f1-f3b0d55707ca0fbf-7bb3"
+                        },
+                        "variable": "response",
+                        "stringId": "stringId_02e974a5da66a1f8",
+                        "label": "MultiChoice",
+                        "layout": "vertical",
+                        "attachment": [
+                            {
+                                "type": "AdaptiveCard",
+                                "cardCode": "{\r\n    \"type\": \"AdaptiveCard\",\r\n    \"$schema\": \"http://adaptivecards.io/schemas/adaptive-card.json\",\r\n    \"version\": \"1.2\",\r\n    \"body\": scenario.cardBody\r\n}"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "8aeffd2e40e8-337b6d429d9549c3-722d",
+                        "type": "action",
+                        "label": "Prepare MultiChoices",
+                        "designer": {
+                            "xLocation": 794,
+                            "yLocation": 330,
+                            "next": "3b616b3c2497-7bd649f243256db8-58b0"
+                        },
+                        "onInit": "// first child answer type\r\nscenario.multiChoiceAnswerType = Object.values(scenario.multiChoice)[0].answerType;\r\n\r\nconst choicesCardArr = [];\r\n\r\nif (scenario.multiChoiceAnswerType === 'Boolean') {\r\n    choicesCardArr.push({\r\n        \"type\": \"Input.ChoiceSet\",\r\n        \"isMultiSelect\": true,\r\n        \"style\": \"compact\",\r\n        \"choices\": Object.keys(scenario.multiChoice).map(k => ({\r\n            title: scenario.multiChoice[k].name,\r\n            value: k\r\n        })),\r\n        \"placeholder\": \"Placeholder text\",\r\n        \"id\": \"choices\"\r\n    });\r\n} else if (scenario.multiChoiceAnswerType === 'Choice') {\r\n    for (const choiceCode in scenario.multiChoice) {\r\n        let choiceObj = scenario.multiChoice[choiceCode];\r\n        // push columnSet with 2 columns ie. title => ChoicesSet\r\n        choicesCardArr.push({\r\n            \"type\": \"ColumnSet\",\r\n            \"columns\": [\r\n                {\r\n                    \"type\": \"Column\",\r\n                    \"items\": [{\r\n                        \"type\": \"TextBlock\",\r\n                        \"size\": \"Small\",\r\n                        \"text\": choiceObj.name\r\n                    }],\r\n                    \"width\": \"100px\"\r\n                },\r\n                {\r\n                    \"type\": \"Column\",\r\n                    \"items\": [\r\n                        {\r\n                            \"id\": choiceCode,\r\n                            \"type\": \"Input.ChoiceSet\",\r\n                            \"choices\": choiceObj.choices.map(c => ({\r\n                                \"title\": c,\r\n                                \"value\": c\r\n                            })),\r\n                            \"value\": choiceObj.choices[0]\r\n                        }\r\n                    ],\r\n                    \"width\": \"stretch\"\r\n                }\r\n            ]\r\n        });\r\n    }\r\n}\r\n\r\nscenario.cardBody = [\r\n    {\r\n        \"type\": \"TextBlock\",\r\n        \"text\": scenario.questionText,\r\n        \"size\": \"Medium\",\r\n        \"weight\": \"Bolder\",\r\n        \"wrap\": true\r\n    },\r\n    ...choicesCardArr,\r\n    {\r\n        \"type\": \"ActionSet\",\r\n        \"Id\":\"Submit\",\r\n        \"actions\": [\r\n            {\r\n                \"type\": \"Action.Submit\",\r\n                \"title\": \"Submit\"\r\n            },\r\n            {\r\n                \"type\": \"Action.Submit\",\r\n                \"title\": \"Don't know / Don't want to answer\",\r\n                \"data\": {\r\n                    \"dontKnow\": true\r\n                }\r\n            }\r\n        ]\r\n    }\r\n];"
+                    },
+                    {
+                        "id": "4acbd42df9f1-f3b0d55707ca0fbf-7bb3",
+                        "type": "action",
+                        "label": "Multichoice Response",
+                        "designer": {
+                            "xLocation": 794,
+                            "yLocation": 471,
+                            "next": "37caa515995f-5a395085b9bdfa2c-9b2f"
+                        },
+                        "onInit": "// if the answer is not object or is object and unknown\r\nif (typeof scenario.response !== \"object\" || scenario.response.dontKnow) {\r\n    scenario.response = null;\r\n}"
+                    },
+                    {
+                        "id": "1a3faa5227a9-d3b84705529e7419-838f",
+                        "type": "action",
+                        "label": "Create single result",
+                        "designer": {
+                            "xLocation": 531,
+                            "yLocation": 740,
+                            "next": "d2c813d56c6d-e873f367b262b7e6-030c"
+                        },
+                        "onInit": "scenario.result = [{\n    ...scenario.question,\n    answer: scenario.response\n}]"
+                    },
+                    {
+                        "id": "37caa515995f-5a395085b9bdfa2c-9b2f",
+                        "type": "action",
+                        "label": "Create multiple results",
+                        "designer": {
+                            "xLocation": 700,
+                            "yLocation": 740,
+                            "next": "d2c813d56c6d-e873f367b262b7e6-030c"
+                        },
+                        "onInit": "let resultSet = new Set([]);\r\n// the response is null only when user answers \"don't know\"\r\n\r\n// get multichoice selected values in set\r\nif (scenario.response != null && scenario.multiChoiceAnswerType == \"Boolean\") {\r\n    resultSet = new Set(scenario.response.choices?.split(\",\") || []);\r\n}\r\n\r\nscenario.result = Object.keys(scenario.multiChoice).map(choiceCode => {\r\n    let answer = null;\r\n    if (scenario.response != null) {\r\n        // in this case codes that are not in resultSet are falsy\r\n        if (scenario.multiChoiceAnswerType == \"Boolean\") {\r\n            if (resultSet.has(choiceCode)) {\r\n                answer = \"True\";\r\n            } else {\r\n                answer = \"False\";\r\n            }\r\n        } else {\r\n            answer = scenario.response[choiceCode];\r\n        }\r\n    }\r\n    return {\r\n        ...scenario.question,\r\n        code: choiceCode,\r\n        answer: answer,\r\n        answerType: scenario.multiChoiceAnswerType,\r\n    };\r\n});"
                     }
                 ],
                 "interrupting": false,

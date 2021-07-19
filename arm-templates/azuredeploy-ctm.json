@@ -90,12 +90,12 @@
     "keyVaultName": "[concat(parameters('serviceName'),'-ctm-kv',variables('suffix'))]",
     "ayalonWebAppName": "[concat(parameters('serviceName'),'-ayalon-webapp',variables('suffix'))]",
     "managedIdentityName": "[concat(parameters('serviceName'),'-managed-identity',variables('suffix'))]",
+    "ayalonServicePlanName": "[concat(parameters('serviceName'),'-ayalon-plan',variables('suffix'))]",
     // Unique resources
     "insightsName": "[concat(parameters('serviceName'),'-ctm-insights')]",
     "proxyApiKey": "[uniqueString(subscription().id)]",
     "mapsServiceName": "[concat(parameters('serviceName'),'-ctm-map')]",
     "ctmServicePlanName": "[concat(parameters('serviceName'),'-ctm-plan')]",
-    "ayalonServicePlanName": "[concat(parameters('serviceName'),'-ayalon-plan')]",
     "gatewayWebAppName": "[concat(parameters('serviceName'),'-gateway-webapp')]",
     "textAnalyticsName": "[concat(parameters('serviceName'),'-ctm-ta')]",
     "autoScaleName": "[concat(parameters('serviceName'), '-plan-auto-scale')]",
@@ -176,7 +176,7 @@
       "tags": "[parameters('resourceTags')]",
       "sku": {
         "name": "P3v2",
-        "capacity": 2
+        "capacity": 1
       },
       "kind": "linux",
       "properties": {
@@ -585,6 +585,10 @@
             {
               "name": "Eula",
               "value": "accept"
+            },
+            {
+              "name": "RAI_TERMS",
+              "value": "accept"
             }
           ]
         }
@@ -876,9 +880,7 @@
             "name": "structuring",
             "properties": {
               "image": "[variables('structuringImageName')]",
-              "command": [
-                "dotnet",
-                "ClinicalTrialsPreprocessing.dll"
+              "command": [ "dotnet", "Microsoft.Internal.DocumentStructuring.ClinicalTrialsPreprocessing.dll"
               ],
               "environmentVariables": [
                 {
