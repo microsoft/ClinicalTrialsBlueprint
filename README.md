@@ -174,7 +174,7 @@ Deploy a primary Healthcare Bot resources for the Marketplace SaaS application y
 
 ```PowerShell
 .\scripts\azuredeploy-healthcarebot.ps1 -ResourceGroup $ctmRg.ResourceGroupName `
-                -saasSubscriptionId $saasSubscriptionId  -botServiceName $botServiceName `
+                -saasSubscriptionId $saasSubscriptionId  -serviceName $ctmServiceName -botServiceName $botServiceName `
                 -botLocation US -matchingOutput $matchingOutput `
                 -TemplateParameterFile .\arm-templates\azuredeploy-healthcarebot.parameters.json `
 ```
@@ -184,7 +184,7 @@ You can now deploy a secondary Healthcare bot and functional testing webapp by r
 ```PowerShell
 .\scripts\azuredeploy-healthcarebot.ps1 -ResourceGroup $ctmRg.ResourceGroupName `
                 -saasSubscriptionId $secondarySaaSSubscriptionId  `
-                -botServiceName $secondaryBotServiceName `
+                -botServiceName -serviceName $ctmServiceName $secondaryBotServiceName `
                 -botLocation US -matchingOutput $matchingSecondaryOutput `
                 -TemplateParameterFile .\arm-templates\azuredeploy-healthcarebot.parameters.json `
                 -isSecondary $true

@@ -962,8 +962,12 @@
               "image": "[variables('nlpServicesImageName')]",
               "environmentVariables": [
                 {
-                  "name": "APP_INSIGHT_KEY",
+                  "name": "APP_INSIGHTS_APK",
                   "value": "[reference(variables('insightsName'), '2015-05-01').instrumentationKey]"
+                },
+                {
+                  "name": "TELEMETRY_TYPE",
+                  "value": "appinsights"
                 }
               ],
               "resources": {
