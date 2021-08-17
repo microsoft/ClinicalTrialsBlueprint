@@ -1,6 +1,6 @@
 {
     "scenarios": [
-       {
+        {
             "odata.etag": "W/\"datetime'2021-02-02T07%3A06%3A39.8554113Z'\"",
             "PartitionKey": "8b0156d5-d95a-422c-a566-34dd83459375",
             "RowKey": "707551cd-4749-4edc-8e69-2e80d17de573",
@@ -941,7 +941,7 @@
                             "yLocation": 547,
                             "next": "2d52c58f3c9f-311c95e0e7a51ce9-5ed7"
                         },
-                        "onInit": "scenario.trials = scenario.qeResponse.trials;\nscenario.trialsCountPrev = scenario.trials.length;\nscenario.qeTrials = scenario.trials;"
+                        "onInit": "scenario.trials = scenario.qeResponse.trials;\nscenario.trialsCountPrev = scenario.trials.length;\nscenario.qeTrials = scenario.trials;\nsession.trace(\"query engin returned \" + scenario.trials.length + \" trials\", 0);"
                     },
                     {
                         "id": "8eb78c0e15f8-3aa0bdbacd6795d8-0ac6",
@@ -1031,7 +1031,7 @@
                     {
                         "id": "bd61cf721cfb-286941d86a9f1950-d264",
                         "type": "branch",
-                        "condition": "scenario.questionGenerationResponse.every(r=>r.answer == null)",
+                        "condition": "scenario.questionGenerationResponse == null ||\r\nscenario.questionGenerationResponse.length == 0 || \r\nscenario.questionGenerationResponse[0].answer == null",
                         "designer": {
                             "xLocation": 940,
                             "yLocation": 507,
@@ -1306,7 +1306,7 @@
                             "yLocation": 567,
                             "next": "bd61cf721cfb-286941d86a9f1950-d264"
                         },
-                        "onInit": "scenario.questionGenerationResponse.forEach(answer=>{\nvar userAnswer = {};\nuserAnswer.questionsNum = scenario.totalQuestionsAsked;\nuserAnswer.answer = answer;\nuserAnswer.profile = scenario.profile;\nsession.logCustomEvent('USER_ANSWER', userAnswer);\n});"
+                        "onInit": "var userAnswer = {};\nuserAnswer.questionsNum = scenario.totalQuestionsAsked;\nuserAnswer.answer = scenario.questionGenerationResponse;\nuserAnswer.profile = scenario.profile;\nsession.logCustomEvent('USER_ANSWER', userAnswer);"
                     },
                     {
                         "id": "42b4b5fab0ed-0ff1c03b236e69bd-63c4",
