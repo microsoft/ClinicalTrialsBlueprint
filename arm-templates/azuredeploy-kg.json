@@ -23,6 +23,9 @@
     "accountId": {
       "type": "string"
     },
+    "recipients": {
+      "type": "string"
+    },
     "resourceTags": {
       "type": "object",
       "defaultValue": {
@@ -345,7 +348,7 @@
                       "body": {
                         "Body": "<p>Structuring process is already running.</p>",
                         "Subject": "[concat('[KG-', parameters('env'), '] ', 'Trials preprocessing aborted')]",
-                        "To": "[parameters('accountId')]"
+                        "To": "[parameters('recipients')]"
                       },
                       "host": {
                         "connection": {
