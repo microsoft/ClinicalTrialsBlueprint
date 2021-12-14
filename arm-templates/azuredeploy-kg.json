@@ -3,27 +3,22 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "env": {
-      "type": "string",
-      "defaultValue": "prod_us"
+      "type": "string"
     },
     "acrServer": {
-      "type": "string",
-      "defaultValue": "ctmprod.azurecr.io"
+      "type": "string"
     },
     "acrUsername": {
-      "type": "string",
-      "defaultValue": "ctmprodreader"
+      "type": "string"
     },
     "acrPassword": {
       "type": "securestring"
     },
     "kgPreprocessorImageTag": {
-      "type": "string",
-      "defaultValue": "2021.1212.1"
+      "type": "string"
     },
     "nlpServicesImageTag": {
-      "type": "string",
-      "defaultValue": "2021.1124.1"
+      "type": "string"
     },
     "accountId": {
       "type": "string"
@@ -117,10 +112,10 @@
             "properties": {
               "image": "[variables('nlpServicesImageName')]",
               "environmentVariables": [
-                // {
-                //   "name": "APP_INSIGHTS_APK",
-                //   "value": "[reference(variables('insightsResourceName'), '2015-05-01').instrumentationKey]"
-                // },
+                {
+                  "name": "APP_INSIGHTS_APK",
+                  "value": "[reference(resourceId(resourceGroup().name, 'Microsoft.Insights/components', variables('insightsResourceName')), '2015-05-01', 'Full').properties.instrumentationKey]"
+                },
                 {
                   "name": "TELEMETRY_TYPE",
                   "value": "appinsights"
