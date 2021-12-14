@@ -505,6 +505,7 @@
                       "added": "@if(equals(triggerBody()?['AddedTrials'], null), 0, length(triggerBody()?['AddedTrials']))",
                       "buildVersion": "@triggerBody()?['BuildVersion']",
                       "failed": "@if(equals(triggerBody()?['FailedTrials'], null), 0, length(triggerBody()?['FailedTrials']))",
+                      "failedTrialIds": "@triggerBody()?['FailedTrials']",
                       "failureMessage": "@triggerBody()?['FailureMessage']",
                       "processed": "@if(equals(triggerBody()?['ProcessedTrials'], null), 0, length(triggerBody()?['ProcessedTrials']))",
                       "removed": "@if(equals(triggerBody()?['RemovedTrials'], null), 0, length(triggerBody()?['RemovedTrials']))",
@@ -561,7 +562,7 @@
                 "Send_a_success_email": {
                   "inputs": {
                     "body": {
-                      "Body": "<p>Processed @{variables('structuringSummary')['processed']} trials.<br>\nFailed @{variables('structuringSummary')['failed']} trials.<br>\nStructuring process time - @{triggerBody()?['TimePassed']}<br>\nStructuring build version - @{triggerBody()?['BuildVersion']}<br>\n</p>",
+                      "Body": "<p>Processed @{variables('structuringSummary')['processed']} trials.<br>\nFailed @{variables('structuringSummary')['failed']} trials.<br>\nFailed Trial Ids @{variables('structuringSummary')['failedTrialIds']} ,<br>\nStructuring process time - @{triggerBody()?['TimePassed']}<br>\nStructuring build version - @{triggerBody()?['BuildVersion']}<br>\n</p>",
                       "Subject": "[concat('[KG-', parameters('env'), '] ', 'Trials updating process finished successfully')]",
                       "To": "[parameters('accountId')]"
                     },
@@ -582,7 +583,7 @@
                   "Send_a_failure_email": {
                     "inputs": {
                       "body": {
-                        "Body": "<p>Failure message - @{triggerBody()?['FailureMessage']}<br>\nStructuring process time - @{triggerBody()?['TimePassed']}<br>\nStructuring build version - @{triggerBody()?['BuildVersion']}</p>",
+                        "Body": "<p>Failure message - @{triggerBody()?['FailureMessage']}<br>\nProcessed @{variables('structuringSummary')['processed']} trials.<br>\nFailed @{variables('structuringSummary')['failed']} trials.<br>\nFailed Trial Ids @{variables('structuringSummary')['failedTrialIds']} ,<br>\nStructuring process time - @{triggerBody()?['TimePassed']}<br>\nStructuring build version - @{triggerBody()?['BuildVersion']}</p>",
                         "Subject": "[concat('[KG-', parameters('env'), '] ', 'Trials updating process failed to complete')]",
                         "To": "[parameters('accountId')]"
                       },
