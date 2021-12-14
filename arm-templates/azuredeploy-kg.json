@@ -1,0 +1,649 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "env": {
+      "type": "string",
+      "defaultValue": "prod_us"
+    },
+    "acrServer": {
+      "type": "string",
+      "defaultValue": "ctmprod.azurecr.io"
+    },
+    "acrUsername": {
+      "type": "string",
+      "defaultValue": "ctmprodreader"
+    },
+    "acrPassword": {
+      "type": "securestring"
+    },
+    "kgPreprocessorImageTag": {
+      "type": "string",
+      "defaultValue": "2021.1212.1"
+    },
+    "nlpServicesImageTag": {
+      "type": "string",
+      "defaultValue": "2021.1124.1"
+    },
+    "accountId": {
+      "type": "string"
+    },
+    "resourceTags": {
+      "type": "object",
+      "defaultValue": {
+        "Environment": "Prod",
+        "Project": "KnowledgeGraph"
+      }
+    }
+  },
+  "variables": {
+    "kgPreprocessorResourceName": "[concat('kg-preprocessor-aci-eastus-', parameters('env'))]",
+    "insightsResourceName": "[concat('kg-appi-eastus-', parameters('env'))]",
+    "managedIdentityResourceName": "[concat('kg-preprocessor-id-eastus-', parameters('env'))]",
+    "kgPreprocessorResourceId": "[resourceId('Microsoft.ContainerInstance/containerGroups', variables('kgPreprocessorResourceName'))]",
+    "managedIdentityResourceId": "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('managedIdentityResourceName'))]",
+    "kgPreprocessorImageName": "[concat(parameters('acrServer'),'/knowledge-graph-preprocessor:', parameters('kgPreprocessorImageTag'))]",
+    "nlpServicesImageName": "[concat(parameters('acrServer'),'/nlp-services-server:', parameters('nlpServicesImageTag'))]",
+    //logic apps
+    "sechedulerLogicAppName": "[concat('kg-secheduler-logic-eastus-', parameters('env'))]",
+    "structurerLogicAppName": "[concat('kg-structurer-logic-eastus-', parameters('env'))]",
+    "finisherLogicAppName": "[concat('kg-finisher-logic-eastus-', parameters('env'))]",
+    "finisherLogicResourceId": "[resourceId('Microsoft.Logic/workflows/', variables('finisherLogicAppName'))]",
+    // Reference to workflow
+    "connections_arm_externalid": "[concat(subscription().id,'/resourceGroups/',resourceGroup().name,'/providers/Microsoft.Web/connections/arm')]",
+    "connections_office365_externalid": "[concat(subscription().id,'/resourceGroups/',resourceGroup().name,'/providers/Microsoft.Web/connections/office365')]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
+      "apiVersion": "2018-11-30",
+      "name": "[variables('managedIdentityResourceName')]",
+      "location": "[resourceGroup().location]"
+    },
+    {
+      "name": "[variables('kgPreprocessorResourceName')]",
+      "type": "Microsoft.ContainerInstance/containerGroups",
+      "apiVersion": "2018-10-01",
+      "tags": "[parameters('resourceTags')]",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[variables('managedIdentityResourceId')]",
+        "[variables('finisherLogicResourceId')]"
+      ],
+      "identity": {
+        "type": "UserAssigned",
+        "userAssignedIdentities": {
+          "[variables('managedIdentityResourceId')]": {}
+        }
+      },
+      "properties": {
+        "containers": [
+          {
+            "name": "kg-preprocessor",
+            "properties": {
+              "image": "[variables('kgPreprocessorImageName')]",
+              "command": [
+                "dotnet",
+                "Microsoft.Internal.DocumentStructuring.ClinicalTrialsPreprocessing.dll"
+              ],
+              "environmentVariables": [
+                {
+                  "name": "ASPNETCORE_ENVIRONMENT",
+                  "value": "[concat(parameters('env'), '_us')]"
+                },
+                {
+                  "name": "IDENTITY_APP_ID",
+                  "value": "[reference(variables('managedIdentityResourceId'), '2018-11-30', 'Full').properties.clientId]"
+                },
+                // {
+                //   "name": "KeyVaultConfiguration__Address",
+                //   "value": "[variables('keyVaultAddress')]"
+                // },
+                {
+                  "name": "PreprocessingConfiguration__FinisherSummaryAddress",
+                  "value": "[listCallbackURL(concat(variables('finisherLogicResourceId'), '/triggers/manual'), '2016-06-01').value]"
+                }
+              ],
+              "resources": {
+                "requests": {
+                  "cpu": 2,
+                  "memoryInGB": 4
+                }
+              }
+            }
+          },
+          {
+            "name": "nlp-services",
+            "properties": {
+              "image": "[variables('nlpServicesImageName')]",
+              "environmentVariables": [
+                // {
+                //   "name": "APP_INSIGHTS_APK",
+                //   "value": "[reference(variables('insightsResourceName'), '2015-05-01').instrumentationKey]"
+                // },
+                {
+                  "name": "TELEMETRY_TYPE",
+                  "value": "appinsights"
+                }
+              ],
+              "resources": {
+                "requests": {
+                  "cpu": 2,
+                  "memoryInGB": 8
+                }
+              }
+            }
+          }
+        ],
+        "imageRegistryCredentials": [
+          {
+            "server": "[parameters('acrServer')]",
+            "username": "[parameters('acrUsername')]",
+            "password": "[parameters('acrPassword')]"
+          }
+        ],
+        "restartPolicy": "OnFailure",
+        "osType": "Linux"
+      }
+    },
+    {
+      "type": "Microsoft.Web/connections",
+      "apiVersion": "2016-06-01",
+      "name": "arm",
+      "tags": "[parameters('resourceTags')]",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "displayName": "[parameters('accountId')]",
+        "customParameterValues": {
+        },
+        "api": {
+          "id": "[concat(subscription().id,'/providers/Microsoft.Web/locations/',resourceGroup().location,'/managedApis/arm')]"
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Web/connections",
+      "apiVersion": "2016-06-01",
+      "name": "office365",
+      "tags": "[parameters('resourceTags')]",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "displayName": "[parameters('accountId')]",
+        "customParameterValues": {
+        },
+        "api": {
+          "id": "[concat(subscription().id,'/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/office365')]"
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Logic/workflows",
+      "apiVersion": "2017-07-01",
+      "tags": "[parameters('resourceTags')]",
+      "name": "[variables('sechedulerLogicAppName')]",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Logic/workflows', variables('structurerLogicAppName'))]"
+      ],
+      "properties": {
+        "state": "Enabled",
+        "definition": {
+          "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+          "contentVersion": "1.0.0.0",
+          "parameters": {
+          },
+          "triggers": {
+            "Recurrence": {
+              "recurrence": {
+                "frequency": "Day",
+                "interval": 1,
+                "schedule": {
+                  "hours": [
+                    "12"
+                  ],
+                  "minutes": [
+                    0
+                  ]
+                }
+              },
+              "type": "Recurrence"
+            }
+          },
+          "actions": {
+            "[variables('structurerLogicAppName')]": {
+              "runAfter": {},
+              "type": "Workflow",
+              "inputs": {
+                "headers": {
+                  "content-type": "application/json"
+                },
+                "host": {
+                  "triggerName": "manual",
+                  "workflow": {
+                    "id": "[concat(subscription().id,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Logic/workflows/', variables('structurerLogicAppName'))]"
+                  }
+                }
+              }
+            }
+          },
+          "outputs": {
+          }
+        },
+        "parameters": {
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Logic/workflows",
+      "apiVersion": "2017-07-01",
+      "name": "[variables('structurerLogicAppName')]",
+      "location": "[resourceGroup().location]",
+      "tags": "[parameters('resourceTags')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/connections','arm')]"
+      ],
+      "properties": {
+        "state": "Enabled",
+        "definition": {
+          "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+          "contentVersion": "1.0.0.0",
+          "parameters": {
+            "$connections": {
+              "defaultValue": {
+              },
+              "type": "Object"
+            }
+          },
+          "triggers": {
+            "manual": {
+              "type": "Request",
+              "kind": "Http",
+              "inputs": {
+                "schema": {
+                }
+              }
+            }
+          },
+          "actions": {
+            "Initialize_structuring_aci_service_variable": {
+              "runAfter": {
+              },
+              "type": "InitializeVariable",
+              "inputs": {
+                "variables": [
+                  {
+                    "name": "structuringAciService",
+                    "type": "string",
+                    "value": "[variables('kgPreprocessorResourceName')]"
+                  }
+                ]
+              }
+            },
+            "Read_current_ACI_resource_status": {
+              "inputs": {
+                "host": {
+                  "connection": {
+                    "name": "@parameters('$connections')['arm']['connectionId']"
+                  }
+                },
+                "method": "get",
+                "path": "[concat('/subscriptions/@{encodeURIComponent(''',subscription().subscriptionId,''')}/resourcegroups/@{encodeURIComponent(''',resourceGroup().name,''')}/providers/@{encodeURIComponent(''Microsoft.ContainerInstance'')}/@{encodeURIComponent(concat(''containerGroups/'', variables(''structuringAciService'')))}')]",
+                "queries": {
+                  "x-ms-api-version": "2018-10-01"
+                }
+              },
+              "runAfter": {
+                "Initialize_structuring_aci_service_variable": [
+                  "Succeeded"
+                ]
+              },
+              "type": "ApiConnection"
+            },
+            "Parse_ACI_status_JSON": {
+              "inputs": {
+                "content": "@body('Read_current_ACI_resource_status')?['properties']",
+                "schema": {
+                  "properties": {
+                    "instanceView": {
+                      "properties": {
+                        "state": {
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "runAfter": {
+                "Read_current_ACI_resource_status": [
+                  "Succeeded"
+                ]
+              },
+              "type": "ParseJson"
+            },
+            "Verify_ACI_is_Stopped": {
+              "actions": {
+                "Start_structuring_service": {
+                  "runAfter": {
+                  },
+                  "type": "ApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connection": {
+                        "name": "@parameters('$connections')['arm']['connectionId']"
+                      }
+                    },
+                    "method": "post",
+                    "path": "[concat('/subscriptions/@{encodeURIComponent(''',subscription().subscriptionId,''')}/resourcegroups/@{encodeURIComponent(''',resourceGroup().name,''')}/providers/@{encodeURIComponent(''Microsoft.ContainerInstance'')}/@{encodeURIComponent(concat(''containerGroups/'', variables(''structuringAciService'')))}/@{encodeURIComponent(''start'')}')]",
+                    "queries": {
+                      "x-ms-api-version": "2018-10-01"
+                    }
+                  }
+                }
+              },
+              "else": {
+                "actions": {
+                  "Send_a_failure_email": {
+                    "inputs": {
+                      "body": {
+                        "Body": "<p>Structuring process is already running.</p>",
+                        "Subject": "[concat('[KG-', parameters('env'), '] ', 'Trials preprocessing aborted')]",
+                        "To": "[parameters('accountId')]"
+                      },
+                      "host": {
+                        "connection": {
+                          "name": "@parameters('$connections')['office365']['connectionId']"
+                        }
+                      },
+                      "method": "post",
+                      "path": "/v2/Mail"
+                    },
+                    "runAfter": {
+                    },
+                    "type": "ApiConnection"
+                  }
+                }
+              },
+              "expression": {
+                "and": [
+                  {
+                    "equals": [
+                      "@body('Parse_ACI_status_JSON')?['instanceView']?['state']",
+                      "Stopped"
+                    ]
+                  }
+                ]
+              },
+              "runAfter": {
+                "Parse_ACI_status_JSON": [
+                  "Succeeded"
+                ]
+              },
+              "type": "If"
+            },
+            "Response_-_200_OK": {
+              "inputs": {
+                "statusCode": 200
+              },
+              "kind": "http",
+              "runAfter": {
+                "Verify_ACI_is_Stopped": [
+                  "Succeeded"
+                ]
+              },
+              "type": "Response"
+            }
+          },
+          "outputs": {
+          }
+        },
+        "parameters": {
+          "$connections": {
+            "value": {
+              "arm": {
+                "connectionId": "[variables('connections_arm_externalid')]",
+                "connectionName": "arm",
+                "id": "[concat(subscription().id,'/providers/Microsoft.Web/locations/', resourceGroup().location,'/managedApis/arm')]"
+              },
+              "office365": {
+                "connectionId": "[variables('connections_office365_externalid')]",
+                "connectionName": "office365",
+                "id": "[concat(subscription().id,'/providers/Microsoft.Web/locations/', resourceGroup().location,'/managedApis/office365')]"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Logic/workflows",
+      "apiVersion": "2017-07-01",
+      "tags": "[parameters('resourceTags')]",
+      "name": "[variables('finisherLogicAppName')]",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/connections','arm')]",
+        "[resourceId('Microsoft.Web/connections','office365')]"
+      ],
+      "properties": {
+        "state": "Enabled",
+        "definition": {
+          "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+          "contentVersion": "1.0.0.0",
+          "parameters": {
+            "$connections": {
+              "defaultValue": {
+              },
+              "type": "Object"
+            }
+          },
+          "triggers": {
+            "manual": {
+              "type": "Request",
+              "kind": "Http",
+              "inputs": {
+                "schema": {
+                  "properties": {
+                    "AddedTrials": {
+                      "items": {
+                        "type": "string"
+                      },
+                      "type": "array"
+                    },
+                    "BuildVersion": {
+                      "type": "string"
+                    },
+                    "FailedTrials": {
+                      "items": {
+                        "type": "string"
+                      },
+                      "type": "array"
+                    },
+                    "FailureMessage": {
+                      "type": "string"
+                    },
+                    "ProcessedTrials": {
+                      "items": {
+                        "type": "string"
+                      },
+                      "type": "array"
+                    },
+                    "RemovedTrials": {
+                      "items": {
+                        "type": "string"
+                      },
+                      "type": "array"
+                    },
+                    "Success": {
+                      "type": "boolean"
+                    },
+                    "TimePassed": {
+                      "type": "string"
+                    },
+                    "UpdatedTrials": {
+                      "items": {
+                        "type": "string"
+                      },
+                      "type": "array"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "actions": {
+            "Initialize_structuringSummary_variable": {
+              "inputs": {
+                "variables": [
+                  {
+                    "name": "structuringSummary",
+                    "type": "object",
+                    "value": {
+                      "added": "@if(equals(triggerBody()?['AddedTrials'], null), 0, length(triggerBody()?['AddedTrials']))",
+                      "buildVersion": "@triggerBody()?['BuildVersion']",
+                      "failed": "@if(equals(triggerBody()?['FailedTrials'], null), 0, length(triggerBody()?['FailedTrials']))",
+                      "failureMessage": "@triggerBody()?['FailureMessage']",
+                      "processed": "@if(equals(triggerBody()?['ProcessedTrials'], null), 0, length(triggerBody()?['ProcessedTrials']))",
+                      "removed": "@if(equals(triggerBody()?['RemovedTrials'], null), 0, length(triggerBody()?['RemovedTrials']))",
+                      "success": "@triggerBody()?['Success']",
+                      "timePassed": "@triggerBody()?['TimePassed']",
+                      "updated": "@if(equals(triggerBody()?['UpdatedTrials'], null), 0, length(triggerBody()?['UpdatedTrials']))"
+                    }
+                  }
+                ]
+              },
+              "runAfter": {
+              },
+              "type": "InitializeVariable"
+            },
+            "Initialize_structuringAci_variable": {
+              "inputs": {
+                "variables": [
+                  {
+                    "name": "structuringAci",
+                    "type": "string",
+                    "value": "[variables('kgPreprocessorResourceName')]"
+                  }
+                ]
+              },
+              "runAfter": {
+                "Initialize_structuringSummary_variable": [
+                  "Succeeded"
+                ]
+              },
+              "type": "InitializeVariable"
+            },
+            "Stop_structuringAci": {
+              "inputs": {
+                "host": {
+                  "connection": {
+                    "name": "@parameters('$connections')['arm']['connectionId']"
+                  }
+                },
+                "method": "post",
+                "path": "[concat('/subscriptions/@{encodeURIComponent(''',subscription().subscriptionId,''')}/resourcegroups/@{encodeURIComponent(''',resourceGroup().name,''')}/providers/@{encodeURIComponent(''Microsoft.ContainerInstance'')}/@{encodeURIComponent(concat(''containerGroups/'', variables(''structuringAci'')))}/@{encodeURIComponent(''stop'')}')]",
+                "queries": {
+                  "x-ms-api-version": "2018-10-01"
+                }
+              },
+              "runAfter": {
+                "Initialize_structuringAci_variable": [
+                  "Succeeded"
+                ]
+              },
+              "type": "ApiConnection"
+            },
+            "Is_structuring_successful": {
+              "actions": {
+                "Send_a_success_email": {
+                  "inputs": {
+                    "body": {
+                      "Body": "<p>Processed @{variables('structuringSummary')['processed']} trials.<br>\nFailed @{variables('structuringSummary')['failed']} trials.<br>\nStructuring process time - @{triggerBody()?['TimePassed']}<br>\nStructuring build version - @{triggerBody()?['BuildVersion']}<br>\n</p>",
+                      "Subject": "[concat('[KG-', parameters('env'), '] ', 'Trials updating process finished successfully')]",
+                      "To": "[parameters('accountId')]"
+                    },
+                    "host": {
+                      "connection": {
+                        "name": "@parameters('$connections')['office365']['connectionId']"
+                      }
+                    },
+                    "method": "post",
+                    "path": "/v2/Mail"
+                  },
+                  "runAfter": {},
+                  "type": "ApiConnection"
+                }
+              },
+              "else": {
+                "actions": {
+                  "Send_a_failure_email": {
+                    "inputs": {
+                      "body": {
+                        "Body": "<p>Failure message - @{triggerBody()?['FailureMessage']}<br>\nStructuring process time - @{triggerBody()?['TimePassed']}<br>\nStructuring build version - @{triggerBody()?['BuildVersion']}</p>",
+                        "Subject": "[concat('[KG-', parameters('env'), '] ', 'Trials updating process failed to complete')]",
+                        "To": "[parameters('accountId')]"
+                      },
+                      "host": {
+                        "connection": {
+                          "name": "@parameters('$connections')['office365']['connectionId']"
+                        }
+                      },
+                      "method": "post",
+                      "path": "/v2/Mail"
+                    },
+                    "runAfter": {
+                    },
+                    "type": "ApiConnection"
+                  }
+                }
+              },
+              "expression": {
+                "and": [
+                  {
+                    "equals": [
+                      "@triggerBody()?['Success']",
+                      true
+                    ]
+                  }
+                ]
+              },
+              "runAfter": {
+                "Stop_structuringAci": [
+                  "Succeeded"
+                ]
+              },
+              "type": "If"
+            }
+          },
+          "outputs": {
+          }
+        },
+        "parameters": {
+          "$connections": {
+            "value": {
+              "arm": {
+                "connectionId": "[variables('connections_arm_externalid')]",
+                "connectionName": "arm",
+                "id": "[concat(subscription().id,'/providers/Microsoft.Web/locations/', resourceGroup().location,'/managedApis/arm')]"
+              },
+              "office365": {
+                "connectionId": "[variables('connections_office365_externalid')]",
+                "connectionName": "office365",
+                "id": "[concat(subscription().id,'/providers/Microsoft.Web/locations/', resourceGroup().location,'/managedApis/office365')]"
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "outputs": {
+    "structuringName": {
+      "type": "string",
+      "value": "[variables('kgPreprocessorResourceName')]"
+    }
+  }
+}

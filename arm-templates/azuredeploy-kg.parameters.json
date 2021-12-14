@@ -1,0 +1,33 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "env": {
+            "value": "prod"
+        },
+        "acrServer": {
+            "value": "ctmprod.azurecr.io"
+        },
+        "acrUsername": {
+            "value": "ctmprodreader"
+        },
+        "acrPassword": {
+            "value": "OQs52KOL+k10otY3ppmWGj6jg2=bdHJ="
+        },
+        "kgPreprocessorImageTag": {
+            "value": "2021.1212.1"
+        },
+        "nlpServicesImageTag": {
+            "value": "2021.1124.1"
+        },
+        "accountId": {
+            "value": "roroktel@microsoft.com"
+        },
+        "resourceTags": {
+            "value": {
+                "Environment": "Prod",
+                "Project": "KnowledgeGraph"
+            }
+        }
+    }
+}

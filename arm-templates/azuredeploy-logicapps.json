@@ -5,14 +5,10 @@
     "serviceName": {
       "type": "string",
       "minLength": 3,
-      "maxLength": 17
+      "maxLength": 16
     },
     "accountId": {
       "type": "string"
-    },
-    "isLiveId": { 
-      "type": "bool",
-      "defaultValue": false
     },
     "functionalTestsFileUrl": {
       "type": "string"
@@ -21,7 +17,7 @@
       "type": "object",
       "defaultValue": {
         "Environment": "Prod",
-        "Project": "FHIR Server"
+        "Project": "Knowledge Graph"
       }
     }
   },
@@ -35,7 +31,6 @@
     "funcTestsAppName": "[concat(parameters('serviceName'),'-ctm-func-tests-webapp')]",
     // Reference to workflow
     "workflows_structurer_logic_app": "[concat(subscription().id,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Logic/workflows/', variables('structurerLogicAppName'))]",
-    "userName": "[if(parameters('isLiveId'), concat('live.com#', parameters('accountId')), parameters('accountId'))]",
     "connections_arm_externalid": "[concat(subscription().id,'/resourceGroups/',resourceGroup().name,'/providers/Microsoft.Web/connections/arm')]",
     "connections_office365_externalid": "[concat(subscription().id,'/resourceGroups/',resourceGroup().name,'/providers/Microsoft.Web/connections/office365')]"
   },
@@ -47,7 +42,7 @@
       "tags": "[parameters('resourceTags')]",
       "location": "[resourceGroup().location]",
       "properties": {
-        "displayName": "[variables('userName')]",
+        "displayName": "[parameters('accountId')]",
         "customParameterValues": {
         },
         "api": {
@@ -62,7 +57,7 @@
       "tags": "[parameters('resourceTags')]",
       "location": "[resourceGroup().location]",
       "properties": {
-        "displayName": "[variables('userName')]",
+        "displayName": "[parameters('accountId')]",
         "customParameterValues": {
         },
         "api": {
