@@ -562,7 +562,7 @@
                     "body": {
                       "Body": "<p>Processed @{variables('structuringSummary')['processed']} trials.<br>\nFailed @{variables('structuringSummary')['failed']} trials.<br>\nFailed Trial Ids @{variables('structuringSummary')['failedTrialIds']} ,<br>\nStructuring process time - @{triggerBody()?['TimePassed']}<br>\nStructuring build version - @{triggerBody()?['BuildVersion']}<br>\n</p>",
                       "Subject": "[concat('[KG-', parameters('env'), '] ', 'Trials updating process finished successfully')]",
-                      "To": "[parameters('accountId')]"
+                      "To": "[parameters('recipients')]"
                     },
                     "host": {
                       "connection": {
@@ -583,7 +583,7 @@
                       "body": {
                         "Body": "<p>Failure message - @{triggerBody()?['FailureMessage']}<br>\nProcessed @{variables('structuringSummary')['processed']} trials.<br>\nFailed @{variables('structuringSummary')['failed']} trials.<br>\nFailed Trial Ids @{variables('structuringSummary')['failedTrialIds']} ,<br>\nStructuring process time - @{triggerBody()?['TimePassed']}<br>\nStructuring build version - @{triggerBody()?['BuildVersion']}</p>",
                         "Subject": "[concat('[KG-', parameters('env'), '] ', 'Trials updating process failed to complete')]",
-                        "To": "[parameters('accountId')]"
+                        "To": "[parameters('recipients')]"
                       },
                       "host": {
                         "connection": {
