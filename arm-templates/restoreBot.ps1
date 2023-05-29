@@ -76,7 +76,7 @@ $botTemplateString = [System.Text.Encoding]::UTF8.GetString($botTemplate.Content
 
 $jwtToken = New-Jwt -headers $headers -payload $payload -secret $secret
 
-write-host "jwtToken created"
+Write-Warning "jwtToken created"
 
 $apiUrl = $baseUrl.Replace('/account', '/api/account') + '/backup'
 
@@ -84,7 +84,7 @@ $headers = @{
     Authorization = 'Bearer ' + $jwtToken
 }
 
-write-host "api url created: $apiUrl."
+Write-Warning "api url created: $apiUrl."
 
 # replace env varibles placeholders in template with its actual value by using ExpandEnvironmentVariables
 # and convert to json
@@ -92,7 +92,7 @@ $body = @{
     hbs = $botTemplateString.TrimEnd() | ForEach-Object { [Environment]::ExpandEnvironmentVariables($_) } 
 } | ConvertTo-Json -Depth 5
 
-write-host "body created. length: $body.Length"
+Write-Warning "body created. length: $body.Length"
 
 $result = Invoke-WebRequest -Uri $apiUrl `
     -Method "post" `
@@ -100,6 +100,6 @@ $result = Invoke-WebRequest -Uri $apiUrl `
     -ContentType "application/json; charset=utf-8" `
     -Body $body
 
-write-host "bot created"
+Write-Warning "bot created"
 
-write-host $result
+Write-Warning $result
