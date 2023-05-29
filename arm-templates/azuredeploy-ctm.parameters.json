@@ -2,68 +2,11 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "serviceName": {
+        "matchingBotName": {
             "value": "##TO BE DEFINED##"
         },
-        "postgreSqlAdministratorLogin": {
+        "healthInsightName": {
             "value": "## TO BE DEFINED ##"
-        },
-        "postgreSqladministratorLoginPassword": {
-            "value": "## TO BE DEFINED ##"
-        },
-        "acrPassword": {
-            "value": "## TO BE DEFINED ##"
-        },
-        "env": {
-            "value": "prod_us"
-        },
-        "acrServer": {
-            "value": "ctmprod.azurecr.io"
-        },
-        "acrUsername": {
-            "value": "ctmprodreader"
-        },
-        "structuringImageTag": {
-            "value": "2020.0528.1"
-        },
-        "queryEngineImageTag": {
-            "value": "2020.0528.1"
-        },
-        "disqualifierImageTag": {
-            "value": "2020.0528.1"
-        },
-        "nlpServicesImageTag": {
-            "value": "2020.0531.5"
-        },
-        "ta4hImageTag": {
-            "value": "2020.0510.1"
-        },
-        "gatewayImageTag": {
-            "value": "2020.0510.1"
-        },
-        "queryCountry": {
-            "value": "us"
-        },
-        "queryPhases": {
-            "value": "phase_1;phase_2;phase_3;phase_4;not_applicable"
-        },
-        "queryRecruitment": {
-            "value": "recruiting"
-        },
-        "querySponsors": {
-            "value": ""
-        },
-        "queryConditions": {
-            "value": ""
-        },
-        "resourceTags": {
-            "value": {
-                "Environment": "Prod",
-                "Project": "CTM"
-            }
-        },
-        "isSecondary": {
-            "value": false
         }
     }
 }

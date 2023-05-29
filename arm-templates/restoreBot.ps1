@@ -40,8 +40,8 @@ Function New-Jwt {
         , [Parameter(Mandatory = $true)][System.Collections.Specialized.OrderedDictionary]$payload
         , [Parameter(Mandatory = $true)][string]$secret
     )
-    $headersJson = $headers | ConvertTo-Json -Compress
-    $payloadJson = $payload | ConvertTo-Json -Compress
+    $headersJson = $headers | ConvertTo-Json -Compress 
+    $payloadJson = $payload | ConvertTo-Json -Compress -Depth 5
     $headersEncoded = Get-Base64UrlEncodeFromString -inputString $headersJson #[System.Convert]::ToBase64String([System.Text.Encoding]::ASCII.GetBytes($headersJson),[Base64FormattingOptions]::None)
     $payloadEncoded = Get-Base64UrlEncodeFromString -inputString $payloadJson #[System.Convert]::ToBase64String([System.Text.Encoding]::ASCII.GetBytes($payloadJson),[Base64FormattingOptions]::None)
 

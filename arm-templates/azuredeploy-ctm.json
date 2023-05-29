@@ -4,13 +4,13 @@
   "parameters": {
     "matchingBotName": {
       "type": "string",
-      "defaultValue": "ctm-healthbot-template",
+      "defaultValue": "ctm-healthbot-demo",
       "minLength": 3,
       "maxLength": 25
     },
     "healthInsightName": {
       "type": "string",
-      "defaultValue": "healthinsights-cog",
+      "defaultValue": "healthinsights-ctm-cog",
       "minLength": 3,
       "maxLength": 25
     },
@@ -74,28 +74,28 @@
         "containerSettings": {
           "containerGroupName": "healthbot-deploy-script"
         },
-        "storageAccountSettings": {
-          "storageAccountName": "healthbot-deploy-storage",
-          "storageAccountKey": "healthbot-deploy-storage-key"
-        },
+        // "storageAccountSettings": {
+        //   "storageAccountName": "healthbot-deploy-storage",
+        //   "storageAccountKey": "healthbot-deploy-storage-key"
+        // },
         "azPowerShellVersion": "9.7",
         "arguments": "[concat('-secret ',
           listSecrets(resourceId('Microsoft.HealthBot/healthBots',
-          parameters('matchingBotName')), '2022-08-08').secrets[0].value,
+          parameters('matchingBotName')), '2022-08-08').secrets[2].value,
           ' -baseUrl ',
           reference(resourceId('Microsoft.HealthBot/healthBots',
           parameters('matchingBotName')),
-          '2022-08-08').properties.endpoint,
-          ' -hbsRestoreFile ./bot-templates/ctm-bot.json')]",
+          '2022-08-08').botManagementPortalLink,
+          ' -hbsRestoreFile https://raw.githubusercontent.com/microsoft/ClinicalTrialsBlueprint/task/tolehman/migrate_to_health_insights_api/bot-templates/ctm-bot.json')]",
         "environmentVariables": [
-          {
-            "name": "UserName",
-            "value": "jdole"
-          },
-          {
-            "name": "Password",
-            "secureValue": "jDolePassword"
-          }
+          // {
+          //   "name": "UserName",
+          //   "value": "jdole"
+          // },
+          // {
+          //   "name": "Password",
+          //   "secureValue": "jDolePassword"
+          // }
         ],
         // "scriptContent": "
         //     param([string] $name)
@@ -105,7 +105,7 @@
         //     $DeploymentScriptOutputs['text'] = $output
         //   ", // or 
         // "primaryScriptUri": "https://raw.githubusercontent.com/Azure/azure-docs-json-samples/master/deployment-script/deploymentscript-helloworld.ps1",
-        "primaryScriptUri": "./restoreBot.ps1",
+        "primaryScriptUri": "https://raw.githubusercontent.com/microsoft/ClinicalTrialsBlueprint/task/tolehman/migrate_to_health_insights_api/arm-templates/restoreBot.ps1",
         "supportingScriptUris": [],
         "timeout": "PT30M",
         "cleanupPreference": "OnSuccess",
@@ -132,7 +132,7 @@
     },
     "healthBotKey": {
       "type": "securestring",
-      "value": "[listSecrets(resourceId('Microsoft.HealthBot/healthBots', parameters('matchingBotName')), '2022-08-08').secrets[0].value]"
-    },
+      "value": "[listSecrets(resourceId('Microsoft.HealthBot/healthBots', parameters('matchingBotName')), '2022-08-08').secrets[2].value]"
+    }
   }
 }
