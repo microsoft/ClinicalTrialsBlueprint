@@ -41,7 +41,7 @@ Function New-Jwt {
         , [Parameter(Mandatory = $true)][string]$secret
     )
     $headersJson = $headers | ConvertTo-Json -Compress 
-    $payloadJson = $payload | ConvertTo-Json -Compress -Depth 5
+    $payloadJson = $payload | ConvertTo-Json -Compress
     $headersEncoded = Get-Base64UrlEncodeFromString -inputString $headersJson #[System.Convert]::ToBase64String([System.Text.Encoding]::ASCII.GetBytes($headersJson),[Base64FormattingOptions]::None)
     $payloadEncoded = Get-Base64UrlEncodeFromString -inputString $payloadJson #[System.Convert]::ToBase64String([System.Text.Encoding]::ASCII.GetBytes($payloadJson),[Base64FormattingOptions]::None)
 
@@ -82,9 +82,11 @@ $headers = @{
     Authorization = 'Bearer ' + $jwtToken
 }
 
+# replace env varibles placeholders in template with its actual value by using ExpandEnvironmentVariables
+# and convert to json
 $body = @{
-    hbs = $botTemplateString.TrimEnd()
-} | ConvertTo-Json
+    hbs = $botTemplateString.TrimEnd() | ForEach-Object { [Environment]::ExpandEnvironmentVariables($_) } 
+} | ConvertTo-Json -Depth 5
 
 $result = Invoke-WebRequest -Uri $apiUrl `
     -Method "post" `
