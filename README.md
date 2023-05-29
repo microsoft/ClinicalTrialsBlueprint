@@ -9,6 +9,9 @@ git clone https://github.com/microsoft/ClinicalTrialsBlueprint
 cd ClinicalTrialsBlueprint
 ```
 
+> **Warning**
+> This document is depracated. bot, LUIS and cognitive service resources should be deployed via the azure portal
+
 [Install the Azure PowerShell module](https://docs.microsoft.com/en-us/powershell/azure/install-az-ps?view=azps-3.3.0)
 
 ## Connect to Azure Subscription
