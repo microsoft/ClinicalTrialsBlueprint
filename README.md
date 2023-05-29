@@ -1,3 +1,6 @@
+New-AzResourceGroup -Name test-ctm-template -Location "East US"
+New-AzResourceGroupDeployment -ResourceGroupName test-ctm-template  -TemplateFile .\arm-templates\azuredeploy-ctm.json
+
 # Clinical Trials Matching Service Blueprint
 
 ## Requirements

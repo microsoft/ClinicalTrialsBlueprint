@@ -76,6 +76,8 @@ $botTemplateString = [System.Text.Encoding]::UTF8.GetString($botTemplate.Content
 
 $jwtToken = New-Jwt -headers $headers -payload $payload -secret $secret
 
+write-host "jwtToken created"
+
 $apiUrl = $baseUrl.Replace('/account', '/api/account') + '/backup'
 
 $headers = @{
@@ -88,10 +90,14 @@ $body = @{
     hbs = $botTemplateString.TrimEnd() | ForEach-Object { [Environment]::ExpandEnvironmentVariables($_) } 
 } | ConvertTo-Json -Depth 5
 
+write-host "body created. length: $body.Length"
+
 $result = Invoke-WebRequest -Uri $apiUrl `
     -Method "post" `
     -Headers $headers `
     -ContentType "application/json; charset=utf-8" `
     -Body $body
+
+write-host "bot created"
 
 write-host $result
