@@ -84,6 +84,8 @@ $headers = @{
     Authorization = 'Bearer ' + $jwtToken
 }
 
+write-host "api url created: $apiUrl."
+
 # replace env varibles placeholders in template with its actual value by using ExpandEnvironmentVariables
 # and convert to json
 $body = @{
