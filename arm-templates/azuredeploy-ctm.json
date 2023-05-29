@@ -4,7 +4,7 @@
   "parameters": {
     "matchingBotName": {
       "type": "string",
-      "defaultValue": "ctm-healthbot-demo2",
+      "defaultValue": "ctm-healthbot-demo",
       "minLength": 3,
       "maxLength": 25
     },
@@ -88,14 +88,14 @@
           '2022-08-08').botManagementPortalLink,
           ' -hbsRestoreFile https://raw.githubusercontent.com/microsoft/ClinicalTrialsBlueprint/task/tolehman/migrate_to_health_insights_api/bot-templates/ctm-bot.json')]",
         "environmentVariables": [
-          // {
-          //   "name": "UserName",
-          //   "value": "jdole"
-          // },
-          // {
-          //   "name": "Password",
-          //   "secureValue": "jDolePassword"
-          // }
+          {
+            "name": "HEALTH_INSIGHT_ENDPOINT",
+            "value": "[reference(resourceId('Microsoft.CognitiveServices/accounts', parameters('healthInsightName')), '2022-12-01').endpoint]"
+          },
+          {
+            "name": "HEALTH_INSIGHT_KEY",
+            "secureValue": "[listKeys(resourceId('Microsoft.CognitiveServices/accounts', parameters('healthInsightName')), '2022-12-01').key1]"
+          }
         ],
         // "scriptContent": "
         //     param([string] $name)

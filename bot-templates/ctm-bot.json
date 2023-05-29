@@ -2,7 +2,7 @@
     "dataConnections": [
         {
             "auth_provider": "",
-            "base_url": "<health insight endpoint>",
+            "base_url": "getEnv(\"health-insight-endpoint\")",
             "description": "health insight endpoint",
             "name": "healthinsight-async",
             "type": "custom",
@@ -74,7 +74,11 @@
             "variables": [
                 {
                     "name": "ocp-key",
-                    "value": "<health insight key>"
+                    "value": "HEALTH_INSIGHT_KEY"
+                },
+                {
+                    "name": "health-insight-endpoint",
+                    "value": "HEALTH_INSIGHT_ENDPOINT"
                 },
                 {
                     "name": "hds-version",
