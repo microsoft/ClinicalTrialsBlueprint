@@ -74,11 +74,11 @@
             "variables": [
                 {
                     "name": "ocp-key",
-                    "value": "HEALTH_INSIGHT_KEY"
+                    "value": "%HEALTH_INSIGHT_KEY%"
                 },
                 {
                     "name": "health-insight-endpoint",
-                    "value": "HEALTH_INSIGHT_ENDPOINT"
+                    "value": "%HEALTH_INSIGHT_ENDPOINT%"
                 },
                 {
                     "name": "hds-version",

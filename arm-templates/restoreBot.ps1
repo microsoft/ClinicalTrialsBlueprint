@@ -72,7 +72,8 @@ $botTemplate = Invoke-WebRequest `
     -Uri $hbsRestoreFile `
     -Method "get" 
 
-$botTemplateString = [System.Text.Encoding]::UTF8.GetString($botTemplate.Content)
+# $botTemplateString = [System.Text.Encoding]::UTF8.GetString($botTemplate.Content)
+$botTemplateString = $botTemplate.Content
 
 $jwtToken = New-Jwt -headers $headers -payload $payload -secret $secret
 
@@ -84,22 +85,24 @@ $headers = @{
     Authorization = 'Bearer ' + $jwtToken
 }
 
-Write-Warning "api url created: $apiUrl."
+Write-Warning "api url: $apiUrl."
 
+Get-ChildItem Env:
 # replace env varibles placeholders in template with its actual value by using ExpandEnvironmentVariables
-# and convert to json
-$body = @{
-    hbs = $botTemplateString.TrimEnd() | ForEach-Object { [Environment]::ExpandEnvironmentVariables($_) } 
-} | ConvertTo-Json -Depth 5
+# and convert to file
+# $botTemplateString = $botTemplateString | ForEach-Object { [Environment]::ExpandEnvironmentVariables($_) }
+$botTemplateString = $botTemplateString | ForEach-Object { Write-Warning ([Environment]::ExpandEnvironmentVariables($_)) }
+$botTemplateString = $botTemplateString.TrimEnd()
 
-Write-Warning "body created. length: $body.Length"
+$body = @{
+    hbs = $botTemplateString
+} | ConvertTo-Json -Depth 10
 
 $result = Invoke-WebRequest -Uri $apiUrl `
     -Method "post" `
     -Headers $headers `
     -ContentType "application/json; charset=utf-8" `
     -Body $body
+    # -InFile "./temp.json" `
 
-Write-Warning "bot created"
-
-Write-Warning $result
+Write-Warning "bot template creation result: $result"
