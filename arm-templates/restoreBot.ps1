@@ -90,9 +90,7 @@ Write-Warning "api url: $apiUrl."
 Get-ChildItem Env:
 # replace env varibles placeholders in template with its actual value by using ExpandEnvironmentVariables
 # and convert to file
-# $botTemplateString = $botTemplateString | ForEach-Object { [Environment]::ExpandEnvironmentVariables($_) }
-$botTemplateString = $botTemplateString | ForEach-Object { Write-Warning ([Environment]::ExpandEnvironmentVariables($_)) }
-$botTemplateString = $botTemplateString.TrimEnd()
+$botTemplateString = $botTemplateString.TrimEnd() | ForEach-Object { [Environment]::ExpandEnvironmentVariables($_) }
 
 $body = @{
     hbs = $botTemplateString
