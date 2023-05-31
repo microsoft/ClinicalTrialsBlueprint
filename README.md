@@ -1,5 +1,6 @@
-New-AzResourceGroup -Name test-ctm-template -Location "East US"
-New-AzResourceGroupDeployment -ResourceGroupName test-ctm-template  -TemplateFile .\arm-templates\azuredeploy-ctm.json
+az group create --name yochai-rg-test -l eastus
+az deployment group create --resource-group yochai-rg-test --template-file .\arm-templates\azuredeploy-ctm.json
+az bicep build --file .\arm-templates\main.bicep
 
 # Clinical Trials Matching Service Blueprint
 

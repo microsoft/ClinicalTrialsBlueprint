@@ -6,6 +6,10 @@ param matchingBotName string = 'ctm-healthbot-demo'
 @maxLength(25)
 param healthInsightName string = 'healthinsights-ctm-cog'
 
+@minLength(3)
+@maxLength(25)
+param languageUnderstandingName string = 'CLU-ctm-cog'
+
 param resourceTags object = {
   Environment: 'Prod'
   Project: 'Health Insight Trial Matching bot'
@@ -47,12 +51,51 @@ resource runPowerShellInline 'Microsoft.Resources/deploymentScripts@2020-10-01' 
     // }
     azPowerShellVersion: '9.7'
     arguments: '-secret ${healthbot.listSecrets().secrets[2].value} -baseUrl ${healthbot.properties.botManagementPortalLink}  -hbsRestoreFile https://raw.githubusercontent.com/microsoft/ClinicalTrialsBlueprint/task/tolehman/migrate_to_health_insights_api/bot-templates/ctm-bot.json'
-    environmentVariables: []
-    primaryScriptUri: 'https://raw.githubusercontent.com/microsoft/ClinicalTrialsBlueprint/task/tolehman/migrate_to_health_insights_api/arm-templates/restoreBot.ps1'
-    supportingScriptUris: []
+    environmentVariables: [
+      {
+        name: 'HEALTH_INSIGHT_ENDPOINT'
+        value: healthInsight.properties.endpoint
+      }
+      {
+        name: 'HEALTH_INSIGHT_KEY'
+        value: healthInsight.listKeys().key1
+      }
+      {
+        name: 'CLU_KEY'
+        value: lungUnderstanding.properties.endpoint
+      }
+      {
+        name: 'CLU_ENDPOINT'
+        value: lungUnderstanding.listKeys().key1
+      }
+    ]
+    scriptContent: '''
+      ./restoreBot.ps1
+      ./restoreLanguageUnderstanding.ps1
+    '''
+    supportingScriptUris: [
+      'https://raw.githubusercontent.com/microsoft/ClinicalTrialsBlueprint/task/tolehman/migrate_to_health_insights_api/arm-templates/restoreBot.ps1'
+      'https://raw.githubusercontent.com/microsoft/ClinicalTrialsBlueprint/task/tolehman/migrate_to_health_insights_api/arm-templates/restoreLanguageUnderstanding.ps1'
+    ]
     timeout: 'PT30M'
     cleanupPreference: 'OnSuccess'
     retentionInterval: 'P1D'
+  }
+}
+
+resource lungUnderstanding 'Microsoft.CognitiveServices/accounts@2022-12-01' = {
+  name: languageUnderstandingName
+  location: location
+  sku: {
+    name: 'F0'
+  }
+  kind: 'TextAnalytics'
+  identity: {
+    type: 'None'
+  }
+  properties: {
+    customSubDomainName: languageUnderstandingName
+    publicNetworkAccess: 'Enabled'
   }
 }
 
