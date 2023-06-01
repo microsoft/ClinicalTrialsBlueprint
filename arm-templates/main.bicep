@@ -16,6 +16,7 @@ param resourceTags object = {
 }
 
 param location string = resourceGroup().location
+param fileLocation string = 'https://raw.githubusercontent.com/microsoft/ClinicalTrialsBlueprint/task/tolehman/migrate_to_health_insights_api/'
 
 resource healthbot 'Microsoft.HealthBot/healthBots@2022-08-08' = {
   name: matchingBotName
@@ -50,7 +51,13 @@ resource runPowerShellInline 'Microsoft.Resources/deploymentScripts@2020-10-01' 
     //   containerGroupName: 'healthbot-deploy-script'
     // }
     azPowerShellVersion: '9.7'
-    arguments: '-secret ${healthbot.listSecrets().secrets[2].value} -baseUrl ${healthbot.properties.botManagementPortalLink}  -hbsRestoreFile https://raw.githubusercontent.com/microsoft/ClinicalTrialsBlueprint/task/tolehman/migrate_to_health_insights_api/bot-templates/ctm-bot.json'
+    arguments: '''
+      botEndpoint=${healthbot.properties.botManagementPortalLink}
+      botSecret=${healthbot.listKeys().properties[0].value}
+      cuiEndpoint=${healthInsight.properties.endpoint}
+      cuiKey=${healthInsight.listKeys().key1}
+      fileLocation=${fileLocation}
+    '''
     environmentVariables: [
       {
         name: 'HEALTH_INSIGHT_ENDPOINT'
@@ -69,13 +76,10 @@ resource runPowerShellInline 'Microsoft.Resources/deploymentScripts@2020-10-01' 
         value: lungUnderstanding.listKeys().key1
       }
     ]
-    scriptContent: '''
-      ./restoreBot.ps1
-      ./restoreLanguageUnderstanding.ps1
-    '''
+    primaryScriptUri: '${fileLocation}/scripts/main-restore.ps1'
     supportingScriptUris: [
-      'https://raw.githubusercontent.com/microsoft/ClinicalTrialsBlueprint/task/tolehman/migrate_to_health_insights_api/arm-templates/restoreBot.ps1'
-      'https://raw.githubusercontent.com/microsoft/ClinicalTrialsBlueprint/task/tolehman/migrate_to_health_insights_api/arm-templates/restoreLanguageUnderstanding.ps1'
+      '${fileLocation}/scripts/restoreBot.ps1'
+      '${fileLocation}/scripts/restoreLanguageUnderstanding.ps1'
     ]
     timeout: 'PT30M'
     cleanupPreference: 'OnSuccess'
