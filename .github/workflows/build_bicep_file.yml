@@ -19,7 +19,7 @@ jobs:
         uses: Azure/cli@v1.0.7
         with:
           # Specify the script here
-          inlineScript: az bicep build --file .\arm-templates\main.bicep    
+          inlineScript: az bicep build --file ./arm-templates/main.bicep
       - name: Update ARM Template json file
         uses: mikeal/publish-to-github-action@master
         env:
