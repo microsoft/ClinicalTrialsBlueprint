@@ -5,13 +5,13 @@
     "_generator": {
       "name": "bicep",
       "version": "0.17.1.54307",
-      "templateHash": "1792877439935595405"
+      "templateHash": "7479803588707675195"
     }
   },
   "parameters": {
     "matchingBotName": {
       "type": "string",
-      "defaultValue": "ctm-healthbot-test",
+      "defaultValue": "ctm-healthbot-demo",
       "maxLength": 25,
       "minLength": 3
     },
@@ -71,6 +71,49 @@
       "tags": "[parameters('resourceTags')]"
     },
     {
+      "type": "Microsoft.Resources/deploymentScripts",
+      "apiVersion": "2020-10-01",
+      "name": "runPowerShellInline",
+      "tags": "[parameters('resourceTags')]",
+      "kind": "AzurePowerShell",
+      "location": "[parameters('location')]",
+      "properties": {
+        "forceUpdateTag": "1",
+        "azPowerShellVersion": "9.7",
+        "arguments": "      botEndpoint=${healthbot.properties.botManagementPortalLink}\r\n      botSecret=${healthbot.listKeys().properties[0].value}\r\n      cuiEndpoint=${healthInsight.properties.endpoint}\r\n      cuiKey=${healthInsight.listKeys().key1}\r\n      fileLocation=${fileLocation}\r\n    ",
+        "environmentVariables": [
+          {
+            "name": "HEALTH_INSIGHT_ENDPOINT",
+            "value": "[reference(resourceId('Microsoft.CognitiveServices/accounts', parameters('healthInsightName')), '2022-12-01').endpoint]"
+          },
+          {
+            "name": "HEALTH_INSIGHT_KEY",
+            "value": "[listKeys(resourceId('Microsoft.CognitiveServices/accounts', parameters('healthInsightName')), '2022-12-01').key1]"
+          },
+          {
+            "name": "CLU_KEY",
+            "value": "[reference(resourceId('Microsoft.CognitiveServices/accounts', parameters('languageUnderstandingName')), '2022-12-01').endpoint]"
+          },
+          {
+            "name": "CLU_ENDPOINT",
+            "value": "[listKeys(resourceId('Microsoft.CognitiveServices/accounts', parameters('languageUnderstandingName')), '2022-12-01').key1]"
+          }
+        ],
+        "primaryScriptUri": "[format('{0}/scripts/main-restore.ps1', parameters('fileLocation'))]",
+        "supportingScriptUris": [
+          "[format('{0}/scripts/restoreBot.ps1', parameters('fileLocation'))]",
+          "[format('{0}/scripts/restoreLanguageUnderstanding.ps1', parameters('fileLocation'))]"
+        ],
+        "timeout": "PT30M",
+        "cleanupPreference": "OnSuccess",
+        "retentionInterval": "P1D"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.CognitiveServices/accounts', parameters('healthInsightName'))]",
+        "[resourceId('Microsoft.CognitiveServices/accounts', parameters('languageUnderstandingName'))]"
+      ]
+    },
+    {
       "type": "Microsoft.CognitiveServices/accounts",
       "apiVersion": "2022-12-01",
       "name": "[parameters('languageUnderstandingName')]",
@@ -89,6 +132,10 @@
     }
   ],
   "outputs": {
+    "healthInsightEndpoint": {
+      "type": "string",
+      "value": "[reference(resourceId('Microsoft.CognitiveServices/accounts', parameters('healthInsightName')), '2022-12-01').endpoint]"
+    },
     "healthBotEndpoint": {
       "type": "string",
       "value": "[reference(resourceId('Microsoft.HealthBot/healthBots', parameters('matchingBotName')), '2022-08-08').botManagementPortalLink]"
