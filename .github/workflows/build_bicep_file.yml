@@ -20,7 +20,13 @@ jobs:
         with:
           # Specify the script here
           inlineScript: az bicep build --file ./arm-templates/main.bicep
-      - name: Update ARM Template json file
-        uses: mikeal/publish-to-github-action@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#       - name: Update ARM Template json file
+#         uses: mikeal/publish-to-github-action@master
+#         env:
+#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload files to a GitHub release
+        uses: svenstaro/upload-release-action@2.6.1
+        with:
+          file: ./arm-templates/main.json
+
