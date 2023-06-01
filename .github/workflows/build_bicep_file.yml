@@ -12,6 +12,7 @@ jobs:
     permissions:
       contents: read
       packages: write
+      deployments: write
       
     steps:
       - uses: actions/checkout@v3
