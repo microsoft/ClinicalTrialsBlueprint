@@ -1,8 +1,8 @@
 param (
     [Parameter(Mandatory=$true)]
-    [string]$cuiEndpoint, 
+    [string]$botEndpoint, 
     [Parameter(Mandatory=$true)]
-    [string]$cuiKey,
+    [string]$botSecret,
     [Parameter(Mandatory=$true)]
     [string]$fileLocation
 )
@@ -76,25 +76,24 @@ $payload = [ordered]@{
 }
 
 $botTemplate = Invoke-WebRequest `
-    -Uri $fileLocation + "bot-templates/ctm-bot.json" `
+    -Uri "$fileLocation/bot-templates/ctm-bot.json" `
     -Method "get" 
 
 # $botTemplateString = [System.Text.Encoding]::UTF8.GetString($botTemplate.Content)
 $botTemplateString = $botTemplate.Content
 
-$jwtToken = New-Jwt -headers $headers -payload $payload -secret $secret
+$jwtToken = New-Jwt -headers $headers -payload $payload -secret $botSecret
 
 Write-Warning "jwtToken created"
 
-$apiUrl = $endpoint.Replace('/account', '/api/account') + '/backup'
+$apiUrl = $botEndpoint.Replace('/account', '/api/account') + '/backup'
 
 $headers = @{
     Authorization = 'Bearer ' + $jwtToken
 }
 
-Write-Warning "api url: $apiUrl."
+Write-Warning "api url: $apiUrl"
 
-Get-ChildItem Env:
 # replace env varibles placeholders in template with its actual value by using ExpandEnvironmentVariables
 # and convert to file
 $botTemplateString = $botTemplateString.TrimEnd() | ForEach-Object { [Environment]::ExpandEnvironmentVariables($_) }
@@ -104,7 +103,7 @@ $body = @{
 } | ConvertTo-Json -Depth 10
 
 $result = Invoke-WebRequest -Uri $apiUrl `
-    -Method "post" `
+    -Method "POST" `
     -Headers $headers `
     -ContentType "application/json; charset=utf-8" `
     -Body $body

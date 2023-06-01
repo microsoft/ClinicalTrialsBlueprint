@@ -11,5 +11,14 @@ param (
     [string]$fileLocation
 )
 
-./restoreBot.ps1 -botEndpoint $botEndpoint -botSecret $botSecret -fileLocation $fileLocation
-./restoreLanguageUnderstanding.ps1 -cuiEndpoint $cuiEndpoint -cuiKey $cuiKey -fileLocation $fileLocation
+# debug: print env varibles
+# Get-ChildItem Env:
+
+# get path
+$ScriptPath = Split-Path $MyInvocation.InvocationName
+
+# restore language understanding model
+Invoke-Expression "$ScriptPath/RestoreLanguageUnderstanding.ps1 -cuiEndpoint $cuiEndpoint -cuiKey $cuiKey -fileLocation $fileLocation"
+
+# restore bot
+Invoke-Expression  "$ScriptPath/RestoreBot.ps1 -botEndpoint $botEndpoint -botSecret $botSecret -fileLocation $fileLocation"
