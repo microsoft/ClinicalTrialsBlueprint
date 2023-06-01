@@ -30,4 +30,6 @@ jobs:
         uses: svenstaro/upload-release-action@2.6.1
         with:
           file: ./arm-templates/main.json
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
