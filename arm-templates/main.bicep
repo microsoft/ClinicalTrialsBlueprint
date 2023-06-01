@@ -68,7 +68,7 @@ resource runPowerShellInline 'Microsoft.Resources/deploymentScripts@2020-10-01' 
         value: healthInsight.listKeys().key1
       }
       {
-        name: 'CLU_KEY'
+        name: 'CLU_SUBSCRIPTION_KEY'
         value: lungUnderstanding.properties.endpoint
       }
       {
