@@ -3,6 +3,10 @@ name: build Bicep file and Update ARM template
 on:
   release:
     types: [created]
+    
+  workflow_run:
+    workflows: ""
+    branches: ["master"]
 
 jobs:
   publish-gpr:
