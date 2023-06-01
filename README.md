@@ -4,7 +4,7 @@ az deployment group create --resource-group yochai-rg-test --template-file .\arm
 az bicep build --file .\arm-templates\main.bicep
 
 ## One click deployemnt
-[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://raw.githubusercontent.com/microsoft/ClinicalTrialsBlueprint/task/tolehman/migrate_to_health_insights_api/arm-templates.json)
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://github.com/microsoft/ClinicalTrialsBlueprint/releases/download/master/main.json)
 
 
 ## One click deployemnt
