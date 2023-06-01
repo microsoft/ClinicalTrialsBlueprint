@@ -76,7 +76,7 @@
                 },
                 {
                     "name": "clu-subscription-key",
-                    "value": "%CLU_SUBSCRIPTION_KEY%"
+                    "value": "%CLU_KEY%"
                 },
                 {
                     "name": "clu-endpoint",
