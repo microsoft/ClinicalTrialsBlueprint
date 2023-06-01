@@ -8,9 +8,9 @@ az bicep build --file .\arm-templates\main.bicep
 
 
 ## One click deployemnt
-### Requirments
+### [Requirments](https://learn.microsoft.com/en-us/azure/azure-resource-manager/bicep/deploy-powershell#prerequisites)
 [Install the Azure PowerShell module](https://docs.microsoft.com/en-us/powershell/azure/install-az-ps)
-
+[Install the Azure Biucep module](https://learn.microsoft.com/en-us/azure/azure-resource-manager/bicep/install#install-manually)
 ### Connect to Azure Subscription
 ```PowerShell
 Login-AzAccount
@@ -24,4 +24,4 @@ $ctmRg = New-AzResourceGroup -Name <resources group name> -Location eastus
 ```
 
 ### Run Deployment
-New-AzResourceGroupDeployment -ResourceGroupName $ctmRg -TemplateFile .\arm-templates\main.json
+New-AzResourceGroupDeployment -ResourceGroupName $ctmRg -TemplateFile .\arm-templates\main.bicep
