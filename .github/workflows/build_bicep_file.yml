@@ -15,10 +15,6 @@ jobs:
       
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 16
-          registry-url: https://npm.pkg.github.com/
       - name: Build Arm Template From Bicep
         uses: Azure/cli@v1.0.7
         with:
