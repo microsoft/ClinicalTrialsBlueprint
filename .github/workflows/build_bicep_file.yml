@@ -1,9 +1,8 @@
 name: build Bicep file and Update ARM template
 
 on:
-  merge_group:
-    branches: ["master", "task/tolehman/migrate_to_health_insights_api"]
-      
+  push:
+    branches: ["master"]
   workflow_dispatch:
 
 jobs:
