@@ -5,8 +5,9 @@ on:
     types: [created]
     
   workflow_run:
-    workflows: ""
-    branches: ["master"]
+      branches: ["master", "task/tolehman/migrate_to_health_insights_api"]
+      
+  workflow_dispatch:
 
 jobs:
   publish-gpr:
