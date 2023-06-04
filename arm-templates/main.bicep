@@ -48,7 +48,7 @@ resource runPowerShellInline 'Microsoft.Resources/deploymentScripts@2020-10-01' 
   properties: {
     forceUpdateTag: '1'
     azPowerShellVersion: '9.7'
-    arguments: '-botEndpoint ${healthbot.properties.botManagementPortalLink} -botSecret ${healthbot.listSecrets().secrets[2].value} -cuiEndpoint ${healthInsight.properties.endpoint} -cuiKey ${healthInsight.listKeys().key1} -fileLocation ${fileLocation}'
+    arguments: '-fileLocation ${fileLocation}'
     environmentVariables: [
       {
         name: 'HEALTH_INSIGHT_ENDPOINT'
@@ -59,12 +59,20 @@ resource runPowerShellInline 'Microsoft.Resources/deploymentScripts@2020-10-01' 
         value: healthInsight.listKeys().key1
       }
       {
-        name: 'CLU_KEY'
+        name: 'CLU_ENDPOINT'
         value: lungUnderstanding.properties.endpoint
       }
       {
-        name: 'CLU_ENDPOINT'
+        name: 'CLU_KEY'
         value: lungUnderstanding.listKeys().key1
+      }
+      {
+        name: 'HEALTH_BOT_ENDPOINT'
+        value: healthbot.properties.botManagementPortalLink
+      }
+      {
+        name: 'HEALTH_BOT_SECRET'
+        value: healthbot.listSecrets().secrets[2].value
       }
     ]
     primaryScriptUri: '${fileLocation}/scripts/MainRestore.ps1'

@@ -1,11 +1,10 @@
 param (
     [Parameter(Mandatory=$true)]
-    [string]$cuiEndpoint, 
-    [Parameter(Mandatory=$true)]
-    [string]$cuiKey,
-    [Parameter(Mandatory=$true)]
     [string]$fileLocation
 )
+
+$cuiKey = $env:CLU_KEY
+$cuiEndpoint = $env:CLU_ENDPOINT
 
 # Fetch json file from web address
 $jsonFile = Invoke-WebRequest `

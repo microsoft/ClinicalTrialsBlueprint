@@ -1,11 +1,10 @@
 param (
     [Parameter(Mandatory=$true)]
-    [string]$botEndpoint, 
-    [Parameter(Mandatory=$true)]
-    [string]$botSecret,
-    [Parameter(Mandatory=$true)]
     [string]$fileLocation
 )
+
+$botSecret = $env:HEALTH_BOT_SECRET
+$botEndpoint = $env:HEALTH_BOT_ENDPOINT
 
 Add-Type -AssemblyName System.Security
 
