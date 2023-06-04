@@ -1,9 +1,8 @@
 name: build Bicep file and Update ARM template
 
 on:
-  merge_group:
-    branches: ["master", "task/tolehman/migrate_to_health_insights_api"]
-      
+  push:
+    branches: ["master"]
   workflow_dispatch:
 
 jobs:
@@ -15,14 +14,9 @@ jobs:
       - name: Build Arm Template From Bicep
         uses: Azure/cli@v1.0.7
         with:
-          # Specify the script here
           inlineScript: az bicep build --file ./arm-templates/main.bicep
-#       - name: Update ARM Template json file
-#         uses: mikeal/publish-to-github-action@master
-#         env:
-#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Upload files to a GitHub release
+      - name: Upload arm json file as a GitHub release
         uses: svenstaro/upload-release-action@2.6.1
         with:
           file: ./arm-templates/main.json
