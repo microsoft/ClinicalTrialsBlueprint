@@ -5,13 +5,13 @@
     "_generator": {
       "name": "bicep",
       "version": "0.17.1.54307",
-      "templateHash": "3144275950465867639"
+      "templateHash": "15261758873689112026"
     }
   },
   "parameters": {
     "matchingBotName": {
       "type": "string",
-      "defaultValue": "ctm-healthbot-test",
+      "defaultValue": "ctm-healthbot-test2",
       "maxLength": 30,
       "minLength": 3
     },

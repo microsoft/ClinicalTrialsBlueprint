@@ -1,6 +1,6 @@
 @minLength(3)
 @maxLength(30)
-param matchingBotName string = 'ctm-healthbot-test'
+param matchingBotName string = 'ctm-healthbot-test2'
 
 @minLength(2)
 @maxLength(64)

@@ -94,6 +94,7 @@ $headers = @{
 
 Write-Warning "api url: $apiUrl, tenant: $tenantName"
 
+Get-ChildItem Env:
 # replace env varibles placeholders in template with its actual value by using ExpandEnvironmentVariables
 # and convert to file
 $botTemplateString = $botTemplateString.TrimEnd() | ForEach-Object { [Environment]::ExpandEnvironmentVariables($_) }
