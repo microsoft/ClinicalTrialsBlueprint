@@ -2,7 +2,7 @@ param (
     [Parameter(Mandatory=$true)]
     [string]$cuiEndpoint, 
     [Parameter(Mandatory=$true)]
-    [securestring]$cuiKey,
+    [string]$cuiKey,
     [Parameter(Mandatory=$true)]
     [string]$fileLocation
 )
