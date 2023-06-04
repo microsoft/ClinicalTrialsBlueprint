@@ -1,14 +1,14 @@
 @minLength(3)
 @maxLength(30)
-param matchingBotName string = 'ctm-healthbot-test2'
+param matchingBotName string = 'ctm-healthbot-template'
 
 @minLength(2)
 @maxLength(64)
-param healthInsightName string = 'healthinsights-ctm-cogs'
+param healthInsightName string = 'ctm-healthinsights-cogs'
 
 @minLength(2)
 @maxLength(64)
-param languageUnderstandingName string = 'CLU-ctm-cogs'
+param languageUnderstandingName string = 'ctm-CLU-cogs'
 
 param resourceTags object = {
   Environment: 'Prod'
@@ -30,7 +30,7 @@ resource healthInsight 'Microsoft.CognitiveServices/accounts@2022-12-01' = {
   name: healthInsightName
   location: location
   sku: {
-    name: 'S0'
+    name: 'F0'
   }
   kind: 'HealthInsights'
   properties: {
@@ -59,7 +59,7 @@ resource runPowerShellInline 'Microsoft.Resources/deploymentScripts@2020-10-01' 
       }
       {
         name: 'HEALTH_INSIGHT_KEY'
-        value: healthInsight.listKeys().key1
+        value: healthInsight.listSecrets().secrets[2].value
       }
       {
         name: 'CLU_KEY'

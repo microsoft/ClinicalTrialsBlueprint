@@ -5,25 +5,25 @@
     "_generator": {
       "name": "bicep",
       "version": "0.17.1.54307",
-      "templateHash": "15261758873689112026"
+      "templateHash": "12671591993277643584"
     }
   },
   "parameters": {
     "matchingBotName": {
       "type": "string",
-      "defaultValue": "ctm-healthbot-test2",
+      "defaultValue": "ctm-healthbot-template",
       "maxLength": 30,
       "minLength": 3
     },
     "healthInsightName": {
       "type": "string",
-      "defaultValue": "healthinsights-ctm-cogs",
+      "defaultValue": "ctm-healthinsights-cogs",
       "maxLength": 64,
       "minLength": 2
     },
     "languageUnderstandingName": {
       "type": "string",
-      "defaultValue": "CLU-ctm-cogs",
+      "defaultValue": "ctm-CLU-cogs",
       "maxLength": 64,
       "minLength": 2
     },
@@ -61,7 +61,7 @@
       "name": "[parameters('healthInsightName')]",
       "location": "[parameters('location')]",
       "sku": {
-        "name": "S0"
+        "name": "F0"
       },
       "kind": "HealthInsights",
       "properties": {
@@ -88,7 +88,7 @@
           },
           {
             "name": "HEALTH_INSIGHT_KEY",
-            "value": "[listKeys(resourceId('Microsoft.CognitiveServices/accounts', parameters('healthInsightName')), '2022-12-01').key1]"
+            "value": "[listSecrets(resourceId('Microsoft.CognitiveServices/accounts', parameters('healthInsightName')), '2022-12-01').secrets[2].value]"
           },
           {
             "name": "CLU_KEY",
