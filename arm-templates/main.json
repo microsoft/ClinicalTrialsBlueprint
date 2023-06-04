@@ -5,13 +5,13 @@
     "_generator": {
       "name": "bicep",
       "version": "0.17.1.54307",
-      "templateHash": "4360445291792475081"
+      "templateHash": "18080311871983495494"
     }
   },
   "parameters": {
     "matchingBotName": {
       "type": "string",
-      "defaultValue": "ctm-healthbot-template4",
+      "defaultValue": "ctm-healthbot-template7",
       "maxLength": 30,
       "minLength": 3
     },
@@ -80,7 +80,7 @@
       "properties": {
         "forceUpdateTag": "1",
         "azPowerShellVersion": "9.7",
-        "arguments": "[format('-botEndpoint={0} -botSecret={1} -cuiEndpoint={2} -cuiKey={3} -fileLocation={4}', reference(resourceId('Microsoft.HealthBot/healthBots', parameters('matchingBotName')), '2022-08-08').botManagementPortalLink, listSecrets(resourceId('Microsoft.HealthBot/healthBots', parameters('matchingBotName')), '2022-08-08').secrets[2].value, reference(resourceId('Microsoft.CognitiveServices/accounts', parameters('healthInsightName')), '2022-12-01').endpoint, listKeys(resourceId('Microsoft.CognitiveServices/accounts', parameters('healthInsightName')), '2022-12-01').key1, parameters('fileLocation'))]",
+        "arguments": "[format('-botEndpoint {0} -botSecret {1} -cuiEndpoint {2} -cuiKey {3} -fileLocation {4}', reference(resourceId('Microsoft.HealthBot/healthBots', parameters('matchingBotName')), '2022-08-08').botManagementPortalLink, listSecrets(resourceId('Microsoft.HealthBot/healthBots', parameters('matchingBotName')), '2022-08-08').secrets[2].value, reference(resourceId('Microsoft.CognitiveServices/accounts', parameters('healthInsightName')), '2022-12-01').endpoint, listKeys(resourceId('Microsoft.CognitiveServices/accounts', parameters('healthInsightName')), '2022-12-01').key1, parameters('fileLocation'))]",
         "environmentVariables": [
           {
             "name": "HEALTH_INSIGHT_ENDPOINT",
