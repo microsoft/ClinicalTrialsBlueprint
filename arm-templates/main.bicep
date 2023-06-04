@@ -1,14 +1,14 @@
 @minLength(3)
-@maxLength(25)
-param matchingBotName string = 'ctm-healthbot-demo'
+@maxLength(30)
+param matchingBotName string = 'ctm-healthbot-test'
 
-@minLength(3)
-@maxLength(25)
-param healthInsightName string = 'healthinsights-ctm-cog'
+@minLength(2)
+@maxLength(64)
+param healthInsightName string = 'healthinsights-ctm-cogs'
 
-@minLength(3)
-@maxLength(25)
-param languageUnderstandingName string = 'CLU-ctm-cog'
+@minLength(2)
+@maxLength(64)
+param languageUnderstandingName string = 'CLU-ctm-cogs'
 
 param resourceTags object = {
   Environment: 'Prod'
@@ -21,7 +21,7 @@ param fileLocation string = 'https://raw.githubusercontent.com/microsoft/Clinica
 resource healthbot 'Microsoft.HealthBot/healthBots@2022-08-08' = {
   name: matchingBotName
   location: location
-  sku: { name: 'F0' }
+  sku: { name: 'S1' }
   properties: {}
   tags: resourceTags
 }
@@ -51,13 +51,7 @@ resource runPowerShellInline 'Microsoft.Resources/deploymentScripts@2020-10-01' 
     //   containerGroupName: 'healthbot-deploy-script'
     // }
     azPowerShellVersion: '9.7'
-    arguments: '''
-      botEndpoint=${healthbot.properties.botManagementPortalLink}
-      botSecret=${healthbot.listKeys().properties[0].value}
-      cuiEndpoint=${healthInsight.properties.endpoint}
-      cuiKey=${healthInsight.listKeys().key1}
-      fileLocation=${fileLocation}
-    '''
+    arguments: '-botEndpoint=${healthbot.properties.botManagementPortalLink} -botSecret=${healthbot.listKeys().properties[0].value} -cuiEndpoint=${healthInsight.properties.endpoint} -cuiKey=${healthInsight.listKeys().key1} -fileLocation=${fileLocation}'
     environmentVariables: [
       {
         name: 'HEALTH_INSIGHT_ENDPOINT'

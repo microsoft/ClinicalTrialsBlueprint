@@ -61,7 +61,7 @@ Function New-Jwt {
     return $jwt
 }
 
-$tenantName = Split-Path -Path $baseUrl -Leaf
+$tenantName = Split-Path -Path $botEndpoint -Leaf
 $DateTime = Get-Date 
 $epoch = ([DateTimeOffset]$DateTime).ToUnixTimeSeconds()
 
@@ -92,7 +92,7 @@ $headers = @{
     Authorization = 'Bearer ' + $jwtToken
 }
 
-Write-Warning "api url: $apiUrl"
+Write-Warning "api url: $apiUrl, tenant: $tenantName"
 
 # replace env varibles placeholders in template with its actual value by using ExpandEnvironmentVariables
 # and convert to file
@@ -107,6 +107,5 @@ $result = Invoke-WebRequest -Uri $apiUrl `
     -Headers $headers `
     -ContentType "application/json; charset=utf-8" `
     -Body $body
-    # -InFile "./temp.json" `
 
 Write-Warning "bot template creation result: $result"

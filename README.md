@@ -1,7 +1,7 @@
 # Clinical Trials Matching Service Blueprint
-az group create --name yochai-rg-test -l eastus
-az deployment group create --resource-group yochai-rg-test --template-file .\arm-templates\azuredeploy-ctm.json
 az bicep build --file .\arm-templates\main.bicep
+az group create --name yochai-rg-test -l eastus
+az deployment group create --resource-group yochai-rg-test --template-file .\arm-templates\main.json
 
 ## One click deployemnt
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://github.com/microsoft/ClinicalTrialsBlueprint/releases/download/master/main.json)
