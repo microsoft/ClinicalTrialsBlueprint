@@ -5,13 +5,13 @@
     "_generator": {
       "name": "bicep",
       "version": "0.17.1.54307",
-      "templateHash": "11202422237686233580"
+      "templateHash": "18285679605057360345"
     }
   },
   "parameters": {
     "matchingBotName": {
       "type": "string",
-      "defaultValue": "ctm-healthbot-template8",
+      "defaultValue": "ctm-healthbot-template9",
       "maxLength": 30,
       "minLength": 3
     },
@@ -99,7 +99,7 @@
             "value": "[listKeys(resourceId('Microsoft.CognitiveServices/accounts', parameters('languageUnderstandingName')), '2022-12-01').key1]"
           }
         ],
-        "primaryScriptUri": "[format('{0}/scripts/main-restore.ps1', parameters('fileLocation'))]",
+        "primaryScriptUri": "[format('{0}/scripts/MainRestore.ps1', parameters('fileLocation'))]",
         "supportingScriptUris": [
           "[format('{0}/scripts/RestoreBot.ps1', parameters('fileLocation'))]",
           "[format('{0}/scripts/RestoreLanguageUnderstanding.ps1', parameters('fileLocation'))]"

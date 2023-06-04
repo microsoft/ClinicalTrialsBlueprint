@@ -67,7 +67,7 @@ resource runPowerShellInline 'Microsoft.Resources/deploymentScripts@2020-10-01' 
         value: lungUnderstanding.listKeys().key1
       }
     ]
-    primaryScriptUri: '${fileLocation}/scripts/main-restore.ps1'
+    primaryScriptUri: '${fileLocation}/scripts/MainRestore.ps1'
     supportingScriptUris: [
       '${fileLocation}/scripts/RestoreBot.ps1'
       '${fileLocation}/scripts/RestoreLanguageUnderstanding.ps1'

@@ -15,10 +15,10 @@ param (
 # Get-ChildItem Env:
 
 # get path
-$ScriptPath = Split-Path $MyInvocation.InvocationName
+# $ScriptPath = Split-Path $MyInvocation.InvocationName
 
 # restore language understanding model
-Invoke-Expression "$ScriptPath/RestoreLanguageUnderstanding.ps1 -cuiEndpoint $cuiEndpoint -cuiKey $cuiKey -fileLocation $fileLocation"
+Invoke-Expression "./RestoreLanguageUnderstanding.ps1 -cuiEndpoint $cuiEndpoint -cuiKey $cuiKey -fileLocation $fileLocation"
 
 # restore bot
-Invoke-Expression  "$ScriptPath/RestoreBot.ps1 -botEndpoint $botEndpoint -botSecret $botSecret -fileLocation $fileLocation"
+Invoke-Expression  "./RestoreBot.ps1 -botEndpoint $botEndpoint -botSecret $botSecret -fileLocation $fileLocation"
