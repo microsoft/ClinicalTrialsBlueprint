@@ -6,14 +6,10 @@ param (
 $cuiKey = $env:CLU_KEY
 $cuiEndpoint = $env:CLU_ENDPOINT
 
-# Fetch json file from web address
-$jsonFile = Invoke-WebRequest `
- -Uri  "$fileLocation/clu/metadata_clinical_trials.json" `
- -OutFile "file.json"
 
 # Import the file into a new Cognitive Language Understanding project named "metadata_clinical_trials"
 $projectName = "metadata_clinical_trials"
-$apiVersion = "2022-05-01"
+$apiVersion = '?api-version=2022-10-01-preview'
 
 # Set the headers for the request
 $headers = @{
@@ -21,28 +17,29 @@ $headers = @{
     "Content-Type" = "application/json"
 }
 
+# Fetch json file from web address
+$jsonFile = Invoke-WebRequest -Uri  "$fileLocation/clu/metadata_clinical_trials.json" 
+
 # Send the request to import the project
 $bodyJson = $jsonFile.Content
-$importUri = $cuiEndpoint + "/language/authoring/analyze-text/projects/$projectName/:import"
-$importUri += "?api-version=$apiVersion"
+$importUri = $cuiEndpoint + "language/authoring/analyze-conversations/projects/$projectName/:import"+ $apiVersion
+Write-Warning "Importing file: $importUri"
 $importResponse = Invoke-WebRequest -Method Post `
                     -Uri $importUri `
                     -Headers $headers -Body $bodyJson
 
-Write-Information   "Import status: $($importResponse.Content)"
+Write-Warning   "Import status: $($importResponse.Content)"
 
 # Train the project
-$trainResponse = Invoke-WebRequest  -Method Post `
-$trainUri = $cuiEndpoint + "/language/authoring/analyze-text/projects/$projectName/train?api-version=$apiVersion"
+$trainUri = $cuiEndpoint + "language/authoring/analyze-conversations/projects/$projectName/train" + $apiVersion
 $trainResponse = Invoke-WebRequest -Method Post -Uri $trainUri -Headers $headers
 
-Write-Information "Train status: $($trainResponse.Content)"
+Write-Warning "Train status: $($trainResponse.Content)"
 
 # Deploy the project
-$deployResponse = Invoke-WebRequest  -Method Post `
-$deployUri = $endpoint + "/language/authoring/analyze-text/projects/$projectName/deploy?api-version=$apiVersion"
+$deployUri = $cuiEndpoint + "language/authoring/analyze-conversations/projects/$projectName/deploy" + $apiVersion
 $deployResponse = Invoke-WebRequest -Method Post `
                   -Uri $deployUri `
                   -Headers $headers
 
-Write-Information "Deploy status: $($deployResponse.Content)"
+Write-Warning "Deploy status: $($deployResponse.Content)"

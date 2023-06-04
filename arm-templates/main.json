@@ -5,19 +5,19 @@
     "_generator": {
       "name": "bicep",
       "version": "0.17.1.54307",
-      "templateHash": "18285679605057360345"
+      "templateHash": "7254108390685987929"
     }
   },
   "parameters": {
     "matchingBotName": {
       "type": "string",
-      "defaultValue": "ctm-healthbot-template12",
+      "defaultValue": "ctm-healthbot-template14",
       "maxLength": 30,
       "minLength": 3
     },
     "healthInsightName": {
       "type": "string",
-      "defaultValue": "ctm-healthinsights-cogs",
+      "defaultValue": "ctm-healthinsights-cogs2",
       "maxLength": 64,
       "minLength": 2
     },
@@ -61,7 +61,7 @@
       "name": "[parameters('healthInsightName')]",
       "location": "[parameters('location')]",
       "sku": {
-        "name": "F0"
+        "name": "S0"
       },
       "kind": "HealthInsights",
       "properties": {
@@ -80,7 +80,7 @@
       "properties": {
         "forceUpdateTag": "1",
         "azPowerShellVersion": "9.7",
-        "arguments": "[format('-botEndpoint {0} -botSecret {1} -cuiEndpoint {2} -cuiKey {3} -fileLocation {4}', reference(resourceId('Microsoft.HealthBot/healthBots', parameters('matchingBotName')), '2022-08-08').botManagementPortalLink, listSecrets(resourceId('Microsoft.HealthBot/healthBots', parameters('matchingBotName')), '2022-08-08').secrets[2].value, reference(resourceId('Microsoft.CognitiveServices/accounts', parameters('healthInsightName')), '2022-12-01').endpoint, listKeys(resourceId('Microsoft.CognitiveServices/accounts', parameters('healthInsightName')), '2022-12-01').key1, parameters('fileLocation'))]",
+        "arguments": "[format('-fileLocation {0}', parameters('fileLocation'))]",
         "environmentVariables": [
           {
             "name": "HEALTH_INSIGHT_ENDPOINT",
@@ -91,12 +91,20 @@
             "value": "[listKeys(resourceId('Microsoft.CognitiveServices/accounts', parameters('healthInsightName')), '2022-12-01').key1]"
           },
           {
-            "name": "CLU_KEY",
+            "name": "CLU_ENDPOINT",
             "value": "[reference(resourceId('Microsoft.CognitiveServices/accounts', parameters('languageUnderstandingName')), '2022-12-01').endpoint]"
           },
           {
-            "name": "CLU_ENDPOINT",
+            "name": "CLU_KEY",
             "value": "[listKeys(resourceId('Microsoft.CognitiveServices/accounts', parameters('languageUnderstandingName')), '2022-12-01').key1]"
+          },
+          {
+            "name": "HEALTH_BOT_ENDPOINT",
+            "value": "[reference(resourceId('Microsoft.HealthBot/healthBots', parameters('matchingBotName')), '2022-08-08').botManagementPortalLink]"
+          },
+          {
+            "name": "HEALTH_BOT_SECRET",
+            "value": "[listSecrets(resourceId('Microsoft.HealthBot/healthBots', parameters('matchingBotName')), '2022-08-08').secrets[2].value]"
           }
         ],
         "primaryScriptUri": "[format('{0}/scripts/MainRestore.ps1', parameters('fileLocation'))]",

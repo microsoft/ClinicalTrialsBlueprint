@@ -4,7 +4,8 @@
     "metadata": {
         "projectKind": "Conversation",
         "settings": {
-            "confidenceThreshold": 0
+            "confidenceThreshold": 0.0,
+            "normalizeCasing": false
         },
         "projectName": "metadata_clinical_trials",
         "multilingual": false,
