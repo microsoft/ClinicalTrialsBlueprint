@@ -5,13 +5,13 @@
     "_generator": {
       "name": "bicep",
       "version": "0.17.1.54307",
-      "templateHash": "18080311871983495494"
+      "templateHash": "11202422237686233580"
     }
   },
   "parameters": {
     "matchingBotName": {
       "type": "string",
-      "defaultValue": "ctm-healthbot-template7",
+      "defaultValue": "ctm-healthbot-template8",
       "maxLength": 30,
       "minLength": 3
     },
@@ -40,7 +40,7 @@
     },
     "fileLocation": {
       "type": "string",
-      "defaultValue": "https://raw.githubusercontent.com/microsoft/ClinicalTrialsBlueprint/task/tolehman/migrate_to_health_insights_api/"
+      "defaultValue": "https://raw.githubusercontent.com/microsoft/ClinicalTrialsBlueprint/task/tolehman/migrate_to_health_insights_api"
     }
   },
   "resources": [
@@ -101,8 +101,8 @@
         ],
         "primaryScriptUri": "[format('{0}/scripts/main-restore.ps1', parameters('fileLocation'))]",
         "supportingScriptUris": [
-          "[format('{0}/scripts/restoreBot.ps1', parameters('fileLocation'))]",
-          "[format('{0}/scripts/restoreLanguageUnderstanding.ps1', parameters('fileLocation'))]"
+          "[format('{0}/scripts/RestoreBot.ps1', parameters('fileLocation'))]",
+          "[format('{0}/scripts/RestoreLanguageUnderstanding.ps1', parameters('fileLocation'))]"
         ],
         "timeout": "PT30M",
         "cleanupPreference": "OnSuccess",

@@ -2,7 +2,7 @@ param (
     [Parameter(Mandatory=$true)]
     [string]$botEndpoint, 
     [Parameter(Mandatory=$true)]
-    [string]$botSecret,
+    [securestring]$botSecret,
     [Parameter(Mandatory=$true)]
     [string]$fileLocation
 )

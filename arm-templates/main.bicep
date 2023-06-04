@@ -16,7 +16,7 @@ param resourceTags object = {
 }
 
 param location string = resourceGroup().location
-param fileLocation string = 'https://raw.githubusercontent.com/microsoft/ClinicalTrialsBlueprint/task/tolehman/migrate_to_health_insights_api/'
+param fileLocation string = 'https://raw.githubusercontent.com/microsoft/ClinicalTrialsBlueprint/task/tolehman/migrate_to_health_insights_api'
 
 resource healthbot 'Microsoft.HealthBot/healthBots@2022-08-08' = {
   name: matchingBotName
