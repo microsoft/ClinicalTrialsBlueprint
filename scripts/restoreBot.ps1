@@ -84,7 +84,7 @@ $botTemplateString = $botTemplate.Content
 
 $jwtToken = New-Jwt -headers $headers -payload $payload -secret $botSecret
 
-Write-Warning "jwtToken created"
+Write-Information "jwtToken created"
 
 $apiUrl = $botEndpoint.Replace('/account', '/api/account') + '/backup'
 
@@ -92,7 +92,7 @@ $headers = @{
     Authorization = 'Bearer ' + $jwtToken
 }
 
-Write-Warning "api url: $apiUrl, tenant: $tenantName"
+Write-Information "api url: $apiUrl, tenant: $tenantName"
 
 Get-ChildItem Env:
 # replace env varibles placeholders in template with its actual value by using ExpandEnvironmentVariables
@@ -109,4 +109,4 @@ $result = Invoke-WebRequest -Uri $apiUrl `
     -ContentType "application/json; charset=utf-8" `
     -Body $body
 
-Write-Warning "bot template creation result: $result"
+Write-Information "bot template creation result: $result"

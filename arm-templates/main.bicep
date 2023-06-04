@@ -51,7 +51,7 @@ resource runPowerShellInline 'Microsoft.Resources/deploymentScripts@2020-10-01' 
     //   containerGroupName: 'healthbot-deploy-script'
     // }
     azPowerShellVersion: '9.7'
-    arguments: '-botEndpoint=${healthbot.properties.botManagementPortalLink} -botSecret=${healthbot.listKeys().properties[0].value} -cuiEndpoint=${healthInsight.properties.endpoint} -cuiKey=${healthInsight.listKeys().key1} -fileLocation=${fileLocation}'
+    arguments: '-botEndpoint="${healthbot.properties.botManagementPortalLink}" -botSecret="${healthbot.listSecrets().secrets[2].value}" -cuiEndpoint="${healthInsight.properties.endpoint}" -cuiKey="${healthInsight.listKeys().key1}" -fileLocation="${fileLocation}"'
     environmentVariables: [
       {
         name: 'HEALTH_INSIGHT_ENDPOINT'
@@ -59,7 +59,7 @@ resource runPowerShellInline 'Microsoft.Resources/deploymentScripts@2020-10-01' 
       }
       {
         name: 'HEALTH_INSIGHT_KEY'
-        value: healthInsight.listSecrets().secrets[2].value
+        value: healthInsight.listKeys().key1
       }
       {
         name: 'CLU_KEY'
