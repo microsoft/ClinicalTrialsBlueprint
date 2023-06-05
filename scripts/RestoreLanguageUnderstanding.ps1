@@ -15,7 +15,8 @@ $apiVersion = '?api-version=2022-10-01-preview'
 # Set the headers for the request
 $headers = @{
     "Ocp-Apim-Subscription-Key" = $cuiKey
-    "Content-Type"              = "application/json"
+    "Content-Type"              = 'application/json; charset=UTF-8'
+    "Accept-Charset"= 'UTF-8'
 }
 
 function WaitForJob {
@@ -37,7 +38,7 @@ function WaitForJob {
 
 function Call-Http {
     param (
-        [Parameter(Mandatory = $true)]
+        [Parameter(Mandatory = $false)]
         [string]$Method,
         [Parameter(Mandatory = $true)]
         [string]$Uri,
@@ -46,27 +47,37 @@ function Call-Http {
     )
 
     try {
-        Write-Warning "Calling $Method $Uri with body: $Body"
-        $response = Invoke-WebRequest -Method $Method -Uri $Uri -Headers $headers -Body $Body -ErrorAction Stop
+        
+        Write-Warning "Calling $Method $Uri with body length $($Body.Length)"
+        if ($Body) {
+            $response = Invoke-WebRequest -Method $Method -Uri $Uri -Headers $headers -Body $Body -ErrorAction Stop -ContentType "application/json"
+        } else {
+            $response = Invoke-WebRequest -Method $Method -Uri $Uri -Headers $headers -ErrorAction Stop
+        }
         return $response
     } catch {
         Write-Host "HTTP request failed with the following response:"
+        Write-Host $_.Exception
         Write-Host $_.Exception.Response.StatusCode.value__ 
         Write-Host $_.Exception.Response.StatusDescription
-        Write-Host $_.Exception.Response.Content
+        $result = $_.Exception.Response.GetResponseStream()
+        $reader = New-Object System.IO.StreamReader($result)
+        $reader.BaseStream.Position = 0
+        $reader.DiscardBufferedData()
+        $responseBody = $reader.ReadToEnd();
+        Write-Host $responseBody
         throw $_.Exception.Response.Content
     }
 }
 
 
 # Fetch json file from web address
-$jsonFile = Invoke-WebRequest -Uri  "$fileLocation/clu/clinical_trial_metadata.json" 
+$jsonFile = Call-Http  -Method Get -Uri  "$fileLocation/clu/clinical_trial_metadata.json"
 
 # Send the request to import the project
 $bodyJson = $jsonFile.Content
 
 $importUri = $cuiEndpoint + "language/authoring/analyze-conversations/projects/$projectName/:import" + $apiVersion
-Write-Warning "Importing file: $importUri"
 $importResponse = Call-Http -Method Post `
     -Uri $importUri `
     -Body $bodyJson
