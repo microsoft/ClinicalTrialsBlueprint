@@ -17,6 +17,7 @@ $headers = @{
     "Ocp-Apim-Subscription-Key" = $cuiKey
     "Content-Type"              = 'application/json; charset=UTF-8'
     "Accept-Charset"= 'UTF-8'
+    "Accept" = "*/*"
 }
 
 function WaitForJob {
@@ -96,8 +97,8 @@ $bodyJson = @{
         'kind'                    = 'percentage'
         'testingSplitPercentage'  = 20
         'trainingSplitPercentage' = 80
-    }
-}
+    } 
+} | ConvertTo-Json -Depth 4
 
 $trainResponse = Call-Http -Method Post `
  -Uri $trainUri `
@@ -110,7 +111,7 @@ WaitForJob $importResponse.Headers['operation-location']
 $deployUri = $cuiEndpoint + "language/authoring/analyze-conversations/projects/$projectName/deployments/deploy" + $apiVersion
 $bodyJson = @{
     'trainedModelLabel' = $modelLabel
-}
+}| ConvertTo-Json -Depth 4
 
 $deployResponse = Call-Http -Method Put `
     -Uri $deployUri `
