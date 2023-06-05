@@ -35,19 +35,41 @@ function WaitForJob {
 }
 
 
+function Call-Http {
+    param (
+        [Parameter(Mandatory = $true)]
+        [string]$Method,
+        [Parameter(Mandatory = $true)]
+        [string]$Uri,
+        [Parameter(Mandatory = $false)]
+        [string]$Body
+    )
 
+    try {
+        Write-Warning "Calling $Method $Uri with body: $Body"
+        $response = Invoke-WebRequest -Method $Method -Uri $Uri -Headers $headers -Body $Body -ErrorAction Stop
+        return $response
+    } catch {
+        Write-Host "HTTP request failed with the following response:"
+        Write-Host $_.Exception.Response.StatusCode.value__ 
+        Write-Host $_.Exception.Response.StatusDescription
+        Write-Host $_.Exception.Response.Content
+        throw $_.Exception.Response.Content
+    }
+}
 
 
 # Fetch json file from web address
-$jsonFile = Invoke-WebRequest -Uri  "$fileLocation/clu/metadata_clinical_trials.json" 
+$jsonFile = Invoke-WebRequest -Uri  "$fileLocation/clu/clinical_trial_metadata.json" 
 
 # Send the request to import the project
 $bodyJson = $jsonFile.Content
+
 $importUri = $cuiEndpoint + "language/authoring/analyze-conversations/projects/$projectName/:import" + $apiVersion
 Write-Warning "Importing file: $importUri"
-$importResponse = Invoke-WebRequest -Method Post `
+$importResponse = Call-Http -Method Post `
     -Uri $importUri `
-    -Headers $headers -Body $bodyJson
+    -Body $bodyJson
 
 WaitForJob $importResponse.Headers['operation-location']
 
@@ -66,7 +88,9 @@ $bodyJson = @{
     }
 }
 
-$trainResponse = Invoke-WebRequest -Method Post -Uri $trainUri -Headers $headers -Body $bodyJson
+$trainResponse = Call-Http -Method Post `
+ -Uri $trainUri `
+ -Body $bodyJson
 
 Write-Warning "Train status: $($trainResponse.Content)"
 WaitForJob $importResponse.Headers['operation-location']
@@ -77,9 +101,8 @@ $bodyJson = @{
     'trainedModelLabel' = $modelLabel
 }
 
-$deployResponse = Invoke-WebRequest -Method Put `
+$deployResponse = Call-Http -Method Put `
     -Uri $deployUri `
-    -Headers $headers `
     -Body $bodyJson
 
 Write-Warning "Deploy status: $($deployResponse.Content)"
