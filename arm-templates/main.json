@@ -5,19 +5,19 @@
     "_generator": {
       "name": "bicep",
       "version": "0.17.1.54307",
-      "templateHash": "7254108390685987929"
+      "templateHash": "14680852948337015693"
     }
   },
   "parameters": {
     "matchingBotName": {
       "type": "string",
-      "defaultValue": "ctm-healthbot-template14",
+      "defaultValue": "ctm-healthbot-template",
       "maxLength": 30,
       "minLength": 3
     },
     "healthInsightName": {
       "type": "string",
-      "defaultValue": "ctm-healthinsights-cogs2",
+      "defaultValue": "ctm-healthinsights-cogs",
       "maxLength": 64,
       "minLength": 2
     },
@@ -61,7 +61,7 @@
       "name": "[parameters('healthInsightName')]",
       "location": "[parameters('location')]",
       "sku": {
-        "name": "S0"
+        "name": "F0"
       },
       "kind": "HealthInsights",
       "properties": {

@@ -37,7 +37,7 @@
                     "enabled": true,
                     "description": "clinical_trial_metadata",
                     "cognitiveServiceEndpoint": "getEnv(\"clu-endpoint\")",
-                    "projectName": "metadata_clinical_trials",
+                    "projectName": "clinical_trial_metadata",
                     "cluApiVersion": "2022-10-01-preview",
                     "cluDeploymentName": "clinical_trial_metadata",
                     "subscription_key": "getEnv(\"clu-subscription-key\")",
