@@ -45,24 +45,21 @@
                 ]
             },
             {
-                "category": "geographyV2",
-                "compositionSetting": "combineComponents",
-                "prebuilts": [
-                    {
-                        "category": "Geography.Location"
-                    },
-                    {
-                        "category": "Geography.Address"
-                    }
-                ]
-            },
-            {
                 "category": "gender.male",
                 "compositionSetting": "requireExactOverlap"
             },
             {
                 "category": "gender.female",
                 "compositionSetting": "requireExactOverlap"
+            },
+            {
+                "category": "geography",
+                "compositionSetting": "combineComponents",
+                "prebuilts": [
+                    {
+                        "category": "Geography.Location"
+                    }
+                ]
             }
         ],
         "utterances": [
