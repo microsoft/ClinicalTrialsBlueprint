@@ -588,7 +588,7 @@
     "scenarios": [
         {
             "RowKey": "1709449a-a017-4464-be4e-0c6058efa7f8",
-            "snapshots": 0,
+            "snapshots": 1,
             "name": "clinical_trials_matching_question_generation",
             "scenario_trigger": "clinical_trials_matching_question_generation",
             "description": "clinical_trials_matching_question_generation",
@@ -905,132 +905,15 @@
             }
         },
         {
-            "RowKey": "20a59324-94b5-45ed-97ba-87368cf84e3e",
+            "RowKey": "180bc1b2-5528-46ee-8bea-04ae508ffb46",
             "snapshots": 0,
-            "name": "clinical_trials_matching_outcome",
-            "scenario_trigger": "clinical_trials_matching_outcome",
-            "description": "clinical_trials_matching_outcome",
-            "userDisplayName": "Linoy Tzarfaty",
-            "active": true,
-            "version": 1,
-            "updated": "2022-03-23T10:15:53.145Z",
-            "currentUser": "",
-            "code": {
-                "interrupting": false,
-                "breaking": false,
-                "returningMessage": "",
-                "version": 3,
-                "steps": [
-                    {
-                        "id": "0a692feea650-27867dd568fdac24-8962",
-                        "type": "action",
-                        "label": "Init",
-                        "designer": {
-                            "xLocation": 694,
-                            "yLocation": 20,
-                            "next": "e8373a213672-980afb41805ad195-1746"
-                        },
-                        "onInit": "scenario.trials = scenario.scenarioArgs.trials;\r\nscenario.error = scenario.scenarioArgs.error;"
-                    },
-                    {
-                        "id": "9bfd640bba67-4d9917adbf400edc-784a",
-                        "type": "statement",
-                        "designer": {
-                            "xLocation": 692,
-                            "yLocation": 280,
-                            "next": "051596a5e9c4-f8bb980a161b64eb-cb87"
-                        },
-                        "text": "customLocalizedStrings[\"CTM/messages/qualifiedTrials\"]",
-                        "stringId": "stringId_1e9a67f771cb8273",
-                        "label": "Qualified Trials"
-                    },
-                    {
-                        "id": "051596a5e9c4-f8bb980a161b64eb-cb87",
-                        "type": "action",
-                        "label": "Create Card",
-                        "designer": {
-                            "xLocation": 700,
-                            "yLocation": 340,
-                            "next": "4aab6a82b7d0-6298a11eccabfacb-b01c"
-                        },
-                        "onInit": "var cardBody = scenario.trials.map(trial => {\n    return {\n\t\t\"type\": \"Container\",\n\t\t\"separator\": true,\n\t\t\"spacing\": \"Large\",\n\t\t\"items\": [\n            {\n                \"type\": \"TextBlock\",\n                \"text\": \"RECRUITING\",\n                \"separator\": true,\n                \"color\": \"dark\"\n            },{\n                \"type\": \"TextBlock\",\n                \"color\": \"accent\",\n                \"text\": \"[\" + trial.description + \"](https://clinicaltrials.gov/ct2/show/\" + trial.id + \")\",\n                \"spacing\": \"none\",\n                \"wrap\": true,\n                \"color\": \"blue\"\n            },{\n                \"type\": \"TextBlock\",\n                \"text\": \"Clinical trial ID: \" + trial.id,\n                \"isSubtle\": true,\n                \"weight\": \"lighter\"\n            }\n        ]\n    }\n});\n\nscenario.card = {\n  \"$schema\": \"http://adaptivecards.io/schemas/adaptive-card.json\",\n  \"type\": \"AdaptiveCard\",\n  \"version\": \"1.0\",\n  \"body\": cardBody\n};"
-                    },
-                    {
-                        "id": "4aab6a82b7d0-6298a11eccabfacb-b01c",
-                        "type": "statement",
-                        "designer": {
-                            "xLocation": 694,
-                            "yLocation": 420
-                        },
-                        "layout": "vertical",
-                        "attachment": [
-                            {
-                                "type": "AdaptiveCard",
-                                "cardCode": "scenario.card"
-                            }
-                        ],
-                        "label": "Show Card"
-                    },
-                    {
-                        "id": "e8373a213672-980afb41805ad195-1746",
-                        "type": "branch",
-                        "condition": "scenario.error != null",
-                        "designer": {
-                            "xLocation": 700,
-                            "yLocation": 100,
-                            "reverse": false,
-                            "next": "f811cb392fdf-a32a2f56f1c9b0d0-c6e0"
-                        },
-                        "label": "Is Error",
-                        "targetStepId": "765a04839f1f-3d3353eeb1427b34-6403"
-                    },
-                    {
-                        "id": "f811cb392fdf-a32a2f56f1c9b0d0-c6e0",
-                        "type": "branch",
-                        "condition": "scenario.trials != null && scenario.trials.length > 0",
-                        "designer": {
-                            "xLocation": 620,
-                            "yLocation": 188,
-                            "next": "e2e9b3e42244-2cd1b869abb8fcec-926a"
-                        },
-                        "label": "Has Trials",
-                        "targetStepId": "9bfd640bba67-4d9917adbf400edc-784a"
-                    },
-                    {
-                        "id": "765a04839f1f-3d3353eeb1427b34-6403",
-                        "type": "statement",
-                        "designer": {
-                            "xLocation": 860,
-                            "yLocation": 280
-                        },
-                        "text": "scenario.error",
-                        "stringId": "stringId_99981a857235d0e8",
-                        "label": "Show error"
-                    },
-                    {
-                        "id": "e2e9b3e42244-2cd1b869abb8fcec-926a",
-                        "type": "statement",
-                        "designer": {
-                            "xLocation": 528,
-                            "yLocation": 280
-                        },
-                        "text": "customLocalizedStrings[\"CTM/messages/noRelavantTrials\"]",
-                        "label": "No relevant trials",
-                        "stringId": "stringId_e3c9220490296efb"
-                    }
-                ]
-            }
-        },
-        {
-            "RowKey": "4440ea41-1d9b-4caa-8c2b-8eeccaa89628",
-            "snapshots": 1,
-            "name": "clinical_trials_matching_patient_metadata",
-            "scenario_trigger": "clinical_trials_matching_patient_metadata",
-            "description": "clinical_trials_matching_patient_metadata",
+            "name": "clinical_trials_matching_initialization",
+            "scenario_trigger": "clinical_trials_matching_initialization",
+            "description": "clinical_trials_matching_initialization",
             "userDisplayName": "Yochai Lehman",
             "active": true,
             "version": 1,
-            "updated": "2023-05-31T09:04:22.500Z",
+            "updated": "2023-04-18T09:43:08.416Z",
             "currentUser": "",
             "code": {
                 "interrupting": false,
@@ -1209,15 +1092,375 @@
             }
         },
         {
+            "RowKey": "20a59324-94b5-45ed-97ba-87368cf84e3e",
+            "snapshots": 1,
+            "name": "clinical_trials_matching_outcome",
+            "scenario_trigger": "clinical_trials_matching_outcome",
+            "description": "clinical_trials_matching_outcome",
+            "userDisplayName": "Linoy Tzarfaty",
+            "active": true,
+            "version": 1,
+            "updated": "2022-03-23T10:15:53.145Z",
+            "currentUser": "",
+            "code": {
+                "interrupting": false,
+                "breaking": false,
+                "returningMessage": "",
+                "version": 3,
+                "steps": [
+                    {
+                        "id": "0a692feea650-27867dd568fdac24-8962",
+                        "type": "action",
+                        "label": "Init",
+                        "designer": {
+                            "xLocation": 694,
+                            "yLocation": 20,
+                            "next": "e8373a213672-980afb41805ad195-1746"
+                        },
+                        "onInit": "scenario.trials = scenario.scenarioArgs.trials;\r\nscenario.error = scenario.scenarioArgs.error;"
+                    },
+                    {
+                        "id": "9bfd640bba67-4d9917adbf400edc-784a",
+                        "type": "statement",
+                        "designer": {
+                            "xLocation": 692,
+                            "yLocation": 280,
+                            "next": "051596a5e9c4-f8bb980a161b64eb-cb87"
+                        },
+                        "text": "customLocalizedStrings[\"CTM/messages/qualifiedTrials\"]",
+                        "stringId": "stringId_1e9a67f771cb8273",
+                        "label": "Qualified Trials"
+                    },
+                    {
+                        "id": "051596a5e9c4-f8bb980a161b64eb-cb87",
+                        "type": "action",
+                        "label": "Create Card",
+                        "designer": {
+                            "xLocation": 700,
+                            "yLocation": 340,
+                            "next": "4aab6a82b7d0-6298a11eccabfacb-b01c"
+                        },
+                        "onInit": "var cardBody = scenario.trials.map(trial => {\n    return {\n\t\t\"type\": \"Container\",\n\t\t\"separator\": true,\n\t\t\"spacing\": \"Large\",\n\t\t\"items\": [\n            {\n                \"type\": \"TextBlock\",\n                \"text\": \"RECRUITING\",\n                \"separator\": true,\n                \"color\": \"dark\"\n            },{\n                \"type\": \"TextBlock\",\n                \"color\": \"accent\",\n                \"text\": \"[\" + trial.description + \"](https://clinicaltrials.gov/ct2/show/\" + trial.id + \")\",\n                \"spacing\": \"none\",\n                \"wrap\": true,\n                \"color\": \"blue\"\n            },{\n                \"type\": \"TextBlock\",\n                \"text\": \"Clinical trial ID: \" + trial.id,\n                \"isSubtle\": true,\n                \"weight\": \"lighter\"\n            }\n        ]\n    }\n});\n\nscenario.card = {\n  \"$schema\": \"http://adaptivecards.io/schemas/adaptive-card.json\",\n  \"type\": \"AdaptiveCard\",\n  \"version\": \"1.0\",\n  \"body\": cardBody\n};"
+                    },
+                    {
+                        "id": "4aab6a82b7d0-6298a11eccabfacb-b01c",
+                        "type": "statement",
+                        "designer": {
+                            "xLocation": 694,
+                            "yLocation": 420
+                        },
+                        "layout": "vertical",
+                        "attachment": [
+                            {
+                                "type": "AdaptiveCard",
+                                "cardCode": "scenario.card"
+                            }
+                        ],
+                        "label": "Show Card"
+                    },
+                    {
+                        "id": "e8373a213672-980afb41805ad195-1746",
+                        "type": "branch",
+                        "condition": "scenario.error != null",
+                        "designer": {
+                            "xLocation": 700,
+                            "yLocation": 100,
+                            "reverse": false,
+                            "next": "f811cb392fdf-a32a2f56f1c9b0d0-c6e0"
+                        },
+                        "label": "Is Error",
+                        "targetStepId": "765a04839f1f-3d3353eeb1427b34-6403"
+                    },
+                    {
+                        "id": "f811cb392fdf-a32a2f56f1c9b0d0-c6e0",
+                        "type": "branch",
+                        "condition": "scenario.trials != null && scenario.trials.length > 0",
+                        "designer": {
+                            "xLocation": 620,
+                            "yLocation": 188,
+                            "next": "e2e9b3e42244-2cd1b869abb8fcec-926a"
+                        },
+                        "label": "Has Trials",
+                        "targetStepId": "9bfd640bba67-4d9917adbf400edc-784a"
+                    },
+                    {
+                        "id": "765a04839f1f-3d3353eeb1427b34-6403",
+                        "type": "statement",
+                        "designer": {
+                            "xLocation": 860,
+                            "yLocation": 280
+                        },
+                        "text": "scenario.error",
+                        "stringId": "stringId_99981a857235d0e8",
+                        "label": "Show error"
+                    },
+                    {
+                        "id": "e2e9b3e42244-2cd1b869abb8fcec-926a",
+                        "type": "statement",
+                        "designer": {
+                            "xLocation": 528,
+                            "yLocation": 280
+                        },
+                        "text": "customLocalizedStrings[\"CTM/messages/noRelavantTrials\"]",
+                        "label": "No relevant trials",
+                        "stringId": "stringId_e3c9220490296efb"
+                    }
+                ]
+            }
+        },
+        {
+            "RowKey": "4440ea41-1d9b-4caa-8c2b-8eeccaa89628",
+            "snapshots": 33,
+            "name": "clinical_trials_matching_patient_metadata",
+            "scenario_trigger": "clinical_trials_matching_patient_metadata",
+            "description": "clinical_trials_matching_patient_metadata",
+            "userDisplayName": "Yochai Lehman",
+            "active": true,
+            "version": 1,
+            "updated": "2023-06-06T07:32:49.826Z",
+            "currentUser": "yolehman@microsoft.com",
+            "code": {
+                "interrupting": false,
+                "breaking": false,
+                "returningMessage": "",
+                "version": 3,
+                "steps": [
+                    {
+                        "id": "09db9a1c39d3-e8ae2ae214eacb87-4873",
+                        "type": "action",
+                        "label": "Init variables",
+                        "designer": {
+                            "xLocation": 168,
+                            "yLocation": 0,
+                            "next": "6d31de90868b-1c041e8a7b606c9c-273f"
+                        },
+                        "onInit": "scenario.clu = scenario.scenarioArgs.clu;\n\nscenario.consts = {};\nscenario.consts.TRIALS_THRESHOLD = 5;\nscenario.consts.QUESTIONS_THRESHOLD = 5;\nscenario.consts.MIN_AGE = 0;\nscenario.consts.MAX_AGE = 120;\nscenario.location = {};\n\n// temp variables for normalization\nscenario.locationCity = null;\nscenario.locationCountryOrRegion = null;\nscenario.locationState = null;\nscenario.condition = null;\nvar ageObj = null;\n// for research and improving language model\nvar notMappedEntities = [];\n// conversation started with arguments\nif (scenario.clu != null) {\n    // iterate all CLU entities and set their values\n    scenario.clu.forEach(ent => {\n        switch (ent.category) {\n            case \"gender.male\":\n                scenario.sex = 'male';\n                break;\n            case \"gender.female\":\n                scenario.sex = 'female';\n                break;\n            case \"age\":\n                if (ent.resolutions && ent.resolutions.length == 1) {\n                    ageObj = ent.resolutions[0];\n                }\n                break;\n            case \"disease\":\n                scenario.condition = ent.text.replace(\" - \", \"-\");\n                break;\n            case \"geography.city\":\n                scenario.locationCity = ent.text;\n                break;\n            case \"geography.countryOrRegion\":\n                scenario.locationCountryOrRegion = ent.text;\n                break;\n            case \"geography.state\":\n                scenario.locationState = ent.text;\n                break;\n            default:\n                notMappedEntities.push(ent.entity);\n        }\n    });\n}\n\n// age normalization\nif (ageObj != null) {\n    switch (ageObj.unit) {\n        case \"Year\":\n            scenario.age = ageObj.value;\n            break;\n        case \"Month\":\n            scenario.age = (+ageObj.value / 12) + \"\";\n            break;\n        case \"Week\":\n            scenario.age = (+ageObj.value / 52) + \"\";\n            break;\n        case \"Day\":\n            scenario.age = (+ageObj.value / 365) + \"\";\n            break;\n        default:\n            scenario.age = null;\n    }\n}\n// location normalization\nscenario.location = {};\nscenario.location.countryOrRegion = scenario.locationCountryOrRegion;\nscenario.location.state = scenario.locationState;\nscenario.location.city = scenario.locationCity;\n\n"
+                    },
+                    {
+                        "id": "de86f22bb596-7c65f50cb311e848-299b",
+                        "type": "prompt",
+                        "dataType": "[\"Female\", \"Male\", \"Prefer not to say\"]",
+                        "designer": {
+                            "xLocation": 183,
+                            "yLocation": 74,
+                            "next": "cfa16b74-36ad-4290-bb83-3007e205cbc8",
+                            "listStyle": 3
+                        },
+                        "text": "customLocalizedStrings[\"CTM/questions/sex\"]",
+                        "variable": "sexValue",
+                        "label": "Sex",
+                        "visible": "scenario.sex == null",
+                        "stringId": "stringId_fd866a19347eef73",
+                        "choiceType": "choice",
+                        "markdown": false
+                    },
+                    {
+                        "id": "774ca676858f-dc86dce31145b233-1250",
+                        "type": "branch",
+                        "condition": "scenario.age &&\r\nparseFloat(scenario.age) > scenario.consts.MIN_AGE &&\r\nparseFloat(scenario.age) <= scenario.consts.MAX_AGE",
+                        "designer": {
+                            "xLocation": 164,
+                            "yLocation": 219,
+                            "next": "76b36f8389b4-0faf6d75e6f30328-77e2"
+                        },
+                        "label": "Verify CLU Age",
+                        "targetStepId": "129a9a48-861b-4263-a82e-787d280a18dd"
+                    },
+                    {
+                        "id": "76b36f8389b4-0faf6d75e6f30328-77e2",
+                        "type": "prompt",
+                        "dataType": "number",
+                        "designer": {
+                            "xLocation": 166,
+                            "yLocation": 277,
+                            "next": "e39413f93f82-b68dc752553926bf-386c"
+                        },
+                        "text": "customLocalizedStrings[\"CTM/questions/age\"]",
+                        "variable": "ageValue",
+                        "submitTitle": "Submit",
+                        "label": "Age",
+                        "visible": "true",
+                        "stringId": "stringId_f2b2ba4e21407e7f"
+                    },
+                    {
+                        "id": "e39413f93f82-b68dc752553926bf-386c",
+                        "type": "branch",
+                        "condition": "scenario.ageValue > scenario.consts.MIN_AGE &&\r\nscenario.ageValue <= scenario.consts.MAX_AGE",
+                        "designer": {
+                            "xLocation": 141,
+                            "yLocation": 393,
+                            "next": "d333290bfd11-8236a6af24b28a6b-b7e3"
+                        },
+                        "label": "Validate Age",
+                        "targetStepId": "129a9a48-861b-4263-a82e-787d280a18dd"
+                    },
+                    {
+                        "id": "6d31de90868b-1c041e8a7b606c9c-273f",
+                        "type": "prompt",
+                        "dataType": "string",
+                        "designer": {
+                            "xLocation": 315,
+                            "yLocation": 53,
+                            "next": "1a93ee0c-a096-40fd-a70a-7042e1177fc8"
+                        },
+                        "text": "customLocalizedStrings[\"CTM/questions/condition\"]",
+                        "variable": "conditionValue",
+                        "label": "Condition",
+                        "visible": "!scenario.condition",
+                        "stringId": "stringId_4cf1956510b3b02e",
+                        "markdown": false
+                    },
+                    {
+                        "id": "d333290bfd11-8236a6af24b28a6b-b7e3",
+                        "type": "statement",
+                        "designer": {
+                            "xLocation": 82,
+                            "yLocation": 343,
+                            "next": "76b36f8389b4-0faf6d75e6f30328-77e2"
+                        },
+                        "text": "customLocalizedStrings[\"CTM/messages/unsupportedAge\"]",
+                        "label": "Unsupported Age",
+                        "stringId": "stringId_d8eae28ead1d3eb5"
+                    },
+                    {
+                        "id": "f5a2e5d498e1-fe3e715a36ca0d77-53e4",
+                        "type": "prompt",
+                        "dataType": "string",
+                        "designer": {
+                            "xLocation": 391,
+                            "yLocation": 560,
+                            "next": "8d86eb91-77ae-4c2d-883d-7ac9e9af12bb"
+                        },
+                        "text": "customLocalizedStrings[\"CTM/questions/state\"]",
+                        "variable": "state",
+                        "label": "State",
+                        "stringId": "stringId_9211b4901d8adfae",
+                        "markdown": false
+                    },
+                    {
+                        "id": "304be1c70c2d-7564feea80bc45fe-b7db",
+                        "type": "action",
+                        "label": "Normalize Results",
+                        "designer": {
+                            "xLocation": 171,
+                            "yLocation": 701,
+                            "next": "f7c3614521fb-fc5c2048fe78a135-3977"
+                        },
+                        "onInit": "var userProfile = {\n    id: \"12\",\n    condition: scenario.condition,\n    Info : {\n        sex: scenario.sex,\n        birthDate: scenario.birthDate,\n    }\n};\n\n// location\nscenario.location.searchLocationCountryOrRegion = scenario.location.countryOrRegion;\nscenario.location.searchLocationState = scenario.location.state;\nscenario.location.searchLocationCity = scenario.location.city;\n\n// assign values to scenario\nscenario.userProfile = userProfile;\n"
+                    },
+                    {
+                        "id": "f7c3614521fb-fc5c2048fe78a135-3977",
+                        "type": "endwithresult",
+                        "designer": {
+                            "xLocation": 166,
+                            "yLocation": 777
+                        },
+                        "endScope": "scenario",
+                        "returnValue": "{\r\n    consts: scenario.consts,\r\n    messages: scenario.messages,\r\n    questions: scenario.questions,\r\n    userProfile: scenario.userProfile,\r\n    location: scenario.location\r\n}",
+                        "label": "Result"
+                    },
+                    {
+                        "id": "0d3919d26ddc-e724cc9f48977f49-135e",
+                        "type": "prompt",
+                        "dataType": "object",
+                        "designer": {
+                            "xLocation": 346,
+                            "yLocation": 377,
+                            "next": "8f9c2de6-3c9d-4857-aa97-9df52100e104"
+                        },
+                        "variable": "locationObj",
+                        "layout": "vertical",
+                        "attachment": [
+                            {
+                                "type": "AdaptiveCard",
+                                "cardCode": "{ \r\n    \"type\": \"AdaptiveCard\",\r\n    \"$schema\": \"http://adaptivecards.io/schemas/adaptive-card.json\",\r\n    \"version\": \"1.3\",\r\n    \"body\": [\r\n        {\r\n            \"type\": \"Input.ChoiceSet\",\r\n            \"choices\": [\r\n                {\r\n    \"title\": \"Afghanistan\",\r\n    \"value\": \"Afghanistan\"\r\n},\r\n{\r\n    \"title\": \"Åland Islands\",\r\n    \"value\": \"Åland Islands\"\r\n},\r\n{\r\n    \"title\": \"Albania\",\r\n    \"value\": \"Albania\"\r\n},\r\n{\r\n    \"title\": \"Algeria\",\r\n    \"value\": \"Algeria\"\r\n},\r\n{\r\n    \"title\": \"American Samoa\",\r\n    \"value\": \"American Samoa\"\r\n},\r\n{\r\n    \"title\": \"Andorra\",\r\n    \"value\": \"Andorra\"\r\n},\r\n{\r\n    \"title\": \"Angola\",\r\n    \"value\": \"Angola\"\r\n},\r\n{\r\n    \"title\": \"Anguilla\",\r\n    \"value\": \"Anguilla\"\r\n},\r\n{\r\n    \"title\": \"Antarctica\",\r\n    \"value\": \"Antarctica\"\r\n},\r\n{\r\n    \"title\": \"Antigua and Barbuda\",\r\n    \"value\": \"Antigua and Barbuda\"\r\n},\r\n{\r\n    \"title\": \"Argentina\",\r\n    \"value\": \"Argentina\"\r\n},\r\n{\r\n    \"title\": \"Armenia\",\r\n    \"value\": \"Armenia\"\r\n},\r\n{\r\n    \"title\": \"Aruba\",\r\n    \"value\": \"Aruba\"\r\n},\r\n{\r\n    \"title\": \"Australia\",\r\n    \"value\": \"Australia\"\r\n},\r\n{\r\n    \"title\": \"Austria\",\r\n    \"value\": \"Austria\"\r\n},\r\n{\r\n    \"title\": \"Azerbaijan\",\r\n    \"value\": \"Azerbaijan\"\r\n},\r\n{\r\n    \"title\": \"Bahamas\",\r\n    \"value\": \"Bahamas\"\r\n},\r\n{\r\n    \"title\": \"Bahrain\",\r\n    \"value\": \"Bahrain\"\r\n},\r\n{\r\n    \"title\": \"Bangladesh\",\r\n    \"value\": \"Bangladesh\"\r\n},\r\n{\r\n    \"title\": \"Barbados\",\r\n    \"value\": \"Barbados\"\r\n},\r\n{\r\n    \"title\": \"Belarus\",\r\n    \"value\": \"Belarus\"\r\n},\r\n{\r\n    \"title\": \"Belgium\",\r\n    \"value\": \"Belgium\"\r\n},\r\n{\r\n    \"title\": \"Belize\",\r\n    \"value\": \"Belize\"\r\n},\r\n{\r\n    \"title\": \"Benin\",\r\n    \"value\": \"Benin\"\r\n},\r\n{\r\n    \"title\": \"Bermuda\",\r\n    \"value\": \"Bermuda\"\r\n},\r\n{\r\n    \"title\": \"Bhutan\",\r\n    \"value\": \"Bhutan\"\r\n},\r\n{\r\n    \"title\": \"Bolivia\",\r\n    \"value\": \"Bolivia\"\r\n},\r\n{\r\n    \"title\": \"Bonaire\",\r\n    \"value\": \"Bonaire\"\r\n},\r\n{\r\n    \"title\": \"Bosnia and Herzegovina\",\r\n    \"value\": \"Bosnia and Herzegovina\"\r\n},\r\n{\r\n    \"title\": \"Botswana\",\r\n    \"value\": \"Botswana\"\r\n},\r\n{\r\n    \"title\": \"Bouvet Island\",\r\n    \"value\": \"Bouvet Island\"\r\n},\r\n{\r\n    \"title\": \"Brazil\",\r\n    \"value\": \"Brazil\"\r\n},\r\n{\r\n    \"title\": \"British Indian Ocean Territory\",\r\n    \"value\": \"British Indian Ocean Territory\"\r\n},\r\n{\r\n    \"title\": \"British Virgin Islands\",\r\n    \"value\": \"British Virgin Islands\"\r\n},\r\n{\r\n    \"title\": \"Brunei\",\r\n    \"value\": \"Brunei\"\r\n},\r\n{\r\n    \"title\": \"Bulgaria\",\r\n    \"value\": \"Bulgaria\"\r\n},\r\n{\r\n    \"title\": \"Burkina Faso\",\r\n    \"value\": \"Burkina Faso\"\r\n},\r\n{\r\n    \"title\": \"Burundi\",\r\n    \"value\": \"Burundi\"\r\n},\r\n{\r\n    \"title\": \"Cabo Verde\",\r\n    \"value\": \"Cabo Verde\"\r\n},\r\n{\r\n    \"title\": \"Cambodia\",\r\n    \"value\": \"Cambodia\"\r\n},\r\n{\r\n    \"title\": \"Cameroon\",\r\n    \"value\": \"Cameroon\"\r\n},\r\n{\r\n    \"title\": \"Canada\",\r\n    \"value\": \"Canada\"\r\n},\r\n{\r\n    \"title\": \"Cayman Islands\",\r\n    \"value\": \"Cayman Islands\"\r\n},\r\n{\r\n    \"title\": \"Central African Republic\",\r\n    \"value\": \"Central African Republic\"\r\n},\r\n{\r\n    \"title\": \"Chad\",\r\n    \"value\": \"Chad\"\r\n},\r\n{\r\n    \"title\": \"Chile\",\r\n    \"value\": \"Chile\"\r\n},\r\n{\r\n    \"title\": \"China\",\r\n    \"value\": \"China\"\r\n},\r\n{\r\n    \"title\": \"Christmas Island\",\r\n    \"value\": \"Christmas Island\"\r\n},\r\n{\r\n    \"title\": \"Cocos (Keeling) Islands\",\r\n    \"value\": \"Cocos (Keeling) Islands\"\r\n},\r\n{\r\n    \"title\": \"Colombia\",\r\n    \"value\": \"Colombia\"\r\n},\r\n{\r\n    \"title\": \"Comoros\",\r\n    \"value\": \"Comoros\"\r\n},\r\n{\r\n    \"title\": \"Congo\",\r\n    \"value\": \"Congo\"\r\n},\r\n{\r\n    \"title\": \"Congo (DRC)\",\r\n    \"value\": \"Congo (DRC)\"\r\n},\r\n{\r\n    \"title\": \"Cook Islands\",\r\n    \"value\": \"Cook Islands\"\r\n},\r\n{\r\n    \"title\": \"Costa Rica\",\r\n    \"value\": \"Costa Rica\"\r\n},\r\n{\r\n    \"title\": \"Côte d’Ivoire\",\r\n    \"value\": \"Côte d’Ivoire\"\r\n},\r\n{\r\n    \"title\": \"Croatia\",\r\n    \"value\": \"Croatia\"\r\n},\r\n{\r\n    \"title\": \"Cuba\",\r\n    \"value\": \"Cuba\"\r\n},\r\n{\r\n    \"title\": \"Curaçao\",\r\n    \"value\": \"Curaçao\"\r\n},\r\n{\r\n    \"title\": \"Cyprus\",\r\n    \"value\": \"Cyprus\"\r\n},\r\n{\r\n    \"title\": \"Czechia\",\r\n    \"value\": \"Czechia\"\r\n},\r\n{\r\n    \"title\": \"Denmark\",\r\n    \"value\": \"Denmark\"\r\n},\r\n{\r\n    \"title\": \"Djibouti\",\r\n    \"value\": \"Djibouti\"\r\n},\r\n{\r\n    \"title\": \"Dominica\",\r\n    \"value\": \"Dominica\"\r\n},\r\n{\r\n    \"title\": \"Dominican Republic\",\r\n    \"value\": \"Dominican Republic\"\r\n},\r\n{\r\n    \"title\": \"Ecuador\",\r\n    \"value\": \"Ecuador\"\r\n},\r\n{\r\n    \"title\": \"Egypt\",\r\n    \"value\": \"Egypt\"\r\n},\r\n{\r\n    \"title\": \"El Salvador\",\r\n    \"value\": \"El Salvador\"\r\n},\r\n{\r\n    \"title\": \"Equatorial Guinea\",\r\n    \"value\": \"Equatorial Guinea\"\r\n},\r\n{\r\n    \"title\": \"Eritrea\",\r\n    \"value\": \"Eritrea\"\r\n},\r\n{\r\n    \"title\": \"Estonia\",\r\n    \"value\": \"Estonia\"\r\n},\r\n{\r\n    \"title\": \"Eswatini\",\r\n    \"value\": \"Eswatini\"\r\n},\r\n{\r\n    \"title\": \"Ethiopia\",\r\n    \"value\": \"Ethiopia\"\r\n},\r\n{\r\n    \"title\": \"Falkland Islands\",\r\n    \"value\": \"Falkland Islands\"\r\n},\r\n{\r\n    \"title\": \"Faroe Islands\",\r\n    \"value\": \"Faroe Islands\"\r\n},\r\n{\r\n    \"title\": \"Fiji\",\r\n    \"value\": \"Fiji\"\r\n},\r\n{\r\n    \"title\": \"Finland\",\r\n    \"value\": \"Finland\"\r\n},\r\n{\r\n    \"title\": \"France\",\r\n    \"value\": \"France\"\r\n},\r\n{\r\n    \"title\": \"French Guiana\",\r\n    \"value\": \"French Guiana\"\r\n},\r\n{\r\n    \"title\": \"French Polynesia\",\r\n    \"value\": \"French Polynesia\"\r\n},\r\n{\r\n    \"title\": \"French Southern Territories\",\r\n    \"value\": \"French Southern Territories\"\r\n},\r\n{\r\n    \"title\": \"Gabon\",\r\n    \"value\": \"Gabon\"\r\n},\r\n{\r\n    \"title\": \"Gambia\",\r\n    \"value\": \"Gambia\"\r\n},\r\n{\r\n    \"title\": \"Georgia\",\r\n    \"value\": \"Georgia\"\r\n},\r\n{\r\n    \"title\": \"Germany\",\r\n    \"value\": \"Germany\"\r\n},\r\n{\r\n    \"title\": \"Ghana\",\r\n    \"value\": \"Ghana\"\r\n},\r\n{\r\n    \"title\": \"Gibraltar\",\r\n    \"value\": \"Gibraltar\"\r\n},\r\n{\r\n    \"title\": \"Greece\",\r\n    \"value\": \"Greece\"\r\n},\r\n{\r\n    \"title\": \"Greenland\",\r\n    \"value\": \"Greenland\"\r\n},\r\n{\r\n    \"title\": \"Grenada\",\r\n    \"value\": \"Grenada\"\r\n},\r\n{\r\n    \"title\": \"Guadeloupe\",\r\n    \"value\": \"Guadeloupe\"\r\n},\r\n{\r\n    \"title\": \"Guam\",\r\n    \"value\": \"Guam\"\r\n},\r\n{\r\n    \"title\": \"Guatemala\",\r\n    \"value\": \"Guatemala\"\r\n},\r\n{\r\n    \"title\": \"Guernsey\",\r\n    \"value\": \"Guernsey\"\r\n},\r\n{\r\n    \"title\": \"Guinea\",\r\n    \"value\": \"Guinea\"\r\n},\r\n{\r\n    \"title\": \"Guinea-Bissau\",\r\n    \"value\": \"Guinea-Bissau\"\r\n},\r\n{\r\n    \"title\": \"Guyana\",\r\n    \"value\": \"Guyana\"\r\n},\r\n{\r\n    \"title\": \"Haiti\",\r\n    \"value\": \"Haiti\"\r\n},\r\n{\r\n    \"title\": \"Heard Island and McDonald Islands\",\r\n    \"value\": \"Heard Island and McDonald Islands\"\r\n},\r\n{\r\n    \"title\": \"Honduras\",\r\n    \"value\": \"Honduras\"\r\n},\r\n{\r\n    \"title\": \"Hong Kong SAR\",\r\n    \"value\": \"Hong Kong SAR\"\r\n},\r\n{\r\n    \"title\": \"Hungary\",\r\n    \"value\": \"Hungary\"\r\n},\r\n{\r\n    \"title\": \"Iceland\",\r\n    \"value\": \"Iceland\"\r\n},\r\n{\r\n    \"title\": \"India\",\r\n    \"value\": \"India\"\r\n},\r\n{\r\n    \"title\": \"Indonesia\",\r\n    \"value\": \"Indonesia\"\r\n},\r\n{\r\n    \"title\": \"Iran\",\r\n    \"value\": \"Iran\"\r\n},\r\n{\r\n    \"title\": \"Iraq\",\r\n    \"value\": \"Iraq\"\r\n},\r\n{\r\n    \"title\": \"Ireland\",\r\n    \"value\": \"Ireland\"\r\n},\r\n{\r\n    \"title\": \"Isle of Man\",\r\n    \"value\": \"Isle of Man\"\r\n},\r\n{\r\n    \"title\": \"Israel\",\r\n    \"value\": \"Israel\"\r\n},\r\n{\r\n    \"title\": \"Italy\",\r\n    \"value\": \"Italy\"\r\n},\r\n{\r\n    \"title\": \"Jamaica\",\r\n    \"value\": \"Jamaica\"\r\n},\r\n{\r\n    \"title\": \"Jan Mayen\",\r\n    \"value\": \"Jan Mayen\"\r\n},\r\n{\r\n    \"title\": \"Japan\",\r\n    \"value\": \"Japan\"\r\n},\r\n{\r\n    \"title\": \"Jersey\",\r\n    \"value\": \"Jersey\"\r\n},\r\n{\r\n    \"title\": \"Jordan\",\r\n    \"value\": \"Jordan\"\r\n},\r\n{\r\n    \"title\": \"Kazakhstan\",\r\n    \"value\": \"Kazakhstan\"\r\n},\r\n{\r\n    \"title\": \"Kenya\",\r\n    \"value\": \"Kenya\"\r\n},\r\n{\r\n    \"title\": \"Kiribati\",\r\n    \"value\": \"Kiribati\"\r\n},\r\n{\r\n    \"title\": \"Korea\",\r\n    \"value\": \"Korea\"\r\n},\r\n{\r\n    \"title\": \"Kosovo\",\r\n    \"value\": \"Kosovo\"\r\n},\r\n{\r\n    \"title\": \"Kuwait\",\r\n    \"value\": \"Kuwait\"\r\n},\r\n{\r\n    \"title\": \"Kyrgyzstan\",\r\n    \"value\": \"Kyrgyzstan\"\r\n},\r\n{\r\n    \"title\": \"Laos\",\r\n    \"value\": \"Laos\"\r\n},\r\n{\r\n    \"title\": \"Latvia\",\r\n    \"value\": \"Latvia\"\r\n},\r\n{\r\n    \"title\": \"Lebanon\",\r\n    \"value\": \"Lebanon\"\r\n},\r\n{\r\n    \"title\": \"Lesotho\",\r\n    \"value\": \"Lesotho\"\r\n},\r\n{\r\n    \"title\": \"Liberia\",\r\n    \"value\": \"Liberia\"\r\n},\r\n{\r\n    \"title\": \"Libya\",\r\n    \"value\": \"Libya\"\r\n},\r\n{\r\n    \"title\": \"Liechtenstein\",\r\n    \"value\": \"Liechtenstein\"\r\n},\r\n{\r\n    \"title\": \"Lithuania\",\r\n    \"value\": \"Lithuania\"\r\n},\r\n{\r\n    \"title\": \"Luxembourg\",\r\n    \"value\": \"Luxembourg\"\r\n},\r\n{\r\n    \"title\": \"Macao SAR\",\r\n    \"value\": \"Macao SAR\"\r\n},\r\n{\r\n    \"title\": \"Madagascar\",\r\n    \"value\": \"Madagascar\"\r\n},\r\n{\r\n    \"title\": \"Malawi\",\r\n    \"value\": \"Malawi\"\r\n},\r\n{\r\n    \"title\": \"Malaysia\",\r\n    \"value\": \"Malaysia\"\r\n},\r\n{\r\n    \"title\": \"Maldives\",\r\n    \"value\": \"Maldives\"\r\n},\r\n{\r\n    \"title\": \"Mali\",\r\n    \"value\": \"Mali\"\r\n},\r\n{\r\n    \"title\": \"Malta\",\r\n    \"value\": \"Malta\"\r\n},\r\n{\r\n    \"title\": \"Marshall Islands\",\r\n    \"value\": \"Marshall Islands\"\r\n},\r\n{\r\n    \"title\": \"Martinique\",\r\n    \"value\": \"Martinique\"\r\n},\r\n{\r\n    \"title\": \"Mauritania\",\r\n    \"value\": \"Mauritania\"\r\n},\r\n{\r\n    \"title\": \"Mauritius\",\r\n    \"value\": \"Mauritius\"\r\n},\r\n{\r\n    \"title\": \"Mayotte\",\r\n    \"value\": \"Mayotte\"\r\n},\r\n{\r\n    \"title\": \"Mexico\",\r\n    \"value\": \"Mexico\"\r\n},\r\n{\r\n    \"title\": \"Micronesia\",\r\n    \"value\": \"Micronesia\"\r\n},\r\n{\r\n    \"title\": \"Moldova\",\r\n    \"value\": \"Moldova\"\r\n},\r\n{\r\n    \"title\": \"Monaco\",\r\n    \"value\": \"Monaco\"\r\n},\r\n{\r\n    \"title\": \"Mongolia\",\r\n    \"value\": \"Mongolia\"\r\n},\r\n{\r\n    \"title\": \"Montenegro\",\r\n    \"value\": \"Montenegro\"\r\n},\r\n{\r\n    \"title\": \"Montserrat\",\r\n    \"value\": \"Montserrat\"\r\n},\r\n{\r\n    \"title\": \"Morocco\",\r\n    \"value\": \"Morocco\"\r\n},\r\n{\r\n    \"title\": \"Mozambique\",\r\n    \"value\": \"Mozambique\"\r\n},\r\n{\r\n    \"title\": \"Myanmar\",\r\n    \"value\": \"Myanmar\"\r\n},\r\n{\r\n    \"title\": \"Namibia\",\r\n    \"value\": \"Namibia\"\r\n},\r\n{\r\n    \"title\": \"Nauru\",\r\n    \"value\": \"Nauru\"\r\n},\r\n{\r\n    \"title\": \"Nepal\",\r\n    \"value\": \"Nepal\"\r\n},\r\n{\r\n    \"title\": \"Netherlands\",\r\n    \"value\": \"Netherlands\"\r\n},\r\n{\r\n    \"title\": \"New Caledonia\",\r\n    \"value\": \"New Caledonia\"\r\n},\r\n{\r\n    \"title\": \"New Zealand\",\r\n    \"value\": \"New Zealand\"\r\n},\r\n{\r\n    \"title\": \"Nicaragua\",\r\n    \"value\": \"Nicaragua\"\r\n},\r\n{\r\n    \"title\": \"Niger\",\r\n    \"value\": \"Niger\"\r\n},\r\n{\r\n    \"title\": \"Nigeria\",\r\n    \"value\": \"Nigeria\"\r\n},\r\n{\r\n    \"title\": \"Niue\",\r\n    \"value\": \"Niue\"\r\n},\r\n{\r\n    \"title\": \"Norfolk Island\",\r\n    \"value\": \"Norfolk Island\"\r\n},\r\n{\r\n    \"title\": \"North Korea\",\r\n    \"value\": \"North Korea\"\r\n},\r\n{\r\n    \"title\": \"North Macedonia\",\r\n    \"value\": \"North Macedonia\"\r\n},\r\n{\r\n    \"title\": \"Northern Mariana Islands\",\r\n    \"value\": \"Northern Mariana Islands\"\r\n},\r\n{\r\n    \"title\": \"Norway\",\r\n    \"value\": \"Norway\"\r\n},\r\n{\r\n    \"title\": \"Oman\",\r\n    \"value\": \"Oman\"\r\n},\r\n{\r\n    \"title\": \"Pakistan\",\r\n    \"value\": \"Pakistan\"\r\n},\r\n{\r\n    \"title\": \"Palau\",\r\n    \"value\": \"Palau\"\r\n},\r\n{\r\n    \"title\": \"Palestinian Authority\",\r\n    \"value\": \"Palestinian Authority\"\r\n},\r\n{\r\n    \"title\": \"Panama\",\r\n    \"value\": \"Panama\"\r\n},\r\n{\r\n    \"title\": \"Papua New Guinea\",\r\n    \"value\": \"Papua New Guinea\"\r\n},\r\n{\r\n    \"title\": \"Paraguay\",\r\n    \"value\": \"Paraguay\"\r\n},\r\n{\r\n    \"title\": \"Peru\",\r\n    \"value\": \"Peru\"\r\n},\r\n{\r\n    \"title\": \"Philippines\",\r\n    \"value\": \"Philippines\"\r\n},\r\n{\r\n    \"title\": \"Pitcairn Islands\",\r\n    \"value\": \"Pitcairn Islands\"\r\n},\r\n{\r\n    \"title\": \"Poland\",\r\n    \"value\": \"Poland\"\r\n},\r\n{\r\n    \"title\": \"Portugal\",\r\n    \"value\": \"Portugal\"\r\n},\r\n{\r\n    \"title\": \"Puerto Rico\",\r\n    \"value\": \"Puerto Rico\"\r\n},\r\n{\r\n    \"title\": \"Qatar\",\r\n    \"value\": \"Qatar\"\r\n},\r\n{\r\n    \"title\": \"Réunion\",\r\n    \"value\": \"Réunion\"\r\n},\r\n{\r\n    \"title\": \"Romania\",\r\n    \"value\": \"Romania\"\r\n},\r\n{\r\n    \"title\": \"Russia\",\r\n    \"value\": \"Russia\"\r\n},\r\n{\r\n    \"title\": \"Rwanda\",\r\n    \"value\": \"Rwanda\"\r\n},\r\n{\r\n    \"title\": \"Saba\",\r\n    \"value\": \"Saba\"\r\n},\r\n{\r\n    \"title\": \"Saint Barthélemy\",\r\n    \"value\": \"Saint Barthélemy\"\r\n},\r\n{\r\n    \"title\": \"Saint Kitts and Nevis\",\r\n    \"value\": \"Saint Kitts and Nevis\"\r\n},\r\n{\r\n    \"title\": \"Saint Lucia\",\r\n    \"value\": \"Saint Lucia\"\r\n},\r\n{\r\n    \"title\": \"Saint Martin\",\r\n    \"value\": \"Saint Martin\"\r\n},\r\n{\r\n    \"title\": \"Saint Pierre and Miquelon\",\r\n    \"value\": \"Saint Pierre and Miquelon\"\r\n},\r\n{\r\n    \"title\": \"Saint Vincent and the Grenadines\",\r\n    \"value\": \"Saint Vincent and the Grenadines\"\r\n},\r\n{\r\n    \"title\": \"Samoa\",\r\n    \"value\": \"Samoa\"\r\n},\r\n{\r\n    \"title\": \"San Marino\",\r\n    \"value\": \"San Marino\"\r\n},\r\n{\r\n    \"title\": \"São Tomé and Príncipe\",\r\n    \"value\": \"São Tomé and Príncipe\"\r\n},\r\n{\r\n    \"title\": \"Saudi Arabia\",\r\n    \"value\": \"Saudi Arabia\"\r\n},\r\n{\r\n    \"title\": \"Senegal\",\r\n    \"value\": \"Senegal\"\r\n},\r\n{\r\n    \"title\": \"Serbia\",\r\n    \"value\": \"Serbia\"\r\n},\r\n{\r\n    \"title\": \"Seychelles\",\r\n    \"value\": \"Seychelles\"\r\n},\r\n{\r\n    \"title\": \"Sierra Leone\",\r\n    \"value\": \"Sierra Leone\"\r\n},\r\n{\r\n    \"title\": \"Singapore\",\r\n    \"value\": \"Singapore\"\r\n},\r\n{\r\n    \"title\": \"Sint Eustatius\",\r\n    \"value\": \"Sint Eustatius\"\r\n},\r\n{\r\n    \"title\": \"Sint Maarten\",\r\n    \"value\": \"Sint Maarten\"\r\n},\r\n{\r\n    \"title\": \"Slovakia\",\r\n    \"value\": \"Slovakia\"\r\n},\r\n{\r\n    \"title\": \"Slovenia\",\r\n    \"value\": \"Slovenia\"\r\n},\r\n{\r\n    \"title\": \"Solomon Islands\",\r\n    \"value\": \"Solomon Islands\"\r\n},\r\n{\r\n    \"title\": \"Somalia\",\r\n    \"value\": \"Somalia\"\r\n},\r\n{\r\n    \"title\": \"South Africa\",\r\n    \"value\": \"South Africa\"\r\n},\r\n{\r\n    \"title\": \"South Georgia and South Sandwich Islands\",\r\n    \"value\": \"South Georgia and South Sandwich Islands\"\r\n},\r\n{\r\n    \"title\": \"South Sudan\",\r\n    \"value\": \"South Sudan\"\r\n},\r\n{\r\n    \"title\": \"Spain\",\r\n    \"value\": \"Spain\"\r\n},\r\n{\r\n    \"title\": \"Sri Lanka\",\r\n    \"value\": \"Sri Lanka\"\r\n},\r\n{\r\n    \"title\": \"St Helena, Ascension, Tristan da Cunha\",\r\n    \"value\": \"St Helena, Ascension, Tristan da Cunha\"\r\n},\r\n{\r\n    \"title\": \"Sudan\",\r\n    \"value\": \"Sudan\"\r\n},\r\n{\r\n    \"title\": \"Suriname\",\r\n    \"value\": \"Suriname\"\r\n},\r\n{\r\n    \"title\": \"Svalbard\",\r\n    \"value\": \"Svalbard\"\r\n},\r\n{\r\n    \"title\": \"Sweden\",\r\n    \"value\": \"Sweden\"\r\n},\r\n{\r\n    \"title\": \"Switzerland\",\r\n    \"value\": \"Switzerland\"\r\n},\r\n{\r\n    \"title\": \"Syria\",\r\n    \"value\": \"Syria\"\r\n},\r\n{\r\n    \"title\": \"Taiwan\",\r\n    \"value\": \"Taiwan\"\r\n},\r\n{\r\n    \"title\": \"Tajikistan\",\r\n    \"value\": \"Tajikistan\"\r\n},\r\n{\r\n    \"title\": \"Tanzania\",\r\n    \"value\": \"Tanzania\"\r\n},\r\n{\r\n    \"title\": \"Thailand\",\r\n    \"value\": \"Thailand\"\r\n},\r\n{\r\n    \"title\": \"Timor-Leste\",\r\n    \"value\": \"Timor-Leste\"\r\n},\r\n{\r\n    \"title\": \"Togo\",\r\n    \"value\": \"Togo\"\r\n},\r\n{\r\n    \"title\": \"Tokelau\",\r\n    \"value\": \"Tokelau\"\r\n},\r\n{\r\n    \"title\": \"Tonga\",\r\n    \"value\": \"Tonga\"\r\n},\r\n{\r\n    \"title\": \"Trinidad and Tobago\",\r\n    \"value\": \"Trinidad and Tobago\"\r\n},\r\n{\r\n    \"title\": \"Tunisia\",\r\n    \"value\": \"Tunisia\"\r\n},\r\n{\r\n    \"title\": \"Turkey\",\r\n    \"value\": \"Turkey\"\r\n},\r\n{\r\n    \"title\": \"Turkmenistan\",\r\n    \"value\": \"Turkmenistan\"\r\n},\r\n{\r\n    \"title\": \"Turks and Caicos Islands\",\r\n    \"value\": \"Turks and Caicos Islands\"\r\n},\r\n{\r\n    \"title\": \"Tuvalu\",\r\n    \"value\": \"Tuvalu\"\r\n},\r\n{\r\n    \"title\": \"U.S. Outlying Islands\",\r\n    \"value\": \"U.S. Outlying Islands\"\r\n},\r\n{\r\n    \"title\": \"U.S. Virgin Islands\",\r\n    \"value\": \"U.S. Virgin Islands\"\r\n},\r\n{\r\n    \"title\": \"Uganda\",\r\n    \"value\": \"Uganda\"\r\n},\r\n{\r\n    \"title\": \"Ukraine\",\r\n    \"value\": \"Ukraine\"\r\n},\r\n{\r\n    \"title\": \"United Arab Emirates\",\r\n    \"value\": \"United Arab Emirates\"\r\n},\r\n{\r\n    \"title\": \"United Kingdom\",\r\n    \"value\": \"United Kingdom\"\r\n},\r\n{\r\n    \"title\": \"United States\",\r\n    \"value\": \"United States\"\r\n},\r\n{\r\n    \"title\": \"Uruguay\",\r\n    \"value\": \"Uruguay\"\r\n},\r\n{\r\n    \"title\": \"Uzbekistan\",\r\n    \"value\": \"Uzbekistan\"\r\n},\r\n{\r\n    \"title\": \"Vanuatu\",\r\n    \"value\": \"Vanuatu\"\r\n},\r\n{\r\n    \"title\": \"Vatican City\",\r\n    \"value\": \"Vatican City\"\r\n},\r\n{\r\n    \"title\": \"Venezuela\",\r\n    \"value\": \"Venezuela\"\r\n},\r\n{\r\n    \"title\": \"Vietnam\",\r\n    \"value\": \"Vietnam\"\r\n},\r\n{\r\n    \"title\": \"Wallis and Futuna\",\r\n    \"value\": \"Wallis and Futuna\"\r\n},\r\n{\r\n    \"title\": \"Yemen\",\r\n    \"value\": \"Yemen\"\r\n},\r\n{\r\n    \"title\": \"Zambia\",\r\n    \"value\": \"Zambia\"\r\n},\r\n{\r\n    \"title\": \"Zimbabwe\",\r\n    \"value\": \"Zimbabwe\"\r\n}\r\n            ],\r\n            \"placeholder\": \"Select Country/Region\",\r\n            \"label\": \"Country/Region\",\r\n            \"id\": \"CountryOrRegion\",\r\n            \"isRequired\": true,\r\n            \"errorMessage\": \"Please select Country/Region\"\r\n        },\r\n        {\r\n            \"type\": \"Input.ChoiceSet\",\r\n            \"choices\": [\r\n                    {\r\n    \"title\": \"Alabama\",\r\n    \"value\": \"AL\"\r\n  },\r\n  {\r\n    \"title\": \"Alaska\",\r\n    \"value\": \"AK\"\r\n  },\r\n  {\r\n    \"title\": \"Arizona\",\r\n    \"value\": \"AZ\"\r\n  },\r\n  {\r\n    \"title\": \"Arkansas\",\r\n    \"value\": \"AR\"\r\n  },\r\n  {\r\n    \"title\": \"California\",\r\n    \"value\": \"CA\"\r\n  },\r\n  {\r\n    \"title\": \"Colorado\",\r\n    \"value\": \"CO\"\r\n  },\r\n  {\r\n    \"title\": \"Connecticut\",\r\n    \"value\": \"CT\"\r\n  },\r\n  {\r\n    \"title\": \"Delaware\",\r\n    \"value\": \"DE\"\r\n  },\r\n  {\r\n    \"title\": \"Florida\",\r\n    \"value\": \"FL\"\r\n  },\r\n  {\r\n    \"title\": \"Georgia\",\r\n    \"value\": \"GA\"\r\n  },\r\n  {\r\n    \"title\": \"Hawaii\",\r\n    \"value\": \"HI\"\r\n  },\r\n  {\r\n    \"title\": \"Idaho\",\r\n    \"value\": \"ID\"\r\n  },\r\n  {\r\n    \"title\": \"Illinois\",\r\n    \"value\": \"IL\"\r\n  },\r\n  {\r\n    \"title\": \"Indiana\",\r\n    \"value\": \"IN\"\r\n  },\r\n  {\r\n    \"title\": \"Iowa\",\r\n    \"value\": \"IA\"\r\n  },\r\n  {\r\n    \"title\": \"Kansas\",\r\n    \"value\": \"KS\"\r\n  },\r\n  {\r\n    \"title\": \"Kentucky\",\r\n    \"value\": \"KY\"\r\n  },\r\n  {\r\n    \"title\": \"Louisiana\",\r\n    \"value\": \"LA\"\r\n  },\r\n  {\r\n    \"title\": \"Maine\",\r\n    \"value\": \"ME\"\r\n  },\r\n  {\r\n    \"title\": \"Maryland\",\r\n    \"value\": \"MD\"\r\n  },\r\n  {\r\n    \"title\": \"Massachusetts\",\r\n    \"value\": \"MA\"\r\n  },\r\n  {\r\n    \"title\": \"Michigan\",\r\n    \"value\": \"MI\"\r\n  },\r\n  {\r\n    \"title\": \"Minnesota\",\r\n    \"value\": \"MN\"\r\n  },\r\n  {\r\n    \"title\": \"Mississippi\",\r\n    \"value\": \"MS\"\r\n  },\r\n  {\r\n    \"title\": \"Missouri\",\r\n    \"value\": \"MO\"\r\n  },\r\n  {\r\n    \"title\": \"Montana\",\r\n    \"value\": \"MT\"\r\n  },\r\n  {\r\n    \"title\": \"Nebraska\",\r\n    \"value\": \"NE\"\r\n  },\r\n  {\r\n    \"title\": \"Nevada\",\r\n    \"value\": \"NV\"\r\n  },\r\n  {\r\n    \"title\": \"New Hampshire\",\r\n    \"value\": \"NH\"\r\n  },\r\n  {\r\n    \"title\": \"New Jersey\",\r\n    \"value\": \"NJ\"\r\n  },\r\n  {\r\n    \"title\": \"New Mexico\",\r\n    \"value\": \"NM\"\r\n  },\r\n  {\r\n    \"title\": \"New York\",\r\n    \"value\": \"NY\"\r\n  },\r\n  {\r\n    \"title\": \"North Carolina\",\r\n    \"value\": \"NC\"\r\n  },\r\n  {\r\n    \"title\": \"North Dakota\",\r\n    \"value\": \"ND\"\r\n  },\r\n  {\r\n    \"title\": \"Ohio\",\r\n    \"value\": \"OH\"\r\n  },\r\n  {\r\n    \"title\": \"Oklahoma\",\r\n    \"value\": \"OK\"\r\n  },\r\n  {\r\n    \"title\": \"Oregon\",\r\n    \"value\": \"OR\"\r\n  },\r\n  {\r\n    \"title\": \"Pennsylvania\",\r\n    \"value\": \"PA\"\r\n  },\r\n  {\r\n    \"title\": \"Rhode Island\",\r\n    \"value\": \"RI\"\r\n  },\r\n  {\r\n    \"title\": \"South Carolina\",\r\n    \"value\": \"SC\"\r\n  },\r\n  {\r\n    \"title\": \"South Dakota\",\r\n    \"value\": \"SD\"\r\n  },\r\n  {\r\n    \"title\": \"Tennessee\",\r\n    \"value\": \"TN\"\r\n  },\r\n  {\r\n    \"title\": \"Texas\",\r\n    \"value\": \"TX\"\r\n  },\r\n  {\r\n    \"title\": \"Utah\",\r\n    \"value\": \"UT\"\r\n  },\r\n  {\r\n    \"title\": \"Vermont\",\r\n    \"value\": \"VT\"\r\n  },\r\n  {\r\n    \"title\": \"Virginia\",\r\n    \"value\": \"VA\"\r\n  },\r\n  {\r\n    \"title\": \"Washington\",\r\n    \"value\": \"WA\"\r\n  },\r\n  {\r\n    \"title\": \"West Virginia\",\r\n    \"value\": \"WV\"\r\n  },\r\n  {\r\n    \"title\": \"Wisconsin\",\r\n    \"value\": \"WI\"\r\n  },\r\n  {\r\n    \"title\": \"Wyoming\",\r\n    \"value\": \"WY\"\r\n  }\r\n            ],\r\n            \"label\": \"State\",\r\n            \"id\": \"State\"\r\n        },\r\n        {\r\n            \"type\": \"Input.Text\",\r\n            \"label\": \"City\",\r\n            \"id\": \"City\"\r\n        },\r\n        {\r\n            \"type\": \"ActionSet\",\r\n            \"actions\": [\r\n                {\r\n                    \"type\": \"Action.Submit\",\r\n                    \"title\": \"Submit\"\r\n                }\r\n            ]\r\n        }\r\n    ]\r\n}\r\n"
+                            }
+                        ],
+                        "label": "Location",
+                        "text": "",
+                        "stringId": "",
+                        "markdown": false,
+                        "visible": "!scenario.location || (!scenario.location.countryOrRegion && !scenario.location.city && !scenario.location.state)"
+                    },
+                    {
+                        "id": "7d67d0eab514-3d507d5aef220042-5c53",
+                        "type": "branch",
+                        "condition": "scenario.location.countryOrRegion?.match(/United States|USA/i)\r\n&& !scenario.location.state \r\n",
+                        "designer": {
+                            "xLocation": 257,
+                            "yLocation": 534,
+                            "next": "304be1c70c2d-7564feea80bc45fe-b7db"
+                        },
+                        "targetStepId": "f5a2e5d498e1-fe3e715a36ca0d77-53e4"
+                    },
+                    {
+                        "id": "8f9c2de6-3c9d-4857-aa97-9df52100e104",
+                        "type": "action",
+                        "label": "Normalize Location Values",
+                        "designer": {
+                            "xLocation": 260,
+                            "yLocation": 462,
+                            "next": "7d67d0eab514-3d507d5aef220042-5c53"
+                        },
+                        "onInit": "\n// location\nscenario.location = scenario.location || {}\nscenario.location.countryOrRegion = scenario.location.countryOrRegion || scenario.locationObj?.CountryOrRegion;\nscenario.location.state = scenario.location.state || scenario.locationObj?.State;\nscenario.location.city = scenario.location.city || scenario.locationObj?.City;\n\nif(!scenario.location.countryOrRegion){\n    // USA as defalt country\n    scenario.location.countryOrRegion = \"United States\"\n    session.trace(\"setting default country: United States\", 0);\n}\n"
+                    },
+                    {
+                        "id": "8d86eb91-77ae-4c2d-883d-7ac9e9af12bb",
+                        "type": "action",
+                        "label": "Normalize State",
+                        "designer": {
+                            "xLocation": 300,
+                            "yLocation": 652,
+                            "next": "304be1c70c2d-7564feea80bc45fe-b7db"
+                        },
+                        "onInit": "// location\nscenario.location.state = scenario.state"
+                    },
+                    {
+                        "id": "129a9a48-861b-4263-a82e-787d280a18dd",
+                        "type": "action",
+                        "label": "Normalize Age",
+                        "designer": {
+                            "xLocation": 276,
+                            "yLocation": 337,
+                            "next": "0d3919d26ddc-e724cc9f48977f49-135e"
+                        },
+                        "onInit": "// age\nlet age = scenario.age || scenario.ageValue\nvar birthYear = new Date().getFullYear() - parseInt(age);\nscenario.birthDate = \"01/01/\"+ birthYear;\nsession.trace(\"normelized age:\" + scenario.birthDate, 0);"
+                    },
+                    {
+                        "id": "cfa16b74-36ad-4290-bb83-3007e205cbc8",
+                        "type": "action",
+                        "label": "Normalize Sex",
+                        "designer": {
+                            "xLocation": 164,
+                            "yLocation": 141,
+                            "next": "774ca676858f-dc86dce31145b233-1250"
+                        },
+                        "onInit": "// gender/sex\n\n\nscenario.sex = scenario.sex || scenario.sexValue?.entity.toLowerCase();\nif (!scenario.sex || scenario.sex == \"prefer not to say\") {\n    scenario.sex = \"unspecified\"\n}"
+                    },
+                    {
+                        "id": "1a93ee0c-a096-40fd-a70a-7042e1177fc8",
+                        "type": "action",
+                        "label": "Normalize Condition",
+                        "designer": {
+                            "xLocation": 316,
+                            "yLocation": 90,
+                            "next": "de86f22bb596-7c65f50cb311e848-299b"
+                        },
+                        "onInit": "// condition\nscenario.condition = scenario.condition || scenario.conditionValue;"
+                    }
+                ]
+            }
+        },
+        {
             "RowKey": "84a5065e-ed6b-470c-bbb2-1790245a1487",
-            "snapshots": 2,
+            "snapshots": 5,
             "name": "clinical_trials_matching_health_insight_async",
             "scenario_trigger": "HealthInsightDataConnectionAsync",
             "description": "call Health Insight async Data Connection",
             "userDisplayName": "Yochai Lehman",
             "active": true,
             "version": 1,
-            "updated": "2023-04-24T09:22:30.586Z",
+            "updated": "2023-06-06T07:29:16.645Z",
             "currentUser": "",
             "code": {
                 "interrupting": false,
@@ -1241,7 +1484,7 @@
                         "type": "datasource",
                         "designer": {
                             "xLocation": 242,
-                            "yLocation": 111,
+                            "yLocation": 110,
                             "reverse": true,
                             "next": "c50052217811-29d485f1b59b412b-8026",
                             "errorStepId": "b06934c57c28-f7976d41b9a5e831-ef13"
@@ -1265,7 +1508,7 @@
                         "label": "Set Error",
                         "designer": {
                             "xLocation": 518,
-                            "yLocation": 282,
+                            "yLocation": 281,
                             "next": "6bb6288ac74c-4e1587e6ee32388c-d52c"
                         },
                         "onInit": "scenario.error = customLocalizedStrings[\"CTM/messages/serviceProblem\"]"
@@ -1296,7 +1539,7 @@
                         "condition": "scenario.retry < 5 && scenario.asyncRes.status !== \"succeeded\"",
                         "designer": {
                             "xLocation": 0,
-                            "yLocation": 421,
+                            "yLocation": 420,
                             "next": "6bb6288ac74c-4e1587e6ee32388c-d52c"
                         },
                         "targetStepId": "6cba4d65f563-345555b56df0c08b-9d85"
@@ -1307,17 +1550,17 @@
                         "type": "wait",
                         "designer": {
                             "xLocation": 290,
-                            "yLocation": 471,
+                            "yLocation": 470,
                             "next": "18cce553aa99-d7cd9893d104a1db-659d"
                         },
-                        "time": "1000"
+                        "time": "2000"
                     },
                     {
                         "id": "c50052217811-29d485f1b59b412b-8026",
                         "type": "assignVariable",
                         "designer": {
                             "xLocation": 98,
-                            "yLocation": 324,
+                            "yLocation": 323,
                             "next": "a1abaeda6f9e-b3eb89df49f71e4c-1e34"
                         },
                         "scope": "scenario",
@@ -1330,7 +1573,7 @@
                         "type": "assignVariable",
                         "designer": {
                             "xLocation": 260,
-                            "yLocation": 311,
+                            "yLocation": 310,
                             "next": "a1abaeda6f9e-b3eb89df49f71e4c-1e34"
                         },
                         "scope": "scenario",
@@ -1343,7 +1586,7 @@
                         "type": "endwithresult",
                         "designer": {
                             "xLocation": 280,
-                            "yLocation": 662
+                            "yLocation": 661
                         },
                         "endScope": "scenario",
                         "label": "Scenario Result",
@@ -1354,15 +1597,15 @@
         },
         {
             "RowKey": "99e762bf-ed15-4c59-9511-5be0302ee156",
-            "snapshots": 8,
+            "snapshots": 33,
             "name": "clinical_trials_matching_core",
             "scenario_trigger": "clinical_trials_matching_core",
             "description": "clinical_trials_matching_core",
             "userDisplayName": "Yochai Lehman",
             "active": true,
             "version": 1,
-            "updated": "2023-05-31T10:29:59.129Z",
-            "currentUser": "",
+            "updated": "2023-06-06T06:28:21.337Z",
+            "currentUser": "yolehman@microsoft.com",
             "code": {
                 "interrupting": false,
                 "breaking": false,
@@ -1374,29 +1617,29 @@
                         "type": "action",
                         "label": "Init Variables",
                         "designer": {
-                            "xLocation": 6,
-                            "yLocation": 2,
+                            "xLocation": 0,
+                            "yLocation": 0,
                             "next": "9984e7e32e45-ea107757d2768337-d656"
                         },
-                        "onInit": "scenario.timeStarted = new Date().getTime();\nscenario.totalQuestionsAsked = 0;\nscenario.questionIndex = 0;\nscenario.luis = {};\nscenario.asyncRes = {};\n// temp variables for normalization\nvar locationCity = null;\nvar locationCountryOrRegion = null;\nvar locationState = null;\nvar ageResolution = null;\nvar condition = null;\n// for research and improving language model\nvar notMappedEntities = [];\n// conversation started with arguments\nif(scenario.scenarioArgs.entities != null) {\n    // iterate all LUIS entities and set their values\n    scenario.scenarioArgs.entities.forEach(ent => {\n        switch(ent.type) {\n            case \"gender\":\n                scenario.luis.sex = ent.role;\n                break;\n            case \"builtin.age\":\n                ageResolution = ent.resolution;\n                break;\n            case \"disease\":\n                condition = ent.entity;\n                break;\n            case \"builtin.geographyV2.countryRegion\":\n                locationCountryOrRegion = ent.entity;\n                break;\n            case \"builtin.geographyV2.state\":\n                locationState = ent.entity;\n                break;\n            case \"builtin.geographyV2.city\":\n                locationCity = ent.entity;\n                break;\n            default:\n                notMappedEntities.push(ent.entity);\n        }\n    });\n}\n// condition normalization\nif (condition != null) {\n    // replace \" - \" with \"-\" for luis model entity repair\n    scenario.luis.condition = condition.replace(\" - \", \"-\");\n}\n// age normalization\nif (ageResolution != null) {\n    switch (ageResolution.unit) {\n        case \"Year\":\n            scenario.luis.age = ageResolution.value;\n            break;\n        case \"Month\":\n            scenario.luis.age = (+ageResolution.value / 12) + \"\";\n            break;\n        case \"Week\":\n            scenario.luis.age = (+ageResolution.value / 52) + \"\";\n            break;\n        case \"Day\":\n            scenario.luis.age = (+ageResolution.value / 365) + \"\";\n            break;\n        default:\n            scenario.luis.age = null;        \n    }\n}\n// location normalization\nif(locationCountryOrRegion != null || locationState != null || locationCity != null) {\n    scenario.luis.location = {};\n    if(locationCountryOrRegion != null) {\n        scenario.luis.location.countryOrRegion = locationCountryOrRegion;\n    }\n    if(locationState != null) {\n        scenario.luis.location.state = locationState;\n    }\n    if(locationCity != null) {\n        scenario.luis.location.city = locationCity;\n    }\n};\n\nsession.trace(\"LUISSSS\" +JSON.stringify(scenario.luis), 0);"
+                        "onInit": "scenario.timeStarted = new Date().getTime();\nscenario.totalQuestionsAsked = 0;\nscenario.questionIndex = 0;\nscenario.clu = scenario.scenarioArgs.entities;\nscenario.asyncRes = {};"
                     },
                     {
                         "id": "102cf72eca14-b299a2caf0e80fe6-bf31",
                         "type": "action",
                         "label": "Assign Values",
                         "designer": {
-                            "xLocation": 6,
-                            "yLocation": 201,
+                            "xLocation": 0,
+                            "yLocation": 200,
                             "next": "162067c1f357-741c663bd45a2170-d303"
                         },
-                        "onInit": "scenario.consts = scenario.initScenarioResponse.consts;\n// add explicit log\nscenario.consts.TRIALS_LOG_LIMIT = 100;\n\nscenario.profile = scenario.initScenarioResponse.userProfile;\nscenario.location = scenario.initScenarioResponse.location"
+                        "onInit": "scenario.consts = scenario.metadataScenarioResponse.consts;\n// add explicit log\nscenario.consts.TRIALS_LOG_LIMIT = 100;\n\nscenario.profile = scenario.metadataScenarioResponse.userProfile;\nscenario.location = scenario.metadataScenarioResponse.location"
                     },
                     {
                         "id": "fb7403c86d6a-1e24272165de9c1b-92f7",
                         "type": "action",
                         "label": "Create Health Insight Request With Demographic conditions",
                         "designer": {
-                            "xLocation": 10,
+                            "xLocation": 8,
                             "yLocation": 380,
                             "next": "7d13692c028c-c62feba5d349bb6e-7959"
                         },
@@ -1407,7 +1650,7 @@
                         "type": "branch",
                         "condition": "scenario.trials.length > 0",
                         "designer": {
-                            "xLocation": 252,
+                            "xLocation": 250,
                             "yLocation": 0,
                             "reverse": true,
                             "next": "5b4a6c548e07-1673cffccb42b3b4-c522"
@@ -1419,7 +1662,7 @@
                         "id": "6c395b7ffcbf-9a3ac0cb171f8c36-4154",
                         "type": "statement",
                         "designer": {
-                            "xLocation": 228,
+                            "xLocation": 226,
                             "yLocation": 200,
                             "next": "46c223b11a89-3ac967716fd0b465-98b6"
                         },
@@ -1432,8 +1675,8 @@
                         "type": "branch",
                         "condition": "scenario.trials.length > scenario.consts.TRIALS_THRESHOLD",
                         "designer": {
-                            "xLocation": 260,
-                            "yLocation": 83,
+                            "xLocation": 258,
+                            "yLocation": 80,
                             "reverse": false,
                             "next": "6c395b7ffcbf-9a3ac0cb171f8c36-4154"
                         },
@@ -1457,7 +1700,7 @@
                         "type": "action",
                         "label": "Create Health Insight  request with Disqualify answers",
                         "designer": {
-                            "xLocation": 740,
+                            "xLocation": 738,
                             "yLocation": 360,
                             "next": "98cd74b3b6e3-4ce71bea1350ec7f-4448"
                         },
@@ -1468,8 +1711,8 @@
                         "type": "action",
                         "label": "Create Question Args",
                         "designer": {
-                            "xLocation": 1180,
-                            "yLocation": 701,
+                            "xLocation": 1178,
+                            "yLocation": 700,
                             "next": "8cc8d6de3179-a14e044b3f7d5fd5-2360"
                         },
                         "onInit": "// keeping track for total questions\r\nscenario.totalQuestionsAsked++;\r\n\r\nvar criterion = scenario.HealthInsightAsyncResponse.response.results.patients[0].neededClinicalInfo[scenario.questionIndex];\r\n       \r\nscenario.questionArgs = {};\r\nscenario.questionArgs.question = criterion;\r\nscenario.questionArgs.profile = scenario.profile;\r\nscenario.questionArgs.questionsNum = scenario.totalQuestionsAsked;\r\n"
@@ -1478,8 +1721,8 @@
                         "id": "8cc8d6de3179-a14e044b3f7d5fd5-2360",
                         "type": "beginScenario",
                         "designer": {
-                            "xLocation": 1008,
-                            "yLocation": 683,
+                            "xLocation": 1006,
+                            "yLocation": 680,
                             "next": "ac3e4757a04f-95c5731ff4cd2f2f-c783"
                         },
                         "scenario": "clinical_trials_matching_question_generation",
@@ -1492,7 +1735,7 @@
                         "type": "branch",
                         "condition": "scenario.questionGenerationResponse == null ||\r\nscenario.questionGenerationResponse.length == 0 || \r\nscenario.questionGenerationResponse[0].value == null",
                         "designer": {
-                            "xLocation": 726,
+                            "xLocation": 724,
                             "yLocation": 520,
                             "next": "c0b338e361df-f9260a30a63543e5-2d46"
                         },
@@ -1504,7 +1747,7 @@
                         "type": "action",
                         "label": "Next Question Index",
                         "designer": {
-                            "xLocation": 1540,
+                            "xLocation": 1538,
                             "yLocation": 580,
                             "next": "275cf280677e-52bf72c7f8f55bad-ae74"
                         },
@@ -1515,8 +1758,8 @@
                         "type": "action",
                         "label": "Save answer to profile",
                         "designer": {
-                            "xLocation": 840,
-                            "yLocation": 648,
+                            "xLocation": 838,
+                            "yLocation": 643,
                             "next": "c7f40688bbe6-46591d81f769a6a1-9d1f"
                         },
                         "onInit": "scenario.profile.Info.ClinicalInfo.push(...scenario.questionGenerationResponse);"
@@ -1526,7 +1769,7 @@
                         "type": "action",
                         "label": "Process disqualify response",
                         "designer": {
-                            "xLocation": 880,
+                            "xLocation": 878,
                             "yLocation": 100,
                             "next": "42b4b5fab0ed-0ff1c03b236e69bd-63c4"
                         },
@@ -1537,7 +1780,7 @@
                         "type": "action",
                         "label": "Init Question Index",
                         "designer": {
-                            "xLocation": 1640,
+                            "xLocation": 1638,
                             "yLocation": 480,
                             "next": "275cf280677e-52bf72c7f8f55bad-ae74"
                         },
@@ -1548,7 +1791,7 @@
                         "type": "branch",
                         "condition": "scenario.questionIndex < scenario.HealthInsightAsyncResponse.response.results.patients[0].neededClinicalInfo.length",
                         "designer": {
-                            "xLocation": 1380,
+                            "xLocation": 1378,
                             "yLocation": 680,
                             "next": "c0b338e361df-f9260a30a63543e5-2d46"
                         },
@@ -1560,7 +1803,7 @@
                         "type": "prompt",
                         "dataType": "[customLocalizedStrings[\"CTM/answers/additionalQuestions\"], customLocalizedStrings[\"CTM/answers/getResults\"]]",
                         "designer": {
-                            "xLocation": 1620,
+                            "xLocation": 1618,
                             "yLocation": 260,
                             "next": "f3aa06e2bb65-6697b1be21430325-586f",
                             "listStyle": 3
@@ -1576,7 +1819,7 @@
                         "type": "branch",
                         "condition": "scenario.totalQuestionsAsked > 0 && \r\n(scenario.trialsCountPrev === scenario.trials.length || \r\n scenario.totalQuestionsAsked >= scenario.consts.QUESTIONS_THRESHOLD)\r\n",
                         "designer": {
-                            "xLocation": 1554,
+                            "xLocation": 1552,
                             "yLocation": 160,
                             "next": "d46040c72921-e874ae9773008129-3f14"
                         },
@@ -1588,8 +1831,8 @@
                         "type": "branch",
                         "condition": "scenario.continueAsking.entity === customLocalizedStrings[\"CTM/answers/additionalQuestions\"]",
                         "designer": {
-                            "xLocation": 1660,
-                            "yLocation": 321,
+                            "xLocation": 1658,
+                            "yLocation": 320,
                             "next": "46c223b11a89-3ac967716fd0b465-98b6"
                         },
                         "label": "is Additional questions",
@@ -1600,7 +1843,7 @@
                         "type": "branch",
                         "condition": "(scenario.HealthInsightAsyncResponse.response.results.patients[0].neededClinicalInfo == null || \r\n scenario.HealthInsightAsyncResponse.response.results.patients[0].neededClinicalInfo.length === 0)",
                         "designer": {
-                            "xLocation": 1020,
+                            "xLocation": 1018,
                             "yLocation": 60,
                             "reverse": true,
                             "next": "6b3fdcb8915e-ec4dc8cd89a2ebbd-a086"
@@ -1612,7 +1855,7 @@
                         "id": "b1119c0d3562-c592b7cced67f2b2-e89c",
                         "type": "statement",
                         "designer": {
-                            "xLocation": 1320,
+                            "xLocation": 1318,
                             "yLocation": 60,
                             "next": "efdb922881fd-730358f2fa29dc39-73b0"
                         },
@@ -1625,7 +1868,7 @@
                         "type": "branch",
                         "condition": "scenario.trials.length > 0",
                         "designer": {
-                            "xLocation": 1180,
+                            "xLocation": 1178,
                             "yLocation": 40,
                             "next": "5b4a6c548e07-1673cffccb42b3b4-c522"
                         },
@@ -1637,7 +1880,7 @@
                         "type": "branch",
                         "condition": "scenario.trials.length > scenario.consts.TRIALS_THRESHOLD",
                         "designer": {
-                            "xLocation": 1452,
+                            "xLocation": 1450,
                             "yLocation": 100,
                             "next": "46c223b11a89-3ac967716fd0b465-98b6"
                         },
@@ -1649,8 +1892,8 @@
                         "type": "action",
                         "label": "Set trials ids to QeRequest",
                         "designer": {
-                            "xLocation": 232,
-                            "yLocation": 281,
+                            "xLocation": 230,
+                            "yLocation": 280,
                             "next": "535da28bf288-64b00bc52de35332-887e"
                         },
                         "onInit": "var trialIds = scenario.trials.map(trial => trial.id);\r\n\r\n\r\n// initialize qeRequest\r\nscenario.healthInsightRequest = {};\r\nvar configuration = {\r\n    ClinicalTrials: {\r\n    RegistryFilters : [\r\n        {\r\n            Sources : [\"Clinicaltrials_gov\"],\r\n            FacilityLocations: [{\r\n                \"State\":scenario.location.searchLocationState,\r\n                \"City\":scenario.location.searchLocationCity,\r\n                \"CountryOrRegion\":scenario.location.searchLocationCountryOrRegion\r\n            }],\r\n            Ids:trialIds\r\n        }\r\n    ]\r\n    },\r\n    IncludeEvidence : false,\r\n    Verbose: true\r\n}\r\nvar patients = [];\r\npatients[0] = scenario.profile;\r\n\r\n\r\nscenario.healthInsightRequest.Configuration = configuration;\r\nscenario.healthInsightRequest.Patients = patients;\r\n"
@@ -1660,7 +1903,7 @@
                         "type": "action",
                         "label": "Process trials-details Response",
                         "designer": {
-                            "xLocation": 240,
+                            "xLocation": 238,
                             "yLocation": 540,
                             "next": "e588f774bae0-892987238b37e51d-68d3"
                         },
@@ -1671,7 +1914,7 @@
                         "type": "action",
                         "label": "Log Profile",
                         "designer": {
-                            "xLocation": 8,
+                            "xLocation": 6,
                             "yLocation": 480,
                             "next": "94a3166030bf-1411dd5626526097-06f0"
                         },
@@ -1682,8 +1925,8 @@
                         "type": "action",
                         "label": "Log QE response",
                         "designer": {
-                            "xLocation": 108,
-                            "yLocation": 28,
+                            "xLocation": 106,
+                            "yLocation": 23,
                             "next": "8eb78c0e15f8-3aa0bdbacd6795d8-0ac6"
                         },
                         "onInit": "var healthInsightRequest = {};\nhealthInsightRequest.trials = scenario.trials.slice(0, scenario.consts.TRIALS_LOG_LIMIT).map(trial => {\n    return {\n        \"id\": trial.id\n    };\n});\nhealthInsightRequest.qeTrialsNum = scenario.trials.length;\nsession.logCustomEvent('healthInsightRequest_#1', healthInsightRequest);"
@@ -1693,8 +1936,8 @@
                         "type": "action",
                         "label": "Log Trials Results",
                         "designer": {
-                            "xLocation": 312,
-                            "yLocation": 645,
+                            "xLocation": 310,
+                            "yLocation": 640,
                             "next": "ccd45520d814-45f9691a3edb8f42-897f"
                         },
                         "onInit": "var trialResults = {};\ntrialResults.totalQuestions = scenario.totalQuestionsAsked;\ntrialResults.resultTrialsNum = scenario.trials.length;\ntrialResults.qeTrialsNum = scenario.qeTrials.length;\ntrialResults.resultTrials = scenario.trials.slice(0, scenario.consts.TRIALS_LOG_LIMIT).map(trial => {\n    return {\n        \"trialId\": trial.id,\n        \"sponsor\": trial.leadSponsor\n    };\n});\ntrialResults.secondsSpent = (new Date().getTime() - scenario.timeStarted) / 1000;\ntrialResults.profile = scenario.profile;\nsession.logCustomEvent('TRIALS_RESULTS', trialResults);\n"
@@ -1704,7 +1947,7 @@
                         "type": "action",
                         "label": "Log Continue Asking Response",
                         "designer": {
-                            "xLocation": 1340,
+                            "xLocation": 1338,
                             "yLocation": 360,
                             "next": "04bde4fbe4fd-cde1c2bb3509913a-e268"
                         },
@@ -1715,8 +1958,8 @@
                         "type": "action",
                         "label": "Log User Answer",
                         "designer": {
-                            "xLocation": 888,
-                            "yLocation": 502,
+                            "xLocation": 886,
+                            "yLocation": 500,
                             "next": "bd61cf721cfb-286941d86a9f1950-d264"
                         },
                         "onInit": "var userAnswer = {};\nuserAnswer.questionsNum = scenario.totalQuestionsAsked;\nuserAnswer.answer = scenario.questionGenerationResponse;\nuserAnswer.profile = scenario.profile;\nsession.logCustomEvent('USER_ANSWER', userAnswer);"
@@ -1726,7 +1969,7 @@
                         "type": "action",
                         "label": "Log Disqualify Response",
                         "designer": {
-                            "xLocation": 1120,
+                            "xLocation": 1118,
                             "yLocation": 220,
                             "next": "ba24c6c14552-29a155c3df1c4f2f-b738"
                         },
@@ -1736,7 +1979,7 @@
                         "id": "9fb7affe3548-5c84b2220de6ce15-cbda",
                         "type": "statement",
                         "designer": {
-                            "xLocation": 560,
+                            "xLocation": 558,
                             "yLocation": 20,
                             "next": "56dfa186629f-62e11a8c3f24b35f-483f"
                         },
@@ -1749,7 +1992,7 @@
                         "type": "branch",
                         "condition": "scenario.trials && scenario.trials.length > 0\r\n",
                         "designer": {
-                            "xLocation": 568,
+                            "xLocation": 566,
                             "yLocation": 80,
                             "reverse": true,
                             "next": "5b4a6c548e07-1673cffccb42b3b4-c522"
@@ -1761,20 +2004,20 @@
                         "id": "9984e7e32e45-ea107757d2768337-d656",
                         "type": "beginScenario",
                         "designer": {
-                            "xLocation": 12,
+                            "xLocation": 18,
                             "yLocation": 100,
                             "next": "102cf72eca14-b299a2caf0e80fe6-bf31"
                         },
                         "scenario": "clinical_trials_matching_patient_metadata",
-                        "variable": "initScenarioResponse",
-                        "args": "{\r\n    luis: scenario.luis\r\n}",
+                        "variable": "metadataScenarioResponse",
+                        "args": "{\r\n    clu: scenario.clu\r\n}",
                         "label": "Initialization scenario"
                     },
                     {
                         "id": "ccd45520d814-45f9691a3edb8f42-897f",
                         "type": "beginScenario",
                         "designer": {
-                            "xLocation": 534,
+                            "xLocation": 532,
                             "yLocation": 700,
                             "next": "3fbfd01c698f-57bbe31377c17247-99b7"
                         },
@@ -1788,7 +2031,7 @@
                         "type": "action",
                         "label": "Verify empty trials",
                         "designer": {
-                            "xLocation": 600,
+                            "xLocation": 598,
                             "yLocation": 600,
                             "next": "ccd45520d814-45f9691a3edb8f42-897f"
                         },
@@ -1799,7 +2042,7 @@
                         "type": "action",
                         "label": "Set Error",
                         "designer": {
-                            "xLocation": 480,
+                            "xLocation": 478,
                             "yLocation": 600,
                             "next": "ccd45520d814-45f9691a3edb8f42-897f"
                         },
@@ -1809,7 +2052,7 @@
                         "id": "94a3166030bf-1411dd5626526097-06f0",
                         "type": "beginScenario",
                         "designer": {
-                            "xLocation": 10,
+                            "xLocation": 8,
                             "yLocation": 580,
                             "next": "7e158957c7b1-3f24b4901d5b0e81-61a1"
                         },
@@ -1823,7 +2066,7 @@
                         "type": "action",
                         "label": "Save answer to profile",
                         "designer": {
-                            "xLocation": 8,
+                            "xLocation": 6,
                             "yLocation": 800,
                             "next": "2d52c58f3c9f-311c95e0e7a51ce9-5ed7"
                         },
@@ -1833,8 +2076,8 @@
                         "id": "535da28bf288-64b00bc52de35332-887e",
                         "type": "beginScenario",
                         "designer": {
-                            "xLocation": 234,
-                            "yLocation": 364,
+                            "xLocation": 232,
+                            "yLocation": 360,
                             "next": "7be8438a27d8-06408c9c0a7d8317-d9e7"
                         },
                         "scenario": "HealthInsightDataConnectionAsync",
@@ -1846,7 +2089,7 @@
                         "id": "51c08ae269fd-67da30d199aab861-fbb4",
                         "type": "beginScenario",
                         "designer": {
-                            "xLocation": 820,
+                            "xLocation": 818,
                             "yLocation": 180,
                             "next": "2d44b90502ae-fa18c1ad79f2c422-70ce"
                         },
@@ -1860,7 +2103,7 @@
                         "label": "Wait",
                         "type": "wait",
                         "designer": {
-                            "xLocation": 788,
+                            "xLocation": 786,
                             "yLocation": 280,
                             "next": "51c08ae269fd-67da30d199aab861-fbb4"
                         },
@@ -1871,7 +2114,7 @@
                         "type": "branch",
                         "condition": "scenario.HealthInsightAsyncResponse.error",
                         "designer": {
-                            "xLocation": 12,
+                            "xLocation": 10,
                             "yLocation": 700,
                             "next": "e36aca80cc99-acd2369adbae6253-9b2f"
                         },
@@ -1883,8 +2126,8 @@
                         "type": "branch",
                         "condition": "scenario.HealthInsightAsyncResponse.error",
                         "designer": {
-                            "xLocation": 660,
-                            "yLocation": 143,
+                            "xLocation": 658,
+                            "yLocation": 140,
                             "next": "57b8d246f882-fccf0daa5e3e5f5e-a939"
                         },
                         "targetStepId": "b06934c57c28-f7976d41b9a5e831-ef13"
@@ -1894,7 +2137,7 @@
                         "type": "branch",
                         "condition": "scenario.HealthInsightAsyncResponse.error",
                         "designer": {
-                            "xLocation": 352,
+                            "xLocation": 350,
                             "yLocation": 460,
                             "next": "2333bc1d943a-dbd4cf50e0a91eee-125b"
                         },
@@ -1905,8 +2148,8 @@
                         "type": "yesnoprompt",
                         "dataType": "boolean",
                         "designer": {
-                            "xLocation": 332,
-                            "yLocation": 808,
+                            "xLocation": 330,
+                            "yLocation": 803,
                             "next": "7dee4d8167e1-2d77369badb06d94-dbdb"
                         },
                         "text": "Would you like to see more trials? ",
@@ -1919,7 +2162,7 @@
                         "type": "action",
                         "label": "Process trials-details Response",
                         "designer": {
-                            "xLocation": 240,
+                            "xLocation": 238,
                             "yLocation": 760,
                             "next": "ccd45520d814-45f9691a3edb8f42-897f"
                         },
@@ -1930,8 +2173,8 @@
                         "type": "branch",
                         "condition": "!scenario.error && scenario.trials.length > scenario.startBufferTrials + 50",
                         "designer": {
-                            "xLocation": 534,
-                            "yLocation": 804,
+                            "xLocation": 532,
+                            "yLocation": 800,
                             "next": "7dee4d8167e1-2d77369badb06d94-dbdb"
                         },
                         "label": "Data connection error && there are more trials",
@@ -1941,8 +2184,8 @@
                         "id": "7dee4d8167e1-2d77369badb06d94-dbdb",
                         "type": "statement",
                         "designer": {
-                            "xLocation": 420,
-                            "yLocation": 909
+                            "xLocation": 418,
+                            "yLocation": 904
                         },
                         "text": "customLocalizedStrings[\"CTM/messages/EndSession\"]",
                         "stringId": "stringId_a46894ffc1bf4ca9",

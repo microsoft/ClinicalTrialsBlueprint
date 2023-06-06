@@ -7,7 +7,7 @@
             "confidenceThreshold": 0.0,
             "normalizeCasing": false
         },
-        "projectName": "metadata_clinical_trials",
+        "projectName": "clinical_trial_metadata",
         "multilingual": false,
         "description": "",
         "language": "en-us"
@@ -25,10 +25,6 @@
         "entities": [
             {
                 "category": "disease",
-                "compositionSetting": "combineComponents"
-            },
-            {
-                "category": "gender",
                 "compositionSetting": "combineComponents"
             },
             {
@@ -53,22 +49,1092 @@
                 "compositionSetting": "requireExactOverlap"
             },
             {
-                "category": "geography",
+                "category": "geography.city",
                 "compositionSetting": "combineComponents",
                 "list": {
                     "sublists": [
                         {
-                            "listKey": "Country",
+                            "listKey": "cities",
                             "synonyms": [
                                 {
                                     "language": "en-us",
                                     "values": [
+                                        "cities",
+                                        "Marysville",
+                                        "Perris",
+                                        "Cleveland",
+                                        "Worcester",
+                                        "Columbia",
+                                        "Waterbury",
+                                        "Eagan",
+                                        "Southfield",
+                                        "Lafayette",
+                                        "Boise City",
+                                        "Elkhart",
+                                        "Buena Park",
+                                        "Marietta",
+                                        "Parker",
+                                        "West Palm Beach",
+                                        "Salem",
+                                        "Aurora",
+                                        "Leesburg",
+                                        "Doral",
+                                        "Westminster",
+                                        "Lubbock",
+                                        "Overland Park",
+                                        "Jackson",
+                                        "Gastonia",
+                                        "Daytona Beach",
+                                        "Kansas City",
+                                        "Rancho Palos Verdes",
+                                        "Burnsville",
+                                        "Rowlett",
+                                        "Roswell",
+                                        "Montgomery",
+                                        "Logan",
+                                        "Woburn",
+                                        "Allentown",
+                                        "Mount Pleasant",
+                                        "Columbus",
+                                        "Buffalo",
+                                        "New Berlin",
+                                        "North Richland Hills",
+                                        "Lima",
+                                        "Sacramento",
+                                        "Fort Smith",
+                                        "East Providence",
+                                        "Urbandale",
+                                        "Mount Vernon",
+                                        "Lakewood",
+                                        "Henderson",
+                                        "Covina",
+                                        "Stamford",
+                                        "Bloomington",
+                                        "Kingsport",
+                                        "Spokane",
+                                        "Kennewick",
+                                        "Philadelphia",
+                                        "Bellingham",
+                                        "Visalia",
+                                        "La Crosse",
+                                        "Council Bluffs",
+                                        "North Lauderdale",
+                                        "Dallas",
+                                        "Antioch",
+                                        "Sterling Heights",
+                                        "Deerfield Beach",
+                                        "Fishers",
+                                        "Cheyenne",
+                                        "Murrieta",
+                                        "Lenexa",
+                                        "Noblesville",
+                                        "Southaven",
+                                        "Chino",
+                                        "Gaithersburg",
+                                        "Fountain Valley",
+                                        "Frederick",
+                                        "Greenville",
+                                        "DeKalb",
+                                        "West Allis",
+                                        "Thornton",
+                                        "West Des Moines",
+                                        "Fall River",
+                                        "Tulare",
+                                        "Chula Vista",
+                                        "Coral Springs",
+                                        "Concord",
+                                        "Smyrna",
+                                        "Apopka",
+                                        "Grand Forks",
+                                        "Lancaster",
+                                        "Naperville",
+                                        "Hollywood",
+                                        "Rogers",
+                                        "New Orleans",
+                                        "Oak Lawn",
+                                        "Caldwell",
+                                        "Portland",
+                                        "Burien",
+                                        "St. Charles",
+                                        "Waukesha",
+                                        "Flagstaff",
+                                        "Puyallup",
+                                        "Schenectady",
+                                        "Denver",
+                                        "Springfield",
+                                        "Campbell",
+                                        "Moreno Valley",
+                                        "Kettering",
+                                        "Lincoln Park",
+                                        "Lake Havasu City",
+                                        "North Little Rock",
+                                        "Reno",
+                                        "Littleton",
+                                        "Prescott",
+                                        "Dublin",
+                                        "Texarkana",
+                                        "Brooklyn Park",
+                                        "West Haven",
+                                        "El Centro",
+                                        "The Colony",
+                                        "Flint",
+                                        "Pittsburg",
+                                        "Buckeye",
+                                        "Brea",
+                                        "Indio",
+                                        "Scottsdale",
+                                        "Lincoln",
+                                        "Trenton",
+                                        "Boston",
+                                        "Glendora",
+                                        "Rochester",
+                                        "Florissant",
+                                        "Annapolis",
+                                        "Chapel Hill",
+                                        "Lawrence",
+                                        "Calexico",
+                                        "Calumet City",
+                                        "Missoula",
+                                        "Clovis",
+                                        "Pearland",
+                                        "Gilbert",
+                                        "Wausau",
+                                        "Raleigh",
+                                        "Orange",
+                                        "Walnut Creek",
+                                        "Bremerton",
+                                        "Porterville",
+                                        "Marana",
+                                        "Tallahassee",
+                                        "Conroe",
+                                        "Blacksburg",
+                                        "San Antonio",
+                                        "Hartford",
+                                        "Waterloo",
+                                        "Binghamton",
+                                        "Meridian",
+                                        "Fond du Lac",
+                                        "Baytown",
+                                        "Cary",
+                                        "Weymouth Town",
+                                        "Tulsa",
+                                        "Mission",
+                                        "Cuyahoga Falls",
+                                        "Malden",
+                                        "Allen",
+                                        "Tucson",
+                                        "Franklin",
+                                        "Shakopee",
+                                        "Jacksonville",
+                                        "Atlantic City",
+                                        "Erie",
+                                        "Merced",
+                                        "Abilene",
+                                        "Yorba Linda",
+                                        "Huntersville",
+                                        "St. Clair Shores",
+                                        "Harrisburg",
+                                        "San Buenaventura (Ventura)",
+                                        "Fremont",
+                                        "Pueblo",
+                                        "Chelsea",
+                                        "Belleville",
+                                        "Minneapolis",
+                                        "Bartlett",
+                                        "Wichita Falls",
+                                        "Missouri City",
+                                        "St. Louis",
+                                        "Pharr",
+                                        "Albuquerque",
+                                        "Athens-Clarke County",
+                                        "South Jordan",
+                                        "North Las Vegas",
+                                        "Pomona",
+                                        "Eastvale",
+                                        "Grove City",
+                                        "Midland",
+                                        "Oklahoma City",
+                                        "Oro Valley",
+                                        "Mesa",
+                                        "Norwalk",
+                                        "Kentwood",
+                                        "Brookfield",
+                                        "Rockwall",
+                                        "Mishawaka",
+                                        "Tustin",
+                                        "St. Cloud",
+                                        "Passaic",
+                                        "Escondido",
+                                        "San Bruno",
+                                        "Berkeley",
+                                        "San Clemente",
+                                        "Lawton",
+                                        "Eau Claire",
+                                        "Maricopa",
+                                        "DeSoto",
+                                        "Fort Wayne",
+                                        "Shoreline",
+                                        "Medford",
+                                        "La Habra",
+                                        "Albany",
+                                        "Daly City",
+                                        "Taylor",
+                                        "Lynchburg",
+                                        "Bowie",
+                                        "Danbury",
+                                        "Charlottesville",
+                                        "Coral Gables",
+                                        "Coeur d'Alene",
+                                        "El Monte",
+                                        "Crystal Lake",
+                                        "Danville",
+                                        "Goodyear",
+                                        "Paterson",
+                                        "Kissimmee",
+                                        "Saginaw",
+                                        "Brownsville",
+                                        "Flower Mound",
+                                        "Grapevine",
+                                        "Edina",
+                                        "Detroit",
+                                        "Fairfield",
+                                        "Mansfield",
+                                        "Birmingham",
+                                        "Austin",
+                                        "Santa Barbara",
+                                        "Addison",
+                                        "Rio Rancho",
+                                        "Normal",
+                                        "Romeoville",
+                                        "Coon Rapids",
+                                        "San Mateo",
+                                        "Orlando",
+                                        "Casper",
+                                        "Bedford",
+                                        "Wilmington",
+                                        "Pinellas Park",
+                                        "North Miami Beach",
+                                        "Fitchburg",
+                                        "Wheeling",
+                                        "Newton",
+                                        "North Miami",
+                                        "Norwich",
+                                        "Newark",
+                                        "Alexandria",
+                                        "Blaine",
+                                        "Harlingen",
+                                        "Lompoc",
+                                        "Denton",
+                                        "Galveston",
+                                        "Greenwood",
+                                        "Salinas",
+                                        "Miami Gardens",
+                                        "Huntington",
+                                        "Laredo",
+                                        "Melbourne",
+                                        "Haltom City",
+                                        "Palm Bay",
+                                        "Wilson",
+                                        "Bountiful",
+                                        "Ceres",
+                                        "Parma",
+                                        "Rapid City",
+                                        "Bell Gardens",
+                                        "Commerce City",
+                                        "Fort Collins",
+                                        "San Leandro",
+                                        "Vista",
+                                        "Yonkers",
+                                        "Cincinnati",
+                                        "Hagerstown",
+                                        "Sanford",
+                                        "Union City",
+                                        "Toledo",
+                                        "Sierra Vista",
+                                        "Newport News",
+                                        "Hammond",
+                                        "Buffalo Grove",
+                                        "Sugar Land",
+                                        "Huntsville",
+                                        "Lodi",
+                                        "Edmonds",
+                                        "Duncanville",
+                                        "Rocky Mount",
+                                        "Pontiac",
+                                        "National City",
+                                        "Hayward",
+                                        "Niagara Falls",
+                                        "Sparks",
+                                        "Hanford",
+                                        "Cypress",
+                                        "Youngstown",
+                                        "Madison",
+                                        "Redlands",
+                                        "Cape Girardeau",
+                                        "Nampa",
+                                        "Washington",
+                                        "Wheaton",
+                                        "Rialto",
+                                        "Fargo",
+                                        "Peoria",
+                                        "Omaha",
+                                        "Rancho Santa Margarita",
+                                        "Manhattan",
+                                        "Palm Springs",
+                                        "San Diego",
+                                        "Santa Rosa",
+                                        "Lowell",
+                                        "Broken Arrow",
+                                        "Kent",
+                                        "Nashville",
+                                        "Hackensack",
+                                        "Broomfield",
+                                        "Durham",
+                                        "Wichita",
+                                        "Cathedral City",
+                                        "Lakeville",
+                                        "Elmhurst",
+                                        "Weslaco",
+                                        "Greenfield",
+                                        "Sunnyvale",
+                                        "Santa Cruz",
+                                        "Kenosha",
+                                        "State College",
+                                        "Quincy",
+                                        "Pompano Beach",
+                                        "San Angelo",
+                                        "Tracy",
+                                        "Spartanburg",
+                                        "Nashua",
+                                        "Macon",
+                                        "Hempstead",
+                                        "Camden",
+                                        "Palm Desert",
+                                        "Streamwood",
+                                        "Chesapeake",
+                                        "Camarillo",
+                                        "Muskegon",
+                                        "Elizabeth",
+                                        "Anchorage",
+                                        "Minot",
+                                        "Davie",
+                                        "McAllen",
+                                        "McKinney",
+                                        "Killeen",
+                                        "Findlay",
+                                        "Oakland",
+                                        "Mountain View",
+                                        "Lake Elsinore",
+                                        "Amarillo",
+                                        "Provo",
+                                        "Atlanta",
+                                        "Monterey Park",
+                                        "Strongsville",
+                                        "Madera",
+                                        "Decatur",
+                                        "Woonsocket",
+                                        "Mobile",
+                                        "Vallejo",
+                                        "Arcadia",
+                                        "Collierville",
+                                        "Jefferson City",
+                                        "Longview",
+                                        "Chandler",
+                                        "Arvada",
+                                        "Alhambra",
+                                        "Kokomo",
+                                        "Oakland Park",
+                                        "Indianapolis",
+                                        "Boynton Beach",
+                                        "Apache Junction",
+                                        "Mount Prospect",
+                                        "Cranston",
+                                        "Olathe",
+                                        "Johns Creek",
+                                        "Greensboro",
+                                        "Kalamazoo",
+                                        "Tigard",
+                                        "Citrus Heights",
+                                        "Tuscaloosa",
+                                        "Ankeny",
+                                        "Hawthorne",
+                                        "Hoover",
+                                        "Delray Beach",
+                                        "Wellington",
+                                        "Bullhead City",
+                                        "Weston",
+                                        "Troy",
+                                        "New Rochelle",
+                                        "Stockton",
+                                        "Royal Oak",
+                                        "Titusville",
+                                        "Laguna Niguel",
+                                        "Spokane Valley",
+                                        "Costa Mesa",
+                                        "Grand Prairie",
+                                        "Portsmouth",
+                                        "Lacey",
+                                        "Apex",
+                                        "Sioux City",
+                                        "Encinitas",
+                                        "Spanish Fork",
+                                        "Huntington Park",
+                                        "Eden Prairie",
+                                        "Tempe",
+                                        "Taylorsville",
+                                        "Westland",
+                                        "Mesquite",
+                                        "Burlington",
+                                        "Garland",
+                                        "Richmond",
+                                        "Bismarck",
+                                        "Carson City",
+                                        "Muskogee",
+                                        "Augusta-Richmond County",
+                                        "Fayetteville",
+                                        "Sayreville",
+                                        "Diamond Bar",
+                                        "Chattanooga",
+                                        "Jeffersonville",
+                                        "Baldwin Park",
+                                        "Miami Beach",
+                                        "Port Arthur",
+                                        "San Luis Obispo",
+                                        "Burleson",
+                                        "Newport Beach",
+                                        "Riverton",
+                                        "Yakima",
+                                        "Dayton",
+                                        "Gulfport",
+                                        "Long Beach",
+                                        "Chico",
+                                        "Hattiesburg",
+                                        "Eugene",
+                                        "Colton",
+                                        "Montebello",
+                                        "Pleasanton",
+                                        "Everett",
+                                        "Hutchinson",
+                                        "Avondale",
+                                        "Euclid",
+                                        "Battle Creek",
+                                        "Rock Island",
+                                        "Beaverton",
+                                        "Kenner",
+                                        "Milpitas",
+                                        "Des Plaines",
+                                        "Placentia",
+                                        "Taunton",
+                                        "Montclair",
+                                        "Johnson City",
+                                        "Savannah",
+                                        "Warren",
+                                        "Vancouver",
+                                        "Sunrise",
+                                        "Muncie",
+                                        "Lehi",
+                                        "San Francisco",
+                                        "Fontana",
+                                        "Frisco",
+                                        "Chino Hills",
+                                        "Poway",
+                                        "Huber Heights",
+                                        "New Brunswick",
+                                        "Norfolk",
+                                        "Hillsboro",
+                                        "San Jacinto",
+                                        "Pensacola",
+                                        "Hamilton",
+                                        "Florence",
+                                        "San Bernardino",
+                                        "Peachtree Corners",
+                                        "Victorville",
+                                        "Gary",
+                                        "Casa Grande",
+                                        "Morgan Hill",
+                                        "Dubuque",
+                                        "Syracuse",
+                                        "Clarksville",
+                                        "Lakeland",
+                                        "Valley Stream",
+                                        "Dover",
+                                        "Moorhead",
+                                        "Culver City",
+                                        "Palatine",
+                                        "Seattle",
+                                        "Covington",
+                                        "Elk Grove",
+                                        "Shreveport",
+                                        "Ogden",
+                                        "Harrisonburg",
+                                        "Inglewood",
+                                        "Pasadena",
+                                        "Lake Oswego",
+                                        "Petaluma",
+                                        "Napa",
+                                        "Duluth",
+                                        "Roanoke",
+                                        "Bend",
+                                        "Apple Valley",
+                                        "Waltham",
+                                        "Fort Myers",
+                                        "Tampa",
+                                        "Upland",
+                                        "Beloit",
+                                        "Plantation",
+                                        "Colorado Springs",
+                                        "Modesto",
+                                        "Grand Rapids",
+                                        "Oak Park",
+                                        "Sarasota",
+                                        "Jurupa Valley",
+                                        "Bellflower",
+                                        "Boulder",
+                                        "Santa Fe",
+                                        "Coachella",
+                                        "Marlborough",
+                                        "Riverside",
+                                        "Palmdale",
+                                        "Novato",
+                                        "Layton",
+                                        "Bolingbrook",
+                                        "Mission Viejo",
+                                        "Glenview",
+                                        "Folsom",
+                                        "Prescott Valley",
+                                        "Las Cruces",
+                                        "Bozeman",
+                                        "Schaumburg",
+                                        "St. Peters",
+                                        "Ames",
+                                        "Surprise",
+                                        "Richardson",
+                                        "San Marcos",
+                                        "Wilkes-Barre",
+                                        "Appleton",
+                                        "Shawnee",
+                                        "Mentor",
+                                        "Livermore",
+                                        "Charlotte",
+                                        "Owensboro",
+                                        "Jupiter",
+                                        "Rohnert Park",
+                                        "Chicago",
+                                        "Billings",
+                                        "Wauwatosa",
+                                        "Lombard",
+                                        "New Haven",
+                                        "York",
+                                        "Knoxville",
+                                        "Elyria",
+                                        "Barnstable Town",
+                                        "Murray",
+                                        "Alameda",
+                                        "Manteca",
+                                        "Maplewood",
+                                        "Murfreesboro",
+                                        "Yuba City",
+                                        "Shelton",
+                                        "Cedar Falls",
+                                        "Germantown",
+                                        "Scranton",
+                                        "Auburn",
+                                        "Manassas",
+                                        "Vacaville",
+                                        "Santa Monica",
+                                        "Suffolk",
+                                        "Rochester Hills",
+                                        "La Quinta",
+                                        "Charleston",
+                                        "Delano",
+                                        "Kannapolis",
+                                        "Corona",
+                                        "Rocklin",
+                                        "Lee's Summit",
+                                        "Palm Coast",
+                                        "Sandy",
+                                        "Bentonville",
+                                        "Santa Clarita",
+                                        "Altamonte Springs",
+                                        "New Braunfels",
+                                        "Memphis",
+                                        "Irving",
+                                        "Hesperia",
+                                        "Holyoke",
+                                        "Dunwoody",
+                                        "Skokie",
+                                        "Kearny",
+                                        "Bethlehem",
+                                        "St. Joseph",
+                                        "Redondo Beach",
+                                        "Houston",
+                                        "Temecula",
+                                        "Ann Arbor",
+                                        "Beaumont",
+                                        "East Lansing",
+                                        "Santee",
+                                        "Tamarac",
+                                        "Bellevue",
+                                        "Pembroke Pines",
+                                        "Springdale",
+                                        "Oxnard",
+                                        "Odessa",
+                                        "Stillwater",
+                                        "Brockton",
+                                        "Bayonne",
+                                        "Paramount",
+                                        "Moline",
+                                        "Jersey City",
+                                        "St. Paul",
+                                        "Deltona",
+                                        "Freeport",
+                                        "Iowa City",
+                                        "Anaheim",
+                                        "Great Falls",
+                                        "West Valley City",
+                                        "Hampton",
+                                        "Georgetown",
+                                        "Orem",
+                                        "Monrovia",
+                                        "Keller",
+                                        "Goose Creek",
+                                        "Little Rock",
+                                        "Santa Ana",
+                                        "White Plains",
+                                        "Idaho Falls",
+                                        "Roseville",
+                                        "Perth Amboy",
+                                        "Peabody",
+                                        "Grand Island",
+                                        "Racine",
+                                        "Carmel",
+                                        "Portage",
+                                        "Middletown",
+                                        "Woodland",
+                                        "Revere",
+                                        "Euless",
+                                        "Arlington Heights",
+                                        "Hemet",
+                                        "High Point",
+                                        "Midwest City",
+                                        "Port Orange",
+                                        "Westerville",
+                                        "Rockford",
+                                        "El Cajon",
+                                        "St. Petersburg",
+                                        "Downers Grove",
+                                        "Milford",
+                                        "Las Vegas",
+                                        "Port St. Lucie",
+                                        "Cedar Rapids",
+                                        "Ormond Beach",
+                                        "Miramar",
+                                        "El Paso",
+                                        "Topeka",
+                                        "Rosemead",
+                                        "Keizer",
+                                        "Minnetonka",
+                                        "Akron",
+                                        "Edinburg",
+                                        "Rancho Cucamonga",
+                                        "North Charleston",
+                                        "Louisville",
+                                        "Watsonville",
+                                        "Coconut Creek",
+                                        "Bradenton",
+                                        "Carlsbad",
+                                        "Texas City",
+                                        "Redding",
+                                        "Wyoming",
+                                        "Lorain",
+                                        "Roy",
+                                        "Fort Lauderdale",
+                                        "Warner Robins",
+                                        "Clearwater",
+                                        "Cutler Bay",
+                                        "Terre Haute",
+                                        "Temple",
+                                        "Beavercreek",
+                                        "Sioux Falls",
+                                        "Margate",
+                                        "Leominster",
+                                        "Warwick",
+                                        "Bakersfield",
+                                        "Miami",
+                                        "Lake Charles",
+                                        "Richland",
+                                        "Hickory",
+                                        "South San Francisco",
+                                        "Plymouth",
+                                        "South Bend",
+                                        "Edmond",
+                                        "Des Moines",
+                                        "Bonita Springs",
+                                        "Draper",
+                                        "Whittier",
+                                        "Livonia",
+                                        "Milwaukee",
+                                        "Sumter",
+                                        "Beverly",
+                                        "Renton",
+                                        "Centennial",
+                                        "Anderson",
+                                        "Pflugerville",
+                                        "Hoboken",
+                                        "Lexington-Fayette",
+                                        "Yuma",
+                                        "Highland",
+                                        "Carol Stream",
+                                        "Joliet",
+                                        "Rock Hill",
+                                        "Rancho Cordova",
+                                        "Dearborn Heights",
+                                        "Honolulu",
+                                        "Victoria",
+                                        "Attleboro",
+                                        "Wylie",
+                                        "Carrollton",
+                                        "Plainfield",
+                                        "Hoffman Estates",
+                                        "Methuen",
+                                        "North Port",
+                                        "Rockville",
+                                        "Burbank",
+                                        "Fullerton",
+                                        "Oshkosh",
+                                        "Farmington Hills",
+                                        "Pico Rivera",
+                                        "Cerritos",
+                                        "La Puente",
+                                        "Grand Junction",
+                                        "Enid",
+                                        "San Jose",
+                                        "Round Rock",
+                                        "Maple Grove",
+                                        "Norman",
+                                        "Homestead",
+                                        "Friendswood",
+                                        "Irvine",
+                                        "Pocatello",
+                                        "Pacifica",
+                                        "Sheboygan",
+                                        "Bossier City",
+                                        "Cedar Park",
+                                        "Sandy Springs",
+                                        "Champaign",
+                                        "Clifton",
+                                        "Moore",
+                                        "Blue Springs",
+                                        "Bryan",
+                                        "Hurst",
+                                        "Cape Coral",
+                                        "Cupertino",
+                                        "Pittsfield",
+                                        "Gilroy",
+                                        "Manchester",
+                                        "Virginia Beach",
+                                        "Salina",
+                                        "Somerville",
+                                        "Largo",
+                                        "Fresno",
+                                        "Phenix City",
+                                        "Berwyn",
+                                        "Palm Beach Gardens",
+                                        "Pawtucket",
+                                        "San Gabriel",
+                                        "Winston-Salem",
+                                        "Alpharetta",
+                                        "O'Fallon",
+                                        "Redwood City",
+                                        "Hallandale Beach",
+                                        "Mankato",
+                                        "Aliso Viejo",
+                                        "Menifee",
+                                        "Loveland",
+                                        "Carpentersville",
+                                        "Providence",
+                                        "Hialeah",
+                                        "San Ramon",
+                                        "Ontario",
+                                        "Kirkland",
+                                        "St. George",
+                                        "Hilton Head Island",
+                                        "Glendale",
+                                        "Meriden",
+                                        "Gardena",
+                                        "Westfield",
+                                        "Elgin",
+                                        "Plano",
+                                        "Longmont",
+                                        "Coppell",
+                                        "Jonesboro",
+                                        "College Station",
+                                        "Dearborn",
+                                        "Utica",
+                                        "Monroe",
+                                        "Baltimore",
+                                        "Pine Bluff",
+                                        "Lynn",
+                                        "Woodbury",
+                                        "Gainesville",
+                                        "West Sacramento",
+                                        "Sammamish",
+                                        "Aventura",
+                                        "San Rafael",
+                                        "Conway",
+                                        "Tacoma",
+                                        "Twin Falls",
+                                        "Sherman",
+                                        "New York",
+                                        "Simi Valley",
+                                        "West Covina",
+                                        "Castle Rock",
+                                        "Valdosta",
+                                        "Fort Worth",
+                                        "Carson",
+                                        "Evansville",
+                                        "Santa Maria",
+                                        "Brentwood",
+                                        "La Mesa",
+                                        "Reading",
+                                        "Turlock",
+                                        "Greeley",
+                                        "Tyler",
+                                        "Winter Garden",
+                                        "Waco",
+                                        "Martinez",
+                                        "Thousand Oaks",
+                                        "Azusa",
+                                        "Bridgeport",
+                                        "St. Louis Park",
+                                        "Chesterfield",
+                                        "Greenacres",
+                                        "Pasco",
+                                        "Torrance",
+                                        "Janesville",
+                                        "Waukegan",
+                                        "Bowling Green",
+                                        "Arlington",
+                                        "Lewisville",
+                                        "Farmington",
+                                        "Oakley",
+                                        "Palo Alto",
+                                        "New Bedford",
+                                        "Redmond",
+                                        "Davis",
+                                        "La Mirada",
+                                        "Altoona",
+                                        "Dothan",
+                                        "East Orange",
+                                        "Tinley Park",
+                                        "Biloxi",
+                                        "Urbana",
+                                        "Garden Grove",
+                                        "Lynwood",
+                                        "Northglenn",
+                                        "Canton",
+                                        "Brookhaven",
+                                        "Baton Rouge",
+                                        "Bristol",
+                                        "Independence",
+                                        "Lansing",
+                                        "Orland Park",
+                                        "Vineland",
+                                        "Green Bay",
+                                        "Evanston",
+                                        "Ocoee",
+                                        "Los Angeles",
+                                        "Federal Way",
+                                        "West Jordan",
+                                        "Yucaipa",
+                                        "Pittsburgh",
+                                        "Downey",
+                                        "Cicero",
+                                        "South Gate",
+                                        "Panama City",
+                                        "Joplin",
+                                        "League City",
+                                        "Salt Lake City",
+                                        "Fort Pierce",
+                                        "Phoenix",
+                                        "Corvallis",
+                                        "Cedar Hill",
+                                        "Chicopee",
+                                        "Ocala",
+                                        "Park Ridge",
+                                        "Olympia",
+                                        "Huntington Beach",
+                                        "Corpus Christi",
+                                        "Haverhill",
+                                        "Hanover Park",
+                                        "Cambridge",
+                                        "Stanton",
+                                        "Summerville",
+                                        "Davenport",
+                                        "Boca Raton",
+                                        "New Britain",
+                                        "Cleveland Heights",
+                                        "Gresham",
+                                        "Lauderhill",
+                                        "Hendersonville",
+                                        "Santa Clara",
+                                        "Oceanside",
+                                        "Lake Forest",
+                                        "Novi",
+                                        "West New York",
+                                        "Linden",
+                                        "Asheville",
+                                        "Compton"
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "requiredComponents": [
+                    "learned"
+                ]
+            },
+            {
+                "category": "geography.state",
+                "compositionSetting": "combineComponents",
+                "list": {
+                    "sublists": [
+                        {
+                            "listKey": "states",
+                            "synonyms": [
+                                {
+                                    "language": "en-us",
+                                    "values": [
+                                        "states",
+                                        "AL",
+                                        "Alabama",
+                                        "AK",
+                                        "Alaska",
+                                        "AZ",
+                                        "Arizona",
+                                        "AR",
+                                        "Arkansas",
+                                        "CA",
+                                        "California",
+                                        "SO",
+                                        "Colorado",
+                                        "CT",
+                                        "Connecticut",
+                                        "DE",
+                                        "Delaware",
+                                        "FL",
+                                        "Florida",
+                                        "GA",
+                                        "Georgia",
+                                        "HI",
+                                        "Hawaii",
+                                        "ID",
+                                        "Idaho",
+                                        "IL",
+                                        "Illinois",
+                                        "IN",
+                                        "Indiana",
+                                        "IA",
+                                        "Iowa",
+                                        "KS",
+                                        "Kansas",
+                                        "KY",
+                                        "Kentucky",
+                                        "LA",
+                                        "Louisiana",
+                                        "ME",
+                                        "Maine",
+                                        "MD",
+                                        "Maryland",
+                                        "MA",
+                                        "Massachusetts",
+                                        "MI",
+                                        "Michigan",
+                                        "MN",
+                                        "Minnesota",
+                                        "MS",
+                                        "Mississippi",
+                                        "MO",
+                                        "Missouri",
+                                        "MT",
+                                        "Montana",
+                                        "NE",
+                                        "Nebraska",
+                                        "NV",
+                                        "Nevada",
+                                        "NH",
+                                        "New Hampshire",
+                                        "NJ",
+                                        "New Jersey",
+                                        "NM",
+                                        "New Mexico",
+                                        "NY",
+                                        "New York",
+                                        "NC",
+                                        "North Carolina",
+                                        "ND",
+                                        "North Dakota",
+                                        "OH",
+                                        "Ohio",
+                                        "OK",
+                                        "Oklahoma",
+                                        "OR",
+                                        "Oregon",
+                                        "PA",
+                                        "Pennsylvania",
+                                        "RI",
+                                        "Rhode Island",
+                                        "SC",
+                                        "South Carolina",
+                                        "SD",
+                                        "South Dakota",
+                                        "TN",
+                                        "Tennessee",
+                                        "TX",
+                                        "Texas",
+                                        "UT",
+                                        "Utah",
+                                        "VT",
+                                        "Vermont",
+                                        "VA",
+                                        "Virginia",
+                                        "WA",
+                                        "Washington",
+                                        "WV",
+                                        "West Virginia",
+                                        "WI",
+                                        "Wisconsin",
+                                        "WY",
+                                        "Wyoming"
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "requiredComponents": [
+                    "learned"
+                ]
+            },
+            {
+                "category": "geography.countryOrRegion",
+                "compositionSetting": "combineComponents",
+                "list": {
+                    "sublists": [
+                        {
+                            "listKey": "countries",
+                            "synonyms": [
+                                {
+                                    "language": "en-us",
+                                    "values": [
+                                        "countries",
                                         "Afghanistan",
                                         "The Islamic Republic of Afghanistan",
                                         "AF",
                                         "AFG",
-                                        "land Islands",
-                                        "land",
+                                        "Åland Islands",
+                                        "Åland",
                                         "AX",
                                         "ALA",
                                         "Albania",
@@ -95,7 +1161,7 @@
                                         "AI",
                                         "AIA",
                                         "Antarctica",
-                                        "All land and ice shelves south of the 60th parallel south",
+                                        "All land and ice shelves south of the 60th parallel south",
                                         "AQ",
                                         "ATA",
                                         "Antigua and Barbuda",
@@ -282,10 +1348,10 @@
                                         "The Republic of Costa Rica",
                                         "CR",
                                         "CRI",
-                                        "C te d'Ivoire",
-                                        "C te D'Ivoire",
-                                        "C te d'Ivoire",
-                                        "The Republic of C te d'Ivoire",
+                                        "Côte d’Ivoire",
+                                        "Côte D'Ivoire",
+                                        "Côte d'Ivoire",
+                                        "The Republic of Côte d'Ivoire",
                                         "CI",
                                         "CIV",
                                         "Croatia",
@@ -296,8 +1362,8 @@
                                         "The Republic of Cuba",
                                         "CU",
                                         "CUB",
-                                        "Cura ao",
-                                        "The Country of Cura ao",
+                                        "Curaçao",
+                                        "The Country of Curaçao",
                                         "CW",
                                         "CUW",
                                         "Cyprus",
@@ -485,7 +1551,6 @@
                                         "ISL",
                                         "India",
                                         "The Republic of India",
-                                        "IN",
                                         "IND",
                                         "Indonesia",
                                         "The Republic of Indonesia",
@@ -779,7 +1844,7 @@
                                         "Palestinian Territories",
                                         "Occupied",
                                         "Panama",
-                                        "The Republic of Panam",
+                                        "The Republic of Panamá",
                                         "PA",
                                         "PAN",
                                         "Papua New Guinea",
@@ -791,7 +1856,7 @@
                                         "PY",
                                         "PRY",
                                         "Peru",
-                                        "The Republic of Per",
+                                        "The Republic of Perú",
                                         "PE",
                                         "PER",
                                         "Philippines",
@@ -822,7 +1887,7 @@
                                         "The State of Qatar",
                                         "QA",
                                         "QAT",
-                                        "R union",
+                                        "Réunion",
                                         "RE",
                                         "REU",
                                         "Romania",
@@ -839,8 +1904,8 @@
                                         "RW",
                                         "RWA",
                                         "Saba",
-                                        "Saint Barth lemy",
-                                        "The Collectivity of Saint-Barth lemy",
+                                        "Saint Barthélemy",
+                                        "The Collectivity of Saint-Barthélemy",
                                         "BL",
                                         "BLM",
                                         "Saint Kitts and Nevis",
@@ -869,9 +1934,9 @@
                                         "The Republic of San Marino",
                                         "SM",
                                         "SMR",
-                                        "S o Tom  and Pr ncipe",
+                                        "São Tomé and Príncipe",
                                         "Sao Tome and Principe",
-                                        "The Democratic Republic of S o Tom  and Pr ncipe",
+                                        "The Democratic Republic of São Tomé and Príncipe",
                                         "ST",
                                         "STP",
                                         "Saudi Arabia",
@@ -1032,15 +2097,15 @@
                                         "U.S. Outlying Islands",
                                         "United States Minor Outlying Islands",
                                         "United States Minor Outlying Islands (the)",
-                                        "Baker Island",
-                                        "Howland Island",
-                                        "Jarvis Island",
-                                        "Johnston Atoll",
-                                        "Kingman Reef",
-                                        "Midway Atoll",
-                                        "Navassa Island",
-                                        "Palmyra Atoll",
-                                        "and Wake Island",
+                                        "Baker Island",
+                                        "Howland Island",
+                                        "Jarvis Island",
+                                        "Johnston Atoll",
+                                        "Kingman Reef",
+                                        "Midway Atoll",
+                                        "Navassa Island",
+                                        "Palmyra Atoll",
+                                        "and Wake Island",
                                         "UM",
                                         "UMI",
                                         "U.S. Virgin Islands",
@@ -1129,139 +2194,158 @@
                                     ]
                                 }
                             ]
-                        },
-                        {
-                            "listKey": "State",
-                            "synonyms": [
-                                {
-                                    "language": "en-us",
-                                    "values": [
-                                        "AL",
-                                        "Alabama",
-                                        "AK",
-                                        "Alaska",
-                                        "AZ",
-                                        "Arizona",
-                                        "AR",
-                                        "Arkansas",
-                                        "CA",
-                                        "California",
-                                        "SO",
-                                        "Colorado",
-                                        "CT",
-                                        "Connecticut",
-                                        "DE",
-                                        "Delaware",
-                                        "FL",
-                                        "Florida",
-                                        "GA",
-                                        "Georgia",
-                                        "HI",
-                                        "Hawaii",
-                                        "ID",
-                                        "Idaho",
-                                        "IL",
-                                        "Illinois",
-                                        "IN",
-                                        "Indiana",
-                                        "IA",
-                                        "Iowa",
-                                        "KS",
-                                        "Kansas",
-                                        "KY",
-                                        "Kentucky",
-                                        "LA",
-                                        "Louisiana",
-                                        "ME",
-                                        "Maine",
-                                        "MD",
-                                        "Maryland",
-                                        "MA",
-                                        "Massachusetts",
-                                        "MI",
-                                        "Michigan",
-                                        "MN",
-                                        "Minnesota",
-                                        "MS",
-                                        "Mississippi",
-                                        "MO",
-                                        "Missouri",
-                                        "MT",
-                                        "Montana",
-                                        "NE",
-                                        "Nebraska",
-                                        "NV",
-                                        "Nevada",
-                                        "NH",
-                                        "New Hampshire",
-                                        "NJ",
-                                        "New Jersey",
-                                        "NM",
-                                        "New Mexico",
-                                        "NY",
-                                        "New York",
-                                        "NC",
-                                        "North Carolina",
-                                        "ND",
-                                        "North Dakota",
-                                        "OH",
-                                        "Ohio",
-                                        "OK",
-                                        "Oklahoma",
-                                        "OR",
-                                        "Oregon",
-                                        "PA",
-                                        "Pennsylvania",
-                                        "RI",
-                                        "Rhode Island",
-                                        "SC",
-                                        "South Carolina",
-                                        "SD",
-                                        "South Dakota",
-                                        "TN",
-                                        "Tennessee",
-                                        "TX",
-                                        "Texas",
-                                        "UT",
-                                        "Utah",
-                                        "VT",
-                                        "Vermont",
-                                        "VA",
-                                        "Virginia",
-                                        "WA",
-                                        "Washington",
-                                        "WV",
-                                        "West Virginia",
-                                        "WI",
-                                        "Wisconsin",
-                                        "WY",
-                                        "Wyoming"
-                                    ]
-                                }
-                            ]
                         }
                     ]
                 },
-                "prebuilts": [
-                    {
-                        "category": "Geography.Location"
-                    }
+                "requiredComponents": [
+                    "learned"
                 ]
             }
         ],
         "utterances": [
+            {
+                "text": "clincal trials for 45 yo men with lung cancer from Huston, Texas",
+                "language": "en-us",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "age",
+                        "offset": 19,
+                        "length": 2
+                    },
+                    {
+                        "category": "gender.male",
+                        "offset": 25,
+                        "length": 3
+                    },
+                    {
+                        "category": "disease",
+                        "offset": 34,
+                        "length": 11
+                    },
+                    {
+                        "category": "geography.city",
+                        "offset": 51,
+                        "length": 6
+                    },
+                    {
+                        "category": "geography.state",
+                        "offset": 59,
+                        "length": 5
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "clinical trials in Washington, USA",
+                "language": "en-us",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "geography.state",
+                        "offset": 19,
+                        "length": 10
+                    },
+                    {
+                        "category": "geography.countryOrRegion",
+                        "offset": 31,
+                        "length": 3
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "trials in TX, USA",
+                "language": "en-us",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "geography.state",
+                        "offset": 10,
+                        "length": 2
+                    },
+                    {
+                        "category": "geography.countryOrRegion",
+                        "offset": 14,
+                        "length": 3
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "clinical experiments in CA state",
+                "language": "en-us",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "geography.state",
+                        "offset": 24,
+                        "length": 2
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "clinical trilas in TX area",
+                "language": "en-us",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "geography.state",
+                        "offset": 19,
+                        "length": 2
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "trilas is new york, NY",
+                "language": "en-us",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "geography.city",
+                        "offset": 10,
+                        "length": 8
+                    },
+                    {
+                        "category": "geography.state",
+                        "offset": 20,
+                        "length": 2
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "trials in tel aviv, israel",
+                "language": "en-us",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "geography.city",
+                        "offset": 10,
+                        "length": 8
+                    },
+                    {
+                        "category": "geography.countryOrRegion",
+                        "offset": 20,
+                        "length": 6
+                    }
+                ],
+                "dataset": "Train"
+            },
             {
                 "text": "clincal trials in Huston, Taxes for 45 yo men with lung cancer",
                 "language": "en-us",
                 "intent": "Clinical Trials Matching",
                 "entities": [
                     {
-                        "category": "geography",
+                        "category": "geography.city",
                         "offset": 18,
                         "length": 6
                     },
                     {
-                        "category": "geography",
+                        "category": "geography.state",
                         "offset": 26,
                         "length": 5
                     },
@@ -1269,11 +2353,6 @@
                         "category": "age",
                         "offset": 36,
                         "length": 2
-                    },
-                    {
-                        "category": "gender",
-                        "offset": 42,
-                        "length": 3
                     },
                     {
                         "category": "disease",
@@ -1326,11 +2405,17 @@
                 "intent": "Clinical Trials Matching",
                 "entities": [
                     {
+                        "category": "geography.countryOrRegion",
+                        "offset": 27,
+                        "length": 2
+                    },
+                    {
                         "category": "disease",
                         "offset": 34,
                         "length": 22
                     }
-                ]
+                ],
+                "dataset": "Train"
             },
             {
                 "text": "clinical trials for a patient with aapc",
@@ -1378,8 +2463,14 @@
                         "category": "disease",
                         "offset": 50,
                         "length": 8
+                    },
+                    {
+                        "category": "geography.city",
+                        "offset": 64,
+                        "length": 6
                     }
-                ]
+                ],
+                "dataset": "Train"
             },
             {
                 "text": "clinical trials for aapc",
@@ -1444,12 +2535,26 @@
             {
                 "text": "clinical trials in houston",
                 "intent": "Clinical Trials Matching",
-                "entities": []
+                "entities": [
+                    {
+                        "category": "geography.city",
+                        "offset": 19,
+                        "length": 7
+                    }
+                ],
+                "dataset": "Train"
             },
             {
                 "text": "clinical trials in new york",
                 "intent": "Clinical Trials Matching",
-                "entities": []
+                "entities": [
+                    {
+                        "category": "geography.city",
+                        "offset": 19,
+                        "length": 8
+                    }
+                ],
+                "dataset": "Train"
             },
             {
                 "text": "data about hepatitis",
@@ -1474,7 +2579,7 @@
                 ]
             },
             {
-                "text": "data ????? hepatitis",
+                "text": "data שנםוא hepatitis",
                 "intent": "None",
                 "entities": [
                     {
@@ -1569,11 +2674,17 @@
                         "length": 6
                     },
                     {
+                        "category": "geography.city",
+                        "offset": 52,
+                        "length": 8
+                    },
+                    {
                         "category": "disease",
                         "offset": 66,
                         "length": 13
                     }
-                ]
+                ],
+                "dataset": "Train"
             },
             {
                 "text": "find clinical trials for stage 2 breast cancer for 16 years old woman",
@@ -1599,8 +2710,14 @@
                         "category": "disease",
                         "offset": 28,
                         "length": 22
+                    },
+                    {
+                        "category": "geography.state",
+                        "offset": 54,
+                        "length": 7
                     }
-                ]
+                ],
+                "dataset": "Train"
             },
             {
                 "text": "find stage i lymphoma stuides",
@@ -1621,8 +2738,14 @@
                         "category": "gender.male",
                         "offset": 28,
                         "length": 3
+                    },
+                    {
+                        "category": "geography.countryOrRegion",
+                        "offset": 37,
+                        "length": 6
                     }
-                ]
+                ],
+                "dataset": "Train"
             },
             {
                 "text": "find therapy related to stage iv cancer in mexico",
@@ -1632,8 +2755,14 @@
                         "category": "disease",
                         "offset": 33,
                         "length": 6
+                    },
+                    {
+                        "category": "geography.countryOrRegion",
+                        "offset": 43,
+                        "length": 6
                     }
-                ]
+                ],
+                "dataset": "Train"
             },
             {
                 "text": "find trials for 2 years old child with brain cancer from new york",
@@ -1643,8 +2772,14 @@
                         "category": "disease",
                         "offset": 39,
                         "length": 12
+                    },
+                    {
+                        "category": "geography.city",
+                        "offset": 57,
+                        "length": 8
                     }
-                ]
+                ],
+                "dataset": "Train"
             },
             {
                 "text": "find trials for brain cancer in stage 3",
@@ -1702,13 +2837,24 @@
                         "category": "gender.female",
                         "offset": 48,
                         "length": 5
+                    },
+                    {
+                        "category": "geography.city",
+                        "offset": 59,
+                        "length": 6
                     }
-                ]
+                ],
+                "dataset": "Train"
             },
             {
                 "text": "find trials in chicago for tongue cancer for a 12 years old boy",
                 "intent": "Clinical Trials Matching",
                 "entities": [
+                    {
+                        "category": "geography.city",
+                        "offset": 15,
+                        "length": 7
+                    },
                     {
                         "category": "disease",
                         "offset": 27,
@@ -1719,7 +2865,8 @@
                         "offset": 60,
                         "length": 3
                     }
-                ]
+                ],
+                "dataset": "Train"
             },
             {
                 "text": "flu",
@@ -1977,6 +3124,11 @@
                 "intent": "Clinical Trials Matching",
                 "entities": [
                     {
+                        "category": "geography.city",
+                        "offset": 35,
+                        "length": 8
+                    },
+                    {
                         "category": "gender.female",
                         "offset": 51,
                         "length": 4
@@ -1986,7 +3138,8 @@
                         "offset": 72,
                         "length": 13
                     }
-                ]
+                ],
+                "dataset": "Train"
             },
             {
                 "text": "i'm looking for studies for a 45 years old woman from new jersey",
@@ -1996,8 +3149,14 @@
                         "category": "gender.female",
                         "offset": 43,
                         "length": 5
+                    },
+                    {
+                        "category": "geography.city",
+                        "offset": 54,
+                        "length": 10
                     }
-                ]
+                ],
+                "dataset": "Train"
             },
             {
                 "text": "im looking for trials for 34 years old",
@@ -2082,8 +3241,14 @@
                         "category": "gender.female",
                         "offset": 44,
                         "length": 5
+                    },
+                    {
+                        "category": "geography.city",
+                        "offset": 55,
+                        "length": 8
                     }
-                ]
+                ],
+                "dataset": "Train"
             },
             {
                 "text": "look for clinical trials for skin cancer in florida",
@@ -2093,8 +3258,14 @@
                         "category": "disease",
                         "offset": 29,
                         "length": 11
+                    },
+                    {
+                        "category": "geography.state",
+                        "offset": 44,
+                        "length": 7
                     }
-                ]
+                ],
+                "dataset": "Train"
             },
             {
                 "text": "looking for clinical trials for 25 years old female with stage ii breast cancer",
@@ -2397,8 +3568,14 @@
                         "category": "disease",
                         "offset": 50,
                         "length": 13
+                    },
+                    {
+                        "category": "geography.city",
+                        "offset": 69,
+                        "length": 13
                     }
-                ]
+                ],
+                "dataset": "Train"
             },
             {
                 "text": "search for trials for 18 years old man with stage ii lymphoma",
@@ -2443,11 +3620,17 @@
                 "intent": "Clinical Trials Matching",
                 "entities": [
                     {
+                        "category": "geography.countryOrRegion",
+                        "offset": 25,
+                        "length": 2
+                    },
+                    {
                         "category": "disease",
                         "offset": 42,
                         "length": 20
                     }
-                ]
+                ],
+                "dataset": "Train"
             },
             {
                 "text": "show me trials for 77 years old male with flat cis of the bladder",
@@ -2567,11 +3750,22 @@
                         "length": 4
                     },
                     {
+                        "category": "geography.city",
+                        "offset": 42,
+                        "length": 7
+                    },
+                    {
+                        "category": "geography.state",
+                        "offset": 50,
+                        "length": 5
+                    },
+                    {
                         "category": "disease",
                         "offset": 61,
                         "length": 17
                     }
-                ]
+                ],
+                "dataset": "Train"
             },
             {
                 "text": "trials for 57 years old male patient from houston with pancreatic cancer",
@@ -2583,11 +3777,17 @@
                         "length": 4
                     },
                     {
+                        "category": "geography.city",
+                        "offset": 42,
+                        "length": 7
+                    },
+                    {
                         "category": "disease",
                         "offset": 55,
                         "length": 17
                     }
-                ]
+                ],
+                "dataset": "Train"
             },
             {
                 "text": "trials for 57 years old male patient from los angeles with pancreatic cancer",
@@ -2599,11 +3799,17 @@
                         "length": 4
                     },
                     {
+                        "category": "geography.city",
+                        "offset": 42,
+                        "length": 11
+                    },
+                    {
                         "category": "disease",
                         "offset": 59,
                         "length": 17
                     }
-                ]
+                ],
+                "dataset": "Train"
             },
             {
                 "text": "trials for 57 years old male patient with pancreatic cancer from houston",
@@ -2618,8 +3824,14 @@
                         "category": "disease",
                         "offset": 42,
                         "length": 17
+                    },
+                    {
+                        "category": "geography.city",
+                        "offset": 65,
+                        "length": 7
                     }
-                ]
+                ],
+                "dataset": "Train"
             },
             {
                 "text": "trials for a male patient from houston",
@@ -2629,8 +3841,14 @@
                         "category": "gender.male",
                         "offset": 13,
                         "length": 4
+                    },
+                    {
+                        "category": "geography.city",
+                        "offset": 31,
+                        "length": 7
                     }
-                ]
+                ],
+                "dataset": "Train"
             },
             {
                 "text": "trials for a male patient with pancreatic cancer from houston",
@@ -2645,13 +3863,26 @@
                         "category": "disease",
                         "offset": 31,
                         "length": 17
+                    },
+                    {
+                        "category": "geography.city",
+                        "offset": 54,
+                        "length": 7
                     }
-                ]
+                ],
+                "dataset": "Train"
             },
             {
                 "text": "trials for a patient from houston",
                 "intent": "Clinical Trials Matching",
-                "entities": []
+                "entities": [
+                    {
+                        "category": "geography.city",
+                        "offset": 26,
+                        "length": 7
+                    }
+                ],
+                "dataset": "Train"
             },
             {
                 "text": "trials for cancer",
@@ -2707,11 +3938,17 @@
                         "length": 4
                     },
                     {
+                        "category": "geography.countryOrRegion",
+                        "offset": 30,
+                        "length": 6
+                    },
+                    {
                         "category": "disease",
                         "offset": 42,
                         "length": 15
                     }
-                ]
+                ],
+                "dataset": "Train"
             },
             {
                 "text": "trials for male patient with pancreatic cancer from houston",
@@ -2726,8 +3963,14 @@
                         "category": "disease",
                         "offset": 29,
                         "length": 17
+                    },
+                    {
+                        "category": "geography.city",
+                        "offset": 52,
+                        "length": 7
                     }
-                ]
+                ],
+                "dataset": "Train"
             },
             {
                 "text": "trials for male patient with pancreatic cancer from los angeles",
@@ -2742,8 +3985,14 @@
                         "category": "disease",
                         "offset": 29,
                         "length": 17
+                    },
+                    {
+                        "category": "geography.city",
+                        "offset": 52,
+                        "length": 11
                     }
-                ]
+                ],
+                "dataset": "Train"
             },
             {
                 "text": "trials for men 57 yo",
@@ -2926,7 +4175,7 @@
                 ]
             },
             {
-                "text": "? find trials for male 57 years old with prostate cancer from mexico",
+                "text": " find trials for male 57 years old with prostate cancer from mexico",
                 "intent": "Clinical Trials Matching",
                 "entities": [
                     {
@@ -2938,8 +4187,14 @@
                         "category": "disease",
                         "offset": 41,
                         "length": 15
+                    },
+                    {
+                        "category": "geography.countryOrRegion",
+                        "offset": 62,
+                        "length": 6
                     }
-                ]
+                ],
+                "dataset": "Train"
             }
         ]
     }
