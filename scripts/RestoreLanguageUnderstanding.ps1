@@ -76,6 +76,8 @@ function Call-Http {
     }
 }
 
+# wait for resource init
+Start-Sleep -Seconds 30
 
 # Fetch json file from web address
 $jsonFile = Invoke-WebRequest  -Method Get -Uri  "$fileLocation/clu/clinical_trial_metadata.json" -ContentType $contentType
