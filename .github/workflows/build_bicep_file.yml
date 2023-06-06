@@ -23,3 +23,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Upload GitHub Pages artifact
+        uses: actions/upload-pages-artifact@v1.0.8
+        with:
+          path: ./arm-templates/main.json
+
+      - name: Deploy GitHub Pages site
+        uses: actions/deploy-pages@v2.0.1
