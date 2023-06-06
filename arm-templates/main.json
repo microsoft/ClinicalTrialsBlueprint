@@ -11,7 +11,7 @@
   "parameters": {
     "matchingBotName": {
       "type": "string",
-      "defaultValue": "ctm-healthbot-template20",
+      "defaultValue": "ctm-healthbot-template21",
       "maxLength": 30,
       "minLength": 3
     },
