@@ -1,5 +1,7 @@
 name: build Bicep file and Update ARM template
-
+env: 
+  artifactDir: "./template"
+  
 on:
   push:
     branches: ["master"]
@@ -8,16 +10,21 @@ on:
 jobs:
   publish-gpr:
     runs-on: ubuntu-latest
-      
+    
     steps:
       - uses: actions/checkout@v3
+      
+      - run: mkdir $artifactDir
       - name: Build Arm Template From Bicep
         uses: Azure/cli@v1.0.7
         with:
-          inlineScript: az bicep build --file ./arm-templates/main.bicep --outdir _site
+          inlineScript: az bicep build --file ./arm-templates/main.bicep --outdir $artifactDir
 
       - name: Upload GitHub Pages artifact
         uses: actions/upload-pages-artifact@v1.0.8
+        with:
+          path: $artifactDir
+          
 
       - name: Deploy GitHub Pages site
         uses: actions/deploy-pages@v2.0.1
