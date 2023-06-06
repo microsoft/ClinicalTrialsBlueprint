@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.17.1.54307",
-      "templateHash": "18350875587059502785"
+      "templateHash": "5044198872593583016"
     }
   },
   "parameters": {
@@ -15,7 +15,7 @@
       "maxLength": 30,
       "minLength": 3
     },
-    "healthInsightName": {
+    "healthInsightsName": {
       "type": "string",
       "defaultValue": "ctm-healthinsights-cogs",
       "maxLength": 64,
@@ -31,7 +31,7 @@
       "type": "object",
       "defaultValue": {
         "Environment": "Prod",
-        "Project": "Health Insight Trial Matching bot"
+        "Project": "Health Insights Trial Matching bot"
       }
     },
     "location": {
@@ -57,14 +57,14 @@
     {
       "type": "Microsoft.CognitiveServices/accounts",
       "apiVersion": "2022-12-01",
-      "name": "[parameters('healthInsightName')]",
+      "name": "[parameters('healthInsightsName')]",
       "location": "[parameters('location')]",
       "sku": {
         "name": "S0"
       },
       "kind": "HealthInsights",
       "properties": {
-        "customSubDomainName": "[parameters('healthInsightName')]",
+        "customSubDomainName": "[parameters('healthInsightsName')]",
         "publicNetworkAccess": "Enabled"
       },
       "tags": "[parameters('resourceTags')]"
@@ -82,12 +82,12 @@
         "arguments": "[format('-fileLocation {0}', variables('fileLocation'))]",
         "environmentVariables": [
           {
-            "name": "HEALTH_INSIGHT_ENDPOINT",
-            "value": "[reference(resourceId('Microsoft.CognitiveServices/accounts', parameters('healthInsightName')), '2022-12-01').endpoint]"
+            "name": "HEALTH_INSIGHTS_ENDPOINT",
+            "value": "[reference(resourceId('Microsoft.CognitiveServices/accounts', parameters('healthInsightsName')), '2022-12-01').endpoint]"
           },
           {
-            "name": "HEALTH_INSIGHT_KEY",
-            "value": "[listKeys(resourceId('Microsoft.CognitiveServices/accounts', parameters('healthInsightName')), '2022-12-01').key1]"
+            "name": "HEALTH_INSIGHTS_KEY",
+            "value": "[listKeys(resourceId('Microsoft.CognitiveServices/accounts', parameters('healthInsightsName')), '2022-12-01').key1]"
           },
           {
             "name": "CLU_ENDPOINT",
@@ -117,7 +117,7 @@
       },
       "dependsOn": [
         "[resourceId('Microsoft.HealthBot/healthBots', parameters('matchingBotName'))]",
-        "[resourceId('Microsoft.CognitiveServices/accounts', parameters('healthInsightName'))]",
+        "[resourceId('Microsoft.CognitiveServices/accounts', parameters('healthInsightsName'))]",
         "[resourceId('Microsoft.CognitiveServices/accounts', parameters('languageUnderstandingName'))]"
       ]
     },
@@ -140,9 +140,9 @@
     }
   ],
   "outputs": {
-    "healthInsightEndpoint": {
+    "healthInsightsEndpoint": {
       "type": "string",
-      "value": "[reference(resourceId('Microsoft.CognitiveServices/accounts', parameters('healthInsightName')), '2022-12-01').endpoint]"
+      "value": "[reference(resourceId('Microsoft.CognitiveServices/accounts', parameters('healthInsightsName')), '2022-12-01').endpoint]"
     },
     "healthBotEndpoint": {
       "type": "string",
