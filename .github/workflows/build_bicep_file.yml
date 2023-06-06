@@ -14,17 +14,24 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       
-      - run: "mkdir $ARTIFACT_DIR"
+      - run: "mkdir ${{ env.ARTIFACT_DIR }}"
+        name: Create Artifact Di"
+      
       - name: Build Arm Template From Bicep
         uses: Azure/cli@v1.0.7
         with:
-          inlineScript: "az bicep build --file ./arm-templates/main.bicep --outdir $ARTIFACT_DIR"
+          inlineScript: "az bicep build --file ./arm-templates/main.bicep --outdir ${{ env.ARTIFACT_DIR }}"
 
       - name: Upload GitHub Pages artifact
-        uses: actions/upload-pages-artifact@v1.0.8
+        uses: actions/upload-artifact@v2
         with:
-          path: "$ARTIFACT_DIR"
+          name: bicep-artifact
+          path: ${{ env.ARTIFACT_DIR }}
           
 
       - name: Deploy GitHub Pages site
-        uses: actions/deploy-pages@v2.0.1
+        uses: JamesIves/github-pages-deploy-action@4.1.1
+        with:
+          branch: gh-pages
+          folder: ${{ env.ARTIFACT_DIR }}
+

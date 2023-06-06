@@ -4,7 +4,7 @@ param matchingBotName string = 'ctm-healthbot-template'
 
 @minLength(2)
 @maxLength(64)
-param healthInsightName string = 'ctm-healthinsights-cogs'
+param healthInsightsName string = 'ctm-healthinsights-cogs'
 
 @minLength(2)
 @maxLength(64)
@@ -12,11 +12,12 @@ param languageUnderstandingName string = 'ctm-CLU-cogs'
 
 param resourceTags object = {
   Environment: 'Prod'
-  Project: 'Health Insight Trial Matching bot'
+  Project: 'Health Insights Trial Matching bot'
 }
 
 param location string = resourceGroup().location
-param fileLocation string = 'https://raw.githubusercontent.com/microsoft/ClinicalTrialsBlueprint/master'
+
+var fileLocation = 'https://raw.githubusercontent.com/microsoft/ClinicalTrialsBlueprint/master'
 
 resource healthbot 'Microsoft.HealthBot/healthBots@2022-08-08' = {
   name: matchingBotName
@@ -26,15 +27,15 @@ resource healthbot 'Microsoft.HealthBot/healthBots@2022-08-08' = {
   tags: resourceTags
 }
 
-resource healthInsight 'Microsoft.CognitiveServices/accounts@2022-12-01' = {
-  name: healthInsightName
+resource healthInsights 'Microsoft.CognitiveServices/accounts@2022-12-01' = {
+  name: healthInsightsName
   location: location
   sku: {
     name: 'S0'
   }
   kind: 'HealthInsights'
   properties: {
-    customSubDomainName: healthInsightName
+    customSubDomainName: healthInsightsName
     publicNetworkAccess: 'Enabled'
   }
   tags: resourceTags
@@ -51,12 +52,12 @@ resource runPowerShellInline 'Microsoft.Resources/deploymentScripts@2020-10-01' 
     arguments: '-fileLocation ${fileLocation}'
     environmentVariables: [
       {
-        name: 'HEALTH_INSIGHT_ENDPOINT'
-        value: healthInsight.properties.endpoint
+        name: 'HEALTH_INSIGHTS_ENDPOINT'
+        value: healthInsights.properties.endpoint
       }
       {
-        name: 'HEALTH_INSIGHT_KEY'
-        value: healthInsight.listKeys().key1
+        name: 'HEALTH_INSIGHTS_KEY'
+        value: healthInsights.listKeys().key1
       }
       {
         name: 'CLU_ENDPOINT'
@@ -102,5 +103,5 @@ resource lungUnderstanding 'Microsoft.CognitiveServices/accounts@2022-12-01' = {
   }
 }
 
-output healthInsightEndpoint string = healthInsight.properties.endpoint
+output healthInsightsEndpoint string = healthInsights.properties.endpoint
 output healthBotEndpoint string = healthbot.properties.botManagementPortalLink
