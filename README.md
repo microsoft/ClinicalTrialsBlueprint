@@ -1,13 +1,8 @@
-# Clinical Trials Matching Service Blueprint
-az bicep build --file .\arm-templates\main.bicep
-az group create --name yochai-rg-test -l eastus
-az deployment group create --resource-group yochai-rg-test --template-file .\arm-templates\main.json
+# Health Insights Clinical Trials Matching Service Healthbot Blueprint
 
 ## One click deployemnt
-[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://github.com/microsoft/ClinicalTrialsBlueprint/releases/download/master/main.json)
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https%3A%2F%2Fgithub.com%2Fmicrosoft%2FClinicalTrialsBlueprint%2Freleases%2Fdownload%2Fmaster%2Fmain.json)
 
-
-## One click deployemnt
 ### [Requirments](https://learn.microsoft.com/en-us/azure/azure-resource-manager/bicep/deploy-powershell#prerequisites)
 [Install the Azure PowerShell module](https://docs.microsoft.com/en-us/powershell/azure/install-az-ps)
 [Install the Azure Biucep module](https://learn.microsoft.com/en-us/azure/azure-resource-manager/bicep/install#install-manually)
