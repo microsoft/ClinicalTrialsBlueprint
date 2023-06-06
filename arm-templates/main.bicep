@@ -103,5 +103,5 @@ resource lungUnderstanding 'Microsoft.CognitiveServices/accounts@2022-12-01' = {
   }
 }
 
-output healthInsightEndpoint string = healthInsights.properties.endpoint
+output healthInsightsEndpoint string = healthInsights.properties.endpoint
 output healthBotEndpoint string = healthbot.properties.botManagementPortalLink
