@@ -1,0 +1,4201 @@
+{
+    "projectFileVersion": "2022-10-01-preview",
+    "stringIndexType": "Utf16CodeUnit",
+    "metadata": {
+        "projectKind": "Conversation",
+        "settings": {
+            "confidenceThreshold": 0.0,
+            "normalizeCasing": false
+        },
+        "projectName": "clinical_trial_metadata",
+        "multilingual": false,
+        "description": "",
+        "language": "en-us"
+    },
+    "assets": {
+        "projectKind": "Conversation",
+        "intents": [
+            {
+                "category": "Clinical Trials Matching"
+            },
+            {
+                "category": "None"
+            }
+        ],
+        "entities": [
+            {
+                "category": "disease",
+                "compositionSetting": "combineComponents"
+            },
+            {
+                "category": "healthy",
+                "compositionSetting": "combineComponents"
+            },
+            {
+                "category": "age",
+                "compositionSetting": "combineComponents",
+                "prebuilts": [
+                    {
+                        "category": "Quantity.Age"
+                    }
+                ]
+            },
+            {
+                "category": "gender.male",
+                "compositionSetting": "requireExactOverlap"
+            },
+            {
+                "category": "gender.female",
+                "compositionSetting": "requireExactOverlap"
+            },
+            {
+                "category": "geography.city",
+                "compositionSetting": "combineComponents",
+                "list": {
+                    "sublists": [
+                        {
+                            "listKey": "cities",
+                            "synonyms": [
+                                {
+                                    "language": "en-us",
+                                    "values": [
+                                        "cities",
+                                        "Marysville",
+                                        "Perris",
+                                        "Cleveland",
+                                        "Worcester",
+                                        "Columbia",
+                                        "Waterbury",
+                                        "Eagan",
+                                        "Southfield",
+                                        "Lafayette",
+                                        "Boise City",
+                                        "Elkhart",
+                                        "Buena Park",
+                                        "Marietta",
+                                        "Parker",
+                                        "West Palm Beach",
+                                        "Salem",
+                                        "Aurora",
+                                        "Leesburg",
+                                        "Doral",
+                                        "Westminster",
+                                        "Lubbock",
+                                        "Overland Park",
+                                        "Jackson",
+                                        "Gastonia",
+                                        "Daytona Beach",
+                                        "Kansas City",
+                                        "Rancho Palos Verdes",
+                                        "Burnsville",
+                                        "Rowlett",
+                                        "Roswell",
+                                        "Montgomery",
+                                        "Logan",
+                                        "Woburn",
+                                        "Allentown",
+                                        "Mount Pleasant",
+                                        "Columbus",
+                                        "Buffalo",
+                                        "New Berlin",
+                                        "North Richland Hills",
+                                        "Lima",
+                                        "Sacramento",
+                                        "Fort Smith",
+                                        "East Providence",
+                                        "Urbandale",
+                                        "Mount Vernon",
+                                        "Lakewood",
+                                        "Henderson",
+                                        "Covina",
+                                        "Stamford",
+                                        "Bloomington",
+                                        "Kingsport",
+                                        "Spokane",
+                                        "Kennewick",
+                                        "Philadelphia",
+                                        "Bellingham",
+                                        "Visalia",
+                                        "La Crosse",
+                                        "Council Bluffs",
+                                        "North Lauderdale",
+                                        "Dallas",
+                                        "Antioch",
+                                        "Sterling Heights",
+                                        "Deerfield Beach",
+                                        "Fishers",
+                                        "Cheyenne",
+                                        "Murrieta",
+                                        "Lenexa",
+                                        "Noblesville",
+                                        "Southaven",
+                                        "Chino",
+                                        "Gaithersburg",
+                                        "Fountain Valley",
+                                        "Frederick",
+                                        "Greenville",
+                                        "DeKalb",
+                                        "West Allis",
+                                        "Thornton",
+                                        "West Des Moines",
+                                        "Fall River",
+                                        "Tulare",
+                                        "Chula Vista",
+                                        "Coral Springs",
+                                        "Concord",
+                                        "Smyrna",
+                                        "Apopka",
+                                        "Grand Forks",
+                                        "Lancaster",
+                                        "Naperville",
+                                        "Hollywood",
+                                        "Rogers",
+                                        "New Orleans",
+                                        "Oak Lawn",
+                                        "Caldwell",
+                                        "Portland",
+                                        "Burien",
+                                        "St. Charles",
+                                        "Waukesha",
+                                        "Flagstaff",
+                                        "Puyallup",
+                                        "Schenectady",
+                                        "Denver",
+                                        "Springfield",
+                                        "Campbell",
+                                        "Moreno Valley",
+                                        "Kettering",
+                                        "Lincoln Park",
+                                        "Lake Havasu City",
+                                        "North Little Rock",
+                                        "Reno",
+                                        "Littleton",
+                                        "Prescott",
+                                        "Dublin",
+                                        "Texarkana",
+                                        "Brooklyn Park",
+                                        "West Haven",
+                                        "El Centro",
+                                        "The Colony",
+                                        "Flint",
+                                        "Pittsburg",
+                                        "Buckeye",
+                                        "Brea",
+                                        "Indio",
+                                        "Scottsdale",
+                                        "Lincoln",
+                                        "Trenton",
+                                        "Boston",
+                                        "Glendora",
+                                        "Rochester",
+                                        "Florissant",
+                                        "Annapolis",
+                                        "Chapel Hill",
+                                        "Lawrence",
+                                        "Calexico",
+                                        "Calumet City",
+                                        "Missoula",
+                                        "Clovis",
+                                        "Pearland",
+                                        "Gilbert",
+                                        "Wausau",
+                                        "Raleigh",
+                                        "Orange",
+                                        "Walnut Creek",
+                                        "Bremerton",
+                                        "Porterville",
+                                        "Marana",
+                                        "Tallahassee",
+                                        "Conroe",
+                                        "Blacksburg",
+                                        "San Antonio",
+                                        "Hartford",
+                                        "Waterloo",
+                                        "Binghamton",
+                                        "Meridian",
+                                        "Fond du Lac",
+                                        "Baytown",
+                                        "Cary",
+                                        "Weymouth Town",
+                                        "Tulsa",
+                                        "Mission",
+                                        "Cuyahoga Falls",
+                                        "Malden",
+                                        "Allen",
+                                        "Tucson",
+                                        "Franklin",
+                                        "Shakopee",
+                                        "Jacksonville",
+                                        "Atlantic City",
+                                        "Erie",
+                                        "Merced",
+                                        "Abilene",
+                                        "Yorba Linda",
+                                        "Huntersville",
+                                        "St. Clair Shores",
+                                        "Harrisburg",
+                                        "San Buenaventura (Ventura)",
+                                        "Fremont",
+                                        "Pueblo",
+                                        "Chelsea",
+                                        "Belleville",
+                                        "Minneapolis",
+                                        "Bartlett",
+                                        "Wichita Falls",
+                                        "Missouri City",
+                                        "St. Louis",
+                                        "Pharr",
+                                        "Albuquerque",
+                                        "Athens-Clarke County",
+                                        "South Jordan",
+                                        "North Las Vegas",
+                                        "Pomona",
+                                        "Eastvale",
+                                        "Grove City",
+                                        "Midland",
+                                        "Oklahoma City",
+                                        "Oro Valley",
+                                        "Mesa",
+                                        "Norwalk",
+                                        "Kentwood",
+                                        "Brookfield",
+                                        "Rockwall",
+                                        "Mishawaka",
+                                        "Tustin",
+                                        "St. Cloud",
+                                        "Passaic",
+                                        "Escondido",
+                                        "San Bruno",
+                                        "Berkeley",
+                                        "San Clemente",
+                                        "Lawton",
+                                        "Eau Claire",
+                                        "Maricopa",
+                                        "DeSoto",
+                                        "Fort Wayne",
+                                        "Shoreline",
+                                        "Medford",
+                                        "La Habra",
+                                        "Albany",
+                                        "Daly City",
+                                        "Taylor",
+                                        "Lynchburg",
+                                        "Bowie",
+                                        "Danbury",
+                                        "Charlottesville",
+                                        "Coral Gables",
+                                        "Coeur d'Alene",
+                                        "El Monte",
+                                        "Crystal Lake",
+                                        "Danville",
+                                        "Goodyear",
+                                        "Paterson",
+                                        "Kissimmee",
+                                        "Saginaw",
+                                        "Brownsville",
+                                        "Flower Mound",
+                                        "Grapevine",
+                                        "Edina",
+                                        "Detroit",
+                                        "Fairfield",
+                                        "Mansfield",
+                                        "Birmingham",
+                                        "Austin",
+                                        "Santa Barbara",
+                                        "Addison",
+                                        "Rio Rancho",
+                                        "Normal",
+                                        "Romeoville",
+                                        "Coon Rapids",
+                                        "San Mateo",
+                                        "Orlando",
+                                        "Casper",
+                                        "Bedford",
+                                        "Wilmington",
+                                        "Pinellas Park",
+                                        "North Miami Beach",
+                                        "Fitchburg",
+                                        "Wheeling",
+                                        "Newton",
+                                        "North Miami",
+                                        "Norwich",
+                                        "Newark",
+                                        "Alexandria",
+                                        "Blaine",
+                                        "Harlingen",
+                                        "Lompoc",
+                                        "Denton",
+                                        "Galveston",
+                                        "Greenwood",
+                                        "Salinas",
+                                        "Miami Gardens",
+                                        "Huntington",
+                                        "Laredo",
+                                        "Melbourne",
+                                        "Haltom City",
+                                        "Palm Bay",
+                                        "Wilson",
+                                        "Bountiful",
+                                        "Ceres",
+                                        "Parma",
+                                        "Rapid City",
+                                        "Bell Gardens",
+                                        "Commerce City",
+                                        "Fort Collins",
+                                        "San Leandro",
+                                        "Vista",
+                                        "Yonkers",
+                                        "Cincinnati",
+                                        "Hagerstown",
+                                        "Sanford",
+                                        "Union City",
+                                        "Toledo",
+                                        "Sierra Vista",
+                                        "Newport News",
+                                        "Hammond",
+                                        "Buffalo Grove",
+                                        "Sugar Land",
+                                        "Huntsville",
+                                        "Lodi",
+                                        "Edmonds",
+                                        "Duncanville",
+                                        "Rocky Mount",
+                                        "Pontiac",
+                                        "National City",
+                                        "Hayward",
+                                        "Niagara Falls",
+                                        "Sparks",
+                                        "Hanford",
+                                        "Cypress",
+                                        "Youngstown",
+                                        "Madison",
+                                        "Redlands",
+                                        "Cape Girardeau",
+                                        "Nampa",
+                                        "Washington",
+                                        "Wheaton",
+                                        "Rialto",
+                                        "Fargo",
+                                        "Peoria",
+                                        "Omaha",
+                                        "Rancho Santa Margarita",
+                                        "Manhattan",
+                                        "Palm Springs",
+                                        "San Diego",
+                                        "Santa Rosa",
+                                        "Lowell",
+                                        "Broken Arrow",
+                                        "Kent",
+                                        "Nashville",
+                                        "Hackensack",
+                                        "Broomfield",
+                                        "Durham",
+                                        "Wichita",
+                                        "Cathedral City",
+                                        "Lakeville",
+                                        "Elmhurst",
+                                        "Weslaco",
+                                        "Greenfield",
+                                        "Sunnyvale",
+                                        "Santa Cruz",
+                                        "Kenosha",
+                                        "State College",
+                                        "Quincy",
+                                        "Pompano Beach",
+                                        "San Angelo",
+                                        "Tracy",
+                                        "Spartanburg",
+                                        "Nashua",
+                                        "Macon",
+                                        "Hempstead",
+                                        "Camden",
+                                        "Palm Desert",
+                                        "Streamwood",
+                                        "Chesapeake",
+                                        "Camarillo",
+                                        "Muskegon",
+                                        "Elizabeth",
+                                        "Anchorage",
+                                        "Minot",
+                                        "Davie",
+                                        "McAllen",
+                                        "McKinney",
+                                        "Killeen",
+                                        "Findlay",
+                                        "Oakland",
+                                        "Mountain View",
+                                        "Lake Elsinore",
+                                        "Amarillo",
+                                        "Provo",
+                                        "Atlanta",
+                                        "Monterey Park",
+                                        "Strongsville",
+                                        "Madera",
+                                        "Decatur",
+                                        "Woonsocket",
+                                        "Mobile",
+                                        "Vallejo",
+                                        "Arcadia",
+                                        "Collierville",
+                                        "Jefferson City",
+                                        "Longview",
+                                        "Chandler",
+                                        "Arvada",
+                                        "Alhambra",
+                                        "Kokomo",
+                                        "Oakland Park",
+                                        "Indianapolis",
+                                        "Boynton Beach",
+                                        "Apache Junction",
+                                        "Mount Prospect",
+                                        "Cranston",
+                                        "Olathe",
+                                        "Johns Creek",
+                                        "Greensboro",
+                                        "Kalamazoo",
+                                        "Tigard",
+                                        "Citrus Heights",
+                                        "Tuscaloosa",
+                                        "Ankeny",
+                                        "Hawthorne",
+                                        "Hoover",
+                                        "Delray Beach",
+                                        "Wellington",
+                                        "Bullhead City",
+                                        "Weston",
+                                        "Troy",
+                                        "New Rochelle",
+                                        "Stockton",
+                                        "Royal Oak",
+                                        "Titusville",
+                                        "Laguna Niguel",
+                                        "Spokane Valley",
+                                        "Costa Mesa",
+                                        "Grand Prairie",
+                                        "Portsmouth",
+                                        "Lacey",
+                                        "Apex",
+                                        "Sioux City",
+                                        "Encinitas",
+                                        "Spanish Fork",
+                                        "Huntington Park",
+                                        "Eden Prairie",
+                                        "Tempe",
+                                        "Taylorsville",
+                                        "Westland",
+                                        "Mesquite",
+                                        "Burlington",
+                                        "Garland",
+                                        "Richmond",
+                                        "Bismarck",
+                                        "Carson City",
+                                        "Muskogee",
+                                        "Augusta-Richmond County",
+                                        "Fayetteville",
+                                        "Sayreville",
+                                        "Diamond Bar",
+                                        "Chattanooga",
+                                        "Jeffersonville",
+                                        "Baldwin Park",
+                                        "Miami Beach",
+                                        "Port Arthur",
+                                        "San Luis Obispo",
+                                        "Burleson",
+                                        "Newport Beach",
+                                        "Riverton",
+                                        "Yakima",
+                                        "Dayton",
+                                        "Gulfport",
+                                        "Long Beach",
+                                        "Chico",
+                                        "Hattiesburg",
+                                        "Eugene",
+                                        "Colton",
+                                        "Montebello",
+                                        "Pleasanton",
+                                        "Everett",
+                                        "Hutchinson",
+                                        "Avondale",
+                                        "Euclid",
+                                        "Battle Creek",
+                                        "Rock Island",
+                                        "Beaverton",
+                                        "Kenner",
+                                        "Milpitas",
+                                        "Des Plaines",
+                                        "Placentia",
+                                        "Taunton",
+                                        "Montclair",
+                                        "Johnson City",
+                                        "Savannah",
+                                        "Warren",
+                                        "Vancouver",
+                                        "Sunrise",
+                                        "Muncie",
+                                        "Lehi",
+                                        "San Francisco",
+                                        "Fontana",
+                                        "Frisco",
+                                        "Chino Hills",
+                                        "Poway",
+                                        "Huber Heights",
+                                        "New Brunswick",
+                                        "Norfolk",
+                                        "Hillsboro",
+                                        "San Jacinto",
+                                        "Pensacola",
+                                        "Hamilton",
+                                        "Florence",
+                                        "San Bernardino",
+                                        "Peachtree Corners",
+                                        "Victorville",
+                                        "Gary",
+                                        "Casa Grande",
+                                        "Morgan Hill",
+                                        "Dubuque",
+                                        "Syracuse",
+                                        "Clarksville",
+                                        "Lakeland",
+                                        "Valley Stream",
+                                        "Dover",
+                                        "Moorhead",
+                                        "Culver City",
+                                        "Palatine",
+                                        "Seattle",
+                                        "Covington",
+                                        "Elk Grove",
+                                        "Shreveport",
+                                        "Ogden",
+                                        "Harrisonburg",
+                                        "Inglewood",
+                                        "Pasadena",
+                                        "Lake Oswego",
+                                        "Petaluma",
+                                        "Napa",
+                                        "Duluth",
+                                        "Roanoke",
+                                        "Bend",
+                                        "Apple Valley",
+                                        "Waltham",
+                                        "Fort Myers",
+                                        "Tampa",
+                                        "Upland",
+                                        "Beloit",
+                                        "Plantation",
+                                        "Colorado Springs",
+                                        "Modesto",
+                                        "Grand Rapids",
+                                        "Oak Park",
+                                        "Sarasota",
+                                        "Jurupa Valley",
+                                        "Bellflower",
+                                        "Boulder",
+                                        "Santa Fe",
+                                        "Coachella",
+                                        "Marlborough",
+                                        "Riverside",
+                                        "Palmdale",
+                                        "Novato",
+                                        "Layton",
+                                        "Bolingbrook",
+                                        "Mission Viejo",
+                                        "Glenview",
+                                        "Folsom",
+                                        "Prescott Valley",
+                                        "Las Cruces",
+                                        "Bozeman",
+                                        "Schaumburg",
+                                        "St. Peters",
+                                        "Ames",
+                                        "Surprise",
+                                        "Richardson",
+                                        "San Marcos",
+                                        "Wilkes-Barre",
+                                        "Appleton",
+                                        "Shawnee",
+                                        "Mentor",
+                                        "Livermore",
+                                        "Charlotte",
+                                        "Owensboro",
+                                        "Jupiter",
+                                        "Rohnert Park",
+                                        "Chicago",
+                                        "Billings",
+                                        "Wauwatosa",
+                                        "Lombard",
+                                        "New Haven",
+                                        "York",
+                                        "Knoxville",
+                                        "Elyria",
+                                        "Barnstable Town",
+                                        "Murray",
+                                        "Alameda",
+                                        "Manteca",
+                                        "Maplewood",
+                                        "Murfreesboro",
+                                        "Yuba City",
+                                        "Shelton",
+                                        "Cedar Falls",
+                                        "Germantown",
+                                        "Scranton",
+                                        "Auburn",
+                                        "Manassas",
+                                        "Vacaville",
+                                        "Santa Monica",
+                                        "Suffolk",
+                                        "Rochester Hills",
+                                        "La Quinta",
+                                        "Charleston",
+                                        "Delano",
+                                        "Kannapolis",
+                                        "Corona",
+                                        "Rocklin",
+                                        "Lee's Summit",
+                                        "Palm Coast",
+                                        "Sandy",
+                                        "Bentonville",
+                                        "Santa Clarita",
+                                        "Altamonte Springs",
+                                        "New Braunfels",
+                                        "Memphis",
+                                        "Irving",
+                                        "Hesperia",
+                                        "Holyoke",
+                                        "Dunwoody",
+                                        "Skokie",
+                                        "Kearny",
+                                        "Bethlehem",
+                                        "St. Joseph",
+                                        "Redondo Beach",
+                                        "Houston",
+                                        "Temecula",
+                                        "Ann Arbor",
+                                        "Beaumont",
+                                        "East Lansing",
+                                        "Santee",
+                                        "Tamarac",
+                                        "Bellevue",
+                                        "Pembroke Pines",
+                                        "Springdale",
+                                        "Oxnard",
+                                        "Odessa",
+                                        "Stillwater",
+                                        "Brockton",
+                                        "Bayonne",
+                                        "Paramount",
+                                        "Moline",
+                                        "Jersey City",
+                                        "St. Paul",
+                                        "Deltona",
+                                        "Freeport",
+                                        "Iowa City",
+                                        "Anaheim",
+                                        "Great Falls",
+                                        "West Valley City",
+                                        "Hampton",
+                                        "Georgetown",
+                                        "Orem",
+                                        "Monrovia",
+                                        "Keller",
+                                        "Goose Creek",
+                                        "Little Rock",
+                                        "Santa Ana",
+                                        "White Plains",
+                                        "Idaho Falls",
+                                        "Roseville",
+                                        "Perth Amboy",
+                                        "Peabody",
+                                        "Grand Island",
+                                        "Racine",
+                                        "Carmel",
+                                        "Portage",
+                                        "Middletown",
+                                        "Woodland",
+                                        "Revere",
+                                        "Euless",
+                                        "Arlington Heights",
+                                        "Hemet",
+                                        "High Point",
+                                        "Midwest City",
+                                        "Port Orange",
+                                        "Westerville",
+                                        "Rockford",
+                                        "El Cajon",
+                                        "St. Petersburg",
+                                        "Downers Grove",
+                                        "Milford",
+                                        "Las Vegas",
+                                        "Port St. Lucie",
+                                        "Cedar Rapids",
+                                        "Ormond Beach",
+                                        "Miramar",
+                                        "El Paso",
+                                        "Topeka",
+                                        "Rosemead",
+                                        "Keizer",
+                                        "Minnetonka",
+                                        "Akron",
+                                        "Edinburg",
+                                        "Rancho Cucamonga",
+                                        "North Charleston",
+                                        "Louisville",
+                                        "Watsonville",
+                                        "Coconut Creek",
+                                        "Bradenton",
+                                        "Carlsbad",
+                                        "Texas City",
+                                        "Redding",
+                                        "Wyoming",
+                                        "Lorain",
+                                        "Roy",
+                                        "Fort Lauderdale",
+                                        "Warner Robins",
+                                        "Clearwater",
+                                        "Cutler Bay",
+                                        "Terre Haute",
+                                        "Temple",
+                                        "Beavercreek",
+                                        "Sioux Falls",
+                                        "Margate",
+                                        "Leominster",
+                                        "Warwick",
+                                        "Bakersfield",
+                                        "Miami",
+                                        "Lake Charles",
+                                        "Richland",
+                                        "Hickory",
+                                        "South San Francisco",
+                                        "Plymouth",
+                                        "South Bend",
+                                        "Edmond",
+                                        "Des Moines",
+                                        "Bonita Springs",
+                                        "Draper",
+                                        "Whittier",
+                                        "Livonia",
+                                        "Milwaukee",
+                                        "Sumter",
+                                        "Beverly",
+                                        "Renton",
+                                        "Centennial",
+                                        "Anderson",
+                                        "Pflugerville",
+                                        "Hoboken",
+                                        "Lexington-Fayette",
+                                        "Yuma",
+                                        "Highland",
+                                        "Carol Stream",
+                                        "Joliet",
+                                        "Rock Hill",
+                                        "Rancho Cordova",
+                                        "Dearborn Heights",
+                                        "Honolulu",
+                                        "Victoria",
+                                        "Attleboro",
+                                        "Wylie",
+                                        "Carrollton",
+                                        "Plainfield",
+                                        "Hoffman Estates",
+                                        "Methuen",
+                                        "North Port",
+                                        "Rockville",
+                                        "Burbank",
+                                        "Fullerton",
+                                        "Oshkosh",
+                                        "Farmington Hills",
+                                        "Pico Rivera",
+                                        "Cerritos",
+                                        "La Puente",
+                                        "Grand Junction",
+                                        "Enid",
+                                        "San Jose",
+                                        "Round Rock",
+                                        "Maple Grove",
+                                        "Norman",
+                                        "Homestead",
+                                        "Friendswood",
+                                        "Irvine",
+                                        "Pocatello",
+                                        "Pacifica",
+                                        "Sheboygan",
+                                        "Bossier City",
+                                        "Cedar Park",
+                                        "Sandy Springs",
+                                        "Champaign",
+                                        "Clifton",
+                                        "Moore",
+                                        "Blue Springs",
+                                        "Bryan",
+                                        "Hurst",
+                                        "Cape Coral",
+                                        "Cupertino",
+                                        "Pittsfield",
+                                        "Gilroy",
+                                        "Manchester",
+                                        "Virginia Beach",
+                                        "Salina",
+                                        "Somerville",
+                                        "Largo",
+                                        "Fresno",
+                                        "Phenix City",
+                                        "Berwyn",
+                                        "Palm Beach Gardens",
+                                        "Pawtucket",
+                                        "San Gabriel",
+                                        "Winston-Salem",
+                                        "Alpharetta",
+                                        "O'Fallon",
+                                        "Redwood City",
+                                        "Hallandale Beach",
+                                        "Mankato",
+                                        "Aliso Viejo",
+                                        "Menifee",
+                                        "Loveland",
+                                        "Carpentersville",
+                                        "Providence",
+                                        "Hialeah",
+                                        "San Ramon",
+                                        "Ontario",
+                                        "Kirkland",
+                                        "St. George",
+                                        "Hilton Head Island",
+                                        "Glendale",
+                                        "Meriden",
+                                        "Gardena",
+                                        "Westfield",
+                                        "Elgin",
+                                        "Plano",
+                                        "Longmont",
+                                        "Coppell",
+                                        "Jonesboro",
+                                        "College Station",
+                                        "Dearborn",
+                                        "Utica",
+                                        "Monroe",
+                                        "Baltimore",
+                                        "Pine Bluff",
+                                        "Lynn",
+                                        "Woodbury",
+                                        "Gainesville",
+                                        "West Sacramento",
+                                        "Sammamish",
+                                        "Aventura",
+                                        "San Rafael",
+                                        "Conway",
+                                        "Tacoma",
+                                        "Twin Falls",
+                                        "Sherman",
+                                        "New York",
+                                        "Simi Valley",
+                                        "West Covina",
+                                        "Castle Rock",
+                                        "Valdosta",
+                                        "Fort Worth",
+                                        "Carson",
+                                        "Evansville",
+                                        "Santa Maria",
+                                        "Brentwood",
+                                        "La Mesa",
+                                        "Reading",
+                                        "Turlock",
+                                        "Greeley",
+                                        "Tyler",
+                                        "Winter Garden",
+                                        "Waco",
+                                        "Martinez",
+                                        "Thousand Oaks",
+                                        "Azusa",
+                                        "Bridgeport",
+                                        "St. Louis Park",
+                                        "Chesterfield",
+                                        "Greenacres",
+                                        "Pasco",
+                                        "Torrance",
+                                        "Janesville",
+                                        "Waukegan",
+                                        "Bowling Green",
+                                        "Arlington",
+                                        "Lewisville",
+                                        "Farmington",
+                                        "Oakley",
+                                        "Palo Alto",
+                                        "New Bedford",
+                                        "Redmond",
+                                        "Davis",
+                                        "La Mirada",
+                                        "Altoona",
+                                        "Dothan",
+                                        "East Orange",
+                                        "Tinley Park",
+                                        "Biloxi",
+                                        "Urbana",
+                                        "Garden Grove",
+                                        "Lynwood",
+                                        "Northglenn",
+                                        "Canton",
+                                        "Brookhaven",
+                                        "Baton Rouge",
+                                        "Bristol",
+                                        "Independence",
+                                        "Lansing",
+                                        "Orland Park",
+                                        "Vineland",
+                                        "Green Bay",
+                                        "Evanston",
+                                        "Ocoee",
+                                        "Los Angeles",
+                                        "Federal Way",
+                                        "West Jordan",
+                                        "Yucaipa",
+                                        "Pittsburgh",
+                                        "Downey",
+                                        "Cicero",
+                                        "South Gate",
+                                        "Panama City",
+                                        "Joplin",
+                                        "League City",
+                                        "Salt Lake City",
+                                        "Fort Pierce",
+                                        "Phoenix",
+                                        "Corvallis",
+                                        "Cedar Hill",
+                                        "Chicopee",
+                                        "Ocala",
+                                        "Park Ridge",
+                                        "Olympia",
+                                        "Huntington Beach",
+                                        "Corpus Christi",
+                                        "Haverhill",
+                                        "Hanover Park",
+                                        "Cambridge",
+                                        "Stanton",
+                                        "Summerville",
+                                        "Davenport",
+                                        "Boca Raton",
+                                        "New Britain",
+                                        "Cleveland Heights",
+                                        "Gresham",
+                                        "Lauderhill",
+                                        "Hendersonville",
+                                        "Santa Clara",
+                                        "Oceanside",
+                                        "Lake Forest",
+                                        "Novi",
+                                        "West New York",
+                                        "Linden",
+                                        "Asheville",
+                                        "Compton"
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "requiredComponents": [
+                    "learned"
+                ]
+            },
+            {
+                "category": "geography.state",
+                "compositionSetting": "combineComponents",
+                "list": {
+                    "sublists": [
+                        {
+                            "listKey": "states",
+                            "synonyms": [
+                                {
+                                    "language": "en-us",
+                                    "values": [
+                                        "states",
+                                        "AL",
+                                        "Alabama",
+                                        "AK",
+                                        "Alaska",
+                                        "AZ",
+                                        "Arizona",
+                                        "AR",
+                                        "Arkansas",
+                                        "CA",
+                                        "California",
+                                        "SO",
+                                        "Colorado",
+                                        "CT",
+                                        "Connecticut",
+                                        "DE",
+                                        "Delaware",
+                                        "FL",
+                                        "Florida",
+                                        "GA",
+                                        "Georgia",
+                                        "HI",
+                                        "Hawaii",
+                                        "ID",
+                                        "Idaho",
+                                        "IL",
+                                        "Illinois",
+                                        "IN",
+                                        "Indiana",
+                                        "IA",
+                                        "Iowa",
+                                        "KS",
+                                        "Kansas",
+                                        "KY",
+                                        "Kentucky",
+                                        "LA",
+                                        "Louisiana",
+                                        "ME",
+                                        "Maine",
+                                        "MD",
+                                        "Maryland",
+                                        "MA",
+                                        "Massachusetts",
+                                        "MI",
+                                        "Michigan",
+                                        "MN",
+                                        "Minnesota",
+                                        "MS",
+                                        "Mississippi",
+                                        "MO",
+                                        "Missouri",
+                                        "MT",
+                                        "Montana",
+                                        "NE",
+                                        "Nebraska",
+                                        "NV",
+                                        "Nevada",
+                                        "NH",
+                                        "New Hampshire",
+                                        "NJ",
+                                        "New Jersey",
+                                        "NM",
+                                        "New Mexico",
+                                        "NY",
+                                        "New York",
+                                        "NC",
+                                        "North Carolina",
+                                        "ND",
+                                        "North Dakota",
+                                        "OH",
+                                        "Ohio",
+                                        "OK",
+                                        "Oklahoma",
+                                        "OR",
+                                        "Oregon",
+                                        "PA",
+                                        "Pennsylvania",
+                                        "RI",
+                                        "Rhode Island",
+                                        "SC",
+                                        "South Carolina",
+                                        "SD",
+                                        "South Dakota",
+                                        "TN",
+                                        "Tennessee",
+                                        "TX",
+                                        "Texas",
+                                        "UT",
+                                        "Utah",
+                                        "VT",
+                                        "Vermont",
+                                        "VA",
+                                        "Virginia",
+                                        "WA",
+                                        "Washington",
+                                        "WV",
+                                        "West Virginia",
+                                        "WI",
+                                        "Wisconsin",
+                                        "WY",
+                                        "Wyoming"
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "requiredComponents": [
+                    "learned"
+                ]
+            },
+            {
+                "category": "geography.countryOrRegion",
+                "compositionSetting": "combineComponents",
+                "list": {
+                    "sublists": [
+                        {
+                            "listKey": "countries",
+                            "synonyms": [
+                                {
+                                    "language": "en-us",
+                                    "values": [
+                                        "countries",
+                                        "Afghanistan",
+                                        "The Islamic Republic of Afghanistan",
+                                        "AF",
+                                        "AFG",
+                                        "Åland Islands",
+                                        "Åland",
+                                        "AX",
+                                        "ALA",
+                                        "Albania",
+                                        "The Republic of Albania",
+                                        "AL",
+                                        "ALB",
+                                        "Algeria",
+                                        "The People's Democratic Republic of Algeria",
+                                        "DZ",
+                                        "DZA",
+                                        "American Samoa",
+                                        "The Territory of American Samoa",
+                                        "AS",
+                                        "ASM",
+                                        "Andorra",
+                                        "The Principality of Andorra",
+                                        "AD",
+                                        "AND",
+                                        "Angola",
+                                        "The Republic of Angola",
+                                        "AO",
+                                        "AGO",
+                                        "Anguilla",
+                                        "AI",
+                                        "AIA",
+                                        "Antarctica",
+                                        "All land and ice shelves south of the 60th parallel south",
+                                        "AQ",
+                                        "ATA",
+                                        "Antigua and Barbuda",
+                                        "AG",
+                                        "ATG",
+                                        "Argentina",
+                                        "The Argentine Republic",
+                                        "AR",
+                                        "ARG",
+                                        "Armenia",
+                                        "The Republic of Armenia",
+                                        "AM",
+                                        "ARM",
+                                        "Aruba",
+                                        "AW",
+                                        "ABW",
+                                        "Australia",
+                                        "The Commonwealth of Australia",
+                                        "AU",
+                                        "AUS",
+                                        "Austria",
+                                        "The Republic of Austria",
+                                        "AT",
+                                        "AUT",
+                                        "Azerbaijan",
+                                        "The Republic of Azerbaijan",
+                                        "AZ",
+                                        "AZE",
+                                        "Bahamas",
+                                        "Bahamas (the)",
+                                        "The Commonwealth of The Bahamas",
+                                        "BS",
+                                        "BHS",
+                                        "Bahrain",
+                                        "The Kingdom of Bahrain",
+                                        "BH",
+                                        "BHR",
+                                        "Bangladesh",
+                                        "The People's Republic of Bangladesh",
+                                        "BD",
+                                        "BGD",
+                                        "Barbados",
+                                        "BB",
+                                        "BRB",
+                                        "Belarus",
+                                        "The Republic of Belarus",
+                                        "BY",
+                                        "BLR",
+                                        "Belgium",
+                                        "The Kingdom of Belgium",
+                                        "BE",
+                                        "BEL",
+                                        "Belize",
+                                        "BZ",
+                                        "BLZ",
+                                        "Benin",
+                                        "The Republic of Benin",
+                                        "BJ",
+                                        "BEN",
+                                        "Bermuda",
+                                        "BM",
+                                        "BMU",
+                                        "Bhutan",
+                                        "The Kingdom of Bhutan",
+                                        "BT",
+                                        "BTN",
+                                        "Bolivia",
+                                        "Bolivia (Plurinational State of)",
+                                        "The Plurinational State of Bolivia",
+                                        "BO",
+                                        "BOL",
+                                        "Bonaire",
+                                        "Sint Eustatius and Saba",
+                                        "BQ",
+                                        "BES",
+                                        "Bosnia and Herzegovina",
+                                        "BA",
+                                        "BIH",
+                                        "Botswana",
+                                        "The Republic of Botswana",
+                                        "BW",
+                                        "BWA",
+                                        "Bouvet Island",
+                                        "BV",
+                                        "BVT",
+                                        "Brazil",
+                                        "The Federative Republic of Brazil",
+                                        "BR",
+                                        "BRA",
+                                        "British Indian Ocean Territory",
+                                        "British Indian Ocean Territory (the)",
+                                        "The British Indian Ocean Territory",
+                                        "IO",
+                                        "IOT",
+                                        "Brunei",
+                                        "Brunei Darussalam",
+                                        "The Nation of Brunei",
+                                        "the Abode of Peace",
+                                        "BN",
+                                        "BRN",
+                                        "Bulgaria",
+                                        "The Republic of Bulgaria",
+                                        "BG",
+                                        "BGR",
+                                        "Burkina Faso",
+                                        "BF",
+                                        "BFA",
+                                        "Burundi",
+                                        "The Republic of Burundi",
+                                        "BI",
+                                        "BDI",
+                                        "Cabo Verde",
+                                        "The Republic of Cabo Verde",
+                                        "CV",
+                                        "CPV",
+                                        "Cambodia",
+                                        "The Kingdom of Cambodia",
+                                        "KH",
+                                        "KHM",
+                                        "Cameroon",
+                                        "The Republic of Cameroon",
+                                        "CM",
+                                        "CMR",
+                                        "Canada",
+                                        "CA",
+                                        "CAN",
+                                        "Cayman Islands",
+                                        "Cayman Islands (the)",
+                                        "The Cayman Islands",
+                                        "KY",
+                                        "CYM",
+                                        "Central African Republic",
+                                        "Central African Republic (the)",
+                                        "The Central African Republic",
+                                        "CF",
+                                        "CAF",
+                                        "Chad",
+                                        "The Republic of Chad",
+                                        "TD",
+                                        "TCD",
+                                        "Chile",
+                                        "The Republic of Chile",
+                                        "CL",
+                                        "CHL",
+                                        "China",
+                                        "The People's Republic of China",
+                                        "CN",
+                                        "CHN",
+                                        "Christmas Island",
+                                        "The Territory of Christmas Island",
+                                        "CX",
+                                        "CXR",
+                                        "Cocos (Keeling) Islands",
+                                        "Cocos (Keeling) Islands (the)",
+                                        "The Territory of Cocos (Keeling) Islands",
+                                        "CC",
+                                        "CCK",
+                                        "Colombia",
+                                        "The Republic of Colombia",
+                                        "CO",
+                                        "COL",
+                                        "Comoros",
+                                        "Comoros (the)",
+                                        "The Union of the Comoros",
+                                        "KM",
+                                        "COM",
+                                        "Congo",
+                                        "Congo (the)",
+                                        "The Republic of the Congo",
+                                        "CG",
+                                        "COG",
+                                        "Congo (DRC)",
+                                        "The Democratic Republic of the",
+                                        "Congo (the Democratic Republic of the)",
+                                        "The Democratic Republic of the Congo",
+                                        "CD",
+                                        "COD",
+                                        "Cook Islands",
+                                        "Cook Islands (the)",
+                                        "The Cook Islands",
+                                        "CK",
+                                        "COK",
+                                        "Costa Rica",
+                                        "The Republic of Costa Rica",
+                                        "CR",
+                                        "CRI",
+                                        "Côte d’Ivoire",
+                                        "Côte D'Ivoire",
+                                        "Côte d'Ivoire",
+                                        "The Republic of Côte d'Ivoire",
+                                        "CI",
+                                        "CIV",
+                                        "Croatia",
+                                        "The Republic of Croatia",
+                                        "HR",
+                                        "HRV",
+                                        "Cuba",
+                                        "The Republic of Cuba",
+                                        "CU",
+                                        "CUB",
+                                        "Curaçao",
+                                        "The Country of Curaçao",
+                                        "CW",
+                                        "CUW",
+                                        "Cyprus",
+                                        "The Republic of Cyprus",
+                                        "CY",
+                                        "CYP",
+                                        "Czechia",
+                                        "The Czech Republic",
+                                        "CZ",
+                                        "CZE",
+                                        "Czech Republic",
+                                        "Denmark",
+                                        "The Kingdom of Denmark",
+                                        "DK",
+                                        "DNK",
+                                        "Djibouti",
+                                        "The Republic of Djibouti",
+                                        "DJ",
+                                        "DJI",
+                                        "Dominica",
+                                        "The Commonwealth of Dominica",
+                                        "DM",
+                                        "DMA",
+                                        "Dominican Republic",
+                                        "Dominican Republic (the)",
+                                        "The Dominican Republic",
+                                        "DO",
+                                        "DOM",
+                                        "Ecuador",
+                                        "The Republic of Ecuador",
+                                        "EC",
+                                        "ECU",
+                                        "Egypt",
+                                        "The Arab Republic of Egypt",
+                                        "EG",
+                                        "EGY",
+                                        "El Salvador",
+                                        "The Republic of El Salvador",
+                                        "SV",
+                                        "SLV",
+                                        "Equatorial Guinea",
+                                        "The Republic of Equatorial Guinea",
+                                        "GQ",
+                                        "GNQ",
+                                        "Eritrea",
+                                        "The State of Eritrea",
+                                        "ER",
+                                        "ERI",
+                                        "Estonia",
+                                        "The Republic of Estonia",
+                                        "EE",
+                                        "EST",
+                                        "Eswatini",
+                                        "Swaziland",
+                                        "The Kingdom of Eswatini",
+                                        "SZ",
+                                        "SWZ",
+                                        "Ethiopia",
+                                        "The Federal Democratic Republic of Ethiopia",
+                                        "ET",
+                                        "ETH",
+                                        "Falkland Islands",
+                                        "Falkland Islands (the)",
+                                        "The Falkland Islands",
+                                        "FK",
+                                        "FLK",
+                                        "Faroe Islands",
+                                        "Faroe Islands (the)",
+                                        "The Faroe Islands",
+                                        "FO",
+                                        "FRO",
+                                        "Fiji",
+                                        "The Republic of Fiji",
+                                        "FJ",
+                                        "FJI",
+                                        "Finland",
+                                        "The Republic of Finland",
+                                        "FI",
+                                        "FIN",
+                                        "France",
+                                        "The French Republic",
+                                        "FR",
+                                        "FRA",
+                                        "French Guiana",
+                                        "Guyane",
+                                        "GF",
+                                        "GUF",
+                                        "French Polynesia",
+                                        "PF",
+                                        "PYF",
+                                        "French Southern Territories",
+                                        "French Southern Territories (the)",
+                                        "The French Southern and Antarctic Lands",
+                                        "TF",
+                                        "ATF",
+                                        "Gabon",
+                                        "The Gabonese Republic",
+                                        "GA",
+                                        "GAB",
+                                        "Gambia",
+                                        "Gambia (the)",
+                                        "The Republic of The Gambia",
+                                        "GM",
+                                        "GMB",
+                                        "Georgia",
+                                        "GE",
+                                        "GEO",
+                                        "Germany",
+                                        "The Federal Republic of Germany",
+                                        "DE",
+                                        "DEU",
+                                        "Ghana",
+                                        "The Republic of Ghana",
+                                        "GH",
+                                        "GHA",
+                                        "Gibraltar",
+                                        "GI",
+                                        "GIB",
+                                        "Greece",
+                                        "The Hellenic Republic",
+                                        "GR",
+                                        "GRC",
+                                        "Greenland",
+                                        "Kalaallit Nunaat",
+                                        "GL",
+                                        "GRL",
+                                        "Grenada",
+                                        "GD",
+                                        "GRD",
+                                        "Guadeloupe",
+                                        "GP",
+                                        "GLP",
+                                        "Guam",
+                                        "The Territory of Guam",
+                                        "GU",
+                                        "GUM",
+                                        "Guatemala",
+                                        "The Republic of Guatemala",
+                                        "GT",
+                                        "GTM",
+                                        "Guernsey",
+                                        "The Bailiwick of Guernsey",
+                                        "GG",
+                                        "GGY",
+                                        "Guinea",
+                                        "The Republic of Guinea",
+                                        "GN",
+                                        "GIN",
+                                        "Guinea-Bissau",
+                                        "The Republic of Guinea-Bissau",
+                                        "GW",
+                                        "GNB",
+                                        "Guyana",
+                                        "The Co-operative Republic of Guyana",
+                                        "GY",
+                                        "GUY",
+                                        "Haiti",
+                                        "The Republic of Haiti",
+                                        "HT",
+                                        "HTI",
+                                        "Heard Island and McDonald Islands",
+                                        "The Territory of Heard Island and McDonald Islands",
+                                        "HM",
+                                        "HMD",
+                                        "Vatican City",
+                                        "Holy See (Vatican City State)",
+                                        "Holy See (the)",
+                                        "The Holy See",
+                                        "VA",
+                                        "VAT",
+                                        "Honduras",
+                                        "The Republic of Honduras",
+                                        "HN",
+                                        "HND",
+                                        "Hong Kong SAR",
+                                        "Hong Kong",
+                                        "The Hong Kong Special Administrative Region of China[10]",
+                                        "HK",
+                                        "HKG",
+                                        "Hungary",
+                                        "HU",
+                                        "HUN",
+                                        "Iceland",
+                                        "IS",
+                                        "ISL",
+                                        "India",
+                                        "The Republic of India",
+                                        "IND",
+                                        "Indonesia",
+                                        "The Republic of Indonesia",
+                                        "ID",
+                                        "IDN",
+                                        "Iran",
+                                        "Islamic Republic of",
+                                        "Iran (Islamic Republic of)",
+                                        "The Islamic Republic of Iran",
+                                        "IR",
+                                        "IRN",
+                                        "Iraq",
+                                        "The Republic of Iraq",
+                                        "IQ",
+                                        "IRQ",
+                                        "Ireland",
+                                        "IE",
+                                        "IRL",
+                                        "Isle of Man",
+                                        "The Isle of Man",
+                                        "IM",
+                                        "IMN",
+                                        "Israel",
+                                        "The State of Israel",
+                                        "IL",
+                                        "ISR",
+                                        "Italy",
+                                        "The Italian Republic",
+                                        "IT",
+                                        "ITA",
+                                        "Jamaica",
+                                        "JM",
+                                        "JAM",
+                                        "Jan Mayen",
+                                        "Norway",
+                                        "The Kingdom of Norway",
+                                        "NO",
+                                        "NOR",
+                                        "Japan",
+                                        "JP",
+                                        "JPN",
+                                        "Jersey",
+                                        "The Bailiwick of Jersey",
+                                        "JE",
+                                        "JEY",
+                                        "Jordan",
+                                        "The Hashemite Kingdom of Jordan",
+                                        "JO",
+                                        "JOR",
+                                        "Kazakhstan",
+                                        "The Republic of Kazakhstan",
+                                        "KZ",
+                                        "KAZ",
+                                        "Kenya",
+                                        "The Republic of Kenya",
+                                        "KE",
+                                        "KEN",
+                                        "Kiribati",
+                                        "The Republic of Kiribati",
+                                        "KI",
+                                        "KIR",
+                                        "Korea",
+                                        "Republic of",
+                                        "Korea (the Republic of)",
+                                        "The Republic of Korea",
+                                        "KR",
+                                        "KOR",
+                                        "Kosovo",
+                                        "Kosovo (the Republic of)",
+                                        "The Republic of Kosovo",
+                                        "XK",
+                                        "RKS",
+                                        "Kuwait",
+                                        "The State of Kuwait",
+                                        "KW",
+                                        "KWT",
+                                        "Kyrgyzstan",
+                                        "The Kyrgyz Republic",
+                                        "KG",
+                                        "KGZ",
+                                        "Laos",
+                                        "Lao People's Democratic Republic",
+                                        "Lao People's Democratic Republic (the)",
+                                        "The Lao People's Democratic Republic",
+                                        "LA",
+                                        "LAO",
+                                        "Latvia",
+                                        "The Republic of Latvia",
+                                        "LV",
+                                        "LVA",
+                                        "Lebanon",
+                                        "The Lebanese Republic",
+                                        "LB",
+                                        "LBN",
+                                        "Lesotho",
+                                        "The Kingdom of Lesotho",
+                                        "LS",
+                                        "LSO",
+                                        "Liberia",
+                                        "The Republic of Liberia",
+                                        "LR",
+                                        "LBR",
+                                        "Libya",
+                                        "Libyan Arab Jamahiriya",
+                                        "The State of Libya",
+                                        "LY",
+                                        "LBY",
+                                        "Liechtenstein",
+                                        "The Principality of Liechtenstein",
+                                        "LI",
+                                        "LIE",
+                                        "Lithuania",
+                                        "The Republic of Lithuania",
+                                        "LT",
+                                        "LTU",
+                                        "Luxembourg",
+                                        "The Grand Duchy of Luxembourg",
+                                        "LU",
+                                        "LUX",
+                                        "Macao SAR",
+                                        "Macau",
+                                        "Macao",
+                                        "Macao Special Administrative Region of China[11]",
+                                        "MO",
+                                        "MAC",
+                                        "Madagascar",
+                                        "The Republic of Madagascar",
+                                        "MG",
+                                        "MDG",
+                                        "Malawi",
+                                        "The Republic of Malawi",
+                                        "MW",
+                                        "MWI",
+                                        "Malaysia",
+                                        "MY",
+                                        "MYS",
+                                        "Maldives",
+                                        "The Republic of Maldives",
+                                        "MV",
+                                        "MDV",
+                                        "Mali",
+                                        "The Republic of Mali",
+                                        "ML",
+                                        "MLI",
+                                        "Malta",
+                                        "The Republic of Malta",
+                                        "MT",
+                                        "MLT",
+                                        "Marshall Islands",
+                                        "Marshall Islands (the)",
+                                        "The Republic of the Marshall Islands",
+                                        "MH",
+                                        "MHL",
+                                        "Martinique",
+                                        "MQ",
+                                        "MTQ",
+                                        "Mauritania",
+                                        "The Islamic Republic of Mauritania",
+                                        "MR",
+                                        "MRT",
+                                        "Mauritius",
+                                        "The Republic of Mauritius",
+                                        "MU",
+                                        "MUS",
+                                        "Mayotte",
+                                        "The Department of Mayotte",
+                                        "YT",
+                                        "MYT",
+                                        "Mexico",
+                                        "The United Mexican States",
+                                        "MX",
+                                        "MEX",
+                                        "Micronesia",
+                                        "Federated States of Micronesia",
+                                        "Micronesia (Federated States of)",
+                                        "The Federated States of Micronesia",
+                                        "FM",
+                                        "FSM",
+                                        "Moldova",
+                                        "Moldova (the Republic of)",
+                                        "The Republic of Moldova",
+                                        "MD",
+                                        "MDA",
+                                        "Monaco",
+                                        "The Principality of Monaco",
+                                        "MC",
+                                        "MCO",
+                                        "Mongolia",
+                                        "The State of Mongolia",
+                                        "MN",
+                                        "MNG",
+                                        "Montenegro",
+                                        "ME",
+                                        "MNE",
+                                        "Montserrat",
+                                        "MS",
+                                        "MSR",
+                                        "Morocco",
+                                        "The Kingdom of Morocco",
+                                        "MA",
+                                        "MAR",
+                                        "Mozambique",
+                                        "The Republic of Mozambique",
+                                        "MZ",
+                                        "MOZ",
+                                        "Myanmar",
+                                        "The Republic of the Union of Myanmar",
+                                        "MM",
+                                        "MMR",
+                                        "Namibia",
+                                        "The Republic of Namibia",
+                                        "NA",
+                                        "NAM",
+                                        "Nauru",
+                                        "The Republic of Nauru",
+                                        "NR",
+                                        "NRU",
+                                        "Nepal",
+                                        "The Federal Democratic Republic of Nepal",
+                                        "NP",
+                                        "NPL",
+                                        "Netherlands",
+                                        "Netherlands (the)",
+                                        "The Kingdom of the Netherlands",
+                                        "NL",
+                                        "NLD",
+                                        "Netherlands Antilles",
+                                        "New Caledonia",
+                                        "NC",
+                                        "NCL",
+                                        "New Zealand",
+                                        "NZ",
+                                        "NZL",
+                                        "Nicaragua",
+                                        "The Republic of Nicaragua",
+                                        "NI",
+                                        "NIC",
+                                        "Niger",
+                                        "Niger (the)",
+                                        "The Republic of the Niger",
+                                        "NE",
+                                        "NER",
+                                        "Nigeria",
+                                        "The Federal Republic of Nigeria",
+                                        "NG",
+                                        "NGA",
+                                        "Niue",
+                                        "NU",
+                                        "NIU",
+                                        "Northern Mariana Islands",
+                                        "Northern Mariana Islands (the)",
+                                        "The Commonwealth of the Northern Mariana Islands",
+                                        "MP",
+                                        "MNP",
+                                        "Norfolk Island",
+                                        "The Territory of Norfolk Island",
+                                        "NF",
+                                        "NFK",
+                                        "North Korea",
+                                        "Democratic People's Republic of",
+                                        "Korea (the Democratic People's Republic of)",
+                                        "The Democratic People's Republic of Korea",
+                                        "KP",
+                                        "PRK",
+                                        "North Macedonia",
+                                        "Republic of North Macedonia",
+                                        "MK",
+                                        "MKD",
+                                        "Macedonia",
+                                        "The Former Yugoslav Republic of",
+                                        "Oman",
+                                        "The Sultanate of Oman",
+                                        "OM",
+                                        "OMN",
+                                        "Pakistan",
+                                        "The Islamic Republic of Pakistan",
+                                        "PK",
+                                        "PAK",
+                                        "Palau",
+                                        "The Republic of Palau",
+                                        "PW",
+                                        "PLW",
+                                        "Palestinian Authority",
+                                        "Palestinian Territory",
+                                        "occupied",
+                                        "Palestine",
+                                        "State of",
+                                        "The State of Palestine",
+                                        "PS",
+                                        "PSE",
+                                        "Palestinian Territories",
+                                        "Occupied",
+                                        "Panama",
+                                        "The Republic of Panamá",
+                                        "PA",
+                                        "PAN",
+                                        "Papua New Guinea",
+                                        "The Independent State of Papua New Guinea",
+                                        "PG",
+                                        "PNG",
+                                        "Paraguay",
+                                        "The Republic of Paraguay",
+                                        "PY",
+                                        "PRY",
+                                        "Peru",
+                                        "The Republic of Perú",
+                                        "PE",
+                                        "PER",
+                                        "Philippines",
+                                        "Philippines (the)",
+                                        "The Republic of the Philippines",
+                                        "PH",
+                                        "PHL",
+                                        "Pitcairn Islands",
+                                        "Pitcairn",
+                                        "The Pitcairn",
+                                        "Henderson",
+                                        "Ducie and Oeno Islands",
+                                        "PN",
+                                        "PCN",
+                                        "Poland",
+                                        "The Republic of Poland",
+                                        "PL",
+                                        "POL",
+                                        "Portugal",
+                                        "The Portuguese Republic",
+                                        "PT",
+                                        "PRT",
+                                        "Puerto Rico",
+                                        "The Commonwealth of Puerto Rico",
+                                        "PR",
+                                        "PRI",
+                                        "Qatar",
+                                        "The State of Qatar",
+                                        "QA",
+                                        "QAT",
+                                        "Réunion",
+                                        "RE",
+                                        "REU",
+                                        "Romania",
+                                        "RO",
+                                        "ROU",
+                                        "Russia",
+                                        "Russian Federation",
+                                        "Russian Federation (the)",
+                                        "The Russian Federation",
+                                        "RU",
+                                        "RUS",
+                                        "Rwanda",
+                                        "The Republic of Rwanda",
+                                        "RW",
+                                        "RWA",
+                                        "Saba",
+                                        "Saint Barthélemy",
+                                        "The Collectivity of Saint-Barthélemy",
+                                        "BL",
+                                        "BLM",
+                                        "Saint Kitts and Nevis",
+                                        "KN",
+                                        "KNA",
+                                        "Saint Lucia",
+                                        "LC",
+                                        "LCA",
+                                        "Saint Martin",
+                                        "Saint Martin (French part)",
+                                        "The Collectivity of Saint-Martin",
+                                        "MF",
+                                        "MAF",
+                                        "Saint Pierre and Miquelon",
+                                        "The Overseas Collectivity of Saint-Pierre and Miquelon",
+                                        "PM",
+                                        "SPM",
+                                        "Saint Vincent and the Grenadines",
+                                        "VC",
+                                        "VCT",
+                                        "Samoa",
+                                        "The Independent State of Samoa",
+                                        "WS",
+                                        "WSM",
+                                        "San Marino",
+                                        "The Republic of San Marino",
+                                        "SM",
+                                        "SMR",
+                                        "São Tomé and Príncipe",
+                                        "Sao Tome and Principe",
+                                        "The Democratic Republic of São Tomé and Príncipe",
+                                        "ST",
+                                        "STP",
+                                        "Saudi Arabia",
+                                        "The Kingdom of Saudi Arabia",
+                                        "SA",
+                                        "SAU",
+                                        "Senegal",
+                                        "The Republic of Senegal",
+                                        "SN",
+                                        "SEN",
+                                        "Serbia",
+                                        "The Republic of Serbia",
+                                        "RS",
+                                        "SRB",
+                                        "Seychelles",
+                                        "The Republic of Seychelles",
+                                        "SC",
+                                        "SYC",
+                                        "Sierra Leone",
+                                        "The Republic of Sierra Leone",
+                                        "SL",
+                                        "SLE",
+                                        "Singapore",
+                                        "The Republic of Singapore",
+                                        "SG",
+                                        "SGP",
+                                        "Sint Eustatius",
+                                        "Sint Maarten",
+                                        "Sint Maarten (Dutch part)",
+                                        "SX",
+                                        "SXM",
+                                        "Slovakia",
+                                        "The Slovak Republic",
+                                        "SK",
+                                        "SVK",
+                                        "Slovenia",
+                                        "The Republic of Slovenia",
+                                        "SI",
+                                        "SVN",
+                                        "Solomon Islands",
+                                        "The Solomon Islands",
+                                        "SB",
+                                        "SLB",
+                                        "Somalia",
+                                        "The Federal Republic of Somalia",
+                                        "SO",
+                                        "SOM",
+                                        "South Africa",
+                                        "The Republic of South Africa",
+                                        "ZA",
+                                        "ZAF",
+                                        "South Georgia and South Sandwich Islands",
+                                        "South Georgia and the South Sandwich Islands",
+                                        "GS",
+                                        "SGS",
+                                        "South Sudan",
+                                        "The Republic of South Sudan",
+                                        "SS",
+                                        "SSD",
+                                        "Spain",
+                                        "The Kingdom of Spain",
+                                        "ES",
+                                        "ESP",
+                                        "Sri Lanka",
+                                        "The Democratic Socialist Republic of Sri Lanka",
+                                        "LK",
+                                        "LKA",
+                                        "St Helena",
+                                        "Ascension",
+                                        "Tristan da Cunha",
+                                        "Saint Helena",
+                                        "Ascension and Tristan da Cunha",
+                                        "SH",
+                                        "SHN",
+                                        "Sudan",
+                                        "Sudan (the)",
+                                        "The Republic of the Sudan",
+                                        "SD",
+                                        "SDN",
+                                        "Suriname",
+                                        "The Republic of Suriname",
+                                        "SR",
+                                        "SUR",
+                                        "Svalbard",
+                                        "Svalbard and Jan Mayen",
+                                        "SJ",
+                                        "SJM",
+                                        "Sweden",
+                                        "The Kingdom of Sweden",
+                                        "SE",
+                                        "SWE",
+                                        "Switzerland",
+                                        "The Swiss Confederation",
+                                        "CH",
+                                        "CHE",
+                                        "Syria",
+                                        "Syrian Arab Republic",
+                                        "Syrian Arab Republic (the)",
+                                        "The Syrian Arab Republic",
+                                        "SY",
+                                        "SYR",
+                                        "Taiwan",
+                                        "Taiwan (Province of China)",
+                                        "The Republic of China",
+                                        "TW",
+                                        "TWN",
+                                        "Tajikistan",
+                                        "The Republic of Tajikistan",
+                                        "TJ",
+                                        "TJK",
+                                        "Tanzania",
+                                        "the United Republic of",
+                                        "The United Republic of Tanzania",
+                                        "TZ",
+                                        "TZA",
+                                        "Thailand",
+                                        "The Kingdom of Thailand",
+                                        "TH",
+                                        "THA",
+                                        "Timor-Leste",
+                                        "The Democratic Republic of Timor-Leste",
+                                        "TL",
+                                        "TLS",
+                                        "Togo",
+                                        "The Togolese Republic",
+                                        "TG",
+                                        "TGO",
+                                        "Tokelau",
+                                        "TK",
+                                        "TKL",
+                                        "Tonga",
+                                        "The Kingdom of Tonga",
+                                        "TO",
+                                        "TON",
+                                        "Trinidad and Tobago",
+                                        "The Republic of Trinidad and Tobago",
+                                        "TT",
+                                        "TTO",
+                                        "Tunisia",
+                                        "The Republic of Tunisia",
+                                        "TN",
+                                        "TUN",
+                                        "Turkey",
+                                        "The Republic of Turkey",
+                                        "TR",
+                                        "TUR",
+                                        "Turkmenistan",
+                                        "TM",
+                                        "TKM",
+                                        "Turks and Caicos Islands",
+                                        "Turks and Caicos Islands (the)",
+                                        "The Turks and Caicos Islands",
+                                        "TC",
+                                        "TCA",
+                                        "Tuvalu",
+                                        "TV",
+                                        "TUV",
+                                        "U.S. Outlying Islands",
+                                        "United States Minor Outlying Islands",
+                                        "United States Minor Outlying Islands (the)",
+                                        "Baker Island",
+                                        "Howland Island",
+                                        "Jarvis Island",
+                                        "Johnston Atoll",
+                                        "Kingman Reef",
+                                        "Midway Atoll",
+                                        "Navassa Island",
+                                        "Palmyra Atoll",
+                                        "and Wake Island",
+                                        "UM",
+                                        "UMI",
+                                        "U.S. Virgin Islands",
+                                        "Virgin Islands (U.S.)",
+                                        "Virgin Islands (US)",
+                                        "The Virgin Islands of the United States",
+                                        "VI",
+                                        "VIR",
+                                        "Uganda",
+                                        "The Republic of Uganda",
+                                        "UG",
+                                        "UGA",
+                                        "Ukraine",
+                                        "UA",
+                                        "UKR",
+                                        "United Arab Emirates",
+                                        "United Arab Emirates (the)",
+                                        "The United Arab Emirates",
+                                        "AE",
+                                        "ARE",
+                                        "United Kingdom",
+                                        "United Kingdom of Great Britain and Northern Ireland (the)",
+                                        "The United Kingdom of Great Britain and Northern Ireland",
+                                        "GB",
+                                        "GBR",
+                                        "United States",
+                                        "United States of America (the)",
+                                        "The United States of America",
+                                        "US",
+                                        "USA",
+                                        "Uruguay",
+                                        "The Oriental Republic of Uruguay",
+                                        "UY",
+                                        "URY",
+                                        "Uzbekistan",
+                                        "The Republic of Uzbekistan",
+                                        "UZ",
+                                        "UZB",
+                                        "Vanuatu",
+                                        "The Republic of Vanuatu",
+                                        "VU",
+                                        "VUT",
+                                        "British Virgin Islands",
+                                        "Virgin Islands (British)",
+                                        "The Virgin Islands",
+                                        "VG",
+                                        "VGB",
+                                        "Venezuela",
+                                        "Venezuela (Bolivarian Republic of)",
+                                        "The Bolivarian Republic of Venezuela",
+                                        "VE",
+                                        "VEN",
+                                        "Vietnam",
+                                        "Viet Nam",
+                                        "The Socialist Republic of Viet Nam",
+                                        "VN",
+                                        "VNM",
+                                        "Wallis and Futuna",
+                                        "The Territory of the Wallis and Futuna Islands",
+                                        "WF",
+                                        "WLF",
+                                        "Yemen",
+                                        "The Republic of Yemen",
+                                        "YE",
+                                        "YEM",
+                                        "Zambia",
+                                        "The Republic of Zambia",
+                                        "ZM",
+                                        "ZMB",
+                                        "Zimbabwe",
+                                        "The Republic of Zimbabwe",
+                                        "ZW",
+                                        "ZWE",
+                                        "Western Sahara",
+                                        "The Sahrawi Arab Democratic Republic",
+                                        "EH",
+                                        "ESH",
+                                        "Former Yugoslavia",
+                                        "Yugoslavia",
+                                        "YU",
+                                        "YUG",
+                                        "Former Serbia and Montenegro",
+                                        "Serbia and Montenegro",
+                                        "CS",
+                                        "SCG"
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "requiredComponents": [
+                    "learned"
+                ]
+            }
+        ],
+        "utterances": [
+            {
+                "text": "clincal trials for 45 yo men with lung cancer from Huston, Texas",
+                "language": "en-us",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "age",
+                        "offset": 19,
+                        "length": 2
+                    },
+                    {
+                        "category": "gender.male",
+                        "offset": 25,
+                        "length": 3
+                    },
+                    {
+                        "category": "disease",
+                        "offset": 34,
+                        "length": 11
+                    },
+                    {
+                        "category": "geography.city",
+                        "offset": 51,
+                        "length": 6
+                    },
+                    {
+                        "category": "geography.state",
+                        "offset": 59,
+                        "length": 5
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "clinical trials in Washington, USA",
+                "language": "en-us",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "geography.state",
+                        "offset": 19,
+                        "length": 10
+                    },
+                    {
+                        "category": "geography.countryOrRegion",
+                        "offset": 31,
+                        "length": 3
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "trials in TX, USA",
+                "language": "en-us",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "geography.state",
+                        "offset": 10,
+                        "length": 2
+                    },
+                    {
+                        "category": "geography.countryOrRegion",
+                        "offset": 14,
+                        "length": 3
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "clinical experiments in CA state",
+                "language": "en-us",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "geography.state",
+                        "offset": 24,
+                        "length": 2
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "clinical trilas in TX area",
+                "language": "en-us",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "geography.state",
+                        "offset": 19,
+                        "length": 2
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "trilas is new york, NY",
+                "language": "en-us",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "geography.city",
+                        "offset": 10,
+                        "length": 8
+                    },
+                    {
+                        "category": "geography.state",
+                        "offset": 20,
+                        "length": 2
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "trials in tel aviv, israel",
+                "language": "en-us",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "geography.city",
+                        "offset": 10,
+                        "length": 8
+                    },
+                    {
+                        "category": "geography.countryOrRegion",
+                        "offset": 20,
+                        "length": 6
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "clincal trials in Huston, Taxes for 45 yo men with lung cancer",
+                "language": "en-us",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "geography.city",
+                        "offset": 18,
+                        "length": 6
+                    },
+                    {
+                        "category": "geography.state",
+                        "offset": 26,
+                        "length": 5
+                    },
+                    {
+                        "category": "age",
+                        "offset": 36,
+                        "length": 2
+                    },
+                    {
+                        "category": "disease",
+                        "offset": 51,
+                        "length": 11
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "am i covered for insurance?",
+                "intent": "None",
+                "entities": []
+            },
+            {
+                "text": "articles about migraine",
+                "intent": "None",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 15,
+                        "length": 8
+                    }
+                ]
+            },
+            {
+                "text": "can you give me information about migraine",
+                "intent": "None",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 34,
+                        "length": 8
+                    }
+                ]
+            },
+            {
+                "text": "causes of diabetes",
+                "intent": "None",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 10,
+                        "length": 8
+                    }
+                ]
+            },
+            {
+                "text": "clinical treatments in the us for non-hodgkin's lymphoma",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "geography.countryOrRegion",
+                        "offset": 27,
+                        "length": 2
+                    },
+                    {
+                        "category": "disease",
+                        "offset": 34,
+                        "length": 22
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "clinical trials for a patient with aapc",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 35,
+                        "length": 4
+                    }
+                ]
+            },
+            {
+                "text": "clinical trials for a patient with ifis",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 35,
+                        "length": 4
+                    }
+                ]
+            },
+            {
+                "text": "clinical trials for a patient with sles",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 35,
+                        "length": 4
+                    }
+                ]
+            },
+            {
+                "text": "clinical trials for a young 21 years old boy with leukemia from sydney",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "gender.male",
+                        "offset": 41,
+                        "length": 3
+                    },
+                    {
+                        "category": "disease",
+                        "offset": 50,
+                        "length": 8
+                    },
+                    {
+                        "category": "geography.city",
+                        "offset": 64,
+                        "length": 6
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "clinical trials for aapc",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 20,
+                        "length": 4
+                    }
+                ]
+            },
+            {
+                "text": "clinical trials for alzheimer",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 20,
+                        "length": 9
+                    }
+                ]
+            },
+            {
+                "text": "clinical trials for grandmother who has breast cancer with bone cancer in massachusetts",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "gender.female",
+                        "offset": 20,
+                        "length": 11
+                    },
+                    {
+                        "category": "disease",
+                        "offset": 40,
+                        "length": 30
+                    }
+                ]
+            },
+            {
+                "text": "clinical trials for ifis",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 20,
+                        "length": 4
+                    }
+                ]
+            },
+            {
+                "text": "clinical trials for sles",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 20,
+                        "length": 4
+                    }
+                ]
+            },
+            {
+                "text": "clinical trials in houston",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "geography.city",
+                        "offset": 19,
+                        "length": 7
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "clinical trials in new york",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "geography.city",
+                        "offset": 19,
+                        "length": 8
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "data about hepatitis",
+                "intent": "None",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 11,
+                        "length": 9
+                    }
+                ]
+            },
+            {
+                "text": "data on hepatitis",
+                "intent": "None",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 8,
+                        "length": 9
+                    }
+                ]
+            },
+            {
+                "text": "data שנםוא hepatitis",
+                "intent": "None",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 11,
+                        "length": 9
+                    }
+                ]
+            },
+            {
+                "text": "diabetes symptoms",
+                "intent": "None",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 0,
+                        "length": 8
+                    }
+                ]
+            },
+            {
+                "text": "do i need to see a doctor now",
+                "intent": "None",
+                "entities": []
+            },
+            {
+                "text": "does my health insurance work with doctor arie schwartzman",
+                "intent": "None",
+                "entities": []
+            },
+            {
+                "text": "does my health plan cover diabetes",
+                "intent": "None",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 26,
+                        "length": 8
+                    }
+                ]
+            },
+            {
+                "text": "find asthma clinical trials",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 5,
+                        "length": 7
+                    }
+                ]
+            },
+            {
+                "text": "find clinical trials for 20 years old male with brain cancer",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "gender.male",
+                        "offset": 38,
+                        "length": 4
+                    },
+                    {
+                        "category": "disease",
+                        "offset": 48,
+                        "length": 12
+                    }
+                ]
+            },
+            {
+                "text": "find clinical trials for 35 years old woman with breast cancer",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "gender.female",
+                        "offset": 38,
+                        "length": 5
+                    },
+                    {
+                        "category": "disease",
+                        "offset": 49,
+                        "length": 13
+                    }
+                ]
+            },
+            {
+                "text": "find clinical trials for a 21 years old female from new york with breast cancer",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "gender.female",
+                        "offset": 40,
+                        "length": 6
+                    },
+                    {
+                        "category": "geography.city",
+                        "offset": 52,
+                        "length": 8
+                    },
+                    {
+                        "category": "disease",
+                        "offset": 66,
+                        "length": 13
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "find clinical trials for stage 2 breast cancer for 16 years old woman",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 33,
+                        "length": 13
+                    },
+                    {
+                        "category": "gender.female",
+                        "offset": 64,
+                        "length": 5
+                    }
+                ]
+            },
+            {
+                "text": "find possible treatment for malignant vagina tumor in florida",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 28,
+                        "length": 22
+                    },
+                    {
+                        "category": "geography.state",
+                        "offset": 54,
+                        "length": 7
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "find stage i lymphoma stuides",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 13,
+                        "length": 8
+                    }
+                ]
+            },
+            {
+                "text": "find studies for 9 year old boy from israel",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "gender.male",
+                        "offset": 28,
+                        "length": 3
+                    },
+                    {
+                        "category": "geography.countryOrRegion",
+                        "offset": 37,
+                        "length": 6
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "find therapy related to stage iv cancer in mexico",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 33,
+                        "length": 6
+                    },
+                    {
+                        "category": "geography.countryOrRegion",
+                        "offset": 43,
+                        "length": 6
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "find trials for 2 years old child with brain cancer from new york",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 39,
+                        "length": 12
+                    },
+                    {
+                        "category": "geography.city",
+                        "offset": 57,
+                        "length": 8
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "find trials for brain cancer in stage 3",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 16,
+                        "length": 12
+                    }
+                ]
+            },
+            {
+                "text": "find trials for male 57 years old with small cell lung cancer from new york",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "gender.male",
+                        "offset": 16,
+                        "length": 4
+                    },
+                    {
+                        "category": "disease",
+                        "offset": 39,
+                        "length": 22
+                    }
+                ]
+            },
+            {
+                "text": "find trials for stage iii t cell lymphoma for 19 years old girl",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 26,
+                        "length": 15
+                    },
+                    {
+                        "category": "gender.female",
+                        "offset": 59,
+                        "length": 4
+                    }
+                ]
+            },
+            {
+                "text": "find trials for stomach cancer for 85 years old woman from boston",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 16,
+                        "length": 14
+                    },
+                    {
+                        "category": "gender.female",
+                        "offset": 48,
+                        "length": 5
+                    },
+                    {
+                        "category": "geography.city",
+                        "offset": 59,
+                        "length": 6
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "find trials in chicago for tongue cancer for a 12 years old boy",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "geography.city",
+                        "offset": 15,
+                        "length": 7
+                    },
+                    {
+                        "category": "disease",
+                        "offset": 27,
+                        "length": 13
+                    },
+                    {
+                        "category": "gender.male",
+                        "offset": 60,
+                        "length": 3
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "flu",
+                "intent": "None",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 0,
+                        "length": 3
+                    }
+                ]
+            },
+            {
+                "text": "flu complications",
+                "intent": "None",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 0,
+                        "length": 3
+                    }
+                ]
+            },
+            {
+                "text": "flu is not fun",
+                "intent": "None",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 0,
+                        "length": 3
+                    }
+                ]
+            },
+            {
+                "text": "flu professional",
+                "intent": "None",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 0,
+                        "length": 3
+                    }
+                ]
+            },
+            {
+                "text": "flu signs",
+                "intent": "None",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 0,
+                        "length": 3
+                    }
+                ]
+            },
+            {
+                "text": "get clinical trials for 12 years old boy with lymphoma",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 46,
+                        "length": 8
+                    }
+                ]
+            },
+            {
+                "text": "get me phase iv trials for stage iv malignant mesothelioma",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 36,
+                        "length": 22
+                    }
+                ]
+            },
+            {
+                "text": "get money back from my health provider",
+                "intent": "None",
+                "entities": []
+            },
+            {
+                "text": "get stage vi melanoma disease studies",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 13,
+                        "length": 8
+                    }
+                ]
+            },
+            {
+                "text": "get studies for stage 5 mouth cancer",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 24,
+                        "length": 12
+                    }
+                ]
+            },
+            {
+                "text": "get trials for renal disease for 12 years old girl",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 15,
+                        "length": 13
+                    },
+                    {
+                        "category": "gender.female",
+                        "offset": 46,
+                        "length": 4
+                    }
+                ]
+            },
+            {
+                "text": "good afternoon",
+                "intent": "None",
+                "entities": []
+            },
+            {
+                "text": "good evening",
+                "intent": "None",
+                "entities": []
+            },
+            {
+                "text": "good morning",
+                "intent": "None",
+                "entities": []
+            },
+            {
+                "text": "good night",
+                "intent": "None",
+                "entities": []
+            },
+            {
+                "text": "hello",
+                "intent": "None",
+                "entities": []
+            },
+            {
+                "text": "how can i recognize heart attack?",
+                "intent": "None",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 20,
+                        "length": 5
+                    }
+                ]
+            },
+            {
+                "text": "how do i get a refund from my health insurance",
+                "intent": "None",
+                "entities": []
+            },
+            {
+                "text": "how to get money back from my health provider",
+                "intent": "None",
+                "entities": []
+            },
+            {
+                "text": "i am 8 years old and i have diseasename",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 28,
+                        "length": 11
+                    }
+                ]
+            },
+            {
+                "text": "i am a 43 old male and i have hiv",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "gender.male",
+                        "offset": 14,
+                        "length": 4
+                    },
+                    {
+                        "category": "disease",
+                        "offset": 30,
+                        "length": 3
+                    }
+                ]
+            },
+            {
+                "text": "i am a 7 years old with diseasename",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 24,
+                        "length": 11
+                    }
+                ]
+            },
+            {
+                "text": "i feel sick",
+                "intent": "None",
+                "entities": []
+            },
+            {
+                "text": "i have a headache",
+                "intent": "None",
+                "entities": []
+            },
+            {
+                "text": "i have diabetes",
+                "intent": "None",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 7,
+                        "length": 8
+                    }
+                ]
+            },
+            {
+                "text": "i have diseasename",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 7,
+                        "length": 11
+                    }
+                ]
+            },
+            {
+                "text": "i have fever",
+                "intent": "None",
+                "entities": []
+            },
+            {
+                "text": "i want to participate in a trial",
+                "intent": "Clinical Trials Matching",
+                "entities": []
+            },
+            {
+                "text": "i would like a medical insurance reimbursement",
+                "intent": "None",
+                "entities": []
+            },
+            {
+                "text": "i'm looking for clinical trials in new york for my wife who has stage 2 breast cancer",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "geography.city",
+                        "offset": 35,
+                        "length": 8
+                    },
+                    {
+                        "category": "gender.female",
+                        "offset": 51,
+                        "length": 4
+                    },
+                    {
+                        "category": "disease",
+                        "offset": 72,
+                        "length": 13
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "i'm looking for studies for a 45 years old woman from new jersey",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "gender.female",
+                        "offset": 43,
+                        "length": 5
+                    },
+                    {
+                        "category": "geography.city",
+                        "offset": 54,
+                        "length": 10
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "im looking for trials for 34 years old",
+                "intent": "Clinical Trials Matching",
+                "entities": []
+            },
+            {
+                "text": "im looking for trials for blood cancer of women over age of 45",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 26,
+                        "length": 12
+                    },
+                    {
+                        "category": "gender.female",
+                        "offset": 42,
+                        "length": 5
+                    }
+                ]
+            },
+            {
+                "text": "info on flu",
+                "intent": "None",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 8,
+                        "length": 3
+                    }
+                ]
+            },
+            {
+                "text": "information about diabetes",
+                "intent": "None",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 18,
+                        "length": 8
+                    }
+                ]
+            },
+            {
+                "text": "locate trials for trials for 56 years old female with osseous cancer",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "gender.female",
+                        "offset": 42,
+                        "length": 6
+                    },
+                    {
+                        "category": "disease",
+                        "offset": 54,
+                        "length": 14
+                    }
+                ]
+            },
+            {
+                "text": "look for clinical trials for 8 years old woman with lung cancer",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "gender.female",
+                        "offset": 41,
+                        "length": 5
+                    },
+                    {
+                        "category": "disease",
+                        "offset": 52,
+                        "length": 11
+                    }
+                ]
+            },
+            {
+                "text": "look for clinical trials for a 45 years old woman from new york",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "gender.female",
+                        "offset": 44,
+                        "length": 5
+                    },
+                    {
+                        "category": "geography.city",
+                        "offset": 55,
+                        "length": 8
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "look for clinical trials for skin cancer in florida",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 29,
+                        "length": 11
+                    },
+                    {
+                        "category": "geography.state",
+                        "offset": 44,
+                        "length": 7
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "looking for clinical trials for 25 years old female with stage ii breast cancer",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "gender.female",
+                        "offset": 45,
+                        "length": 6
+                    },
+                    {
+                        "category": "disease",
+                        "offset": 66,
+                        "length": 13
+                    }
+                ]
+            },
+            {
+                "text": "looking for clinical trials for a 72 years old man with lung cancer",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "gender.male",
+                        "offset": 47,
+                        "length": 3
+                    },
+                    {
+                        "category": "disease",
+                        "offset": 56,
+                        "length": 11
+                    }
+                ]
+            },
+            {
+                "text": "looking for clinical trials for a patient with abe",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 47,
+                        "length": 3
+                    }
+                ]
+            },
+            {
+                "text": "looking for clinical trials for a patient with alzheimer",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 47,
+                        "length": 9
+                    }
+                ]
+            },
+            {
+                "text": "looking for clinical trials for a patient with jra",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 47,
+                        "length": 3
+                    }
+                ]
+            },
+            {
+                "text": "looking for clinical trials for a patient with sil",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 47,
+                        "length": 3
+                    }
+                ]
+            },
+            {
+                "text": "looking for studies related to major depressive disorder with anxious distress",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 31,
+                        "length": 47
+                    }
+                ]
+            },
+            {
+                "text": "looking for trials for a patient with breast cancer",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 38,
+                        "length": 13
+                    }
+                ]
+            },
+            {
+                "text": "lookup studies for stage 1 brain cancer for 9 years old male",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 27,
+                        "length": 12
+                    },
+                    {
+                        "category": "gender.male",
+                        "offset": 56,
+                        "length": 4
+                    }
+                ]
+            },
+            {
+                "text": "lookup studies for stage 1a brain cancer for 9 years old male",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 28,
+                        "length": 12
+                    },
+                    {
+                        "category": "gender.male",
+                        "offset": 57,
+                        "length": 4
+                    }
+                ]
+            },
+            {
+                "text": "major depressive disorder",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 0,
+                        "length": 25
+                    }
+                ]
+            },
+            {
+                "text": "medical specialists for dementia",
+                "intent": "None",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 24,
+                        "length": 8
+                    }
+                ]
+            },
+            {
+                "text": "migraine info",
+                "intent": "None",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 0,
+                        "length": 8
+                    }
+                ]
+            },
+            {
+                "text": "my 48 years old mother is looking for trial to participate in related to hiv",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "gender.female",
+                        "offset": 16,
+                        "length": 6
+                    },
+                    {
+                        "category": "disease",
+                        "offset": 73,
+                        "length": 3
+                    }
+                ]
+            },
+            {
+                "text": "paranoia resources",
+                "intent": "None",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 0,
+                        "length": 8
+                    }
+                ]
+            },
+            {
+                "text": "present trials for pancreatic neuroendocrine carcinoma for 12 years old woman",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 19,
+                        "length": 35
+                    },
+                    {
+                        "category": "gender.female",
+                        "offset": 72,
+                        "length": 5
+                    }
+                ]
+            },
+            {
+                "text": "researches for healthy people",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "healthy",
+                        "offset": 15,
+                        "length": 7
+                    }
+                ]
+            },
+            {
+                "text": "researches for healthy women",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "healthy",
+                        "offset": 15,
+                        "length": 7
+                    },
+                    {
+                        "category": "gender.female",
+                        "offset": 23,
+                        "length": 5
+                    }
+                ]
+            },
+            {
+                "text": "resources for paranoia",
+                "intent": "None",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 14,
+                        "length": 8
+                    }
+                ]
+            },
+            {
+                "text": "risks of flu",
+                "intent": "None",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 9,
+                        "length": 3
+                    }
+                ]
+            },
+            {
+                "text": "salmonella signs",
+                "intent": "None",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 0,
+                        "length": 10
+                    }
+                ]
+            },
+            {
+                "text": "search for clinical trials for liver cirrhosis for 33 years old man from italy",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 31,
+                        "length": 15
+                    }
+                ]
+            },
+            {
+                "text": "search for clinical trials that focus on stage iii penis cancer",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 51,
+                        "length": 12
+                    }
+                ]
+            },
+            {
+                "text": "search for treatment for a 25 years old male with anus neoplasm from san francisco",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "gender.male",
+                        "offset": 40,
+                        "length": 4
+                    },
+                    {
+                        "category": "disease",
+                        "offset": 50,
+                        "length": 13
+                    },
+                    {
+                        "category": "geography.city",
+                        "offset": 69,
+                        "length": 13
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "search for trials for 18 years old man with stage ii lymphoma",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "gender.male",
+                        "offset": 35,
+                        "length": 3
+                    },
+                    {
+                        "category": "disease",
+                        "offset": 53,
+                        "length": 8
+                    }
+                ]
+            },
+            {
+                "text": "search for trials for stage 2 brain cancer",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 30,
+                        "length": 12
+                    }
+                ]
+            },
+            {
+                "text": "search for trials for stage four breast cancer",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 33,
+                        "length": 13
+                    }
+                ]
+            },
+            {
+                "text": "search for trials in the us for stage ivb liver cell carcinoma",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "geography.countryOrRegion",
+                        "offset": 25,
+                        "length": 2
+                    },
+                    {
+                        "category": "disease",
+                        "offset": 42,
+                        "length": 20
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "show me trials for 77 years old male with flat cis of the bladder",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "gender.male",
+                        "offset": 32,
+                        "length": 4
+                    },
+                    {
+                        "category": "disease",
+                        "offset": 42,
+                        "length": 23
+                    }
+                ]
+            },
+            {
+                "text": "signs for broken rib",
+                "intent": "None",
+                "entities": []
+            },
+            {
+                "text": "signs of salmonella",
+                "intent": "None",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 9,
+                        "length": 10
+                    }
+                ]
+            },
+            {
+                "text": "studies about non-small cell lung cancer",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 14,
+                        "length": 26
+                    }
+                ]
+            },
+            {
+                "text": "studies for breast cancer",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 12,
+                        "length": 13
+                    }
+                ]
+            },
+            {
+                "text": "studies for healthy people",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "healthy",
+                        "offset": 12,
+                        "length": 7
+                    }
+                ]
+            },
+            {
+                "text": "sun is shining",
+                "intent": "None",
+                "entities": []
+            },
+            {
+                "text": "symptoms of diabetes",
+                "intent": "None",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 12,
+                        "length": 8
+                    }
+                ]
+            },
+            {
+                "text": "trails for 67 years old",
+                "intent": "Clinical Trials Matching",
+                "entities": []
+            },
+            {
+                "text": "trials for 24 year old with melanoma",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 28,
+                        "length": 8
+                    }
+                ]
+            },
+            {
+                "text": "trials for 45 years old in healthy condition",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "healthy",
+                        "offset": 27,
+                        "length": 7
+                    }
+                ]
+            },
+            {
+                "text": "trials for 57 years old male patient from houston texas with pancreatic cancer",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "gender.male",
+                        "offset": 24,
+                        "length": 4
+                    },
+                    {
+                        "category": "geography.city",
+                        "offset": 42,
+                        "length": 7
+                    },
+                    {
+                        "category": "geography.state",
+                        "offset": 50,
+                        "length": 5
+                    },
+                    {
+                        "category": "disease",
+                        "offset": 61,
+                        "length": 17
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "trials for 57 years old male patient from houston with pancreatic cancer",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "gender.male",
+                        "offset": 24,
+                        "length": 4
+                    },
+                    {
+                        "category": "geography.city",
+                        "offset": 42,
+                        "length": 7
+                    },
+                    {
+                        "category": "disease",
+                        "offset": 55,
+                        "length": 17
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "trials for 57 years old male patient from los angeles with pancreatic cancer",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "gender.male",
+                        "offset": 24,
+                        "length": 4
+                    },
+                    {
+                        "category": "geography.city",
+                        "offset": 42,
+                        "length": 11
+                    },
+                    {
+                        "category": "disease",
+                        "offset": 59,
+                        "length": 17
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "trials for 57 years old male patient with pancreatic cancer from houston",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "gender.male",
+                        "offset": 24,
+                        "length": 4
+                    },
+                    {
+                        "category": "disease",
+                        "offset": 42,
+                        "length": 17
+                    },
+                    {
+                        "category": "geography.city",
+                        "offset": 65,
+                        "length": 7
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "trials for a male patient from houston",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "gender.male",
+                        "offset": 13,
+                        "length": 4
+                    },
+                    {
+                        "category": "geography.city",
+                        "offset": 31,
+                        "length": 7
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "trials for a male patient with pancreatic cancer from houston",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "gender.male",
+                        "offset": 13,
+                        "length": 4
+                    },
+                    {
+                        "category": "disease",
+                        "offset": 31,
+                        "length": 17
+                    },
+                    {
+                        "category": "geography.city",
+                        "offset": 54,
+                        "length": 7
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "trials for a patient from houston",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "geography.city",
+                        "offset": 26,
+                        "length": 7
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "trials for cancer",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 11,
+                        "length": 6
+                    }
+                ]
+            },
+            {
+                "text": "trials for cancer patient",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 11,
+                        "length": 6
+                    }
+                ]
+            },
+            {
+                "text": "trials for covid-19",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 11,
+                        "length": 8
+                    }
+                ]
+            },
+            {
+                "text": "trials for healthy people",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "healthy",
+                        "offset": 11,
+                        "length": 7
+                    }
+                ]
+            },
+            {
+                "text": "trials for male 57 years from mexico with prostate cancer",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "gender.male",
+                        "offset": 11,
+                        "length": 4
+                    },
+                    {
+                        "category": "geography.countryOrRegion",
+                        "offset": 30,
+                        "length": 6
+                    },
+                    {
+                        "category": "disease",
+                        "offset": 42,
+                        "length": 15
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "trials for male patient with pancreatic cancer from houston",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "gender.male",
+                        "offset": 11,
+                        "length": 4
+                    },
+                    {
+                        "category": "disease",
+                        "offset": 29,
+                        "length": 17
+                    },
+                    {
+                        "category": "geography.city",
+                        "offset": 52,
+                        "length": 7
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "trials for male patient with pancreatic cancer from los angeles",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "gender.male",
+                        "offset": 11,
+                        "length": 4
+                    },
+                    {
+                        "category": "disease",
+                        "offset": 29,
+                        "length": 17
+                    },
+                    {
+                        "category": "geography.city",
+                        "offset": 52,
+                        "length": 11
+                    }
+                ],
+                "dataset": "Train"
+            },
+            {
+                "text": "trials for men 57 yo",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "gender.male",
+                        "offset": 11,
+                        "length": 3
+                    }
+                ]
+            },
+            {
+                "text": "trials for patient suffering from diseasename",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 34,
+                        "length": 11
+                    }
+                ]
+            },
+            {
+                "text": "trials for patient with covid-19",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 24,
+                        "length": 8
+                    }
+                ]
+            },
+            {
+                "text": "trials for people without disease",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "healthy",
+                        "offset": 18,
+                        "length": 15
+                    }
+                ]
+            },
+            {
+                "text": "trials for twenty years old",
+                "intent": "Clinical Trials Matching",
+                "entities": []
+            },
+            {
+                "text": "trials related to diseasename",
+                "intent": "Clinical Trials Matching",
+                "entities": []
+            },
+            {
+                "text": "type of doctor for anemia",
+                "intent": "None",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 19,
+                        "length": 6
+                    }
+                ]
+            },
+            {
+                "text": "ulcerative",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 0,
+                        "length": 10
+                    }
+                ]
+            },
+            {
+                "text": "what are the sign for flu?",
+                "intent": "None",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 22,
+                        "length": 3
+                    }
+                ]
+            },
+            {
+                "text": "what are the symptoms of flu?",
+                "intent": "None",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 25,
+                        "length": 3
+                    }
+                ]
+            },
+            {
+                "text": "what doctor should i see for my broken knee?",
+                "intent": "None",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 39,
+                        "length": 4
+                    }
+                ]
+            },
+            {
+                "text": "what is diabetes",
+                "intent": "None",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 8,
+                        "length": 8
+                    }
+                ]
+            },
+            {
+                "text": "what is flu?",
+                "intent": "None",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 8,
+                        "length": 3
+                    }
+                ]
+            },
+            {
+                "text": "what is salmonella?",
+                "intent": "None",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 8,
+                        "length": 10
+                    }
+                ]
+            },
+            {
+                "text": "what kind of doctor should i see about flu?",
+                "intent": "None",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 39,
+                        "length": 3
+                    }
+                ]
+            },
+            {
+                "text": "what symptoms do men get when they got prostate cancer?",
+                "intent": "None",
+                "entities": [
+                    {
+                        "category": "gender.male",
+                        "offset": 17,
+                        "length": 3
+                    },
+                    {
+                        "category": "disease",
+                        "offset": 39,
+                        "length": 15
+                    }
+                ]
+            },
+            {
+                "text": "who treats brain cancer?",
+                "intent": "None",
+                "entities": [
+                    {
+                        "category": "disease",
+                        "offset": 11,
+                        "length": 12
+                    }
+                ]
+            },
+            {
+                "text": " find trials for male 57 years old with prostate cancer from mexico",
+                "intent": "Clinical Trials Matching",
+                "entities": [
+                    {
+                        "category": "gender.male",
+                        "offset": 18,
+                        "length": 4
+                    },
+                    {
+                        "category": "disease",
+                        "offset": 41,
+                        "length": 15
+                    },
+                    {
+                        "category": "geography.countryOrRegion",
+                        "offset": 62,
+                        "length": 6
+                    }
+                ],
+                "dataset": "Train"
+            }
+        ]
+    }
+}
