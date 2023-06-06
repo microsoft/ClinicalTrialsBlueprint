@@ -1,0 +1,153 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.17.1.54307",
+      "templateHash": "10036206782506289321"
+    }
+  },
+  "parameters": {
+    "matchingBotName": {
+      "type": "string",
+      "defaultValue": "ctm-healthbot-template",
+      "maxLength": 30,
+      "minLength": 3
+    },
+    "healthInsightName": {
+      "type": "string",
+      "defaultValue": "ctm-healthinsights-cogs",
+      "maxLength": 64,
+      "minLength": 2
+    },
+    "languageUnderstandingName": {
+      "type": "string",
+      "defaultValue": "ctm-CLU-cogs",
+      "maxLength": 64,
+      "minLength": 2
+    },
+    "resourceTags": {
+      "type": "object",
+      "defaultValue": {
+        "Environment": "Prod",
+        "Project": "Health Insight Trial Matching bot"
+      }
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]"
+    },
+    "fileLocation": {
+      "type": "string",
+      "defaultValue": "https://raw.githubusercontent.com/microsoft/ClinicalTrialsBlueprint/master"
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.HealthBot/healthBots",
+      "apiVersion": "2022-08-08",
+      "name": "[parameters('matchingBotName')]",
+      "location": "[parameters('location')]",
+      "sku": {
+        "name": "S1"
+      },
+      "properties": {},
+      "tags": "[parameters('resourceTags')]"
+    },
+    {
+      "type": "Microsoft.CognitiveServices/accounts",
+      "apiVersion": "2022-12-01",
+      "name": "[parameters('healthInsightName')]",
+      "location": "[parameters('location')]",
+      "sku": {
+        "name": "S0"
+      },
+      "kind": "HealthInsights",
+      "properties": {
+        "customSubDomainName": "[parameters('healthInsightName')]",
+        "publicNetworkAccess": "Enabled"
+      },
+      "tags": "[parameters('resourceTags')]"
+    },
+    {
+      "type": "Microsoft.Resources/deploymentScripts",
+      "apiVersion": "2020-10-01",
+      "name": "runPowerShellInline",
+      "tags": "[parameters('resourceTags')]",
+      "kind": "AzurePowerShell",
+      "location": "[parameters('location')]",
+      "properties": {
+        "forceUpdateTag": "1",
+        "azPowerShellVersion": "9.7",
+        "arguments": "[format('-fileLocation {0}', parameters('fileLocation'))]",
+        "environmentVariables": [
+          {
+            "name": "HEALTH_INSIGHT_ENDPOINT",
+            "value": "[reference(resourceId('Microsoft.CognitiveServices/accounts', parameters('healthInsightName')), '2022-12-01').endpoint]"
+          },
+          {
+            "name": "HEALTH_INSIGHT_KEY",
+            "value": "[listKeys(resourceId('Microsoft.CognitiveServices/accounts', parameters('healthInsightName')), '2022-12-01').key1]"
+          },
+          {
+            "name": "CLU_ENDPOINT",
+            "value": "[reference(resourceId('Microsoft.CognitiveServices/accounts', parameters('languageUnderstandingName')), '2022-12-01').endpoint]"
+          },
+          {
+            "name": "CLU_KEY",
+            "value": "[listKeys(resourceId('Microsoft.CognitiveServices/accounts', parameters('languageUnderstandingName')), '2022-12-01').key1]"
+          },
+          {
+            "name": "HEALTH_BOT_ENDPOINT",
+            "value": "[reference(resourceId('Microsoft.HealthBot/healthBots', parameters('matchingBotName')), '2022-08-08').botManagementPortalLink]"
+          },
+          {
+            "name": "HEALTH_BOT_SECRET",
+            "value": "[listSecrets(resourceId('Microsoft.HealthBot/healthBots', parameters('matchingBotName')), '2022-08-08').secrets[2].value]"
+          }
+        ],
+        "primaryScriptUri": "[format('{0}/scripts/MainRestore.ps1', parameters('fileLocation'))]",
+        "supportingScriptUris": [
+          "[format('{0}/scripts/RestoreBot.ps1', parameters('fileLocation'))]",
+          "[format('{0}/scripts/RestoreLanguageUnderstanding.ps1', parameters('fileLocation'))]"
+        ],
+        "timeout": "PT30M",
+        "cleanupPreference": "OnSuccess",
+        "retentionInterval": "P1D"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.HealthBot/healthBots', parameters('matchingBotName'))]",
+        "[resourceId('Microsoft.CognitiveServices/accounts', parameters('healthInsightName'))]",
+        "[resourceId('Microsoft.CognitiveServices/accounts', parameters('languageUnderstandingName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.CognitiveServices/accounts",
+      "apiVersion": "2022-12-01",
+      "name": "[parameters('languageUnderstandingName')]",
+      "location": "[parameters('location')]",
+      "sku": {
+        "name": "S"
+      },
+      "kind": "TextAnalytics",
+      "identity": {
+        "type": "None"
+      },
+      "properties": {
+        "customSubDomainName": "[parameters('languageUnderstandingName')]",
+        "publicNetworkAccess": "Enabled"
+      }
+    }
+  ],
+  "outputs": {
+    "healthInsightEndpoint": {
+      "type": "string",
+      "value": "[reference(resourceId('Microsoft.CognitiveServices/accounts', parameters('healthInsightName')), '2022-12-01').endpoint]"
+    },
+    "healthBotEndpoint": {
+      "type": "string",
+      "value": "[reference(resourceId('Microsoft.HealthBot/healthBots', parameters('matchingBotName')), '2022-08-08').botManagementPortalLink]"
+    }
+  }
+}
