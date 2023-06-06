@@ -3,6 +3,9 @@ param (
     [string]$fileLocation
 )
 
+# debug: print env varibles
+Get-ChildItem Env:
+
 $cuiKey = $env:CLU_KEY
 $cuiEndpoint = $env:CLU_ENDPOINT
 
@@ -17,7 +20,6 @@ $headers = @{
     "Ocp-Apim-Subscription-Key" = $cuiKey
     "Content-Type"              = $contentType
     "Accept-Charset"            = 'UTF-8'
-    "Accept"                    = "*/*"
 }
 
 function WaitForJob {

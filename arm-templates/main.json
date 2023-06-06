@@ -11,19 +11,19 @@
   "parameters": {
     "matchingBotName": {
       "type": "string",
-      "defaultValue": "ctm-healthbot-template17",
+      "defaultValue": "ctm-healthbot-template18",
       "maxLength": 30,
       "minLength": 3
     },
     "healthInsightName": {
       "type": "string",
-      "defaultValue": "ctm-healthinsights-cogs3",
+      "defaultValue": "ctm-healthinsights-cogs4",
       "maxLength": 64,
       "minLength": 2
     },
     "languageUnderstandingName": {
       "type": "string",
-      "defaultValue": "ctm-CLU-cogs3",
+      "defaultValue": "ctm-CLU-cogs4",
       "maxLength": 64,
       "minLength": 2
     },
@@ -61,7 +61,7 @@
       "name": "[parameters('healthInsightName')]",
       "location": "[parameters('location')]",
       "sku": {
-        "name": "F0"
+        "name": "S0"
       },
       "kind": "HealthInsights",
       "properties": {

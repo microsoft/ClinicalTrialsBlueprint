@@ -30,7 +30,7 @@ resource healthInsight 'Microsoft.CognitiveServices/accounts@2022-12-01' = {
   name: healthInsightName
   location: location
   sku: {
-    name: 'F0'
+    name: 'S0'
   }
   kind: 'HealthInsights'
   properties: {
