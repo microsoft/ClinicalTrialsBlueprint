@@ -36,11 +36,11 @@
                 "clinical_trial_metadata": {
                     "enabled": true,
                     "description": "clinical_trial_metadata",
-                    "cognitiveServiceEndpoint": "getEnv(\"clu-endpoint\")",
+                    "cognitiveServiceEndpoint": "%CLU_ENDPOINT%",
                     "projectName": "clinical_trial_metadata",
                     "cluApiVersion": "2022-10-01-preview",
                     "cluDeploymentName": "clinical_trial_metadata",
-                    "subscription_key": "getEnv(\"clu-subscription-key\")",
+                    "subscription_key": "%CLU_KEY%",
                     "intents": [
                         "Clinical Trials Matching"
                     ]
@@ -63,24 +63,8 @@
         "environment_variables": {
             "variables": [
                 {
-                    "name": "ocp-key",
-                    "value": "%HEALTH_INSIGHT_KEY%"
-                },
-                {
-                    "name": "health-insight-endpoint",
-                    "value": "%HEALTH_INSIGHT_ENDPOINT%"
-                },
-                {
                     "name": "hds-version",
                     "value": "api-version=2023-03-01-preview"
-                },
-                {
-                    "name": "clu-subscription-key",
-                    "value": "%CLU_KEY%"
-                },
-                {
-                    "name": "clu-endpoint",
-                    "value": "%CLU_ENDPOINT%"
                 }
             ]
         }
@@ -89,16 +73,16 @@
     "dataConnections": [
         {
             "auth_provider": "",
-            "base_url": "getEnv(\"health-insight-endpoint\")",
-            "description": "health insight endpoint",
-            "name": "healthinsight-async",
+            "base_url": "%HEALTH_INSIGHTS_ENDPOINT%",
+            "description": "health insights endpoint",
+            "name": "healthinsights-async",
             "type": "custom",
             "id": "1681808472152",
             "static_parameters": [
                 {
                     "key": "Ocp-Apim-Subscription-Key",
                     "type": "header",
-                    "value": "getEnv(\"ocp-key\")"
+                    "value": "%HEALTH_INSIGHTS_KEY%"
                 }
             ]
         }
@@ -1454,9 +1438,9 @@
         {
             "RowKey": "84a5065e-ed6b-470c-bbb2-1790245a1487",
             "snapshots": 5,
-            "name": "clinical_trials_matching_health_insight_async",
-            "scenario_trigger": "HealthInsightDataConnectionAsync",
-            "description": "call Health Insight async Data Connection",
+            "name": "clinical_trials_matching_health_insights_async",
+            "scenario_trigger": "HealthInsightsDataConnectionAsync",
+            "description": "call Health Insights async Data Connection",
             "userDisplayName": "Yochai Lehman",
             "active": true,
             "version": 1,
@@ -1477,7 +1461,7 @@
                             "yLocation": 0,
                             "next": "95f6b5f256da-ed1cea46c0187621-f7b9"
                         },
-                        "onInit": "scenario.healthInsightRequest = scenario.scenarioArgs.healthInsightRequest;\r\n"
+                        "onInit": "scenario.healthInsightsRequest = scenario.scenarioArgs.healthInsightsRequest;\r\n"
                     },
                     {
                         "id": "95f6b5f256da-ed1cea46c0187621-f7b9",
@@ -1489,18 +1473,18 @@
                             "next": "c50052217811-29d485f1b59b412b-8026",
                             "errorStepId": "b06934c57c28-f7976d41b9a5e831-ef13"
                         },
-                        "dataConnection": "healthinsight-async",
+                        "dataConnection": "healthinsights-async",
                         "urlBase": "'https://tm-cs-hi-eastus.cognitiveservices.azure.com/'",
                         "urlPath": "'healthinsights/trialmatcher/jobs'",
-                        "urlParams": "getEnv(\"health-insight-version\")",
+                        "urlParams": "getEnv(\"health-insights-version\")",
                         "contentType": "raw",
                         "method": "post",
-                        "payload": "scenario.healthInsightRequest",
+                        "payload": "scenario.healthInsightsRequest",
                         "opJson": true,
                         "opResolveWithFullResponse": true,
-                        "response": "healthInsight",
-                        "error": "healthInsightError",
-                        "label": "Health Insight Matcher Enpoint #1"
+                        "response": "healthInsights",
+                        "error": "healthInsightsError",
+                        "label": "Health Insights Matcher Enpoint #1"
                     },
                     {
                         "id": "b06934c57c28-f7976d41b9a5e831-ef13",
@@ -1523,15 +1507,15 @@
                             "errorStepId": "b06934c57c28-f7976d41b9a5e831-ef13"
                         },
                         "dataConnection": "",
-                        "urlBase": "scenario.healthInsight.headers[\"operation-location\"]",
+                        "urlBase": "scenario.healthInsights.headers[\"operation-location\"]",
                         "urlPath": "",
                         "urlParams": "",
                         "method": "get",
-                        "headers": "{\"Ocp-Apim-Subscription-Key\":getEnv(\"ocp-key\")}",
+                        "headers": "{\"Ocp-Apim-Subscription-Key\":\"%HEALTH_INSIGHTS_KEY%\"}",
                         "opJson": true,
                         "opResolveWithFullResponse": false,
                         "response": "asyncRes",
-                        "error": "healthInsightError"
+                        "error": "healthInsightsError"
                     },
                     {
                         "id": "e6c72ef1282a-0b5730b1bd9e0861-c99c",
@@ -1637,13 +1621,13 @@
                     {
                         "id": "fb7403c86d6a-1e24272165de9c1b-92f7",
                         "type": "action",
-                        "label": "Create Health Insight Request With Demographic conditions",
+                        "label": "Create Health Insights Request With Demographic conditions",
                         "designer": {
                             "xLocation": 8,
                             "yLocation": 380,
                             "next": "7d13692c028c-c62feba5d349bb6e-7959"
                         },
-                        "onInit": "// initialize askedCodes\nscenario.profile.Info.ClinicalInfo = [];\n\n// initialize healthInsightRequest\nvar healthInsightRequest = {};\nvar configuration = {\n    ClinicalTrials: {\n        RegistryFilters : [\n            {\n            Sources : [\"Clinicaltrials_gov\"],\n            Conditions : [scenario.profile.condition],\n            FacilityLocations: [{\n                \"State\":scenario.location.searchLocationState,\n                \"City\":scenario.location.searchLocationCity,\n                \"CountryOrRegion\":scenario.location.searchLocationCountryOrRegion\n            }]\n            }\n        ]\n    },\n    IncludeEvidence : false,\n    Verbose: false\n}\nvar patients = [];\npatients[0] = scenario.profile;\n\nhealthInsightRequest.id = new Date().getTime().toString();\n\nhealthInsightRequest.Configuration = configuration;\nhealthInsightRequest.Patients = patients;\n\nscenario.healthInsightRequest = healthInsightRequest;\n\n"
+                        "onInit": "// initialize askedCodes\nscenario.profile.Info.ClinicalInfo = [];\n\n// initialize healthInsightsRequest\nvar healthInsightsRequest = {};\nvar configuration = {\n    ClinicalTrials: {\n        RegistryFilters : [\n            {\n            Sources : [\"Clinicaltrials_gov\"],\n            Conditions : [scenario.profile.condition],\n            FacilityLocations: [{\n                \"State\":scenario.location.searchLocationState,\n                \"City\":scenario.location.searchLocationCity,\n                \"CountryOrRegion\":scenario.location.searchLocationCountryOrRegion\n            }]\n            }\n        ]\n    },\n    IncludeEvidence : false,\n    Verbose: false\n}\nvar patients = [];\npatients[0] = scenario.profile;\n\nhealthInsightsRequest.id = new Date().getTime().toString();\n\nhealthInsightsRequest.Configuration = configuration;\nhealthInsightsRequest.Patients = patients;\n\nscenario.healthInsightsRequest = healthInsightsRequest;\n\n"
                     },
                     {
                         "id": "8eb78c0e15f8-3aa0bdbacd6795d8-0ac6",
@@ -1698,13 +1682,13 @@
                     {
                         "id": "c0b338e361df-f9260a30a63543e5-2d46",
                         "type": "action",
-                        "label": "Create Health Insight  request with Disqualify answers",
+                        "label": "Create Health Insights  request with Disqualify answers",
                         "designer": {
                             "xLocation": 738,
                             "yLocation": 360,
                             "next": "98cd74b3b6e3-4ce71bea1350ec7f-4448"
                         },
-                        "onInit": "var trialIds = scenario.trials.map(trial => trial.id);\n\n// initialize qeRequest\nscenario.healthInsightRequest = {};\nvar configuration = {\n    ClinicalTrials: {\n    RegistryFilters : [\n            {\n                Sources : [\"Clinicaltrials_gov\"],\n                Ids:trialIds,\n            }\n        ]\n    },\n    IncludeEvidence : false,\n    Verbose: false\n}\nvar patients = [];\npatients[0] = scenario.profile;\n\n\nscenario.healthInsightRequest.Configuration = configuration;\nscenario.healthInsightRequest.Patients = patients;\n"
+                        "onInit": "var trialIds = scenario.trials.map(trial => trial.id);\n\n// initialize qeRequest\nscenario.healthInsightsRequest = {};\nvar configuration = {\n    ClinicalTrials: {\n    RegistryFilters : [\n            {\n                Sources : [\"Clinicaltrials_gov\"],\n                Ids:trialIds,\n            }\n        ]\n    },\n    IncludeEvidence : false,\n    Verbose: false\n}\nvar patients = [];\npatients[0] = scenario.profile;\n\n\nscenario.healthInsightsRequest.Configuration = configuration;\nscenario.healthInsightsRequest.Patients = patients;\n"
                     },
                     {
                         "id": "22130a4fa790-7398bd4e67a60462-949a",
@@ -1715,7 +1699,7 @@
                             "yLocation": 700,
                             "next": "8cc8d6de3179-a14e044b3f7d5fd5-2360"
                         },
-                        "onInit": "// keeping track for total questions\r\nscenario.totalQuestionsAsked++;\r\n\r\nvar criterion = scenario.HealthInsightAsyncResponse.response.results.patients[0].neededClinicalInfo[scenario.questionIndex];\r\n       \r\nscenario.questionArgs = {};\r\nscenario.questionArgs.question = criterion;\r\nscenario.questionArgs.profile = scenario.profile;\r\nscenario.questionArgs.questionsNum = scenario.totalQuestionsAsked;\r\n"
+                        "onInit": "// keeping track for total questions\r\nscenario.totalQuestionsAsked++;\r\n\r\nvar criterion = scenario.HealthInsightsAsyncResponse.response.results.patients[0].neededClinicalInfo[scenario.questionIndex];\r\n       \r\nscenario.questionArgs = {};\r\nscenario.questionArgs.question = criterion;\r\nscenario.questionArgs.profile = scenario.profile;\r\nscenario.questionArgs.questionsNum = scenario.totalQuestionsAsked;\r\n"
                     },
                     {
                         "id": "8cc8d6de3179-a14e044b3f7d5fd5-2360",
@@ -1773,7 +1757,7 @@
                             "yLocation": 100,
                             "next": "42b4b5fab0ed-0ff1c03b236e69bd-63c4"
                         },
-                        "onInit": "// update scenario.trialsCountPrev and scenario.trials\r\nscenario.trialsCountPrev = scenario.trials.length;\r\n\r\nscenario.trials = scenario.HealthInsightAsyncResponse.response.results.patients[0].inferences.filter(trial => trial.value == \"Eligible\");\r\n"
+                        "onInit": "// update scenario.trialsCountPrev and scenario.trials\r\nscenario.trialsCountPrev = scenario.trials.length;\r\n\r\nscenario.trials = scenario.HealthInsightsAsyncResponse.response.results.patients[0].inferences.filter(trial => trial.value == \"Eligible\");\r\n"
                     },
                     {
                         "id": "d46040c72921-e874ae9773008129-3f14",
@@ -1789,7 +1773,7 @@
                     {
                         "id": "275cf280677e-52bf72c7f8f55bad-ae74",
                         "type": "branch",
-                        "condition": "scenario.questionIndex < scenario.HealthInsightAsyncResponse.response.results.patients[0].neededClinicalInfo.length",
+                        "condition": "scenario.questionIndex < scenario.HealthInsightsAsyncResponse.response.results.patients[0].neededClinicalInfo.length",
                         "designer": {
                             "xLocation": 1378,
                             "yLocation": 680,
@@ -1841,7 +1825,7 @@
                     {
                         "id": "ba24c6c14552-29a155c3df1c4f2f-b738",
                         "type": "branch",
-                        "condition": "(scenario.HealthInsightAsyncResponse.response.results.patients[0].neededClinicalInfo == null || \r\n scenario.HealthInsightAsyncResponse.response.results.patients[0].neededClinicalInfo.length === 0)",
+                        "condition": "(scenario.HealthInsightsAsyncResponse.response.results.patients[0].neededClinicalInfo == null || \r\n scenario.HealthInsightsAsyncResponse.response.results.patients[0].neededClinicalInfo.length === 0)",
                         "designer": {
                             "xLocation": 1018,
                             "yLocation": 60,
@@ -1896,7 +1880,7 @@
                             "yLocation": 280,
                             "next": "535da28bf288-64b00bc52de35332-887e"
                         },
-                        "onInit": "var trialIds = scenario.trials.map(trial => trial.id);\r\n\r\n\r\n// initialize qeRequest\r\nscenario.healthInsightRequest = {};\r\nvar configuration = {\r\n    ClinicalTrials: {\r\n    RegistryFilters : [\r\n        {\r\n            Sources : [\"Clinicaltrials_gov\"],\r\n            FacilityLocations: [{\r\n                \"State\":scenario.location.searchLocationState,\r\n                \"City\":scenario.location.searchLocationCity,\r\n                \"CountryOrRegion\":scenario.location.searchLocationCountryOrRegion\r\n            }],\r\n            Ids:trialIds\r\n        }\r\n    ]\r\n    },\r\n    IncludeEvidence : false,\r\n    Verbose: true\r\n}\r\nvar patients = [];\r\npatients[0] = scenario.profile;\r\n\r\n\r\nscenario.healthInsightRequest.Configuration = configuration;\r\nscenario.healthInsightRequest.Patients = patients;\r\n"
+                        "onInit": "var trialIds = scenario.trials.map(trial => trial.id);\r\n\r\n\r\n// initialize qeRequest\r\nscenario.healthInsightsRequest = {};\r\nvar configuration = {\r\n    ClinicalTrials: {\r\n    RegistryFilters : [\r\n        {\r\n            Sources : [\"Clinicaltrials_gov\"],\r\n            FacilityLocations: [{\r\n                \"State\":scenario.location.searchLocationState,\r\n                \"City\":scenario.location.searchLocationCity,\r\n                \"CountryOrRegion\":scenario.location.searchLocationCountryOrRegion\r\n            }],\r\n            Ids:trialIds\r\n        }\r\n    ]\r\n    },\r\n    IncludeEvidence : false,\r\n    Verbose: true\r\n}\r\nvar patients = [];\r\npatients[0] = scenario.profile;\r\n\r\n\r\nscenario.healthInsightsRequest.Configuration = configuration;\r\nscenario.healthInsightsRequest.Patients = patients;\r\n"
                     },
                     {
                         "id": "2333bc1d943a-dbd4cf50e0a91eee-125b",
@@ -1907,7 +1891,7 @@
                             "yLocation": 540,
                             "next": "e588f774bae0-892987238b37e51d-68d3"
                         },
-                        "onInit": "\r\nscenario.startBufferTrials = 0;\r\nscenario.endBufferTrials = 50;\r\n\r\nvar trials = [];\r\nscenario.HealthInsightAsyncResponse.response.results.patients[0].inferences.forEach(trial => {\r\n    if(trial.value == \"Eligible\") {\r\n        trials.push(trial);\r\n    }\r\n});\r\n\r\nscenario.trials = trials;\r\nscenario.trialsBuffer = trials.slice(scenario.startBufferTrials, scenario.endBufferTrials);"
+                        "onInit": "\r\nscenario.startBufferTrials = 0;\r\nscenario.endBufferTrials = 50;\r\n\r\nvar trials = [];\r\nscenario.HealthInsightsAsyncResponse.response.results.patients[0].inferences.forEach(trial => {\r\n    if(trial.value == \"Eligible\") {\r\n        trials.push(trial);\r\n    }\r\n});\r\n\r\nscenario.trials = trials;\r\nscenario.trialsBuffer = trials.slice(scenario.startBufferTrials, scenario.endBufferTrials);"
                     },
                     {
                         "id": "7d13692c028c-c62feba5d349bb6e-7959",
@@ -1929,7 +1913,7 @@
                             "yLocation": 23,
                             "next": "8eb78c0e15f8-3aa0bdbacd6795d8-0ac6"
                         },
-                        "onInit": "var healthInsightRequest = {};\nhealthInsightRequest.trials = scenario.trials.slice(0, scenario.consts.TRIALS_LOG_LIMIT).map(trial => {\n    return {\n        \"id\": trial.id\n    };\n});\nhealthInsightRequest.qeTrialsNum = scenario.trials.length;\nsession.logCustomEvent('healthInsightRequest_#1', healthInsightRequest);"
+                        "onInit": "var healthInsightsRequest = {};\nhealthInsightsRequest.trials = scenario.trials.slice(0, scenario.consts.TRIALS_LOG_LIMIT).map(trial => {\n    return {\n        \"id\": trial.id\n    };\n});\nhealthInsightsRequest.qeTrialsNum = scenario.trials.length;\nsession.logCustomEvent('healthInsightsRequest_#1', healthInsightsRequest);"
                     },
                     {
                         "id": "e588f774bae0-892987238b37e51d-68d3",
@@ -2056,10 +2040,10 @@
                             "yLocation": 580,
                             "next": "7e158957c7b1-3f24b4901d5b0e81-61a1"
                         },
-                        "scenario": "HealthInsightDataConnectionAsync",
-                        "args": "{ \r\n    \"healthInsightRequest\": scenario.healthInsightRequest\r\n}",
-                        "variable": "HealthInsightAsyncResponse",
-                        "label": "Health Insight KG call"
+                        "scenario": "HealthInsightsDataConnectionAsync",
+                        "args": "{ \r\n    \"healthInsightsRequest\": scenario.healthInsightsRequest\r\n}",
+                        "variable": "HealthInsightsAsyncResponse",
+                        "label": "Health Insights KG call"
                     },
                     {
                         "id": "e36aca80cc99-acd2369adbae6253-9b2f",
@@ -2070,7 +2054,7 @@
                             "yLocation": 800,
                             "next": "2d52c58f3c9f-311c95e0e7a51ce9-5ed7"
                         },
-                        "onInit": "const trials = scenario.HealthInsightAsyncResponse.response.results.patients[0].inferences.filter(trial => trial.value == \"Eligible\");\r\n\r\nscenario.trials = trials;\r\nscenario.trialsCountPrev = trials.length;\r\nscenario.qeTrials = scenario.trials;\r\nsession.trace(\"demographic query has returned:\" + trials.length + \" trials\", 0);"
+                        "onInit": "const trials = scenario.HealthInsightsAsyncResponse.response.results.patients[0].inferences.filter(trial => trial.value == \"Eligible\");\r\n\r\nscenario.trials = trials;\r\nscenario.trialsCountPrev = trials.length;\r\nscenario.qeTrials = scenario.trials;\r\nsession.trace(\"demographic query has returned:\" + trials.length + \" trials\", 0);"
                     },
                     {
                         "id": "535da28bf288-64b00bc52de35332-887e",
@@ -2080,10 +2064,10 @@
                             "yLocation": 360,
                             "next": "7be8438a27d8-06408c9c0a7d8317-d9e7"
                         },
-                        "scenario": "HealthInsightDataConnectionAsync",
-                        "args": "{\r\n    \r\n    \"healthInsightRequest\": scenario.healthInsightRequest,\r\n\r\n}",
-                        "variable": "HealthInsightAsyncResponse",
-                        "label": "Health Insight get details"
+                        "scenario": "HealthInsightsDataConnectionAsync",
+                        "args": "{\r\n    \r\n    \"healthInsightsRequest\": scenario.healthInsightsRequest,\r\n\r\n}",
+                        "variable": "HealthInsightsAsyncResponse",
+                        "label": "Health Insights get details"
                     },
                     {
                         "id": "51c08ae269fd-67da30d199aab861-fbb4",
@@ -2093,10 +2077,10 @@
                             "yLocation": 180,
                             "next": "2d44b90502ae-fa18c1ad79f2c422-70ce"
                         },
-                        "scenario": "HealthInsightDataConnectionAsync",
-                        "args": "{\r\n    \r\n    \"healthInsightRequest\": scenario.healthInsightRequest,\r\n\r\n}",
-                        "variable": "HealthInsightAsyncResponse",
-                        "label": "Health Insight filter trials by answers"
+                        "scenario": "HealthInsightsDataConnectionAsync",
+                        "args": "{\r\n    \r\n    \"healthInsightsRequest\": scenario.healthInsightsRequest,\r\n\r\n}",
+                        "variable": "HealthInsightsAsyncResponse",
+                        "label": "Health Insights filter trials by answers"
                     },
                     {
                         "id": "98cd74b3b6e3-4ce71bea1350ec7f-4448",
@@ -2112,7 +2096,7 @@
                     {
                         "id": "7e158957c7b1-3f24b4901d5b0e81-61a1",
                         "type": "branch",
-                        "condition": "scenario.HealthInsightAsyncResponse.error",
+                        "condition": "scenario.HealthInsightsAsyncResponse.error",
                         "designer": {
                             "xLocation": 10,
                             "yLocation": 700,
@@ -2124,7 +2108,7 @@
                     {
                         "id": "2d44b90502ae-fa18c1ad79f2c422-70ce",
                         "type": "branch",
-                        "condition": "scenario.HealthInsightAsyncResponse.error",
+                        "condition": "scenario.HealthInsightsAsyncResponse.error",
                         "designer": {
                             "xLocation": 658,
                             "yLocation": 140,
@@ -2135,7 +2119,7 @@
                     {
                         "id": "7be8438a27d8-06408c9c0a7d8317-d9e7",
                         "type": "branch",
-                        "condition": "scenario.HealthInsightAsyncResponse.error",
+                        "condition": "scenario.HealthInsightsAsyncResponse.error",
                         "designer": {
                             "xLocation": 350,
                             "yLocation": 460,
