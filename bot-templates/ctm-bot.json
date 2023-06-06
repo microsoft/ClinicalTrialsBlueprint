@@ -63,7 +63,7 @@
         "environment_variables": {
             "variables": [
                 {
-                    "name": "hds-version",
+                    "name": "health-insights-version",
                     "value": "api-version=2023-03-01-preview"
                 }
             ]
@@ -1474,7 +1474,7 @@
                             "errorStepId": "b06934c57c28-f7976d41b9a5e831-ef13"
                         },
                         "dataConnection": "healthinsights-async",
-                        "urlBase": "'https://tm-cs-hi-eastus.cognitiveservices.azure.com/'",
+                        "urlBase": null,
                         "urlPath": "'healthinsights/trialmatcher/jobs'",
                         "urlParams": "getEnv(\"health-insights-version\")",
                         "contentType": "raw",
