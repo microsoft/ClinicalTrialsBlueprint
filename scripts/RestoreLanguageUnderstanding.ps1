@@ -3,9 +3,6 @@ param (
     [string]$fileLocation
 )
 
-# debug: print env varibles
-Get-ChildItem Env:
-
 $cuiKey = $env:CLU_KEY
 $cuiEndpoint = $env:CLU_ENDPOINT
 
@@ -13,6 +10,8 @@ $cuiEndpoint = $env:CLU_ENDPOINT
 # Import the file into a new Cognitive Language Understanding project named "clinical_trial_metadata"
 $projectName = "clinical_trial_metadata"
 $modelLabel = 'clinical_trial_metadata'
+$deployLabel = 'clinical_trial_metadata'
+
 $apiVersion = '?api-version=2022-10-01-preview'
 
 $contentType = 'application/json; charset=UTF-8'
@@ -116,7 +115,7 @@ $trainLocation = $trainResponse.Headers['operation-location'][0]
 WaitForJob -StatusEndpoint $trainLocation
 
 # Deploy the project
-$deployUri = $cuiEndpoint + "language/authoring/analyze-conversations/projects/$projectName/deployments/deploy" + $apiVersion
+$deployUri = $cuiEndpoint + "language/authoring/analyze-conversations/projects/$projectName/deployments/$deployLabel" + $apiVersion
 $bodyJson = @{
     'trainedModelLabel' = $modelLabel
 } | ConvertTo-Json -Depth 4

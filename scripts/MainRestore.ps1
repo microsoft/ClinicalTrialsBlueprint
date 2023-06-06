@@ -4,8 +4,8 @@ param (
 )
 
 
-# get path
-# $ScriptPath = Split-Path $MyInvocation.InvocationName
+# debug: print env varibles
+# Get-ChildItem Env:
 
 # restore language understanding model
 Invoke-Expression "./RestoreLanguageUnderstanding.ps1 -fileLocation $fileLocation"
