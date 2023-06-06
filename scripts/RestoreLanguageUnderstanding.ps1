@@ -84,8 +84,6 @@ $jsonFile = Invoke-WebRequest  -Method Get -Uri  "$fileLocation/clu/clinical_tri
 # Send the request to import the project
 $bodyJson = $jsonFile.Content
 
-$bodyJson | Out-File -FilePath ".\bodyJson.json" -Encoding utf8
-
 $importUri = $cuiEndpoint + "language/authoring/analyze-conversations/projects/$projectName/:import" + $apiVersion
 $importResponse = Call-Http -Method Post `
     -Uri $importUri `
