@@ -1,6 +1,6 @@
 
 
-# Health Insights Clinical Trials Matching Service Healthbot Blueprint
+# Health Insights Clinical Trials Matching Service Healthbot Sample
 
 ## Description
 
