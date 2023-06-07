@@ -14,7 +14,7 @@ The resources that will be deploied with this template, to be used by the bot:
 Additionely, during the deplyment the following resource will be created, and will be auto removed after the deployment finish succefully:
 - DeploymentScripts Resource (https://learn.microsoft.com/en-us/azure/azure-resource-manager/templates/deployment-script-template) - Used during the deployment, 
 - [Azure Container Instance](https://azure.microsoft.com/en-us/products/container-instances/)
-- [Azure Storage]([https://azure.microsoft.com/en-us/free/storage/search/?ef_id=_k_CjwKCAjw1YCkBhAOEiwA5aN4ATfidi5l_Q2x3FkyTR1o3c6EY2fNRSMb_fuSDYnFnws0oHlYtsDdKBoCgLsQAvD_BwE_k_&OCID=AIDcmm81syc84i_SEM__k_CjwKCAjw1YCkBhAOEiwA5aN4ATfidi5l_Q2x3FkyTR1o3c6EY2fNRSMb_fuSDYnFnws0oHlYtsDdKBoCgLsQAvD_BwE_k_&gclid=CjwKCAjw1YCkBhAOEiwA5aN4ATfidi5l_Q2x3FkyTR1o3c6EY2fNRSMb_fuSDYnFnws0oHlYtsDdKBoCgLsQAvD_BwE](https://learn.microsoft.com/en-us/azure/storage/common/storage-introduction))
+- [Azure Storage](https://learn.microsoft.com/en-us/azure/storage/common/storage-introduction))
 
 ## One Click Deployemnt
 ### Requirments
