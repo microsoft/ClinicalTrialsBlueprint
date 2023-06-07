@@ -19,6 +19,9 @@ Additionally, during the deployment, the following resource will be created and 
 - [Azure Container Instance](https://azure.microsoft.com/en-us/products/container-instances/)
 - [Azure Storage](https://learn.microsoft.com/en-us/azure/storage/common/storage-introduction)
 
+There are two modes to use this blueprint: One-Click Deployment or Manual Deployment. 
+In both modes you will create the same Azure resources. One-Click-Deployment is the simplest way to start with. When using the Manual Deployment, you receive the experience of step-by-step process. 
+
 ## One-Click Deployment
 
 ### Requirements
