@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.17.1.54307",
-      "templateHash": "5044198872593583016"
+      "templateHash": "10812708933537939825"
     }
   },
   "parameters": {
@@ -87,7 +87,7 @@
           },
           {
             "name": "HEALTH_INSIGHTS_KEY",
-            "value": "[listKeys(resourceId('Microsoft.CognitiveServices/accounts', parameters('healthInsightsName')), '2022-12-01').key1]"
+            "secureValue": "[listKeys(resourceId('Microsoft.CognitiveServices/accounts', parameters('healthInsightsName')), '2022-12-01').key1]"
           },
           {
             "name": "CLU_ENDPOINT",
@@ -95,7 +95,7 @@
           },
           {
             "name": "CLU_KEY",
-            "value": "[listKeys(resourceId('Microsoft.CognitiveServices/accounts', parameters('languageUnderstandingName')), '2022-12-01').key1]"
+            "secureValue": "[listKeys(resourceId('Microsoft.CognitiveServices/accounts', parameters('languageUnderstandingName')), '2022-12-01').key1]"
           },
           {
             "name": "HEALTH_BOT_ENDPOINT",
@@ -103,7 +103,7 @@
           },
           {
             "name": "HEALTH_BOT_SECRET",
-            "value": "[listSecrets(resourceId('Microsoft.HealthBot/healthBots', parameters('matchingBotName')), '2022-08-08').secrets[2].value]"
+            "secureValue": "[listSecrets(resourceId('Microsoft.HealthBot/healthBots', parameters('matchingBotName')), '2022-08-08').secrets[2].value]"
           }
         ],
         "primaryScriptUri": "[format('{0}/scripts/MainRestore.ps1', variables('fileLocation'))]",
