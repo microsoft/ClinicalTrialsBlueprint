@@ -26,31 +26,11 @@ In both modes you will create the same Azure resources. One-Click-Deployment is 
 
 ### Requirements
 
-- Azure subscription with write permission
+- Azure subscription with 'write' permission
 
 To deploy a new bot directly in Azure, you can use this button:
 
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fmicrosoft%2FClinicalTrialsBlueprint%2Fgh-pages%2Fmain.json)
-
-## Bot Usage
-
-After successful deployment, to see the bot in action, open the generated bot resource, enter the management portal, and start a chat conversation with a prompt:
-
-`clinical trials in israel for 24-year-old women with lung cancer`
-
-The bot will use Azure Language Understanding (CLU) to recognize the intent "find clinical trials" and collect trial metadata:
-- patient age
-- patient sex
-- patient condition
-- wanted trial location
-
-If any metadata wasn't provided or wasn't recognized, the bot will collect it separately.
-
-After receiving the needed data, the bot will send a matching request to Azure Trial Matching, receive a trials list, and use the response to start asking relevant questions about the patient's condition to help Azure Trial Matching qualify the most relevant trials.
-
-After a number of questions, the user will be provided with a list of clinical trials that are relevant to the provided metadata.
-
-For additional health bot usage details, see [Azure Health Bot Documentation](https://learn.microsoft.com/en-us/azure/health-bot/)
 
 ## Manual Deployment
 
@@ -86,3 +66,21 @@ $ctmRg = New-AzResourceGroup -Name <resources group name> -Location <region>
 
 ### Run Deployment
 New-AzResourceGroupDeployment -ResourceGroupName $ctmRg -TemplateFile .\arm-templates\main.bicep
+
+## How to use the Azure Health Bot with built-in Clinical Trial Matching
+
+After successful deployment, to see the bot in action, open the generated bot resource, enter the management portal, and start a chat conversation with a prompt,
+for example:
+`clinical trials in israel for 24-year-old women with lung cancer`
+or
+`find clinical trials for Alzheimer's disease`
+The bot will use Azure Language Understanding (CLU) to recognize the intent "find clinical trials", and analyze from this statement the relevant clinical trial characteristics to look for. The data provided by the user in this case includes patient age, patient sex, patient condition and preferred trial location.
+
+To improve the patient qualification, additional information can be captured from the patient, by generating a question and waiting for user input.  After receiving the needed data, the bot will send a matching request to the Trial Matching, receive a trials list, and use the response to start asking additional questions about the patient's condition to enable Trial Matching perform a more accurate qualification of the eligible clinical trials. After a number of questions, the user will be provided with a list of clinical trials that are relevant to the provided clinical data and preference data.
+
+After receiving the needed data, the bot will send a matching request to Azure Trial Matching, receive a trials list, and use the response to start asking relevant questions about the patient's condition to help Azure Trial Matching qualify the most relevant trials.
+
+After a number of questions, the user will be provided with a list of clinical trials that are relevant to the provided metadata.
+
+For additional health bot usage details, see [Azure Health Bot Documentation](https://learn.microsoft.com/en-us/azure/health-bot/)
+
