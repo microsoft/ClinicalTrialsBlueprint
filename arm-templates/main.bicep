@@ -57,15 +57,15 @@ resource runPowerShellInline 'Microsoft.Resources/deploymentScripts@2020-10-01' 
       }
       {
         name: 'HEALTH_INSIGHTS_KEY'
-        value: healthInsights.listKeys().key1
+        secureValue: healthInsights.listKeys().key1
       }
       {
         name: 'CLU_ENDPOINT'
-        value: lungUnderstanding.properties.endpoint
+        value: langUnderstanding.properties.endpoint
       }
       {
         name: 'CLU_KEY'
-        value: lungUnderstanding.listKeys().key1
+        secureValue: langUnderstanding.listKeys().key1
       }
       {
         name: 'HEALTH_BOT_ENDPOINT'
@@ -73,7 +73,7 @@ resource runPowerShellInline 'Microsoft.Resources/deploymentScripts@2020-10-01' 
       }
       {
         name: 'HEALTH_BOT_SECRET'
-        value: healthbot.listSecrets().secrets[2].value
+        secureValue: healthbot.listSecrets().secrets[2].value
       }
     ]
     primaryScriptUri: '${fileLocation}/scripts/MainRestore.ps1'
@@ -87,7 +87,7 @@ resource runPowerShellInline 'Microsoft.Resources/deploymentScripts@2020-10-01' 
   }
 }
 
-resource lungUnderstanding 'Microsoft.CognitiveServices/accounts@2022-12-01' = {
+resource langUnderstanding 'Microsoft.CognitiveServices/accounts@2022-12-01' = {
   name: languageUnderstandingName
   location: location
   sku: {
