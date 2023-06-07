@@ -25,32 +25,20 @@ In both modes you will create the same Azure resources. One-Click-Deployment is 
 ## One-Click Deployment
 
 ### Requirements
-
 - Azure subscription with 'write' permission
-
 To deploy a new bot directly in Azure, you can use this button:
 
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fmicrosoft%2FClinicalTrialsBlueprint%2Fgh-pages%2Fmain.json)
 
-## Manual Deployment
 
-To deploy the ARM template manually, you can use the following instructions. The created resources will be the same as the resources created in the "One-Click Deployment" method.
+<details></summary>## Manual Deployment To deploy the ARM template manually, you can use the following instructions. The created resources will be the same as the resources created in the "One-Click Deployment" method.</summary>
+
+
 
 ### Requirements
-
 - [Install Azure PowerShell](https://learn.microsoft.com/en-us/azure/azure-resource-manager/bicep/deploy-powershell#prerequisites)
 - [Install the Azure PowerShell module](https://docs.microsoft.com/en-us/powershell/azure/install-az-ps)
 - [Install the Azure Bicep module](https://learn.microsoft.com/en-us/azure/azure-resource-manager/bicep/install#install-manually)
-
-### Connect to Azure Subscription
-
-### Requirements
-
-- [Install Azure PowerShell](https://learn.microsoft.com/en-us/azure/azure-resource-manager/bicep/deploy-powershell#prerequisites)
-- [Install the Azure PowerShell module](https://docs.microsoft.com/en-us/powershell/azure/install-az-ps)
-- [Install the Azure Bicep module](https://learn.microsoft.com/en-us/azure/azure-resource-manager/bicep/install#install-manually)
-
-### Connect to Azure Subscription
 
 ### Connect to Azure Subscription
 ```PowerShell
@@ -65,10 +53,13 @@ $ctmRg = New-AzResourceGroup -Name <resources group name> -Location <region>
 ```
 
 ### Run Deployment
+```PowerShell
 New-AzResourceGroupDeployment -ResourceGroupName $ctmRg -TemplateFile .\arm-templates\main.bicep
+```
+
+</details>
 
 ## How to use the Azure Health Bot with built-in Clinical Trial Matching
-
 After successful deployment, to see the bot in action, open the generated bot resource, enter the management portal, and start a chat conversation with a prompt,
 for example:
 `clinical trials in israel for 24-year-old women with lung cancer`
