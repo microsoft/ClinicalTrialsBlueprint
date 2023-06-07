@@ -30,8 +30,8 @@ To deploy a new bot directly in Azure, you can use this button:
 
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fmicrosoft%2FClinicalTrialsBlueprint%2Fgh-pages%2Fmain.json)
 
-
-<details><summary>## Manual Deployment To deploy the ARM template manually, you can use the following instructions. The created resources will be the same as the resources created in the "One-Click Deployment" method.</summary>
+## Manual Deployment
+<details><summary>To deploy the ARM template manually, you can use the following instructions. The created resources will be the same as the resources created in the "One-Click Deployment" method.</summary>
 
 
 
