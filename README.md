@@ -7,6 +7,7 @@
 This repository contains the ARM template and scripts to deploy a [Clinical Trials Matching Bot](https://learn.microsoft.com/en-us/azure/azure-health-insights/trial-matcher/overview#azure-health-bot-integration).
 
 The Trial Matcher is an AI model offered within the context of the broader Project Health Insights. Trial Matcher is designed to match patients to potentially suitable clinical trials or find a group of potentially eligible patients to a list of clinical trials. [Read more about Azure Trial Matcher](https://learn.microsoft.com/en-us/azure/azure-health-insights/trial-matcher/overview)
+In this blueprint, you will generate Azure Health Bot with built-in Clinical Trial Matching integration, enable to match a patient to set of clinical trials this patient is eligible for.
 
 The resources that will be deployed with this template, to be used by the bot:
 - [Azure Health bot](https://learn.microsoft.com/en-us/azure/health-bot/)
