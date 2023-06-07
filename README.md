@@ -20,7 +20,7 @@ $account
 ### Create Resource Group
 Create Resource Group that will contain all the resources required for the blueprint resources
 ```PowerShell
-$ctmRg = New-AzResourceGroup -Name <resources group name> -Location eastus
+$ctmRg = New-AzResourceGroup -Name <resources group name> -Location <region>
 ```
 
 ### Run Deployment
