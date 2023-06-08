@@ -71,9 +71,7 @@ To improve the patient qualification, additional information can be captured fro
 
 After receiving the needed data, the bot will send a matching request to Azure Trial Matching, receive a trials list, and use the response to start asking relevant questions about the patient's condition to help Azure Trial Matching qualify the most relevant trials.
 
-After a number of questions, the user will be provided with a list of clinical trials that are relevant to the provided metadata.
-
- ![image](https://github.com/microsoft/ClinicalTrialsBlueprint/assets/12156855/796ab1d5-0834-4dfd-b005-55bbd8ec90e6)
+![image](https://github.com/microsoft/ClinicalTrialsBlueprint/assets/12156855/796ab1d5-0834-4dfd-b005-55bbd8ec90e6)
 
 For additional health bot usage details, see [Azure Health Bot Documentation](https://learn.microsoft.com/en-us/azure/health-bot/)
 
