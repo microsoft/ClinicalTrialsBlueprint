@@ -4,28 +4,28 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.17.1.54307",
-      "templateHash": "10812708933537939825"
+      "version": "0.24.24.22086",
+      "templateHash": "984587842179901906"
     }
   },
   "parameters": {
     "matchingBotName": {
       "type": "string",
       "defaultValue": "ctm-healthbot-template",
-      "maxLength": 30,
-      "minLength": 3
+      "minLength": 3,
+      "maxLength": 30
     },
     "healthInsightsName": {
       "type": "string",
       "defaultValue": "ctm-healthinsights-cogs",
-      "maxLength": 64,
-      "minLength": 2
+      "minLength": 2,
+      "maxLength": 64
     },
     "languageUnderstandingName": {
       "type": "string",
       "defaultValue": "ctm-CLU-cogs",
-      "maxLength": 64,
-      "minLength": 2
+      "minLength": 2,
+      "maxLength": 64
     },
     "resourceTags": {
       "type": "object",
