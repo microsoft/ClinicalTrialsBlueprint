@@ -4,8 +4,8 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.24.24.22086",
-      "templateHash": "984587842179901906"
+      "version": "0.27.1.19265",
+      "templateHash": "6023425415336376763"
     }
   },
   "parameters": {
@@ -18,6 +18,12 @@
     "healthInsightsName": {
       "type": "string",
       "defaultValue": "ctm-healthinsights-cogs",
+      "minLength": 2,
+      "maxLength": 64
+    },
+    "ta4hName": {
+      "type": "string",
+      "defaultValue": "ctm-ta4h-cogs",
       "minLength": 2,
       "maxLength": 64
     },
@@ -57,6 +63,21 @@
     {
       "type": "Microsoft.CognitiveServices/accounts",
       "apiVersion": "2022-12-01",
+      "name": "[parameters('ta4hName')]",
+      "location": "[parameters('location')]",
+      "sku": {
+        "name": "F0"
+      },
+      "kind": "TextAnalytics",
+      "properties": {
+        "customSubDomainName": "[parameters('ta4hName')]",
+        "publicNetworkAccess": "Enabled"
+      },
+      "tags": "[parameters('resourceTags')]"
+    },
+    {
+      "type": "Microsoft.CognitiveServices/accounts",
+      "apiVersion": "2023-05-01",
       "name": "[parameters('healthInsightsName')]",
       "location": "[parameters('location')]",
       "sku": {
@@ -65,9 +86,15 @@
       "kind": "HealthInsights",
       "properties": {
         "customSubDomainName": "[parameters('healthInsightsName')]",
-        "publicNetworkAccess": "Enabled"
+        "publicNetworkAccess": "Enabled",
+        "apiProperties": {
+          "TA4HResourceId": "[resourceId('Microsoft.CognitiveServices/accounts', parameters('ta4hName'))]"
+        }
       },
-      "tags": "[parameters('resourceTags')]"
+      "tags": "[parameters('resourceTags')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.CognitiveServices/accounts', parameters('ta4hName'))]"
+      ]
     },
     {
       "type": "Microsoft.Resources/deploymentScripts",
@@ -83,11 +110,11 @@
         "environmentVariables": [
           {
             "name": "HEALTH_INSIGHTS_ENDPOINT",
-            "value": "[reference(resourceId('Microsoft.CognitiveServices/accounts', parameters('healthInsightsName')), '2022-12-01').endpoint]"
+            "value": "[reference(resourceId('Microsoft.CognitiveServices/accounts', parameters('healthInsightsName')), '2023-05-01').endpoint]"
           },
           {
             "name": "HEALTH_INSIGHTS_KEY",
-            "secureValue": "[listKeys(resourceId('Microsoft.CognitiveServices/accounts', parameters('healthInsightsName')), '2022-12-01').key1]"
+            "secureValue": "[listKeys(resourceId('Microsoft.CognitiveServices/accounts', parameters('healthInsightsName')), '2023-05-01').key1]"
           },
           {
             "name": "CLU_ENDPOINT",
@@ -142,7 +169,7 @@
   "outputs": {
     "healthInsightsEndpoint": {
       "type": "string",
-      "value": "[reference(resourceId('Microsoft.CognitiveServices/accounts', parameters('healthInsightsName')), '2022-12-01').endpoint]"
+      "value": "[reference(resourceId('Microsoft.CognitiveServices/accounts', parameters('healthInsightsName')), '2023-05-01').endpoint]"
     },
     "healthBotEndpoint": {
       "type": "string",
