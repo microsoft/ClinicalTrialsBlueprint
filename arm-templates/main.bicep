@@ -8,6 +8,10 @@ param healthInsightsName string = 'ctm-healthinsights-cogs'
 
 @minLength(2)
 @maxLength(64)
+param ta4hName string = 'ctm-ta4h-cogs'
+
+@minLength(2)
+@maxLength(64)
 param languageUnderstandingName string = 'ctm-CLU-cogs'
 
 param resourceTags object = {
@@ -27,7 +31,21 @@ resource healthbot 'Microsoft.HealthBot/healthBots@2022-08-08' = {
   tags: resourceTags
 }
 
-resource healthInsights 'Microsoft.CognitiveServices/accounts@2022-12-01' = {
+resource ta4h 'Microsoft.CognitiveServices/accounts@2022-12-01' = {
+  name: ta4hName
+  location: location
+  sku: {
+    name: 'F0'
+  }
+  kind: 'TextAnalytics'
+  properties: {
+    customSubDomainName: ta4hName
+    publicNetworkAccess: 'Enabled'
+  }
+  tags: resourceTags
+}
+
+resource healthInsights 'Microsoft.CognitiveServices/accounts@2023-05-01' = {
   name: healthInsightsName
   location: location
   sku: {
@@ -37,6 +55,9 @@ resource healthInsights 'Microsoft.CognitiveServices/accounts@2022-12-01' = {
   properties: {
     customSubDomainName: healthInsightsName
     publicNetworkAccess: 'Enabled'
+      apiProperties: {
+        TA4HResourceId: ta4h.id
+      }
   }
   tags: resourceTags
 }
