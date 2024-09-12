@@ -1,4 +1,4 @@
-@v4name: build Bicep file and Update ARM template
+name: build Bicep file and Update ARM template
 env: 
   ARTIFACT_DIR: "./template"
   
