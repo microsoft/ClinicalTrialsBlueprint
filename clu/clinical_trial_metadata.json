@@ -41,11 +41,11 @@
                 ]
             },
             {
-                "category": "gender.male",
+                "category": "sex.male",
                 "compositionSetting": "requireExactOverlap"
             },
             {
-                "category": "gender.female",
+                "category": "sex.female",
                 "compositionSetting": "requireExactOverlap"
             },
             {
@@ -2214,7 +2214,7 @@
                         "length": 2
                     },
                     {
-                        "category": "gender.male",
+                        "category": "sex.male",
                         "offset": 25,
                         "length": 3
                     },
@@ -2455,7 +2455,7 @@
                 "intent": "Clinical Trials Matching",
                 "entities": [
                     {
-                        "category": "gender.male",
+                        "category": "sex.male",
                         "offset": 41,
                         "length": 3
                     },
@@ -2499,7 +2499,7 @@
                 "intent": "Clinical Trials Matching",
                 "entities": [
                     {
-                        "category": "gender.female",
+                        "category": "sex.female",
                         "offset": 20,
                         "length": 11
                     },
@@ -2637,7 +2637,7 @@
                 "intent": "Clinical Trials Matching",
                 "entities": [
                     {
-                        "category": "gender.male",
+                        "category": "sex.male",
                         "offset": 38,
                         "length": 4
                     },
@@ -2653,7 +2653,7 @@
                 "intent": "Clinical Trials Matching",
                 "entities": [
                     {
-                        "category": "gender.female",
+                        "category": "sex.female",
                         "offset": 38,
                         "length": 5
                     },
@@ -2669,7 +2669,7 @@
                 "intent": "Clinical Trials Matching",
                 "entities": [
                     {
-                        "category": "gender.female",
+                        "category": "sex.female",
                         "offset": 40,
                         "length": 6
                     },
@@ -2696,7 +2696,7 @@
                         "length": 13
                     },
                     {
-                        "category": "gender.female",
+                        "category": "sex.female",
                         "offset": 64,
                         "length": 5
                     }
@@ -2735,7 +2735,7 @@
                 "intent": "Clinical Trials Matching",
                 "entities": [
                     {
-                        "category": "gender.male",
+                        "category": "sex.male",
                         "offset": 28,
                         "length": 3
                     },
@@ -2797,7 +2797,7 @@
                 "intent": "Clinical Trials Matching",
                 "entities": [
                     {
-                        "category": "gender.male",
+                        "category": "sex.male",
                         "offset": 16,
                         "length": 4
                     },
@@ -2818,7 +2818,7 @@
                         "length": 15
                     },
                     {
-                        "category": "gender.female",
+                        "category": "sex.female",
                         "offset": 59,
                         "length": 4
                     }
@@ -2834,7 +2834,7 @@
                         "length": 14
                     },
                     {
-                        "category": "gender.female",
+                        "category": "sex.female",
                         "offset": 48,
                         "length": 5
                     },
@@ -2861,7 +2861,7 @@
                         "length": 13
                     },
                     {
-                        "category": "gender.male",
+                        "category": "sex.male",
                         "offset": 60,
                         "length": 3
                     }
@@ -2982,7 +2982,7 @@
                         "length": 13
                     },
                     {
-                        "category": "gender.female",
+                        "category": "sex.female",
                         "offset": 46,
                         "length": 4
                     }
@@ -3050,7 +3050,7 @@
                 "intent": "Clinical Trials Matching",
                 "entities": [
                     {
-                        "category": "gender.male",
+                        "category": "sex.male",
                         "offset": 14,
                         "length": 4
                     },
@@ -3129,7 +3129,7 @@
                         "length": 8
                     },
                     {
-                        "category": "gender.female",
+                        "category": "sex.female",
                         "offset": 51,
                         "length": 4
                     },
@@ -3146,7 +3146,7 @@
                 "intent": "Clinical Trials Matching",
                 "entities": [
                     {
-                        "category": "gender.female",
+                        "category": "sex.female",
                         "offset": 43,
                         "length": 5
                     },
@@ -3173,7 +3173,7 @@
                         "length": 12
                     },
                     {
-                        "category": "gender.female",
+                        "category": "sex.female",
                         "offset": 42,
                         "length": 5
                     }
@@ -3206,7 +3206,7 @@
                 "intent": "Clinical Trials Matching",
                 "entities": [
                     {
-                        "category": "gender.female",
+                        "category": "sex.female",
                         "offset": 42,
                         "length": 6
                     },
@@ -3222,7 +3222,7 @@
                 "intent": "Clinical Trials Matching",
                 "entities": [
                     {
-                        "category": "gender.female",
+                        "category": "sex.female",
                         "offset": 41,
                         "length": 5
                     },
@@ -3238,7 +3238,7 @@
                 "intent": "Clinical Trials Matching",
                 "entities": [
                     {
-                        "category": "gender.female",
+                        "category": "sex.female",
                         "offset": 44,
                         "length": 5
                     },
@@ -3272,7 +3272,7 @@
                 "intent": "Clinical Trials Matching",
                 "entities": [
                     {
-                        "category": "gender.female",
+                        "category": "sex.female",
                         "offset": 45,
                         "length": 6
                     },
@@ -3288,7 +3288,7 @@
                 "intent": "Clinical Trials Matching",
                 "entities": [
                     {
-                        "category": "gender.male",
+                        "category": "sex.male",
                         "offset": 47,
                         "length": 3
                     },
@@ -3375,7 +3375,7 @@
                         "length": 12
                     },
                     {
-                        "category": "gender.male",
+                        "category": "sex.male",
                         "offset": 56,
                         "length": 4
                     }
@@ -3391,7 +3391,7 @@
                         "length": 12
                     },
                     {
-                        "category": "gender.male",
+                        "category": "sex.male",
                         "offset": 57,
                         "length": 4
                     }
@@ -3435,7 +3435,7 @@
                 "intent": "Clinical Trials Matching",
                 "entities": [
                     {
-                        "category": "gender.female",
+                        "category": "sex.female",
                         "offset": 16,
                         "length": 6
                     },
@@ -3467,7 +3467,7 @@
                         "length": 35
                     },
                     {
-                        "category": "gender.female",
+                        "category": "sex.female",
                         "offset": 72,
                         "length": 5
                     }
@@ -3494,7 +3494,7 @@
                         "length": 7
                     },
                     {
-                        "category": "gender.female",
+                        "category": "sex.female",
                         "offset": 23,
                         "length": 5
                     }
@@ -3560,7 +3560,7 @@
                 "intent": "Clinical Trials Matching",
                 "entities": [
                     {
-                        "category": "gender.male",
+                        "category": "sex.male",
                         "offset": 40,
                         "length": 4
                     },
@@ -3582,7 +3582,7 @@
                 "intent": "Clinical Trials Matching",
                 "entities": [
                     {
-                        "category": "gender.male",
+                        "category": "sex.male",
                         "offset": 35,
                         "length": 3
                     },
@@ -3637,7 +3637,7 @@
                 "intent": "Clinical Trials Matching",
                 "entities": [
                     {
-                        "category": "gender.male",
+                        "category": "sex.male",
                         "offset": 32,
                         "length": 4
                     },
@@ -3745,7 +3745,7 @@
                 "intent": "Clinical Trials Matching",
                 "entities": [
                     {
-                        "category": "gender.male",
+                        "category": "sex.male",
                         "offset": 24,
                         "length": 4
                     },
@@ -3772,7 +3772,7 @@
                 "intent": "Clinical Trials Matching",
                 "entities": [
                     {
-                        "category": "gender.male",
+                        "category": "sex.male",
                         "offset": 24,
                         "length": 4
                     },
@@ -3794,7 +3794,7 @@
                 "intent": "Clinical Trials Matching",
                 "entities": [
                     {
-                        "category": "gender.male",
+                        "category": "sex.male",
                         "offset": 24,
                         "length": 4
                     },
@@ -3816,7 +3816,7 @@
                 "intent": "Clinical Trials Matching",
                 "entities": [
                     {
-                        "category": "gender.male",
+                        "category": "sex.male",
                         "offset": 24,
                         "length": 4
                     },
@@ -3838,7 +3838,7 @@
                 "intent": "Clinical Trials Matching",
                 "entities": [
                     {
-                        "category": "gender.male",
+                        "category": "sex.male",
                         "offset": 13,
                         "length": 4
                     },
@@ -3855,7 +3855,7 @@
                 "intent": "Clinical Trials Matching",
                 "entities": [
                     {
-                        "category": "gender.male",
+                        "category": "sex.male",
                         "offset": 13,
                         "length": 4
                     },
@@ -3933,7 +3933,7 @@
                 "intent": "Clinical Trials Matching",
                 "entities": [
                     {
-                        "category": "gender.male",
+                        "category": "sex.male",
                         "offset": 11,
                         "length": 4
                     },
@@ -3955,7 +3955,7 @@
                 "intent": "Clinical Trials Matching",
                 "entities": [
                     {
-                        "category": "gender.male",
+                        "category": "sex.male",
                         "offset": 11,
                         "length": 4
                     },
@@ -3977,7 +3977,7 @@
                 "intent": "Clinical Trials Matching",
                 "entities": [
                     {
-                        "category": "gender.male",
+                        "category": "sex.male",
                         "offset": 11,
                         "length": 4
                     },
@@ -3999,7 +3999,7 @@
                 "intent": "Clinical Trials Matching",
                 "entities": [
                     {
-                        "category": "gender.male",
+                        "category": "sex.male",
                         "offset": 11,
                         "length": 3
                     }
@@ -4152,7 +4152,7 @@
                 "intent": "None",
                 "entities": [
                     {
-                        "category": "gender.male",
+                        "category": "sex.male",
                         "offset": 17,
                         "length": 3
                     },
@@ -4179,7 +4179,7 @@
                 "intent": "Clinical Trials Matching",
                 "entities": [
                     {
-                        "category": "gender.male",
+                        "category": "sex.male",
                         "offset": 18,
                         "length": 4
                     },
