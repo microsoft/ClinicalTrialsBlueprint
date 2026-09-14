@@ -12,27 +12,27 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@a37ce9120846195fa4ece8f58b268e6043cb2f26 # v3.7.0
       
       - run: "mkdir ${{ env.ARTIFACT_DIR }}"
         name: Create Artifact Di"
       
       - name: Build Arm Template From Bicep
-        uses: Azure/cli@v1.0.7
+        uses: Azure/cli@fa0f960f00db49b95fdb54328a767aee31e80105 # v1.0.7
         with:
           inlineScript: "az bicep build --file ./arm-templates/main.bicep --outdir ${{ env.ARTIFACT_DIR }}"
         env:
           DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: 1
           
       - name: Upload GitHub Pages artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: bicep-artifact
           path: ${{ env.ARTIFACT_DIR }}
           
 
       - name: Deploy GitHub Pages site
-        uses: JamesIves/github-pages-deploy-action@v4.6.1
+        uses: JamesIves/github-pages-deploy-action@5c6e9e9f3672ce8fd37b9856193d2a537941e66c # v4.6.1
         with:
           branch: gh-pages
           folder: ${{ env.ARTIFACT_DIR }}
